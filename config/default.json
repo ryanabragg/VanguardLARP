@@ -1,0 +1,62 @@
+{
+  "host": "localhost",
+  "port": 3030,
+  "public": "../public/",
+  "paginate": {
+    "default": 10,
+    "max": 50
+  },
+  "authentication": {
+    "secret": "a6a45598943e013024cac28667540f365577b85afcb9af0ddd257740aed0c441a2ed156cb8713fba94fb746cf3c7f0005282a954df2ef28f988ad9555f0dd151f72d947d2cb46835301ced4a1ff9c6b99bea301cc0e23e92c6d7c103f631a9a210cf4aafe60465eb31bb086f93e35df6a2f47f45ef6018b78102b7f497b0f12d9348886be2b6ba23f4e137193a55fe654b30486cdd7398876f5f467f221fc4e05931fd7b582b75cfe314f8ed0f8dcde2675cde75d6583a404a372ffe7c50487fbfcbf314390564eb06a8c3f3fe10b4d34a6960c6fa16c9272c0d78ec0af4bd73edb8faedd0444a4deccc76689a1347cacc11c5082559421ec687e37f24154a84",
+    "strategies": [
+      "jwt",
+      "local"
+    ],
+    "path": "/authentication",
+    "service": "users",
+    "jwt": {
+      "header": {
+        "type": "access"
+      },
+      "audience": "https://yourdomain.com",
+      "subject": "anonymous",
+      "issuer": "feathers",
+      "algorithm": "HS256",
+      "expiresIn": "1d"
+    },
+    "local": {
+      "entity": "user",
+      "service": "users",
+      "usernameField": "email",
+      "passwordField": "password"
+    },
+    "facebook": {
+      "clientID": "your facebook client id",
+      "clientSecret": "your facebook client secret",
+      "successRedirect": "/",
+      "scope": [
+        "public_profile",
+        "email"
+      ],
+      "profileFields": [
+        "id",
+        "displayName",
+        "first_name",
+        "last_name",
+        "email",
+        "gender",
+        "profileUrl",
+        "birthday",
+        "picture",
+        "permissions"
+      ]
+    },
+    "cookie": {
+      "enabled": true,
+      "name": "feathers-jwt",
+      "httpOnly": false,
+      "secure": false
+    }
+  },
+  "nedb": "../data"
+}
