@@ -1,0 +1,83 @@
+{
+  "player": "Ryan Bragg",
+  "name": "Gremian \"Grenth\" Ienith",
+  "build": 265,
+  "lives": {
+    "blue": 1,
+    "black": 1,
+    "red": 2,
+    "white": 9
+  },
+  "race": {
+    "name": "Dok'Lphar - Darkling",
+    "culture": "Foxkeen"
+  },
+  "racials": [
+    "Craft Auto-Boomer",
+    "Use Ranged",
+    "Trick Shot",
+    "Double Tap",
+    "Flint & Steel",
+    "Foxkeen"
+  ],
+  "skills": [
+    "Student of War"
+  ],
+  "sourcemarks": [
+    "wind"
+  ],
+  "aptitudes": {
+    "armor": 0,
+    "studentofwar": 0,
+    "melee": 0,
+    "ranged": 0,
+    "sourcemark": 0,
+  },
+  "crafts": {
+    "alchemist": 0,
+    "armorsmith": 0,
+    "blacksmith": 0,
+    "boomersmith": 4,
+    "clockworker": 0,
+    "enchanter": 0,
+    "fieldsurgeon": 0,
+    "locksmith": 0,
+    "scribe": 0,
+    "sourceengineer": 4,
+    "trapmaker": 0,
+    "trinketjeweler": 0,
+    "underwaterbasketweaver": 0,
+    "weaponsmith": 0
+  },
+  "pools": {
+    "chemix": 0,
+    "melee": 3,
+    "spell": 1
+  },
+  "domains": {
+    "Extra Body": 1,
+    "Monk": true,
+    "Dodge": 1,
+    "Flurry": 1,
+    "Rebirth": 1,
+    "Shadow Meld": 1,
+    "Trick Shot": true,
+    "Evasive Mind": true,
+    "Shadow Phase": true,
+    "Corpse Flesh": true,
+    "Dragon Flesh": 1,
+    "Dragon Bones": true,
+    "Reflect Shield": 1,
+    "Third Eye": true,
+    "Elemental Consume": 1
+  },
+  "artes": [
+    "Dragon's Breath"
+  ],
+  "freebies": [
+    "Monk",
+    "Dragon Bones",
+    "Shadow Phase",
+    "Elemental Consume"
+  ]
+}

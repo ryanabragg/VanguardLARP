@@ -1,0 +1,136 @@
+{
+  "name": "Student of War",
+  "build": 25,
+  "group": "Constant",
+  "type": "Skill",
+  "max": 1,
+  "requires": "",
+  "text": "This represents...",
+  "effects": "",
+  "replaces": [
+    "Use Melee",
+    "Use Ranged",
+    "Two-Weapon Fighting",
+    "Use Shield",
+    "Elemental Source Mark"
+  ],
+  "invokes": [
+    "Student of War Aptitude"
+  ],
+  "grants": ""
+}
+
+{
+  "name": "Student of War Aptitude",
+  "build": 10,
+  "group": "Constant",
+  "type": "Skill",
+  "max": 0,
+  "requires": "Student of War",
+  "text": "...",
+  "effects": "",
+  "replaces": [
+    "Melee Aptitude",
+    "Ranged Aptitude",
+    "Source Mark Aptitude"
+  ],
+  "invokes": "",
+  "grants": ""
+}
+
+{
+  "name": "Source Engineer",
+  "build": 10,
+  "group": "Constant",
+  "type": "Craft",
+  "max": 5,
+  "requires": "",
+  "text": "...",
+  "effects": "",
+  "replaces": "",
+  "invokes": "",
+  "grants": ""
+}
+
+{
+  "name": "Chemix Pool",
+  "build": 5,
+  "group": "Pools",
+  "type": "Chemix",
+  "max": 0,
+  "requires": "",
+  "text": "",
+  "effects": "",
+  "replaces": "",
+  "invokes": "",
+  "grants": [
+    "BOOM!",
+    "Concussive Shot",
+    "Goblin Glue",
+    "Healing Potion",
+    "Neutralizing Oils",
+    "Poison (2)",
+    "Salamander Skin (2)"
+  ]
+}
+
+{
+  "name": "Salamander Skin (2)",
+  "build": 0,
+  "group": "Pools",
+  "type": "Chemix",
+  "max": 0,
+  "requires": "Chemix Pool",
+  "text": "...",
+  "replaces": "",
+  "invokes": "",
+  "grants": ""
+}
+
+{
+  "name": "Corpse Flesh",
+  "build": 10,
+  "group": "domain",
+  "type": "burn",
+  "max": 1,
+  "requires": "",
+  "text": "...",
+  "replaces": "",
+  "invokes": [
+    "Will of the Faithful"
+  ],
+  "grants": ""
+}
+
+{
+  "name": "Will of the Faithful",
+  "build": 0,
+  "group": "domain",
+  "type": "hidden",
+  "max": 1,
+  "requires": [
+    "True Faith",
+    "Corpse Flesh"
+  ],
+  "text": "...",
+  "replaces": "",
+  "invokes": "",
+  "grants": ""
+}
+
+{
+  "name": "True Faith",
+  "build": 25,
+  "group": "Advanced Art",
+  "type": "",
+  "max": 1,
+  "requires": "True Faith",
+  "text": "...",
+  "replaces": "",
+  "invokes": [
+    "Will of the Faithful",
+    ".",
+    "."
+  ],
+  "grants": ""
+}
