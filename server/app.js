@@ -27,9 +27,9 @@ app.use(helmet());
 app.use(compress());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(favicon(path.join(app.get('public'), 'favicon.ico')));
+app.use(favicon(path.join(app.get('static'), 'favicon.ico')));
 // Host the public folder
-app.use('/', feathers.static(app.get('public')));
+app.use('/', feathers.static(app.get('static')));
 
 // Set up Plugins and providers
 app.configure(hooks());
