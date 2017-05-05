@@ -3,7 +3,7 @@
   "description": "website for VanguardLARP",
   "version": "0.0.0",
   "homepage": "",
-  "main": "server",
+  "main": "src",
   "keywords": [
     "feathers"
   ],
@@ -14,7 +14,7 @@
   "contributors": [],
   "bugs": {},
   "directories": {
-    "lib": "server"
+    "lib": "src"
   },
   "engines": {
     "node": ">= 6.0.0",
@@ -22,8 +22,8 @@
   },
   "scripts": {
     "test": "npm run eslint && npm run mocha",
-    "eslint": "eslint server/. test/. --config .eslintrc.json",
-    "start": "node server/",
+    "eslint": "eslint src/. test/. --config .eslintrc.json",
+    "start": "node src/",
     "mocha": "mocha test/ --recursive"
   },
   "dependencies": {
@@ -47,6 +47,8 @@
     "helmet": "^3.5.0",
     "nedb": "^1.8.0",
     "passport-facebook": "^2.1.1",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
     "serve-favicon": "^2.4.2",
     "winston": "^2.3.1"
   },
