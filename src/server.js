@@ -1,23 +1,23 @@
 require('dotenv').config({ silent: true });
 
-const path = require('path');
-const favicon = require('serve-favicon');
-const compress = require('compression');
-const cors = require('cors');
-const helmet = require('helmet');
-const bodyParser = require('body-parser');
+import path from 'path';
+import favicon from 'serve-favicon';
+import compress from 'compression';
+import cors from 'cors';
+import helmet from 'helmet';
+import bodyParser from 'body-parser';
 
-const feathers = require('feathers');
-const configuration = require('feathers-configuration');
-const hooks = require('feathers-hooks');
-const rest = require('feathers-rest');
-const socketio = require('feathers-socketio');
+import feathers from 'feathers';
+import configuration from 'feathers-configuration';
+import hooks from 'feathers-hooks';
+import rest from 'feathers-rest';
+import socketio from 'feathers-socketio';
 
-const middleware = require('./middleware');
-const services = require('./services');
-const appHooks = require('./server.hooks');
+import middleware from './middleware';
+import services from './services';
+import appHooks from './server.hooks';
 
-const authentication = require('./authentication');
+import authentication from './authentication';
 
 const app = feathers();
 
