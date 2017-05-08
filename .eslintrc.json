@@ -4,7 +4,16 @@
     "node": true,
     "mocha": true
   },
-  "extends": "eslint:recommended",
+  "plugins": [
+    "node",
+    "react"
+  ],
+  "extends": [
+    "google",
+    "eslint:recommended",
+    "plugin:node/recommended",
+    "plugin:react/recommended"
+  ],
   "rules": {
     "indent": [
       "error",
