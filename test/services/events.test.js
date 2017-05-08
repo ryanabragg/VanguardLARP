@@ -1,5 +1,5 @@
 const assert = require('assert');
-const app = require('../../api/app');
+const app = require('../../src/server');
 
 describe('\'events\' service', () => {
   it('registered the service', () => {
