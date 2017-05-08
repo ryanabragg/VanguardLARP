@@ -1,6 +1,7 @@
 {
   "host": "HOST",
   "port": "PORT",
+  "dist": "../dist/",
   "static": "../static/",
   "paginate": {
     "default": 10,
