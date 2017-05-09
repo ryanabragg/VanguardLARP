@@ -1,9 +1,9 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import injectSheet from 'react-jss'
-import Color from 'color'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import injectSheet from 'react-jss';
+import Color from 'color';
 
-import Schedule from './Schedule'
+import Schedule from './Schedule';
 
 /* Colors From LA
 $maroon: #643335;
@@ -29,7 +29,7 @@ const colors = {
   'black': '#000000',
   'white': '#ffffff',
   'grey': '#808080',
-}
+};
 
 const breakpoints = {
   '0': 0,
@@ -38,7 +38,7 @@ const breakpoints = {
   'm': 840,
   'l': 1280,
   'xl': 1600
-}
+};
 
 /*
 $typography: (
@@ -165,7 +165,7 @@ const styles = {
       height: '360px'
     },
   }
-}
+};
 
 class Homepage extends React.Component {
   render() {
@@ -308,4 +308,4 @@ class Homepage extends React.Component {
   }
 }
 
-export default injectSheet(styles)(Homepage)
+export default injectSheet(styles)(Homepage);

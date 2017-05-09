@@ -2,12 +2,20 @@
   "env": {
     "es6": true,
     "node": true,
+    "browser": true,
     "mocha": true
   },
   "plugins": [
     "node",
     "react"
   ],
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+        "jsx": true
+    }
+  },
   "extends": [
     "google",
     "eslint:recommended",
@@ -30,6 +38,9 @@
     "semi": [
       "error",
       "always"
+    ],
+    "node/no-unsupported-features": [ // to stop errors on using import/export
+      "off"
     ]
   }
 }

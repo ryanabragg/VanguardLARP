@@ -1,6 +1,6 @@
-const handler = require('feathers-errors/handler');
-const notFound = require('feathers-errors/not-found');
-const serverRender = require('./server-render')
+import handler from 'feathers-errors/handler';
+import notFound from 'feathers-errors/not-found';
+import serverRender from './server-render';
 
 module.exports = function () {
   // Add your custom middleware here. Remember, that
@@ -8,7 +8,7 @@ module.exports = function () {
   // the error handler have to go last.
   const app = this;
 
-  app.configure(serverRender)
+  app.configure(serverRender);
 
   if(process.env.NODE_ENV != 'production'){
     const webpack = require('./webpack');

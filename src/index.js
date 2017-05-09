@@ -9,8 +9,8 @@ process.on('unhandledRejection', (reason, p) =>
 );
 
 server.on('listening', () => {
-  logger.info(`Feathers application started on ${app.get('host')}:${port}`)
+  logger.info(`Feathers application started on ${app.get('host')}:${port}`);
   if(process.env.NODE_ENV != 'production'){
-    logger.info(`Building webpack...`);
+    logger.info('Building webpack...');
   }
 });

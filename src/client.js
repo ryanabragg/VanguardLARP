@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Route, Link } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { AppContainer } from 'react-hot-loader';
 
 import App from './components/App';
@@ -12,7 +12,7 @@ function HotLoader(props) {
         {props.children}
       </AppContainer>
     </BrowserRouter>
-  )
+  );
 }
 
 window.onload = () => {
@@ -23,8 +23,8 @@ window.onload = () => {
     document.getElementById('react-app'),
     () => {
       // We don't need the static css once we have launched the application.
-      const ssStyles = document.getElementById('server-side-styles')
-      ssStyles.parentNode.removeChild(ssStyles)
+      const ssStyles = document.getElementById('server-side-styles');
+      ssStyles.parentNode.removeChild(ssStyles);
     }
   );
 };

@@ -80,6 +80,6 @@ export default class Schedule extends Component {
           <span className='location'>Camp Ginger Cascades: Rainbow</span>
         </li>
       </ol>
-    )
+    );
   }
 }

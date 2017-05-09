@@ -4,7 +4,7 @@ import { StaticRouter, matchPath } from 'react-router';
 import {SheetsRegistryProvider, SheetsRegistry} from 'react-jss';
 
 import App from '../components/App';
-import routes from '../routes'
+import routes from '../routes';
 
 module.exports = function () {
   const app = this;
@@ -12,11 +12,11 @@ module.exports = function () {
   app.get('*', (req, res, next) => {
     const match = routes.reduce((acc, route) => matchPath(req.url, route, { exact: true }) || acc, null);
     if (!match.isExact) {
-        next()
-        return
+      next();
+      return;
     }
-    const context = {}
-    const sheets = new SheetsRegistry()
+    const context = {};
+    const sheets = new SheetsRegistry();
 
     const markup = renderToString(
       <StaticRouter location={req.url} context={context}>
@@ -28,8 +28,7 @@ module.exports = function () {
 
     // context updates if redirected
     if (context.url) {
-      res.redirect(301, context.url)
-  //  } else if (isJavascript.test(req.url)) {
+      res.redirect(301, context.url);
     } else {
       res.send(`
 <!DOCTYPE html>
@@ -47,6 +46,6 @@ module.exports = function () {
   </body>
 </html>
       `);
-    };
+    }
   });
-}
+};
