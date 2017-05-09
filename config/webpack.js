@@ -6,15 +6,14 @@ module.exports = {
   entry: {
     'app': [
       'babel-polyfill',
-      //'webpack-hot-middleware/client?reload=true'
-      //'react-hot-loader/patch',
-      '../src/client'
+      'webpack-hot-middleware/client',
+      'react-hot-loader',
+      './src/client'
     ]
   },
   output: {
     path: path.join(process.cwd(),'dist'),
-    filename: 'scripts.js',
-    chunkFilename: 'scripts-[chunkhash].js'
+    filename: 'scripts.js'
   },
   devtool: 'eval-source-map',
   plugins: [
@@ -22,7 +21,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       filename: 'index.html',
       title: 'Vanguard LARP',
-      template: '../src/html.ejs'
+      template: './src/html.ejs'
     }),
   ],
   module: {

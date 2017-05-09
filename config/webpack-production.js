@@ -18,7 +18,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       filename: 'index.html',
       title: 'Vanguard LARP',
-      template: path.join(process.cwd(),'/src/html.ejs')
+      template: './src/html.ejs'
     })
   ],
   module: {
