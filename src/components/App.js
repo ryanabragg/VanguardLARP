@@ -6,10 +6,10 @@ import {PageNotFound} from './PageNotFound';
 export default class App extends React.Component {
   render() {
     return (
-      <div className="app-container">
+      <div className="route-container">
         <Switch>
           <Route exact path='/' component={Homepage}/>
-          <Route path='/admin' component={Homepage}/>
+          <Route path='/admin' component={PageNotFound}/>
           <Route path='*' component={PageNotFound}/>
         </Switch>
       </div>

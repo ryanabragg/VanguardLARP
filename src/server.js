@@ -71,7 +71,7 @@ app.get('*', (req, res) => {
   </head>
   <body>
     <div id="react-app">${markup}</div>
-    <script src="/scripts.js"></script>
+    <script type="application/javascript" src="/scripts.js"></script>
   </body>
 </html>
     `);
@@ -88,7 +88,7 @@ app.configure(authentication);
 // Set up our services (see `services/index.js`)
 app.configure(services);
 // Configure middleware (see `middleware/index.js`) - always has to be last
-//app.configure(middleware);
+app.configure(middleware);
 app.hooks(appHooks);
 
 module.exports = app;

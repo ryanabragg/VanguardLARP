@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router'
+import { Link } from 'react-router-dom'
 import injectSheet from 'react-jss'
 import Color from 'color'
 
@@ -148,7 +148,7 @@ const styles = {
   },
   headerImage: {
     background: {
-      image: 'dist/logo.svg', //612x360 image
+      image: 'url(dist/logo.svg)',
       size: 'contain',
       repeat: 'no-repeat',
       position: 'center',
@@ -172,14 +172,14 @@ class Homepage extends React.Component {
     return (
       <div>
         <div className={this.props.classes.header}>
-          <div className={this.props.classes.headerImage}>test
+          <div className={this.props.classes.headerImage}>
           </div>
         </div>
         <main>
           <div className='container'>
             <article className='grid-item'>
               <h1>Welcome!</h1>
-              <p>
+              <p><Link to='/'>home</Link><Link to='/admin'>admin</Link>
                 We are a boffer steampunk fantasy fusion game geared towards
                 making the player feel epic from the start. That seems like a mouthful, but in truth,
                 you get to be what you want to be, in whatever way you want to be. Our game mechanics
