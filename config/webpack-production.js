@@ -15,11 +15,11 @@ module.exports = {
   },
   devtool: 'source-map',
   plugins: [
-    new HtmlWebpackPlugin({
+/*    new HtmlWebpackPlugin({
       filename: 'index.html',
       title: 'Vanguard LARP',
       template: './src/html.ejs'
-    })
+    })*/
   ],
   module: {
     rules: [

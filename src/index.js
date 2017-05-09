@@ -8,6 +8,9 @@ process.on('unhandledRejection', (reason, p) =>
   logger.error('Unhandled Rejection at: Promise ', p, reason)
 );
 
-server.on('listening', () =>
+server.on('listening', () => {
   logger.info(`Feathers application started on ${app.get('host')}:${port}`)
-);
+  if(process.env.NODE_ENV != 'production'){
+    logger.info(`Building webpack...`);
+  }
+});

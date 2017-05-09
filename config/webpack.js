@@ -7,7 +7,7 @@ module.exports = {
     'app': [
       'babel-polyfill',
       'webpack-hot-middleware/client',
-      'react-hot-loader',
+      'react-hot-loader/patch',
       './src/client'
     ]
   },
@@ -18,11 +18,11 @@ module.exports = {
   devtool: 'eval-source-map',
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new HtmlWebpackPlugin({
+/*    new HtmlWebpackPlugin({
       filename: 'index.html',
       title: 'Vanguard LARP',
       template: './src/html.ejs'
-    }),
+    }),*/
   ],
   module: {
     rules: [

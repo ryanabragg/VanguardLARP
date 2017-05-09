@@ -3,6 +3,7 @@ import { Switch, Route, Link } from 'react-router-dom';
 import Homepage from './Homepage';
 import PageNotFound from './PageNotFound';
 
+// check against ../routes.js
 export default class App extends React.Component {
   render() {
     return (
