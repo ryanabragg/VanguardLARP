@@ -144,15 +144,16 @@ const Header = (props) => {
   });
 
   return (
-    <div {...styles}>
+    <header {...styles}>
       <div {...logo}>
       </div>
-    </div>
+    </header>
   );
 }
 
 const Footer = (props) => {
   const styles = css({
+    float: 'left',
     position: 'relative',
     fontSize: '0.6rem',
     lineHeight: '1em',
@@ -170,9 +171,9 @@ const Footer = (props) => {
   });
 
   return (
-    <div {...styles}>
+    <footer {...styles}>
       <p>©2015 RedTape Productions</p>
-    </div>
+    </footer>
   );
 }
 
@@ -218,7 +219,7 @@ const Main = (props) => {
 const Article = (props) => {
   const styles = css({
     position: 'relative',
-    [`@media (min-width: ${theme.breakpoints.m + 1}px) and (max-resolution: 120dpi)`]: {
+    [`@media (min-width: ${theme.breakpoints.m + 1}px)`]: {
       width: props.splitView ? '40%' : '90%',
       float: 'left',
       marginLeft: '5%',
@@ -260,10 +261,13 @@ const IconFacebook = (props) => {
 
 const Cards = (props) => {
   const styles = css({
-    [`@media (min-width: ${theme.breakpoints.m + 1})`]: {
-      ':last-child': {
-        marginLeft: '1em'
-      }
+    float: 'right',
+    marginBottom: '1em',
+    [`@media (max-width: ${theme.breakpoints.m}px)`]: {
+      width: '100%'
+    },
+    [`@media (min-width: ${theme.breakpoints.m + 1}px)`]: {
+      marginLeft: '1em'
     }
   });
 
@@ -278,19 +282,13 @@ const Card = (props) => {
   const style_div = css({
     boxShadow: '0 4px 8px 0 rgba(0, 0, 0, .2)',
     transition: '0.3s',
-    position: 'relative',
     float: 'right',
-    height: '6em',
-    [`@media (max-width: ${theme.breakpoints.m})`]: {
-      width: '50%',
-      marginBottom: '1em'
+    height: '8em',
+    [`@media (max-width: ${theme.breakpoints.m}px)`]: {
+      width: '50%'
     },
-    [`@media (min-width: ${theme.breakpoints.m + 1})`]: {
-      width: '7.5em'
-    },
-    [`@media (min-width: ${theme.breakpoints.m + 1}) and (min-resolution: 120dpi)`]: {
-      width: '50%',
-      marginBottom: '1em'
+    [`@media (min-width: ${theme.breakpoints.m + 1}px)`]: {
+      width: '8em'
     },
     '& svg': {
       display: 'block',
@@ -307,7 +305,7 @@ const Card = (props) => {
       paddingRight: '0.5em',
       margin: '0px',
       textAlign: 'center',
-      fontSize: '1em'
+      fontSize: '.8em'
     },
     ':hover': {
       boxShadow: '0 8px 16px 0 rgba(0,0,0,0.2)'
