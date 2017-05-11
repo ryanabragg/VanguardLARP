@@ -1,7 +1,7 @@
 import React from 'react';
 import { renderToString } from 'react-dom/server';
 import { StaticRouter, matchPath } from 'react-router';
-import {SheetsRegistryProvider, SheetsRegistry} from 'react-jss';
+import { renderStatic } from 'glamor/server';
 
 import App from '../components/App';
 import routes from '../routes';
@@ -16,35 +16,31 @@ module.exports = function () {
       return;
     }
     const context = {};
-    const sheets = new SheetsRegistry();
-
-    const markup = renderToString(
+    let { html, css, ids } = renderStatic(() => renderToString(
       <StaticRouter location={req.url} context={context}>
-        <SheetsRegistryProvider registry={sheets}>
-          <App/>
-        </SheetsRegistryProvider>
+        <App />
       </StaticRouter>
-    );
+    ));
 
     // context updates if redirected
     if (context.url) {
       res.redirect(301, context.url);
     } else {
       res.send(`
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Vanguard LARP</title>
-    <style type="text/css" id="server-side-styles">
-      ${sheets.toString()}
-    </style>
-  </head>
-  <body>
-    <div id="react-app">${markup}</div>
-    <script type="application/javascript" src="/scripts.js"></script>
-  </body>
-</html>
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="utf-8" />
+            <title>Vanguard LARP</title>
+            <style type="text/css" id="server-side-styles">
+              ${css}
+            </style>
+          </head>
+          <body>
+            <div id="react-app">${html}</div>
+            <script type="application/javascript" src="/scripts.js"></script>
+          </body>
+        </html>
       `);
     }
   });
