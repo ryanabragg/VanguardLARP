@@ -1,12 +1,13 @@
 const routes = [
   '/',
   '/admin',
-  '/admin/events',
   '/admin/events/:id',
-  '/admin/rules',
+  '/admin/events',
   '/admin/rules/:id',
-  '/character',
-  '/character/:id'
+  '/admin/rules',
+  '/admin/characters/:id',
+  '/character/:id',
+  '/character'
 ];
 
 module.exports = routes;
