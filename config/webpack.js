@@ -13,6 +13,7 @@ module.exports = {
   },
   output: {
     path: path.join(process.cwd(),'dist'),
+    publicPath: "/",
     filename: 'scripts.js'
   },
   devtool: 'eval-source-map',

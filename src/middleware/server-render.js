@@ -10,7 +10,15 @@ module.exports = function () {
   const app = this;
 
   app.get('*', (req, res, next) => {
-    const match = routes.reduce((acc, route) => matchPath(req.url, route, { exact: true }) || acc, null);
+    const whitelist = [
+      /.js$/i,
+      /.json$/i
+    ]; // mostly for webpack HMR
+    if(whitelist.reduce((acc, filetype) => filetype.test(req.url) || acc, null)) {
+      next();
+      return;
+    }
+    const match = routes.reduce((acc, route) => matchPath(req.url, route, { exact: true }) || acc, null); // react routes
     if (!match.isExact) {
       next();
       return;
