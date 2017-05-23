@@ -2,21 +2,20 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { css } from 'glamor';
 import Color from 'color';
-/*
+
 import io from 'socket.io-client';
 import feathers from 'feathers/client';
 import socketio from 'feathers-socketio/client';
 
 import RxJS from 'rxjs';
 import reactive from 'feathers-reactive';
-*/
-/*
-const socket = io();
+
+const socket = io('192.168.1.171:3030');
 const app = feathers()
   .configure(socketio(socket))
   .configure(reactive(RxJS)); // turns service methods into streams, so .subscribe instead of .then
 
-const serviceEvents = app.service('events');
+const events = app.service('events');
 
 /* Colors From LA
 $maroon: #643335;
@@ -441,8 +440,23 @@ const Contact = (props) => {
 }
 
 class Schedule extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      events: [],
+      next: ''
+    };
+  }
+
+  componentDidMount () {
+    this.events = events.find().subscribe(events => this.setState({ events: events.data }));
+  }
+
+  componentWillUnmount () {
+    this.events.unsubscribe();
+  }
 /*  componentDidMount () {
-    serviceEvents.find( {
+    events.find( {
       query: {
         $sort: {
           dateStart: -1
@@ -467,12 +481,6 @@ class Schedule extends React.Component {
       position: 'relative',
       lineHeight: '2em',
       paddingLeft: '.5em',
-      ':nth-child(even)': {
-        backgroundColor: '#e2e2e2'
-      },
-      ':nth-child(odd)': {
-        backgroundColor: '#f6f6f6'
-      },
       ':hover': {
         backgroundColor: '#cccccc'
       }
@@ -490,56 +498,55 @@ class Schedule extends React.Component {
     return (
       <Article splitView>
         <h1 {...styles_header}>Schedule</h1>
-        <div>
-          next event
-        </div>
         <p>The camp reservations are done yearly.</p>
         <ol {...styles_list}>
-          { this.state.events.data.map(event =>
-            <li {...styles_event} key={event.id}>
-            {event.dateStart}
-            <span {...styles_locaiton}>{event.location}</span>
+          {this.state.events.map((event) => {
+            <li {...styles_event} key={event._id}>
+              {event.date}
+              <span {...styles_location}>{event.location}</span>
             </li>
-          ) }
+          })}
+        </ol>
+        <ol {...styles_list}>
           <li {...styles_event}>
             Jan 20, 2017
-            <span {...styles_locaiton}>Camp Ginger Cascades: Rainbow</span>
+            <span {...styles_location}>Camp Ginger Cascades: Rainbow</span>
           </li>
           <li {...styles_event}>
             Mar 3, 2017
-            <span {...styles_locaiton}>Camp Ginger Cascades: Rainbow</span>
+            <span {...styles_location}>Camp Ginger Cascades: Rainbow</span>
           </li>
           <li {...styles_event}>
             Mar 31, 2017
-            <span {...styles_locaiton}>Camp Ginger Cascades: Rainbow</span>
+            <span {...styles_location}>Camp Ginger Cascades: Rainbow</span>
           </li>
           <li {...styles_event}>
             April 28, 2017
-            <span {...styles_locaiton}>Camp Ginger Cascades: Rainbow</span>
+            <span {...styles_location}>Camp Ginger Cascades: Rainbow</span>
           </li>
           <li {...styles_event}>
             May 26, 2017
-            <span {...styles_locaiton}>Camp Ginger Cascades: Rainbow</span>
+            <span {...styles_location}>Camp Ginger Cascades: Rainbow</span>
           </li>
           <li {...styles_event}>
             Aug 11, 2017
-            <span {...styles_locaiton}>Camp Ginger Cascades: Rainbow</span>
+            <span {...styles_location}>Camp Ginger Cascades: Rainbow</span>
           </li>
           <li {...styles_event}>
             Sep 8, 2017
-            <span {...styles_locaiton}>Camp Ginger Cascades: Rainbow</span>
+            <span {...styles_location}>Camp Ginger Cascades: Rainbow</span>
           </li>
           <li {...styles_event}>
             Oct 13, 2017
-            <span {...styles_locaiton}>Camp Ginger Cascades: Rainbow</span>
+            <span {...styles_location}>Camp Ginger Cascades: Rainbow</span>
           </li>
           <li {...styles_event}>
             Nov 10, 2017
-            <span {...styles_locaiton}>Camp Ginger Cascades: Rainbow</span>
+            <span {...styles_location}>Camp Ginger Cascades: Rainbow</span>
           </li>
           <li {...styles_event}>
             Dec 8, 2017
-            <span {...styles_locaiton}>Camp Ginger Cascades: Rainbow</span>
+            <span {...styles_location}>Camp Ginger Cascades: Rainbow</span>
           </li>
         </ol>
       </Article>
