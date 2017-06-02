@@ -51,7 +51,7 @@
     "feathers-nedb": "^2.6.2",
     "feathers-reactive": "^0.4.1",
     "feathers-rest": "^1.7.2",
-    "feathers-socketio": "^1.6.0",
+    "feathers-socketio": "^2.0.0",
     "glamor": "^2.20.25",
     "helmet": "^3.5.0",
     "nedb": "^1.8.0",
