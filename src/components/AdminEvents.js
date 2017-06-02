@@ -15,7 +15,9 @@ import AdminDashboard from './AdminDashboard';
 const socket = io('192.168.1.171:3030');
 const app = feathers()
   .configure(socketio(socket))
-  .configure(reactive(RxJS)); // turns service methods into streams, so .subscribe instead of .then
+  .configure(reactive(RxJS),{
+    idField: '_id'
+  });
 
 const eventService = app.service('events');
 
@@ -26,28 +28,35 @@ export default class AdminEvents extends React.Component {
       events: [],
       id: '',
       date: '',
-      location: ''
+      location: '',
+      newDate: '',
+      newLocation: '',
+      errors: ''
     };
     this.newEvent = this.newEvent.bind(this);
+    this.deselectEvent = this.deselectEvent.bind(this);
     this.selectEvent = this.selectEvent.bind(this);
     this.updateEvent = this.updateEvent.bind(this);
     this.deleteEvent = this.deleteEvent.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.renderViewOrEdit = this.renderViewOrEdit.bind(this);
   }
 
   componentDidMount () {
     this.events = eventService.find({
       query: {
-        $sort: {
-          date: -1
-        },
 /*        date: {
+          $gte: new Date().getFullYear() - 1 + '-01-01'
+        }
+        date: {
           $gte: new Date(Date.now() - 2 * 24*60*60*1000).toJSON() // >= two days ago
-        }*/ // can't get this part to work
+        }*/
       }
-    }).subscribe(
-      events => this.setState({ events: events.data })
+    }).subscribe(events =>
+      this.setState({
+        events: this.state.events.filter(event => !events.data.map(event => event._id).includes(event._id)).concat(events.data)
+      })
     );
   }
 
@@ -56,10 +65,30 @@ export default class AdminEvents extends React.Component {
   }
 
   newEvent () {
+    eventService.create(
+      {
+        date: this.state.newDate,
+        location: this.state.newLocation
+      },
+      (error, event) => {
+        this.setState({
+          id: event._id,
+          date: event.date,
+          location: event.location,
+          newDate: '',
+          newLocation: '',
+          errors: error
+        })
+      }
+    );
+  }
+
+  deselectEvent() {
     this.setState({
       id: '',
       date: '',
-      location: ''
+      location: '',
+      errors: ''
     });
   }
 
@@ -67,54 +96,44 @@ export default class AdminEvents extends React.Component {
     this.setState({
       id: id,
       date: this.state.events.find(event => event._id == id).date,
-      location: this.state.events.find(event => event._id == id).location
+      location: this.state.events.find(event => event._id == id).location,
+      errors: ''
     });
   }
 
   updateEvent (event) {
-    if (this.state.id) {
-      eventService.patch(
-        this.state.id,
-        {
-          date: new Date(event.date),
-          location: event.location
-        },
-        (error, event) => {
-          // todo: show error
-        }
-      );
-    } else {
-      eventService.create(
-        {
-          date: new Date(event.date),
-          location: event.location
-        },
-        (err, event) => {
-          // todo: show error
-          this.setState({
-            id: event._id
-          })
-        }
-      );
-    }
-    // todo: event list post-action fix
+    eventService.patch(
+      event.id,
+      {
+        date: event.date,
+        location: event.location
+      },
+      (error, event) => {
+        this.setState({
+          errors: error
+        })
+      }
+    );
   }
 
-  deleteEvent () {
-    if (this.state.id) {
+  deleteEvent (id) {
+    if (id) {
       eventService.remove(
-        this.state.id,
-        (err, event) => {
+        id,
+        (error, event) => {
           // todo
-          this.setState({
-            id: '',
-            date: '',
-            location: ''
-          })
+          if(!error){
+            this.setState({
+              events: this.state.events.filter(event => event._id != id),
+              id: '',
+              date: '',
+              location: '',
+              errors: ''
+            })
+          }
         }
       );
     }
-    // todo: event list post-remove fix
   }
 
   handleInputChange(e) {
@@ -133,35 +152,52 @@ export default class AdminEvents extends React.Component {
     this.updateEvent(event);
   };
 
-  render () {
-    return (
-      <AdminDashboard>
-        <article>
-          <ol>
-            {
-              this.state.events.map((event, i) => {
-                return (
-                  <li key={i}>
-                    <p>{event.date}</p>
-                    <p>{event.location}</p>
-                    <button type='button' onClick={this.selectEvent.bind(this, event._id)}>Edit</button>
-                  </li>
-                );
-              })
-            }
-          </ol>
-        </article>
-        <main>
-          <button type='button' onClick={this.newEvent}>New Event</button>
-          <form name={'event:' + (this.state.id) ? this.state.id : 'new'} onSubmit={this.handleSubmit}>
+  renderViewOrEdit( event ) {
+    if ( this.state.id === event._id ) {
+      return (
+        <li key={event._id}>
+          <form name={'event-' + (this.state.id)} onSubmit={this.handleSubmit}>
             <label name='date'>Date</label>
-            <input type="date" name='date' onChange={this.handleInputChange} value={this.state.date.toString()} />
+            <input type='date' name='date' onChange={this.handleInputChange} value={this.state.date} />
             <label name='location'>Location</label>
-            <input type="text" name='location' onChange={this.handleInputChange} value={this.state.location} />
+            <input type='text' name='location' onChange={this.handleInputChange} value={this.state.location} />
             <button type='submit' onClick={this.handleSubmit}>Submit</button>
             <button type='button' onClick={this.selectEvent.bind(this, this.state.id)}>Reset</button>
             <button type='button' onClick={this.deleteEvent.bind(this, this.state.id)}>Delete</button>
+            <button type='button' onClick={this.deselectEvent.bind(this)}>Cancel</button>
           </form>
+          <div>
+          {this.state.errors}
+          </div>
+        </li>);
+    } else {
+      return (
+        <li key={event._id}>
+          {`${event.date} at ${ event.location } (${ event.location })`}
+          <button type='button' onClick={this.selectEvent.bind(null, event._id)}>Edit</button>
+        </li>);
+    }
+  }
+
+  render () {
+    return (
+      <AdminDashboard>
+        <form name='event-new' onSubmit={this.newEvent}>
+          <label name='date'>Date</label>
+          <input type='date' name='newDate' onChange={this.handleInputChange} value={this.state.newDate} />
+          <label name='location'>Location</label>
+          <input type='text' name='newLocation' onChange={this.handleInputChange} value={this.state.newLocation} />
+          <button type='button' onClick={this.newEvent}>Add Event</button>
+        </form>
+        <div>
+        {this.state.errors}
+        </div>
+        <main>
+          <ol>
+            {this.state.events.sort(function(a,b) {return (a.date > b.date) ? -1 : ((b.date > a.date) ? 1 : 0);}).map((event) => {
+              return this.renderViewOrEdit(event);
+            })}
+          </ol>
         </main>
       </AdminDashboard>
     );
