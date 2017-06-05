@@ -13,9 +13,11 @@ import reactive from 'feathers-reactive';
 const socket = io('192.168.1.171:3030');
 const app = feathers()
   .configure(socketio(socket))
-  .configure(reactive(RxJS)); // turns service methods into streams, so .subscribe instead of .then
+  .configure(reactive(RxJS),{
+    idField: '_id'
+  });
 
-const events = app.service('events');
+const eventService = app.service('events');
 
 /* Colors From LA
 $maroon: #643335;
@@ -449,21 +451,26 @@ class Schedule extends React.Component {
   }
 
   componentDidMount () {
-    this.events = events.find().subscribe(events => this.setState({ events: events.data }));
+    this.events = eventService.find({
+      query: {
+/*        date: {
+          $gte: new Date().getFullYear() - 1 + '-01-01'
+        }
+        date: {
+          $gte: new Date(Date.now() - 2 * 24*60*60*1000).toJSON() // >= two days ago
+        }*/
+      }
+    }).subscribe(events =>
+      this.setState({
+        events: this.state.events.filter(event => !events.data.map(event => event._id).includes(event._id)).concat(events.data)
+      })
+    );
   }
 
   componentWillUnmount () {
     this.events.unsubscribe();
   }
-/*  componentDidMount () {
-    events.find( {
-      query: {
-        $sort: {
-          dateStart: -1
-        }
-      }
-    }).subscribe(events => this.setState({events}));
-  }*/
+
   render() {
     const styles_header = css({
       fontSize: '2em',
@@ -500,11 +507,12 @@ class Schedule extends React.Component {
         <h1 {...styles_header}>Schedule</h1>
         <p>The camp reservations are done yearly.</p>
         <ol {...styles_list}>
-          {this.state.events.map((event) => {
-            <li {...styles_event} key={event._id}>
-              {event.date}
-              <span {...styles_location}>{event.location}</span>
-            </li>
+          {this.state.events.sort(function(a,b) {return (a.date > b.date) ? -1 : ((b.date > a.date) ? 1 : 0);}).map((event) => {
+            return(
+              <li {...styles_event} key={event._id}>
+                {event.date}
+                <span {...styles_location}>{event.location}</span>
+              </li>)
           })}
         </ol>
         <ol {...styles_list}>

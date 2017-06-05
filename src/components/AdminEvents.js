@@ -44,16 +44,7 @@ export default class AdminEvents extends React.Component {
   }
 
   componentDidMount () {
-    this.events = eventService.find({
-      query: {
-/*        date: {
-          $gte: new Date().getFullYear() - 1 + '-01-01'
-        }
-        date: {
-          $gte: new Date(Date.now() - 2 * 24*60*60*1000).toJSON() // >= two days ago
-        }*/
-      }
-    }).subscribe(events =>
+    this.events = eventService.find().subscribe(events =>
       this.setState({
         events: this.state.events.filter(event => !events.data.map(event => event._id).includes(event._id)).concat(events.data)
       })
@@ -153,9 +144,12 @@ export default class AdminEvents extends React.Component {
   };
 
   renderViewOrEdit( event ) {
+    const styles_item = css({
+      height: 10
+    });
     if ( this.state.id === event._id ) {
       return (
-        <li key={event._id}>
+        <li {...styles_item} key={event._id}>
           <form name={'event-' + (this.state.id)} onSubmit={this.handleSubmit}>
             <label name='date'>Date</label>
             <input type='date' name='date' onChange={this.handleInputChange} value={this.state.date} />
@@ -172,7 +166,7 @@ export default class AdminEvents extends React.Component {
         </li>);
     } else {
       return (
-        <li key={event._id}>
+        <li {...styles_item} key={event._id}>
           {`${event.date} at ${ event.location } (${ event.location })`}
           <button type='button' onClick={this.selectEvent.bind(null, event._id)}>Edit</button>
         </li>);
