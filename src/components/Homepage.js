@@ -83,21 +83,19 @@ const theme = {
 // pure CSS template string
 // HRM tends to fail; requires refresh
 injectGlobal`
-html, body {
+* {
   box-sizing: border-box;
-  width: 100%;
+}
+
+html, body {
   margin: 0;
   padding: 0;
   background-color: ${theme.colors.background};
   color: ${Color(theme.colors.font).mix(Color(theme.colors.background), theme.alpha.primary).hex()};
   color: rgba(${theme.colors.font}, ${theme.alpha.primary});
   font-family: ${theme.font.standard};
-  line-height: 100%;
-}
-@media (max-width: ${theme.breakpoints.s}px) {
-  html, body {
-    font-size: 18px;
-  }
+  line-height: 1.2;
+  font-size: 18px;
 }
 @media (min-width: ${theme.breakpoints.s + 1}px) and (max-width: ${theme.breakpoints.m}px) {
   html, body {
@@ -108,12 +106,6 @@ html, body {
   html, body {
     font-size: 24px;
   }
-}
-
-*,
-*:before,
-*:after {
-  box-sizing: inherit;
 }
 `;
 
@@ -228,9 +220,9 @@ const Cards = styled.div`
 `;
 
 const Card = styled.div`
+  float: left;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .2);
   transition: 0.3s;
-  float: right;
   height: 8em;
   @media (max-width: ${theme.breakpoints.m}px) {
     width: 50%;
@@ -265,8 +257,8 @@ const ScheduledEvents = styled.ol`
   padding: 0;
   margin: 0;
   li {
-    line-height: 2em;
-    padding-left: 0.5em;
+    line-height: 1.2em;
+    padding: 0.5em;
     background: ${Color(theme.colors.secondary).mix(Color('white'), 0.1).hex()};
   }
   li:nth-child(odd) {
@@ -276,9 +268,25 @@ const ScheduledEvents = styled.ol`
     background: ${Color(theme.colors.secondary).mix(Color('white'), 0.3).hex()};
   }
   .location {
-    float: right,
+    display: inline;
     padding-right: ${.5 / .7}em;
     font-size: 0.7em;
+    @media (min-width: ${theme.breakpoints.s + 1}px) and (max-width: ${theme.breakpoints.m}px) {
+      float: right;
+    }
+    @media (min-width: ${theme.breakpoints.l + 1}px) {
+      float: right;
+    }
+  }
+  .location:before {
+    @media (max-width: ${theme.breakpoints.s}px) {
+      content: '';
+      display: block;
+    }
+    @media (min-width: ${theme.breakpoints.m + 1}px) and (max-width: ${theme.breakpoints.l}px) {
+      content: '';
+      display: block;
+    }
   }
 `;
 
