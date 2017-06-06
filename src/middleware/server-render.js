@@ -1,7 +1,7 @@
 import React from 'react';
 import { renderToString } from 'react-dom/server';
 import { StaticRouter, matchPath } from 'react-router';
-import { renderStatic } from 'glamor/server';
+import { ServerStyleSheet } from 'styled-components';
 
 import App from '../components/App';
 import routes from '../routes';
@@ -24,11 +24,13 @@ module.exports = function () {
       return;
     }
     const context = {};
-    let { html, css, ids } = renderStatic(() => renderToString(
+    const sheet = new ServerStyleSheet();
+    const html = renderToString(sheet.collectStyles(
       <StaticRouter location={req.url} context={context}>
         <App />
-      </StaticRouter>
-    ));
+      </StaticRouter>)
+    );
+    const css = sheet.getStyleTags();
 
     // context updates if redirected
     if (context.url) {
@@ -41,9 +43,7 @@ module.exports = function () {
             <meta charset="utf-8" />
             <meta name="viewport" content="width=device-width,initial-scale=1">
             <title>Vanguard LARP</title>
-            <style type="text/css" id="server-side-styles">
-              ${css}
-            </style>
+            ${css}
           </head>
           <body>
             <div id="react-app">${html}</div>

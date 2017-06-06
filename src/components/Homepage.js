@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { css } from 'glamor';
+
+import styled, { injectGlobal } from 'styled-components';
 import Color from 'color';
 
 import io from 'socket.io-client';
@@ -81,7 +82,7 @@ const theme = {
 
 // pure CSS template string
 // HRM tends to fail; requires refresh
-css.insert(`
+injectGlobal`
 html, body {
   box-sizing: border-box;
   width: 100%;
@@ -114,126 +115,82 @@ html, body {
 *:after {
   box-sizing: inherit;
 }
-`);
+`;
 
-const Header = (props) => {
-  const styles = css({
-    fontSize: '1.5rem',
-    background: [
-      theme.colors.secondary,
-      `linear-gradient(0deg, white, ${Color(theme.colors.secondary).mix(Color('black')).hex()})`
-    ],
-    width: '100%',
-    paddingTop: '20px',
-    paddingBottom: '100px',
-  });
+const H1 = styled.h1`
+  font-size: 2em;
+  line-height: 1em;
+  font-family: ${theme.font.trebuchet};
+`;
 
-  const logo = css({
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center',
-    backgroundImage: 'url(logo.svg)',
-    backgroundSize: 'contain',
-    [`@media (max-width: ${theme.breakpoints.s}px)`]: {
-      height: '240px'
-    },
-    [`@media (min-width: ${theme.breakpoints.s + 1}px) and (max-width: ${theme.breakpoints.m}px)`]: {
-      height: '300px'
-    },
-    [`@media (min-width: ${theme.breakpoints.m + 1}px)`]: {
-      height: '360px'
-    }
-  });
+const Header = styled.header`
+  font-size: 1.5rem;
+  background: ${theme.colors.secondary};
+  background: linear-gradient(0deg, white, ${Color(theme.colors.secondary).mix(Color('black')).hex()});
+  width: 100%;
+  padding-top: 20px;
+  padding-bottom: 100px;
+`;
 
-  return (
-    <header {...styles}>
-      <div {...logo}>
-      </div>
-    </header>
-  );
-}
+const HeaderImage = styled.div`
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url(logo.svg);
+  background-size: contain;
+  @media (max-width: ${theme.breakpoints.s}px) {
+    height: 240px;
+  }
+  @media (min-width: ${theme.breakpoints.s + 1}px) and (max-width: ${theme.breakpoints.m}px) {
+    height: 300px;
+  }
+  @media (min-width: ${theme.breakpoints.m + 1}px) {
+    height: 360px;
+  }
+`;
 
-const Footer = (props) => {
-  const styles = css({
-    float: 'left',
-    position: 'relative',
-    fontSize: '0.6rem',
-    lineHeight: '1em',
-    width: '100%',
-    height: '100px',
-    background: [
-      theme.colors.secondary,
-      `linear-gradient(180deg, white, ${Color(theme.colors.secondary).mix(Color('black')).hex()})`
-    ],
-    '& p': {
-      position: 'absolute',
-      right: '5%',
-      bottom: '10px'
-    }
-  });
+const Footer = styled.footer`
+  float: left;
+  position: relative;
+  font-size: 0.6rem;
+  line-height: 1em;
+  width: 100%;
+  height: 100px;
+  background: ${theme.colors.secondary};
+  background: linear-gradient(180deg, white, ${Color(theme.colors.secondary).mix(Color('black')).hex()});
+  p {
+    position: absolute;
+    right: 5%;
+    bottom: 10px;
+  }
+`;
 
-  return (
-    <footer {...styles}>
-      <p>©2015 RedTape Productions</p>
-    </footer>
-  );
-}
+const Navigation = styled.nav`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  .icon {
+    margin: 0px;
+    padding: 0px;
+  }
+`;
 
-const Navigation = (props) => {
-  const styles = css({
-    position: 'absolute',
-    top: '20px',
-    right: '20px',
-    '& .icon': {
-      margin: '0px',
-      padding: '0px'
-    }
-  });
+const Main = styled.main`
+  position: relative;
+  margin: auto;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  max-width: ${theme.breakpoints.l}px;
+`;
 
-  return (
-    <div {...styles}>
-      {props.children}
-    </div>
-  );
-}
-
-const Main = (props) => {
-  const styles = css({
-    position: 'relative',
-    margin: 'auto',
-    paddingLeft: '2rem',
-    paddingRight: '2rem',
-    maxWidth: `${theme.breakpoints.l}px`,
-    ':after': {
-      content: ' ',
-      display: 'table',
-      clear: 'both'
-    }
-  });
-
-  return (
-    <main {...styles}>
-      {props.children}
-    </main>
-  );
-}
-
-const Article = (props) => {
-  const styles = css({
-    position: 'relative',
-    [`@media (min-width: ${theme.breakpoints.m + 1}px)`]: {
-      width: props.splitView ? '40%' : '90%',
-      float: 'left',
-      marginLeft: '5%',
-      marginRight: '5%'
-    }
-  });
-
-  return (
-    <article {...styles}>
-      {props.children}
-    </article>
-  );
-}
+const Article = styled.article`
+  position: relative;
+  @media (min-width: ${theme.breakpoints.m + 1}px) {
+    width: ${props => props.splitView ? '40%' : '90%'};
+    float: left;
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+`;
 
 const IconCharacter = (props) => {
   return (
@@ -260,186 +217,70 @@ const IconFacebook = (props) => {
   );
 }
 
-const Cards = (props) => {
-  const styles = css({
-    float: 'right',
-    marginBottom: '1em',
-    [`@media (max-width: ${theme.breakpoints.m}px)`]: {
-      width: '100%'
-    },
-    [`@media (min-width: ${theme.breakpoints.m + 1}px)`]: {
-      marginLeft: '1em'
-    }
-  });
+const Cards = styled.div`
+  float: right;
+  margin-bottom: 1em;
+    margin-left: 1em;
+  @media (max-width: ${theme.breakpoints.m}px) {
+    width: 100%;
+    margin-left: 0;
+  }
+`;
 
-  return (
-    <div {...styles}>
-      {props.children}
-    </div>
-  );
-}
+const Card = styled.div`
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .2);
+  transition: 0.3s;
+  float: right;
+  height: 8em;
+  @media (max-width: ${theme.breakpoints.m}px) {
+    width: 50%;
+  }
+  @media (min-width: ${theme.breakpoints.m + 1}px) {
+    width: 8em;
+  }
+  svg {
+    display: block;
+    margin: 0 auto;
+    height: 80%;
+  }
+  a {
+    color: inherit;
+    text-decoration: inherit;
+  }
+  p {
+    width: 100%;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    margin: 0px;
+    text-align: center;
+    font-size: .8em;
+  }
+  :hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  }
+`;
 
-const Card = (props) => {
-  const style_div = css({
-    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, .2)',
-    transition: '0.3s',
-    float: 'right',
-    height: '8em',
-    [`@media (max-width: ${theme.breakpoints.m}px)`]: {
-      width: '50%'
-    },
-    [`@media (min-width: ${theme.breakpoints.m + 1}px)`]: {
-      width: '8em'
-    },
-    '& svg': {
-      display: 'block',
-      margin: '0 auto',
-      height: '80%'
-    },
-    '& a': {
-      color: 'inherit',
-      textDecoration: 'inherit'
-    },
-    '& p': {
-      width: '100%',
-      paddingLeft: '0.5em',
-      paddingRight: '0.5em',
-      margin: '0px',
-      textAlign: 'center',
-      fontSize: '.8em'
-    },
-    ':hover': {
-      boxShadow: '0 8px 16px 0 rgba(0,0,0,0.2)'
-    }
-  });
-
-  return (
-    <div {...style_div}>
-      <a target={props.target} href={props.link}>
-        {props.children}
-      </a>
-    </div>
-  );
-}
-
-const Welcome = (props) => {
-  const styles = css({
-    fontSize: '2em',
-    lineHeight: '1em',
-    fontFamily: theme.font.trebuchet
-  });
-
-  return (
-    <Article splitView>
-      <h1 {...styles}>Welcome!</h1>
-      <p>
-        We are a boffer steampunk fantasy fusion game geared towards
-        making the player feel epic from the start. That seems like a mouthful, but in truth,
-        you get to be what you want to be, in whatever way you want to be. Our game mechanics
-        use a classless system allowing any player to take any skill, provided they have the
-        requirements. You want to throw fireballs <em>and</em> be good with a sword? No problem!
-      </p>
-      <p>
-        A Steampunk setting means a lot of things to a lot of people; to us it means you can
-        dress in a lot of cool ways, and we can mix our fantasy stories with an Old West feel
-        or Victorian zombie hunting stories. A broad scope is allowed for any given character
-        to be unique.
-      </p>
-      <p>
-        The game usually takes place at beautiful Camp Ginger Cascades in Lenior, NC. We have
-        electricity in all cabins, heaters are provided during the winter, showers,
-        and a kitchen in each camp area. You can bring your own food, or buy in on meals
-        (check the Facebook event for details).
-      </p>
-    </Article>
-  );
-}
-
-const Story = (props) => {
-  const styles = css({
-    fontSize: '2em',
-    lineHeight: '1em',
-    fontFamily: theme.font.trebuchet
-  });
-
-  return (
-    <Article splitView>
-      <h1 {...styles}>The Story</h1>
-      <p>
-        One thousand years ago, the beings now considered myth vanished. Technology has
-        grown, and the world has shrunk as travel has expanded beyond foot and hoof. A
-        strangely glowing blue stone mined from the earth serves as the primary power source.
-        It can be used to move an airship, power machinery, or even make a simple
-        sword into a mechanical wonder. Each nation has an ever-growing demand for more.
-      </p>
-      <p>
-        To aid in this, the Faith--the largest landowner in the Empire--has for the first
-        time in over 500 years opened up some of it's land to be mined - the Dragon’s
-        Spine Mountains. The main base for mining is the town of Jacob’s Spire. It is close to
-        Hadrian's Wall - a great wall separating the Empire from the Ill'Andar Nation.
-        Recently the town has been plagued by strange creatures and events the likes of which
-        have not been seen in a millenium.
-      </p>
-    </Article>
-  );
-}
-
-const Rules = (props) => {
-  const styles = css({
-    fontSize: '2em',
-    lineHeight: '1em',
-    fontFamily: theme.font.trebuchet
-  });
-
-  return (
-    <Article>
-      <h1 {...styles}>Game Rules</h1>
-      <Cards>
-        <Card target="_blank" link="character-sheet.pdf">
-          <IconCharacter />
-          <p>Character Sheet</p>
-        </Card>
-        <Card target = "_blank" link="https://docs.google.com/document/d/1qhpAflKwudtAlP0mCH43gbcQifZwSJe7aII-nm1PzeI/edit">
-          <IconGoogleDoc />
-          <p>Rules Document</p>
-        </Card>
-      </Cards>
-      <p>
-        The game's rules are maintained as Google Documents. The rules can be a bit
-        intimidating, but people pick them up fairly quickly after a game or two. We use a
-        one-page character sheet at game which lists all the common abilities. Printed
-        rulebooks are availble at game. Most importantly, if an ability is used on you, it's
-        up to the user to explain it if you ask what it does.
-      </p>
-    </Article>
-  );
-}
-
-const Contact = (props) => {
-  const styles = css({
-    fontSize: '2em',
-    lineHeight: '1em',
-    fontFamily: theme.font.trebuchet
-  });
-
-  return (
-    <Article>
-      <h1 {...styles}>Contact Us</h1>
-      <Cards>
-        <Card target="_blank" link="https://www.facebook.com/groups/544631092325451/">
-          <IconFacebook />
-          <p>Facebook Group</p>
-        </Card>
-      </Cards>
-      <p>
-        Join us on Facebook! Ask any questions you have there and get answers from both
-        players and personel. We've chosen to embrace Facebook as our communication medium
-        rather than build our own. Most everyone has an account already, and players have
-        appreciated the convenience.
-      </p>
-    </Article>
-  );
-}
+const ScheduledEvents = styled.ol`
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  li {
+    line-height: 2em;
+    padding-left: 0.5em;
+    background: ${Color(theme.colors.secondary).mix(Color('white'), 0.1).hex()};
+  }
+  li:nth-child(odd) {
+    background: ${Color(theme.colors.secondary).mix(Color('white'), 0.2).hex()};
+  }
+  li:hover {
+    background: ${Color(theme.colors.secondary).mix(Color('white'), 0.3).hex()};
+  }
+  .location {
+    float: right,
+    padding-right: ${.5 / .7}em;
+    font-size: 0.7em;
+  }
+`;
 
 class Schedule extends React.Component {
   constructor(props) {
@@ -472,148 +313,187 @@ class Schedule extends React.Component {
   }
 
   render() {
-    const styles_header = css({
-      fontSize: '2em',
-      lineHeight: '1em',
-      fontFamily: theme.font.trebuchet
-    });
-
-    const styles_list = css({
-      listStyleType: 'none',
-      padding: 0,
-      margin: 0
-    });
-
-    const styles_event = css({
-      position: 'relative',
-      lineHeight: '2em',
-      paddingLeft: '.5em',
-      ':hover': {
-        backgroundColor: '#cccccc'
-      }
-    });
-
-    const styles_location = css({
-      float: 'right',
-      paddingRight: `${.5 / .7}em`,
-      fontSize: '.7em'
-    });
-
-    if(!this.state){
-      return <Article splitView><h1 {...styles_header}>Schedule</h1>Loading...</Article>;
+    if(!this.state.events){
+      return <Article splitView><H1>Schedule</H1>Loading...</Article>;
     }
     return (
-      <Article splitView>
-        <h1 {...styles_header}>Schedule</h1>
-        <p>The camp reservations are done yearly.</p>
-        <ol {...styles_list}>
-          {this.state.events.sort(function(a,b) {return (a.date > b.date) ? -1 : ((b.date > a.date) ? 1 : 0);}).map((event) => {
-            return(
-              <li {...styles_event} key={event._id}>
-                {event.date}
-                <span {...styles_location}>{event.location}</span>
-              </li>)
-          })}
-        </ol>
-        <ol {...styles_list}>
-          <li {...styles_event}>
-            Jan 20, 2017
-            <span {...styles_location}>Camp Ginger Cascades: Rainbow</span>
-          </li>
-          <li {...styles_event}>
-            Mar 3, 2017
-            <span {...styles_location}>Camp Ginger Cascades: Rainbow</span>
-          </li>
-          <li {...styles_event}>
-            Mar 31, 2017
-            <span {...styles_location}>Camp Ginger Cascades: Rainbow</span>
-          </li>
-          <li {...styles_event}>
-            April 28, 2017
-            <span {...styles_location}>Camp Ginger Cascades: Rainbow</span>
-          </li>
-          <li {...styles_event}>
-            May 26, 2017
-            <span {...styles_location}>Camp Ginger Cascades: Rainbow</span>
-          </li>
-          <li {...styles_event}>
-            Aug 11, 2017
-            <span {...styles_location}>Camp Ginger Cascades: Rainbow</span>
-          </li>
-          <li {...styles_event}>
-            Sep 8, 2017
-            <span {...styles_location}>Camp Ginger Cascades: Rainbow</span>
-          </li>
-          <li {...styles_event}>
-            Oct 13, 2017
-            <span {...styles_location}>Camp Ginger Cascades: Rainbow</span>
-          </li>
-          <li {...styles_event}>
-            Nov 10, 2017
-            <span {...styles_location}>Camp Ginger Cascades: Rainbow</span>
-          </li>
-          <li {...styles_event}>
-            Dec 8, 2017
-            <span {...styles_location}>Camp Ginger Cascades: Rainbow</span>
-          </li>
-        </ol>
-      </Article>
+      <ScheduledEvents>
+        {this.state.events.sort(function(a,b) {return (a.date > b.date) ? -1 : ((b.date > a.date) ? 1 : 0);}).map((event) => {
+          return(
+            <li key={event._id}>
+              {event.date}
+              <span className='location'>{event.location}</span>
+            </li>)
+        })}
+        <li>
+          Jan 20, 2017
+          <span className='location'>Camp Ginger Cascades: Rainbow</span>
+        </li>
+        <li>
+          Mar 3, 2017
+          <span className='location'>Camp Ginger Cascades: Rainbow</span>
+        </li>
+        <li>
+          Mar 31, 2017
+          <span className='location'>Camp Ginger Cascades: Rainbow</span>
+        </li>
+        <li>
+          April 28, 2017
+          <span className='location'>Camp Ginger Cascades: Rainbow</span>
+        </li>
+        <li>
+          May 26, 2017
+          <span className='location'>Camp Ginger Cascades: Rainbow</span>
+        </li>
+        <li>
+          Aug 11, 2017
+          <span className='location'>Camp Ginger Cascades: Rainbow</span>
+        </li>
+        <li>
+          Sep 8, 2017
+          <span className='location'>Camp Ginger Cascades: Rainbow</span>
+        </li>
+        <li>
+          Oct 13, 2017
+          <span className='location'>Camp Ginger Cascades: Rainbow</span>
+        </li>
+        <li>
+          Nov 10, 2017
+          <span className='location'>Camp Ginger Cascades: Rainbow</span>
+        </li>
+        <li>
+          Dec 8, 2017
+          <span className='location'>Camp Ginger Cascades: Rainbow</span>
+        </li>
+      </ScheduledEvents>
     );
   }
-}
-
-const Location = (props) => {
-  const styles = css({
-    fontSize: '2em',
-    lineHeight: '1em',
-    fontFamily: theme.font.trebuchet
-  });
-
-  return (
-    <Article splitView>
-      <h1 {...styles}>Location</h1>
-      <p className='location-address'>2090 Scout Rd, Lenoir, North Carolina 28645</p>
-      <div className='location-detail'>
-        <p>
-          Note that Scout Road turns into a gravel road at the camp entrance,
-          while the paved road curves left. See <a target="_blank" href='https://www.google.com/maps/@35.9480276,-81.3864486,265m/data=!3m1!1e3?hl=en-US'>here</a> for a visual.
-        </p>
-        <p>
-          After the entrance, keep going until you see a fork in the road and turn left.
-          Parking is on the right after a short distance, but to unload your vehicles continue
-          along the left, at which point you are on a one-way road that will eventually
-          take you back to the previous fork and the parking lot.
-        </p>
-        <p>
-          Drive slowly. The road is narrow, fairly steep, and weather worn.
-        </p>
-        <p>
-          Mushroom is the first camp area. Rainbow is the second.
-          After Rainbow there is an eventual intersection with
-          Hilltop on the right and Rocky Ridge on the left.
-          Going straight will pass though camp HQ and complete the circle.
-        </p>
-      </div>
-    </Article>
-  );
 }
 
 export default class Homepage extends React.Component {
   render() {
     return (
       <div>
-        <Header />
+        <Header>
+          <HeaderImage />
+        </Header>
         <Main>
-          <Welcome />
-          <Story />
-          <Rules />
-          <Contact />
-          <Schedule />
-          <Location />
+          <Article splitView>
+            <H1>Welcome!</H1>
+            <p>
+              We are a boffer steampunk fantasy fusion game geared towards
+              making the player feel epic from the start. That seems like a mouthful, but in truth,
+              you get to be what you want to be, in whatever way you want to be. Our game mechanics
+              use a classless system allowing any player to take any skill, provided they have the
+              requirements. You want to throw fireballs <em>and</em> be good with a sword? No problem!
+            </p>
+            <p>
+              A Steampunk setting means a lot of things to a lot of people; to us it means you can
+              dress in a lot of cool ways, and we can mix our fantasy stories with an Old West feel
+              or Victorian zombie hunting stories. A broad scope is allowed for any given character
+              to be unique.
+            </p>
+            <p>
+              The game usually takes place at beautiful Camp Ginger Cascades in Lenior, NC. We have
+              electricity in all cabins, heaters are provided during the winter, showers,
+              and a kitchen in each camp area. You can bring your own food, or buy in on meals
+              (check the Facebook event for details).
+            </p>
+          </Article>
+          <Article splitView>
+            <H1>The Story</H1>
+            <p>
+              One thousand years ago, the beings now considered myth vanished. Technology has
+              grown, and the world has shrunk as travel has expanded beyond foot and hoof. A
+              strangely glowing blue stone mined from the earth serves as the primary power source.
+              It can be used to move an airship, power machinery, or even make a simple
+              sword into a mechanical wonder. Each nation has an ever-growing demand for more.
+            </p>
+            <p>
+              To aid in this, the Faith--the largest landowner in the Empire--has for the first
+              time in over 500 years opened up some of it's land to be mined - the Dragon’s
+              Spine Mountains. The main base for mining is the town of Jacob’s Spire. It is close to
+              Hadrian's Wall - a great wall separating the Empire from the Ill'Andar Nation.
+              Recently the town has been plagued by strange creatures and events the likes of which
+              have not been seen in a millenium.
+            </p>
+          </Article>
+          <Article>
+            <H1>Game Rules</H1>
+            <Cards>
+              <Card>
+                <a target='_blank' href='character-sheet.pdf'>
+                  <IconCharacter />
+                  <p>Character Sheet</p>
+                </a>
+              </Card>
+              <Card>
+                <a target='_blank' href='https://docs.google.com/document/d/1qhpAflKwudtAlP0mCH43gbcQifZwSJe7aII-nm1PzeI/edit'>
+                  <IconGoogleDoc />
+                  <p>Rules Document</p>
+                </a>
+              </Card>
+            </Cards>
+            <p>
+              The game's rules are maintained as Google Documents. The rules can be a bit
+              intimidating, but people pick them up fairly quickly after a game or two. We use a
+              one-page character sheet at game which lists all the common abilities. Printed
+              rulebooks are availble at game. Most importantly, if an ability is used on you, it's
+              up to the user to explain it if you ask what it does.
+            </p>
+          </Article>
+          <Article>
+            <H1>Contact Us</H1>
+            <Cards>
+              <Card>
+                <a target='_blank' href='https://www.facebook.com/groups/544631092325451/'>
+                  <IconFacebook />
+                  <p>Facebook Group</p>
+                </a>
+              </Card>
+            </Cards>
+            <p>
+              Join us on Facebook! Ask any questions you have there and get answers from both
+              players and personel. We've chosen to embrace Facebook as our communication medium
+              rather than build our own. Most everyone has an account already, and players have
+              appreciated the convenience.
+            </p>
+          </Article>
+          <Article splitView>
+            <H1>Schedule</H1>
+            <p>The camp reservations are done yearly.</p>
+            <Schedule />
+          </Article>
+          <Article splitView>
+            <H1>Location</H1>
+            <p className='location-address'>2090 Scout Rd, Lenoir, North Carolina 28645</p>
+            <div className='location-detail'>
+              <p>
+                Note that Scout Road turns into a gravel road at the camp entrance,
+                while the paved road curves left. See <a target="_blank" href='https://www.google.com/maps/@35.9480276,-81.3864486,265m/data=!3m1!1e3?hl=en-US'>here</a> for a visual.
+              </p>
+              <p>
+                After the entrance, keep going until you see a fork in the road and turn left.
+                Parking is on the right after a short distance, but to unload your vehicles continue
+                along the left, at which point you are on a one-way road that will eventually
+                take you back to the previous fork and the parking lot.
+              </p>
+              <p>
+                Drive slowly. The road is narrow, fairly steep, and weather worn.
+              </p>
+              <p>
+                Mushroom is the first camp area. Rainbow is the second.
+                After Rainbow there is an eventual intersection with
+                Hilltop on the right and Rocky Ridge on the left.
+                Going straight will pass though camp HQ and complete the circle.
+              </p>
+            </div>
+          </Article>
         </Main>
-        <Navigation>
-        </Navigation>
-        <Footer />
+        <Navigation />
+        <Footer>
+          <p>©2015 RedTape Productions</p>
+        </Footer>
       </div>
     );
   }

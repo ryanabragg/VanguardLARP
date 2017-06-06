@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { css } from 'glamor';
+
+import styled, { injectGlobal } from 'styled-components';
 import Color from 'color';
 
 import io from 'socket.io-client';
@@ -144,12 +145,9 @@ export default class AdminEvents extends React.Component {
   };
 
   renderViewOrEdit( event ) {
-    const styles_item = css({
-      height: 10
-    });
     if ( this.state.id === event._id ) {
       return (
-        <li {...styles_item} key={event._id}>
+        <li key={event._id}>
           <form name={'event-' + (this.state.id)} onSubmit={this.handleSubmit}>
             <label name='date'>Date</label>
             <input type='date' name='date' onChange={this.handleInputChange} value={this.state.date} />
@@ -166,7 +164,7 @@ export default class AdminEvents extends React.Component {
         </li>);
     } else {
       return (
-        <li {...styles_item} key={event._id}>
+        <li key={event._id}>
           {`${event.date} at ${ event.location } (${ event.location })`}
           <button type='button' onClick={this.selectEvent.bind(null, event._id)}>Edit</button>
         </li>);

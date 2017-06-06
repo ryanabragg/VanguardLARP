@@ -20,12 +20,7 @@ window.onload = () => {
       <HotLoader>
         <App/>
       </HotLoader>,
-    document.getElementById('react-app'),
-    () => {
-      // We don't need the static css once we have launched the application.
-      const ssStyles = document.getElementById('server-side-styles');
-      ssStyles.parentNode.removeChild(ssStyles);
-    }
+    document.getElementById('react-app')
   );
 };
 
