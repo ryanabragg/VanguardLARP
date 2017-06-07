@@ -333,46 +333,6 @@ class Schedule extends React.Component {
               <span className='location'>{event.location}</span>
             </li>)
         })}
-        <li>
-          Jan 20, 2017
-          <span className='location'>Camp Ginger Cascades: Rainbow</span>
-        </li>
-        <li>
-          Mar 3, 2017
-          <span className='location'>Camp Ginger Cascades: Rainbow</span>
-        </li>
-        <li>
-          Mar 31, 2017
-          <span className='location'>Camp Ginger Cascades: Rainbow</span>
-        </li>
-        <li>
-          April 28, 2017
-          <span className='location'>Camp Ginger Cascades: Rainbow</span>
-        </li>
-        <li>
-          May 26, 2017
-          <span className='location'>Camp Ginger Cascades: Rainbow</span>
-        </li>
-        <li>
-          Aug 11, 2017
-          <span className='location'>Camp Ginger Cascades: Rainbow</span>
-        </li>
-        <li>
-          Sep 8, 2017
-          <span className='location'>Camp Ginger Cascades: Rainbow</span>
-        </li>
-        <li>
-          Oct 13, 2017
-          <span className='location'>Camp Ginger Cascades: Rainbow</span>
-        </li>
-        <li>
-          Nov 10, 2017
-          <span className='location'>Camp Ginger Cascades: Rainbow</span>
-        </li>
-        <li>
-          Dec 8, 2017
-          <span className='location'>Camp Ginger Cascades: Rainbow</span>
-        </li>
       </ScheduledEvents>
     );
   }
