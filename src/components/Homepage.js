@@ -1,265 +1,25 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import styled, { ThemeProvider } from 'styled-components';
-import Color from 'color';
+import { ThemeProvider } from 'styled-components';
 
-import io from 'socket.io-client';
-import feathers from 'feathers/client';
-import socketio from 'feathers-socketio/client';
+import IconCharacter from './IconCharacter';
+import IconFacebook from './IconFacebook';
+import IconGoogleDoc from './IconGoogleDoc';
 
-import RxJS from 'rxjs';
-import reactive from 'feathers-reactive';
+import Events from './Home/Events';
+
+import Article from './Home/styled/Article';
+import Card from './Home/styled/Card';
+import Cards from './Home/styled/Cards';
+import Footer from './Home/styled/Footer';
+import H1 from './Home/styled/H1';
+import Header from './Home/styled/Header';
+import HeaderImage from './Home/styled/HeaderImage';
+import Main from './Home/styled/Main';
+import Navigation from './Home/styled/Navigation';
 
 import theme from './theme';
-
-const socket = io('192.168.1.171:3030');
-const app = feathers()
-  .configure(socketio(socket))
-  .configure(reactive(RxJS),{
-    idField: '_id'
-  });
-
-const eventService = app.service('events');
-
-const H1 = styled.h1`
-  font-size: 2em;
-  line-height: 1em;
-  font-family: ${theme.font.trebuchet};
-`;
-
-const Header = styled.header`
-  background: ${theme.colors.secondary};
-  background: linear-gradient(0deg, white, ${Color(theme.colors.secondary).mix(Color('black')).hex()});
-  width: 100%;
-  padding-top: 20px;
-  padding-bottom: 100px;
-`;
-
-const HeaderImage = styled.div`
-  background-repeat: no-repeat;
-  background-position: center;
-  background-image: url(logo.svg);
-  background-size: contain;
-  @media (max-width: ${theme.breakpoints.s}px) {
-    height: 240px;
-  }
-  @media (min-width: ${theme.breakpoints.s + 1}px) and (max-width: ${theme.breakpoints.m}px) {
-    height: 300px;
-  }
-  @media (min-width: ${theme.breakpoints.m + 1}px) {
-    height: 360px;
-  }
-`;
-
-const Footer = styled.footer`
-  float: left;
-  position: relative;
-  font-size: 0.8em;
-  line-height: 1em;
-  width: 100%;
-  height: 100px;
-  background: ${theme.colors.secondary};
-  background: linear-gradient(180deg, white, ${Color(theme.colors.secondary).mix(Color('black')).hex()});
-  p {
-    position: absolute;
-    right: 5%;
-    bottom: 10px;
-  }
-`;
-
-const Navigation = styled.nav`
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  .icon {
-    margin: 0px;
-    padding: 0px;
-  }
-`;
-
-const Main = styled.main`
-  position: relative;
-  margin: auto;
-  padding-left: 2em;
-  padding-right: 2em;
-  max-width: ${theme.breakpoints.l}px;
-  color: ${Color(theme.colors.font).mix(Color(theme.colors.background), theme.alpha.primary).hex()};
-  color: rgba(${theme.colors.font}, ${theme.alpha.primary});
-  font-family: ${theme.font.standard};
-  line-height: 1.2;
-  font-size: 18px;
-  @media (min-width: ${theme.breakpoints.s + 1}px) and (max-width: ${theme.breakpoints.m}px) {
-    font-size: 20px;
-  }
-  @media (min-width: ${theme.breakpoints.m + 1}px) {
-    font-size: 24px;
-  }
-`;
-
-const Article = styled.article`
-  position: relative;
-  @media (min-width: ${theme.breakpoints.m + 1}px) {
-    width: ${props => props.splitView ? '40%' : '90%'};
-    float: left;
-    margin-left: 5%;
-    margin-right: 5%;
-  }
-`;
-
-const IconCharacter = (props) => {
-  return (
-    <svg width={props.width} height={props.height} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path d="M3 5v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2H5c-1.11 0-2 .9-2 2zm12 4c0 1.66-1.34 3-3 3s-3-1.34-3-3 1.34-3 3-3 3 1.34 3 3zm-9 8c0-2 4-3.1 6-3.1s6 1.1 6 3.1v1H6v-1z" fill="#607D8B"/>
-      <path d="M0 0h24v24H0z" fill="none"/>
-    </svg>
-  );
-}
-
-const IconGoogleDoc = (props) => {
-  return (
-    <svg width={props.width} height={props.height} viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
-      <path d="M41.707,13.793l-11.5-11.5C30.02,2.105,29.766,2,29.5,2H11.491C9.566,2,8,3.561,8,5.479v38.422C8,46.161,9.845,48,12.113,48 h25.774C40.155,48,42,46.161,42,43.901V14.5C42,14.235,41.895,13.98,41.707,13.793z M17,37c-0.552,0-1-0.448-1-1 c0-0.552,0.448-1,1-1s1,0.448,1,1C18,36.552,17.552,37,17,37z M17,32c-0.552,0-1-0.448-1-1c0-0.552,0.448-1,1-1s1,0.448,1,1 C18,31.552,17.552,32,17,32z M17,27c-0.552,0-1-0.448-1-1c0-0.552,0.448-1,1-1s1,0.448,1,1C18,26.552,17.552,27,17,27z M33,37H21v-2 h12V37z M33,32H21v-2h12V32z M33,27H21v-2h12V27z M31.667,14C30.748,14,30,13.252,30,12.333V4.914L39.086,14H31.667z" fill="#2196F3"></path>
-    </svg>
-  );
-}
-
-const IconFacebook = (props) => {
-  return (
-    <svg width={props.width} height={props.height} viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
-      <path d="M1579 128q35 0 60 25t25 60v1366q0 35-25 60t-60 25h-391v-595h199l30-232h-229v-148q0-56 23.5-84t91.5-28l122-1v-207q-63-9-178-9-136 0-217.5 80t-81.5 226v171h-200v232h200v595h-735q-35 0-60-25t-25-60v-1366q0-35 25-60t60-25h1366z" fill="#3B5998"/>
-    </svg>
-  );
-}
-
-const Cards = styled.div`
-  float: right;
-  margin-bottom: 1em;
-    margin-left: 1em;
-  @media (max-width: ${theme.breakpoints.m}px) {
-    width: 100%;
-    margin-left: 0;
-  }
-`;
-
-const Card = styled.div`
-  float: left;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .2);
-  transition: 0.3s;
-  height: 8em;
-  @media (max-width: ${theme.breakpoints.m}px) {
-    width: 50%;
-  }
-  @media (min-width: ${theme.breakpoints.m + 1}px) {
-    width: 8em;
-  }
-  svg {
-    display: block;
-    margin: 0 auto;
-    height: 80%;
-  }
-  a {
-    color: inherit;
-    text-decoration: inherit;
-  }
-  p {
-    width: 100%;
-    padding-left: 0.5em;
-    padding-right: 0.5em;
-    margin: 0px;
-    text-align: center;
-    font-size: .8em;
-  }
-  :hover {
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-  }
-`;
-
-const ScheduledEvents = styled.ol`
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  li {
-    line-height: 1.2em;
-    padding: 0.5em;
-    background: ${Color(theme.colors.secondary).mix(Color('white'), 0.1).hex()};
-  }
-  li:nth-child(odd) {
-    background: ${Color(theme.colors.secondary).mix(Color('white'), 0.2).hex()};
-  }
-  li:hover {
-    background: ${Color(theme.colors.secondary).mix(Color('white'), 0.3).hex()};
-  }
-  .location {
-    display: inline;
-    padding-right: ${.5 / .7}em;
-    font-size: 0.7em;
-    @media (min-width: ${theme.breakpoints.s + 1}px) and (max-width: ${theme.breakpoints.m}px) {
-      float: right;
-    }
-    @media (min-width: ${theme.breakpoints.l + 1}px) {
-      float: right;
-    }
-  }
-  .location:before {
-    @media (max-width: ${theme.breakpoints.s}px) {
-      content: '';
-      display: block;
-    }
-    @media (min-width: ${theme.breakpoints.m + 1}px) and (max-width: ${theme.breakpoints.l}px) {
-      content: '';
-      display: block;
-    }
-  }
-`;
-
-class Schedule extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      events: [],
-      next: ''
-    };
-  }
-
-  componentDidMount () {
-    this.events = eventService.find({
-      query: {
-/*        date: {
-          $gte: new Date().getFullYear() - 1 + '-01-01'
-        }
-        date: {
-          $gte: new Date(Date.now() - 2 * 24*60*60*1000).toJSON() // >= two days ago
-        }*/
-      }
-    }).subscribe(events =>
-      this.setState({
-        events: this.state.events.filter(event => !events.data.map(event => event._id).includes(event._id)).concat(events.data)
-      })
-    );
-  }
-
-  componentWillUnmount () {
-    this.events.unsubscribe();
-  }
-
-  render() {
-    if(!this.state.events){
-      return <Article splitView><H1>Schedule</H1>Loading...</Article>;
-    }
-    return (
-      <ScheduledEvents>
-        {this.state.events.sort(function(a,b) {return (a.date > b.date) ? -1 : ((b.date > a.date) ? 1 : 0);}).map((event) => {
-          return(
-            <li key={event._id}>
-              {event.date}
-              <span className='location'>{event.location}</span>
-            </li>)
-        })}
-      </ScheduledEvents>
-    );
-  }
-}
 
 export default class Homepage extends React.Component {
   render() {
@@ -353,7 +113,7 @@ export default class Homepage extends React.Component {
           <Article splitView>
             <H1>Schedule</H1>
             <p>The camp reservations are done yearly.</p>
-            <Schedule />
+            <Events />
           </Article>
           <Article splitView>
             <H1>Location</H1>
