@@ -4,7 +4,7 @@ import { injectGlobal, ThemeProvider } from 'styled-components';
 
 import AdminDashboard from './AdminDashboard';
 import AdminEvents from './AdminEvents';
-import Homepage from './Homepage';
+import Home from './Home';
 import PageNotFound from './PageNotFound';
 
 import theme from './theme';
@@ -29,7 +29,7 @@ export default class App extends React.Component {
       <ThemeProvider theme={theme}>
         <div>
           <Switch>
-            <Route exact path='/' component={Homepage}/>
+            <Route exact path='/' component={Home}/>
             <Route exact path='/admin' component={AdminDashboard} />
             <Route exact path='/admin/events/' component={AdminEvents} />
             <Route path='/admin/events/:id' component={AdminEvents} />
