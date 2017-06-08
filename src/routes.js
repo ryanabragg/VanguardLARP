@@ -1,10 +1,10 @@
 const routes = [
   '/',
   '/admin',
-  '/admin/events/:id',
   '/admin/events',
-  '/admin/rules/:id',
+  '/admin/events/:id',
   '/admin/rules',
+  '/admin/rules/:id',
   '/admin/characters/:id',
   '/character/:id',
   '/character'
