@@ -8,8 +8,6 @@ import io from 'socket.io-client';
 import feathers from 'feathers/client';
 import socketio from 'feathers-socketio/client';
 
-import AdminDashboard from './AdminDashboard';
-
 const socket = io('192.168.1.171:3030');
 const app = feathers().configure(socketio(socket));
 
@@ -206,7 +204,7 @@ export default class AdminEvents extends React.Component {
 
   render () {
     return (
-      <AdminDashboard>
+      <div>
         <form name='event-new' onSubmit={this.newEvent}>
           <label name='date'>Date</label>
           <input type='date' name='newDate' onChange={this.handleInputChange} value={this.state.newDate} />
@@ -226,7 +224,7 @@ export default class AdminEvents extends React.Component {
             })}
           </ol>
         </main>
-      </AdminDashboard>
+      </div>
     );
   }
 }

@@ -5,9 +5,10 @@ const routes = [
   '/admin/events/:id',
   '/admin/rules',
   '/admin/rules/:id',
+  '/admin/characters',
   '/admin/characters/:id',
-  '/character/:id',
-  '/character'
+  '/character',
+  '/character/:id'
 ];
 
 module.exports = routes;
