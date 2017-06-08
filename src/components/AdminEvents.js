@@ -38,15 +38,35 @@ export default class AdminEvents extends React.Component {
   }
 
   componentDidMount () {
+    app.service('events').on('created', event => {
+      this.setState({
+        events: this.state.events.concat(event)
+      })
+    });
+    app.service('events').on('patched', event => {
+      this.setState({
+        events: this.state.events.filter(event => event._id != event.id).concat(event),
+        date: (event._id === this.state.id) ? event.date : this.state.date,
+        location: (event._id === this.state.id) ? event.location : this.state.location,
+        area: (event._id === this.state.id) ? event.area : this.state.area,
+      })
+    });
+    app.service('events').on('removed', event => {
+      this.setState({
+        events: this.state.events.filter(event => event._id != id)
+      })
+    });
     this.getEvents();
   }
 
   componentWillUnmount () {
-    
+    app.service('events').removeListener('created');
+    app.service('events').removeListener('patched');
+    app.service('events').removeListener('removed');
   }
 
   getEvents (skip = 0) {
-    app.service('events').find({query:{$skip:skip}}).then(events => {
+    app.service('events').find({query:{$sort:{created:1},$skip:skip}}).then(events => {
       this.setState({
         events: this.state.events.filter(event => !events.data.map(event => event._id).includes(event._id)).concat(events.data)
       })
@@ -59,6 +79,8 @@ export default class AdminEvents extends React.Component {
   newEvent () {
     app.service('events').create(
       {
+        created: (new Date()).toJSON(),
+        modified: (new Date()).toJSON(),
         date: this.state.newDate,
         location: this.state.newLocation,
         area: this.state.newArea
@@ -103,6 +125,7 @@ export default class AdminEvents extends React.Component {
     app.service('events').patch(
       event.id,
       {
+        modified: (new Date()).toJSON(),
         date: event.date,
         location: event.location,
         area: event.area
@@ -123,7 +146,6 @@ export default class AdminEvents extends React.Component {
           // todo
           if(!error){
             this.setState({
-              events: this.state.events.filter(event => event._id != id),
               id: '',
               date: '',
               location: '',
