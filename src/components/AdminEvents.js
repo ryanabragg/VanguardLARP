@@ -8,6 +8,8 @@ import io from 'socket.io-client';
 import feathers from 'feathers/client';
 import socketio from 'feathers-socketio/client';
 
+import Pagination from './Admin/styled/Pagination';
+
 const socket = io('192.168.1.171:3030');
 const app = feathers().configure(socketio(socket));
 
@@ -15,7 +17,14 @@ export default class AdminEvents extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      events: [],
+      paginate: 10,
+      events: {
+        // sorted by data.date descending
+        total: 0, // total number of records
+        limit: 0, // max number of items per page
+        skip: 0, // number of skipped items (offset)
+        data: []
+      },
       id: '',
       date: '',
       location: '',
@@ -25,6 +34,7 @@ export default class AdminEvents extends React.Component {
       newArea: '',
       errors: ''
     };
+    this.getEvents = this.getEvents.bind(this);
     this.newEvent = this.newEvent.bind(this);
     this.deselectEvent = this.deselectEvent.bind(this);
     this.selectEvent = this.selectEvent.bind(this);
@@ -32,27 +42,34 @@ export default class AdminEvents extends React.Component {
     this.deleteEvent = this.deleteEvent.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.pageClick = this.pageClick.bind(this);
     this.renderViewOrEdit = this.renderViewOrEdit.bind(this);
   }
 
   componentDidMount () {
     app.service('events').on('created', event => {
-      this.setState({
-        events: this.state.events.concat(event)
-      })
+      this.getEvents(this.state.events.skip);
     });
     app.service('events').on('patched', event => {
-      this.setState({
-        events: this.state.events.filter(event => event._id != event.id).concat(event),
-        date: (event._id === this.state.id) ? event.date : this.state.date,
-        location: (event._id === this.state.id) ? event.location : this.state.location,
-        area: (event._id === this.state.id) ? event.area : this.state.area,
-      })
+      this.getEvents(this.state.events.skip);
+      /*
+      var index = this.state.events.data.findIndex(data => data._id == event._id);
+      if(index > -1){
+        this.setState({
+          events: {
+            total: this.state.events.total,
+            limit: this.state.events.limit,
+            skip: this.state.events.skip,
+            data: this.state.events.data.splice(index, 1, event)
+          },
+          date: (event._id === this.state.id) ? event.date : this.state.date,
+          location: (event._id === this.state.id) ? event.location : this.state.location,
+          area: (event._id === this.state.id) ? event.area : this.state.area,
+        });
+      }*/
     });
     app.service('events').on('removed', event => {
-      this.setState({
-        events: this.state.events.filter(event => event._id != id)
-      })
+      this.getEvents(this.state.events.skip);
     });
     this.getEvents();
   }
@@ -64,13 +81,10 @@ export default class AdminEvents extends React.Component {
   }
 
   getEvents (skip = 0) {
-    app.service('events').find({query:{$sort:{created:1},$skip:skip}}).then(events => {
+    app.service('events').find({query:{$sort:{date:-1},$limit:this.state.paginate,$skip:skip}}).then(events => {
       this.setState({
-        events: this.state.events.filter(event => !events.data.map(event => event._id).includes(event._id)).concat(events.data)
-      })
-      if(events.skip < events.total){
-        this.getEvents(events.skip+events.limit);
-      }
+        events: events
+      });
     });
   }
 
@@ -84,7 +98,8 @@ export default class AdminEvents extends React.Component {
         area: this.state.newArea
       },
       (error, event) => {
-        this.setState({
+        this.getEvents(this.state.events.skip);
+        this.setState({/*
           events: this.state.events.concat(event),
           id: event._id,
           date: event.date,
@@ -92,9 +107,9 @@ export default class AdminEvents extends React.Component {
           area: event.area,
           newDate: '',
           newLocation: '',
-          newArea: '',
+          newArea: '',*/
           errors: error
-        })
+        });
       }
     );
   }
@@ -112,9 +127,9 @@ export default class AdminEvents extends React.Component {
   selectEvent (id) {
     this.setState({
       id: id,
-      date: this.state.events.find(event => event._id == id).date,
-      location: this.state.events.find(event => event._id == id).location,
-      area: this.state.events.find(event => event._id == id).area,
+      date: this.state.events.data.find(event => event._id == id).date,
+      location: this.state.events.data.find(event => event._id == id).location,
+      area: this.state.events.data.find(event => event._id == id).area,
       errors: ''
     });
   }
@@ -164,17 +179,22 @@ export default class AdminEvents extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    var event = {
+    this.updateEvent({
       id: this.state.id,
       date : this.state.date,
       location : this.state.location,
       area: this.state.area
-    };
-    this.updateEvent(event);
+    });
   };
 
-  renderViewOrEdit( event ) {
-    if ( this.state.id === event._id ) {
+  pageClick(e) {
+    e.preventDefault();
+    let skip = (e.target.id - 1) * this.state.paginate;
+    this.getEvents(skip);
+  }
+
+  renderViewOrEdit(event) {
+    if (this.state.id === event._id) {
       return (
         <li key={event._id}>
           <form name={'event-' + (this.state.id)} onSubmit={this.handleSubmit}>
@@ -219,10 +239,14 @@ export default class AdminEvents extends React.Component {
         </div>
         <main>
           <ol>
-            {this.state.events.sort(function(a,b) {return (a.date > b.date) ? -1 : ((b.date > a.date) ? 1 : 0);}).map((event) => {
+            {this.state.events.data.sort(function(a,b) {return (a.date > b.date) ? -1 : ((b.date > a.date) ? 1 : 0);}).map((event) => {
               return this.renderViewOrEdit(event);
             })}
           </ol>
+          <Pagination
+            onClick={this.pageClick}
+            current={1 + Math.floor(this.state.events.skip / this.state.paginate)}
+            total={Math.ceil(this.state.events.total / this.state.paginate)} />
         </main>
       </div>
     );
