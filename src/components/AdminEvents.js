@@ -19,7 +19,6 @@ export default class AdminEvents extends React.Component {
     this.state = {
       paginate: 10,
       events: {
-        // sorted by data.date descending
         total: 0, // total number of records
         limit: 0, // max number of items per page
         skip: 0, // number of skipped items (offset)
@@ -52,21 +51,6 @@ export default class AdminEvents extends React.Component {
     });
     app.service('events').on('patched', event => {
       this.getEvents(this.state.events.skip);
-      /*
-      var index = this.state.events.data.findIndex(data => data._id == event._id);
-      if(index > -1){
-        this.setState({
-          events: {
-            total: this.state.events.total,
-            limit: this.state.events.limit,
-            skip: this.state.events.skip,
-            data: this.state.events.data.splice(index, 1, event)
-          },
-          date: (event._id === this.state.id) ? event.date : this.state.date,
-          location: (event._id === this.state.id) ? event.location : this.state.location,
-          area: (event._id === this.state.id) ? event.area : this.state.area,
-        });
-      }*/
     });
     app.service('events').on('removed', event => {
       this.getEvents(this.state.events.skip);
@@ -98,18 +82,11 @@ export default class AdminEvents extends React.Component {
         area: this.state.newArea
       },
       (error, event) => {
-        this.getEvents(this.state.events.skip);
-        this.setState({/*
-          events: this.state.events.concat(event),
-          id: event._id,
-          date: event.date,
-          location: event.location,
-          area: event.area,
-          newDate: '',
-          newLocation: '',
-          newArea: '',*/
-          errors: error
-        });
+        if (error) {
+          this.setState({
+            errors: error
+          });
+        }
       }
     );
   }
@@ -119,8 +96,7 @@ export default class AdminEvents extends React.Component {
       id: '',
       date: '',
       location: '',
-      area: '',
-      errors: ''
+      area: ''
     });
   }
 
@@ -129,8 +105,7 @@ export default class AdminEvents extends React.Component {
       id: id,
       date: this.state.events.data.find(event => event._id == id).date,
       location: this.state.events.data.find(event => event._id == id).location,
-      area: this.state.events.data.find(event => event._id == id).area,
-      errors: ''
+      area: this.state.events.data.find(event => event._id == id).area
     });
   }
 
@@ -144,9 +119,11 @@ export default class AdminEvents extends React.Component {
         area: event.area
       },
       (error, event) => {
-        this.setState({
-          errors: error
-        })
+        if (error) {
+          this.setState({
+            errors: error
+          });
+        }
       }
     );
   }
@@ -156,15 +133,18 @@ export default class AdminEvents extends React.Component {
       app.service('events').remove(
         id,
         (error, event) => {
-          // todo
-          if(!error){
+          if (error) {
+            this.setState({
+              errors: error
+            });
+          } else {
             this.setState({
               id: '',
               date: '',
               location: '',
               area: '',
               errors: ''
-            })
+            });
           }
         }
       );
