@@ -7,7 +7,7 @@ import theme from '../../theme';
 const HeaderImage = styled.div`
   background-repeat: no-repeat;
   background-position: center;
-  background-image: url(logo.svg);
+  background-image: url(./logo.svg);
   background-size: contain;
   @media (max-width: ${theme.breakpoints.s}px) {
     height: 240px;
