@@ -8,7 +8,7 @@ import io from 'socket.io-client';
 import feathers from 'feathers/client';
 import socketio from 'feathers-socketio/client';
 
-import Pagination from './Admin/styled/Pagination';
+import Pagination from './styled/Pagination';
 
 const socket = io('localhost:3030');
 const app = feathers().configure(socketio(socket));

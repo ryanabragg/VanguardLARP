@@ -3,23 +3,21 @@ import { Link } from 'react-router-dom';
 
 import { ThemeProvider } from 'styled-components';
 
-import IconCharacter from './svg/Character';
-import IconFacebook from './svg/Facebook';
-import IconGoogleDoc from './svg/GoogleDoc';
+import IconCharacter from '../svg/Character';
+import IconFacebook from '../svg/Facebook';
+import IconGoogleDoc from '../svg/GoogleDoc';
 
-import Events from './Home/Events';
+import Events from './Events';
 
-import Article from './Home/styled/Article';
-import Card from './Home/styled/Card';
-import Cards from './Home/styled/Cards';
-import Footer from './Home/styled/Footer';
-import H1 from './Home/styled/H1';
-import Header from './Home/styled/Header';
-import HeaderImage from './Home/styled/HeaderImage';
-import Main from './Home/styled/Main';
-import Navigation from './Home/styled/Navigation';
-
-import theme from './theme';
+import Article from './styled/Article';
+import Card from './styled/Card';
+import Cards from './styled/Cards';
+import Footer from './styled/Footer';
+import H1 from './styled/H1';
+import Header from './styled/Header';
+import HeaderImage from './styled/HeaderImage';
+import Main from './styled/Main';
+import Navigation from './styled/Navigation';
 
 const Home = (props) => {
   return (
