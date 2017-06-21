@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 
 import { ThemeProvider } from 'styled-components';
 
-import IconCharacter from './IconCharacter';
-import IconFacebook from './IconFacebook';
-import IconGoogleDoc from './IconGoogleDoc';
+import IconCharacter from './svg/Character';
+import IconFacebook from './svg/Facebook';
+import IconGoogleDoc from './svg/GoogleDoc';
 
 import Events from './Home/Events';
 

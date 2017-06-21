@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 
 import Navigation from './styled/Navigation';
-import IconCharacter from '../IconCharacter';
+import IconCharacter from '../svg/Character';
 
 class Menu extends React.Component {
   constructor (props) {
