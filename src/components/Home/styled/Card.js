@@ -2,17 +2,15 @@ import React from 'react';
 import styled from 'styled-components';
 import Color from 'color';
 
-import theme from '../../theme';
-
 const Card = styled.div`
   float: left;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .2);
   transition: 0.3s;
   height: 8em;
-  @media (max-width: ${theme.breakpoints.m}px) {
+  @media (max-width: ${props => props.theme.breakpoints.m}px) {
     width: 50%;
   }
-  @media (min-width: ${theme.breakpoints.m + 1}px) {
+  @media (min-width: ${props => props.theme.breakpoints.m + 1}px) {
     width: 8em;
   }
   svg {
