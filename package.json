@@ -49,10 +49,8 @@
     "feathers-hooks": "^2.0.1",
     "feathers-hooks-common": "^3.2.0",
     "feathers-nedb": "^2.6.2",
-    "feathers-reactive": "^0.4.1",
     "feathers-rest": "^1.7.2",
     "feathers-socketio": "^2.0.0",
-    "glamor": "^2.20.25",
     "helmet": "^3.5.0",
     "nedb": "^1.8.0",
     "passport-facebook": "^2.1.1",
@@ -61,7 +59,6 @@
     "react-jss": "^6.1.1",
     "react-router": "^4.1.1",
     "react-router-dom": "^4.1.1",
-    "rxjs": "^5.3.1",
     "serve-favicon": "^2.4.2",
     "styled-components": "^2.0.0",
     "winston": "^2.3.1"

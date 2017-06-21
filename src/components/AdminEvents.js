@@ -10,7 +10,7 @@ import socketio from 'feathers-socketio/client';
 
 import Pagination from './Admin/styled/Pagination';
 
-const socket = io('192.168.1.171:3030');
+const socket = io('localhost:3030');
 const app = feathers().configure(socketio(socket));
 
 export default class AdminEvents extends React.Component {
