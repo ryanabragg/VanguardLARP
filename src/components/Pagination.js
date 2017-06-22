@@ -1,8 +1,11 @@
 import React from 'react';
 
 const Pagination = (props) => {
+  const rest = Object.assign({}, props);
+  delete rest.current;
+  delete rest.total;
   return (
-    <div id={props.id} className={props.className}>
+    <div {...rest}>
       <a id={1} onClick={props.onClick}>{props.linkFirst || '«'}</a>
       <a id={Math.max(1, props.current-1)} onClick={props.onClick}>{props.linkPrevious || '‹'}</a>
       {(props.current > 2) ? <a id={props.current-2} onClick={props.onClick}>{props.current-2}</a> : null}
