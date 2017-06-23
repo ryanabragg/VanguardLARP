@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Color from 'color';
 
-import Pagination from '../../Pagination';
+import Pagination from '../Pagination';
 
 const StyledPagination = styled(Pagination)`
   padding: 0;

@@ -8,7 +8,12 @@ import io from 'socket.io-client';
 import feathers from 'feathers/client';
 import socketio from 'feathers-socketio/client';
 
-import Pagination from './styled/Pagination';
+import Spinner from '../styled/Spinner';
+import Button from '../styled/Button';
+import Form from '../styled/Form';
+import Modal from '../styled/Modal';
+import List from '../styled/List';
+import Pagination from '../styled/Pagination';
 
 const socket = io('localhost:3030');
 const app = feathers().configure(socketio(socket));
@@ -24,35 +29,51 @@ export default class AdminEvents extends React.Component {
         skip: 0, // number of skipped items (offset)
         data: []
       },
+      isFormVisible: false,
       id: '',
       date: '',
       location: '',
       area: '',
-      newDate: '',
-      newLocation: '',
-      newArea: '',
-      errors: ''
+      alerts: []
     };
     this.getEvents = this.getEvents.bind(this);
     this.newEvent = this.newEvent.bind(this);
     this.deselectEvent = this.deselectEvent.bind(this);
     this.selectEvent = this.selectEvent.bind(this);
+    this.createEvent = this.createEvent.bind(this);
     this.updateEvent = this.updateEvent.bind(this);
     this.deleteEvent = this.deleteEvent.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.pageClick = this.pageClick.bind(this);
-    this.renderViewOrEdit = this.renderViewOrEdit.bind(this);
   }
 
   componentDidMount () {
     app.service('events').on('created', event => {
+      this.setState({
+        alerts: this.state.alerts.concat({
+          type: 'info',
+          text: 'New event created for ' + event.date + ' at ' + event.location + ' (' + event.area + ')'
+        })
+      });
       this.getEvents(this.state.events.skip);
     });
     app.service('events').on('patched', event => {
+      this.setState({
+        alerts: this.state.alerts.concat({
+          type: 'info',
+          text: 'Event updated. ' + event.date + ' at ' + event.location + ' (' + event.area + ')'
+        })
+      });
       this.getEvents(this.state.events.skip);
     });
     app.service('events').on('removed', event => {
+      this.setState({
+        alerts: this.state.alerts.concat({
+          type: 'info',
+          text: 'Event deleted. ' + event.date + ' at ' + event.location + ' (' + event.area + ')'
+        })
+      });
       this.getEvents(this.state.events.skip);
     });
     this.getEvents();
@@ -73,26 +94,17 @@ export default class AdminEvents extends React.Component {
   }
 
   newEvent () {
-    app.service('events').create(
-      {
-        created: (new Date()).toJSON(),
-        modified: (new Date()).toJSON(),
-        date: this.state.newDate,
-        location: this.state.newLocation,
-        area: this.state.newArea
-      },
-      (error, event) => {
-        if (error) {
-          this.setState({
-            errors: error
-          });
-        }
-      }
-    );
+    this.setState({
+      isFormVisible: true,
+      date: '',
+      location: '',
+      area: ''
+    });
   }
 
   deselectEvent() {
     this.setState({
+      isFormVisible: false,
       id: '',
       date: '',
       location: '',
@@ -102,11 +114,31 @@ export default class AdminEvents extends React.Component {
 
   selectEvent (id) {
     this.setState({
+      isFormVisible: true,
       id: id,
       date: this.state.events.data.find(event => event._id == id).date,
       location: this.state.events.data.find(event => event._id == id).location,
       area: this.state.events.data.find(event => event._id == id).area
     });
+  }
+
+  createEvent (event) {
+    app.service('events').create(
+      {
+        created: (new Date()).toJSON(),
+        modified: (new Date()).toJSON(),
+        date: event.date,
+        location: event.location,
+        area: event.area
+      },
+      (error, event) => {
+        if (error) {
+          this.setState({
+            alerts: this.state.alerts.concat({type: 'error', text: error})
+          });
+        }
+      }
+    );
   }
 
   updateEvent (event) {
@@ -121,7 +153,7 @@ export default class AdminEvents extends React.Component {
       (error, event) => {
         if (error) {
           this.setState({
-            errors: error
+            alerts: this.state.alerts.concat({type: 'error', text: error})
           });
         }
       }
@@ -135,15 +167,15 @@ export default class AdminEvents extends React.Component {
         (error, event) => {
           if (error) {
             this.setState({
-              errors: error
+              alerts: this.state.alerts.concat({type: 'error', text: error})
             });
           } else {
             this.setState({
+              isFormVisible: false,
               id: '',
               date: '',
               location: '',
-              area: '',
-              errors: ''
+              area: ''
             });
           }
         }
@@ -159,12 +191,21 @@ export default class AdminEvents extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    this.updateEvent({
-      id: this.state.id,
-      date : this.state.date,
-      location : this.state.location,
-      area: this.state.area
-    });
+    //todo errors check on field values
+    if(this.state.id){
+      this.updateEvent({
+        id: this.state.id,
+        date : this.state.date,
+        location : this.state.location,
+        area: this.state.area
+      });
+    } else {
+      this.createEvent({
+        date : this.state.date,
+        location : this.state.location,
+        area: this.state.area
+      });
+    }
   };
 
   pageClick(e) {
@@ -173,61 +214,41 @@ export default class AdminEvents extends React.Component {
     this.getEvents(skip);
   }
 
-  renderViewOrEdit(event) {
-    if (this.state.id === event._id) {
-      return (
-        <li key={event._id}>
-          <form name={'event-' + (this.state.id)} onSubmit={this.handleSubmit}>
-            <label name='date'>Date</label>
-            <input type='date' name='date' onChange={this.handleInputChange} value={this.state.date} />
-            <label name='location'>Location</label>
-            <input type='text' name='location' onChange={this.handleInputChange} value={this.state.location} />
-            <label name='area'>Area</label>
-            <input type='text' name='area' onChange={this.handleInputChange} value={this.state.area} />
-            <button type='submit' onClick={this.handleSubmit}>Submit</button>
-            <button type='button' onClick={this.selectEvent.bind(this, this.state.id)}>Reset</button>
-            <button type='button' onClick={this.deleteEvent.bind(this, this.state.id)}>Delete</button>
-            <button type='button' onClick={this.deselectEvent.bind(this)}>Cancel</button>
-          </form>
-          <div>
-          {this.state.errors}
-          </div>
-        </li>);
-    } else {
-      return (
-        <li key={event._id}>
-          {`${event.date} at ${ event.location } (${ event.area })`}
-          <button type='button' onClick={this.selectEvent.bind(null, event._id)}>Edit</button>
-        </li>);
-    }
-  }
-
   render () {
     return (
       <div>
-        <form name='event-new' onSubmit={this.newEvent}>
-          <label name='date'>Date</label>
-          <input type='date' name='newDate' onChange={this.handleInputChange} value={this.state.newDate} />
-          <label name='location'>Location</label>
-          <input type='text' name='newLocation' onChange={this.handleInputChange} value={this.state.newLocation} />
-            <label name='area'>Area</label>
-            <input type='text' name='newArea' onChange={this.handleInputChange} value={this.state.newArea} />
-          <button type='button' onClick={this.newEvent}>Add Event</button>
-        </form>
-        <div>
-        {this.state.errors}
-        </div>
         <main>
-          <ol>
+          <button type='button' onClick={this.newEvent}>Add Event</button>
+          {this.state.events.limit === 0 ? <Spinner /> : null}
+          <List>
             {this.state.events.data.sort(function(a,b) {return (a.date > b.date) ? -1 : ((b.date > a.date) ? 1 : 0);}).map((event) => {
-              return this.renderViewOrEdit(event);
+              return (
+                <li key={event._id} onClick={this.selectEvent.bind(null, event._id)}>
+                  {`${event.date} at ${ event.location } (${ event.area })`}
+                  <button type='button'>Edit</button>
+                </li>
+              );
             })}
-          </ol>
+          </List>
           <Pagination
             onClick={this.pageClick}
             current={1 + Math.floor(this.state.events.skip / this.state.paginate)}
             total={Math.ceil(this.state.events.total / this.state.paginate)} />
         </main>
+        <Modal visible={this.state.isFormVisible != false} closeOnClickOutside={true} closeModal={this.deselectEvent.bind(this)}>
+          <Form name={'event-' + (this.state.id)} onSubmit={this.handleSubmit}>
+            <label name='date'>Date</label>
+            <input type='date' name='date' onChange={this.handleInputChange} value={this.state.date} placeholder='YYYY-MM-DD' />
+            <label name='location'>Location</label>
+            <input type='text' name='location' onChange={this.handleInputChange} value={this.state.location} />
+            <label name='area'>Area</label>
+            <input type='text' name='area' onChange={this.handleInputChange} value={this.state.area} />
+            <button type='submit' value="submit" onClick={this.handleSubmit}>Submit</button>
+            <button type='button' value="reset" onClick={this.selectEvent.bind(this, this.state.id)}>Reset</button>
+            <button type='button' value="delete" onClick={this.deleteEvent.bind(this, this.state.id)}>Delete</button>
+            <button type='button' value="cancel" onClick={this.deselectEvent.bind(this)}>Cancel</button>
+          </Form>
+        </Modal>
       </div>
     );
   }

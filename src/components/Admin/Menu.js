@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 
-import Navigation from './styled/Navigation';
+import Navigation from '../styled/Navigation';
 import IconCharacter from '../svg/Character';
 
 class Menu extends React.Component {
@@ -21,13 +21,13 @@ class Menu extends React.Component {
 
   render() {
     return (
-      <Navigation isMenuHidden={this.state.isMenuHidden}>
+      <Navigation isMenuHidden={this.state.isMenuHidden} onClick={this.toggleMenu}>
         <Link to='/'><img src='../logo.svg'/></Link>
         <NavLink exact to='/admin' activeClassName='nav-active'>Dashboard</NavLink>
         <NavLink to='/admin/events' activeClassName='nav-active'>Events</NavLink>
         <NavLink to='/admin/rules' activeClassName='nav-active'>Rules</NavLink>
         <NavLink to='/admin/characters' activeClassName='nav-active'>Characters</NavLink>
-        <a className='nav-icon' href='javascript:void(0);' onClick={this.toggleMenu}>&#9776;</a>
+        <a className='nav-icon' href='javascript:void(0);'>&#9776;</a>
       </Navigation>
     );
   }
