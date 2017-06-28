@@ -5,8 +5,9 @@ import Color from 'color';
 import Pagination from '../Pagination';
 
 const StyledPagination = styled(Pagination)`
-  padding: 0;
-  margin: 0;
+  padding: 0.3em 0;
+  margin: 0 auto;
+  font-size: 1.2em;
   a {
     display: inline;
     padding: 0.3em 1em;
@@ -14,7 +15,6 @@ const StyledPagination = styled(Pagination)`
     border-bottom: 1px solid ${props => Color(props.theme.colors.secondary).mix(Color('grey'), 0.3).hex()};
     border-left: 1px solid ${props => Color(props.theme.colors.secondary).mix(Color('grey'), 0.3).hex()};
     transition: background-color .3s;
-    font-size: 1.2em;
   }
   .current {
     background: ${props => Color(props.theme.colors.secondary).mix(Color('white'), 0.3).hex()};
