@@ -17,7 +17,7 @@ const Navigation = styled.nav`
     line-height: 60px;
     font-size: 2em;
     font-family: ${props => props.theme.font.trebuchet};
-    color: ${props => Color(props.theme.colors.background).mix(Color(props.theme.colors.font), props.theme.alpha.primary).hex()};
+    color: ${props => Color(Color(props.theme.colors.primary).grayscale().dark() ? 'white' : 'black').mix(Color(props.theme.colors.primary).grayscale(), props.theme.alpha.primary).hex()};
   }
   a:hover {
     color: ${props => props.theme.colors.secondary};
