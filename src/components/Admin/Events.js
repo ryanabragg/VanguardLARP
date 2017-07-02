@@ -291,8 +291,12 @@ export default class AdminEvents extends React.Component {
           <NotificationList>
             {this.state.alerts.map((alert, index) => {
               let actionClick = null;
-              if (alert.actionType == 'create')
-                actionClick = this.createEvent.bind(this, alert.data);
+              if (alert.actionType == 'create') {
+                actionClick = () => {
+                  this.createEvent(alert.data);
+                  this.removeAlert(alert.key);
+                }
+              }
               return (
                 <Notification
                   key={alert.key}
@@ -301,8 +305,9 @@ export default class AdminEvents extends React.Component {
                   message={alert.message}
                   action={alert.action}
                   actionClick={actionClick}
-                  timeoutDuration={Math.max(0, alert.added - Date.now() + 300000 + index * 1000)}
+                  timeoutDuration={Math.max(0, alert.added - Date.now() + 3000 + index * 1000)}
                   timeoutFunction={this.removeAlert.bind(this, alert.key)}
+                  showDismiss={!alert.action}
                 />
               );
             })}
