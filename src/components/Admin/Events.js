@@ -8,12 +8,17 @@ import io from 'socket.io-client';
 import feathers from 'feathers/client';
 import socketio from 'feathers-socketio/client';
 
+import UUID from 'uuid/v1';
+
 import Spinner from '../styled/Spinner';
 import Button from '../styled/Button';
 import Form from '../styled/Form';
 import Modal from '../styled/Modal';
 import List from '../styled/List';
 import Pagination from '../styled/Pagination';
+
+import NotificationList from './styled/NotificationList';
+import Notification from '../Notification';
 
 const socket = io('localhost:3030');
 const app = feathers().configure(socketio(socket));
@@ -46,14 +51,17 @@ export default class AdminEvents extends React.Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.pageClick = this.pageClick.bind(this);
+    this.removeAlert = this.removeAlert.bind(this);
   }
 
   componentDidMount () {
     app.service('events').on('created', event => {
       this.setState({
         alerts: this.state.alerts.concat({
-          type: 'info',
-          text: 'New event created for ' + event.date + ' at ' + event.location + ' (' + event.area + ')'
+          key: UUID(),
+          added: Date.now(),
+          type: 'success',
+          message: 'New event created for ' + event.date + ' at ' + event.location + ' (' + event.area + ')'
         })
       });
       this.getEvents(this.state.events.skip);
@@ -61,8 +69,10 @@ export default class AdminEvents extends React.Component {
     app.service('events').on('patched', event => {
       this.setState({
         alerts: this.state.alerts.concat({
-          type: 'info',
-          text: 'Event updated. ' + event.date + ' at ' + event.location + ' (' + event.area + ')'
+          key: UUID(),
+          added: Date.now(),
+          type: 'success',
+          message: 'Event updated. ' + event.date + ' at ' + event.location + ' (' + event.area + ')'
         })
       });
       this.getEvents(this.state.events.skip);
@@ -70,8 +80,13 @@ export default class AdminEvents extends React.Component {
     app.service('events').on('removed', event => {
       this.setState({
         alerts: this.state.alerts.concat({
-          type: 'info',
-          text: 'Event deleted. ' + event.date + ' at ' + event.location + ' (' + event.area + ')'
+          key: UUID(),
+          added: Date.now(),
+          type: 'success',
+          message: 'Event deleted. ' + event.date + ' at ' + event.location + ' (' + event.area + ')',
+          action: 'UNDO',
+          actionType: 'create',
+          data: event
         })
       });
       this.getEvents(this.state.events.skip);
@@ -125,8 +140,9 @@ export default class AdminEvents extends React.Component {
   createEvent (event) {
     app.service('events').create(
       {
-        created: (new Date()).toJSON(),
-        modified: (new Date()).toJSON(),
+        _id: event._id,
+        created: event.created || (new Date()).toJSON(),
+        modified: event.modified || (new Date()).toJSON(),
         date: event.date,
         location: event.location,
         area: event.area
@@ -134,7 +150,12 @@ export default class AdminEvents extends React.Component {
       (error, event) => {
         if (error) {
           this.setState({
-            alerts: this.state.alerts.concat({type: 'error', text: error})
+            alerts: this.state.alerts.concat({
+              key: UUID(),
+              added: Date.now(),
+              type: 'alert',
+              message: error
+            })
           });
         }
       }
@@ -153,7 +174,12 @@ export default class AdminEvents extends React.Component {
       (error, event) => {
         if (error) {
           this.setState({
-            alerts: this.state.alerts.concat({type: 'error', text: error})
+            alerts: this.state.alerts.concat({
+              key: UUID(),
+              added: Date.now(),
+              type: 'alert',
+              message: error
+            })
           });
         }
       }
@@ -167,7 +193,12 @@ export default class AdminEvents extends React.Component {
         (error, event) => {
           if (error) {
             this.setState({
-              alerts: this.state.alerts.concat({type: 'error', text: error})
+              alerts: this.state.alerts.concat({
+                key: UUID(),
+                added: Date.now(),
+                type: 'alert',
+                message: error
+              })
             });
           } else {
             this.setState({
@@ -214,6 +245,12 @@ export default class AdminEvents extends React.Component {
     this.getEvents(skip);
   }
 
+  removeAlert(key) {
+    this.setState({
+      alerts: this.state.alerts.filter(alert => alert.key != key)
+    })
+  }
+
   render () {
     return (
       <div>
@@ -233,7 +270,8 @@ export default class AdminEvents extends React.Component {
           <Pagination
             onClick={this.pageClick}
             current={1 + Math.floor(this.state.events.skip / this.state.paginate)}
-            total={Math.ceil(this.state.events.total / this.state.paginate)} />
+            total={Math.ceil(this.state.events.total / this.state.paginate)}
+          />
         </main>
         <Modal visible={this.state.isFormVisible != false} closeOnClickOutside={true} closeModal={this.deselectEvent.bind(this)}>
           <Form name={'event-' + (this.state.id)} onSubmit={this.handleSubmit}>
@@ -249,6 +287,27 @@ export default class AdminEvents extends React.Component {
             <button type='button' value="cancel" onClick={this.deselectEvent.bind(this)}>Cancel</button>
           </Form>
         </Modal>
+        {!this.state.alerts.length ? null :
+          <NotificationList>
+            {this.state.alerts.map((alert, index) => {
+              let actionClick = null;
+              if (alert.actionType == 'create')
+                actionClick = this.createEvent.bind(this, alert.data);
+              return (
+                <Notification
+                  key={alert.key}
+                  type={alert.type}
+                  title={alert.title}
+                  message={alert.message}
+                  action={alert.action}
+                  actionClick={actionClick}
+                  timeoutDuration={Math.max(0, alert.added - Date.now() + 300000 + index * 1000)}
+                  timeoutFunction={this.removeAlert.bind(this, alert.key)}
+                />
+              );
+            })}
+          </NotificationList>
+        }
       </div>
     );
   }
