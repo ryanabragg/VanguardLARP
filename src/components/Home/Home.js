@@ -67,13 +67,13 @@ const Home = (props) => {
           <H1>Game Rules</H1>
           <Cards>
             <Card>
-              <a target='_blank' href='character-sheet.pdf'>
+              <a target='_new' href='character-sheet.pdf'>
                 <IconCharacter />
                 <p>Character Sheet</p>
               </a>
             </Card>
             <Card>
-              <a target='_blank' href='https://docs.google.com/document/d/1qhpAflKwudtAlP0mCH43gbcQifZwSJe7aII-nm1PzeI/edit'>
+              <a target='_new' href='https://docs.google.com/document/d/1qhpAflKwudtAlP0mCH43gbcQifZwSJe7aII-nm1PzeI/edit'>
                 <IconGoogleDoc />
                 <p>Rules Document</p>
               </a>
@@ -91,7 +91,7 @@ const Home = (props) => {
           <H1>Contact Us</H1>
           <Cards>
             <Card>
-              <a target='_blank' href='https://www.facebook.com/groups/544631092325451/'>
+              <a target='_new' href='https://www.facebook.com/groups/544631092325451/'>
                 <IconFacebook />
                 <p>Facebook Group</p>
               </a>
@@ -115,7 +115,7 @@ const Home = (props) => {
           <div className='location-detail'>
             <p>
               Note that Scout Road turns into a gravel road at the camp entrance,
-              while the paved road curves left. See <a target="_blank" href='https://www.google.com/maps/@35.9480276,-81.3864486,265m/data=!3m1!1e3?hl=en-US'>here</a> for a visual.
+              while the paved road curves left. See <a target="_new" href='https://www.google.com/maps/@35.9480276,-81.3864486,265m/data=!3m1!1e3?hl=en-US'>here</a> for a visual.
             </p>
             <p>
               After the entrance, keep going until you see a fork in the road and turn left.
