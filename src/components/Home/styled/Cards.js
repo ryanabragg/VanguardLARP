@@ -1,6 +1,4 @@
-import React from 'react';
 import styled from 'styled-components';
-import Color from 'color';
 
 const Cards = styled.div`
   float: right;

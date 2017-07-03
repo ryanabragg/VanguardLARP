@@ -1,8 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-
-import styled, { injectGlobal } from 'styled-components';
-import Color from 'color';
 
 import io from 'socket.io-client';
 import feathers from 'feathers/client';
@@ -11,7 +7,6 @@ import socketio from 'feathers-socketio/client';
 import UUID from 'uuid/v1';
 
 import Spinner from '../styled/Spinner';
-import Button from '../styled/Button';
 import Form from '../styled/Form';
 import Modal from '../styled/Modal';
 import List from '../styled/List';

@@ -10,8 +10,6 @@ const socket = io('localhost:3030');
 const app = feathers()
   .configure(socketio(socket));
 
-const eventService = app.service('events');
-
 class Events extends React.Component {
   constructor(props) {
     super(props);

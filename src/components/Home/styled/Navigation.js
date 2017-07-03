@@ -1,8 +1,4 @@
-import React from 'react';
 import styled from 'styled-components';
-import Color from 'color';
-
-import theme from '../../theme';
 
 const Navigation = styled.nav`
   position: absolute;

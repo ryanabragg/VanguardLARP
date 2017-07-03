@@ -1,6 +1,4 @@
-import React from 'react';
 import styled from 'styled-components';
-import Color from 'color';
 
 const Button = styled.button`
   border: ${props => props.border || 'none'};

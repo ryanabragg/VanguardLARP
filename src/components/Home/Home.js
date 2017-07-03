@@ -1,7 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-
-import { ThemeProvider } from 'styled-components';
 
 import IconCharacter from '../svg/Character';
 import IconFacebook from '../svg/Facebook';
