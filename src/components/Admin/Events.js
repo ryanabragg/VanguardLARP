@@ -111,6 +111,7 @@ export default class AdminEvents extends React.Component {
   newEvent () {
     this.setState({
       isFormVisible: true,
+      id: '',
       date: '',
       location: '',
       area: ''
