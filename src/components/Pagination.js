@@ -2,8 +2,13 @@ import React from 'react';
 
 const Pagination = (props) => {
   const rest = Object.assign({}, props);
+  delete rest.onClick;
   delete rest.current;
   delete rest.total;
+  delete rest.linkFirst;
+  delete rest.linkPrevious;
+  delete rest.linkNext;
+  delete rest.linkLast;
   return (
     <div {...rest}>
       <a id={1} onClick={props.onClick}>{props.linkFirst || '«'}</a>
