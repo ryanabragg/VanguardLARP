@@ -14,8 +14,7 @@ const StyledModal = styled(Modal)`
   padding: 60px 0 0 0;
   margin: 0;
   z-index: 42;
-  background-color: rgb(0,0,0);
-  background-color: ${props => props.noBackdrop ? '' : 'rgba(0, 0, 0, 0.3)'};
+  ${props => props.noBackdrop ? '' : 'background-color: rgb(0, 0, 0); background-color: rgba(0, 0, 0, 0.3);'}
   span.modal-close {
     position: absolute;
     top: 0;
