@@ -55,10 +55,10 @@ const Home = (props) => {
             sword into a mechanical wonder. Each nation has an ever-growing demand for more.
           </p>
           <p>
-            To aid in this, the Faith--the largest landowner in the Empire--has for the first
-            time in over 500 years opened up some of it's land to be mined - the Dragon’s
+            To aid in this, the Faith—the largest landowner in the Empire—has for the first
+            time in over 500 years opened up some of it&apos;s land to be mined: the Dragon’s
             Spine Mountains. The main base for mining is the town of Jacob’s Spire. It is close to
-            Hadrian's Wall - a great wall separating the Empire from the Ill'Andar Nation.
+            Hadrian&apos;s Wall, a great wall separating the Empire from the Ill&apos;Andar Nation.
             Recently the town has been plagued by strange creatures and events the likes of which
             have not been seen in a millenium.
           </p>
@@ -80,10 +80,10 @@ const Home = (props) => {
             </Card>
           </Cards>
           <p>
-            The game's rules are maintained as Google Documents. The rules can be a bit
+            The game&apos;s rules are maintained as Google Documents. The rules can be a bit
             intimidating, but people pick them up fairly quickly after a game or two. We use a
             one-page character sheet at game which lists all the common abilities. Printed
-            rulebooks are availble at game. Most importantly, if an ability is used on you, it's
+            rulebooks are availble at game. Most importantly, if an ability is used on you, it&apos;s
             up to the user to explain it if you ask what it does.
           </p>
         </Article>
@@ -99,7 +99,7 @@ const Home = (props) => {
           </Cards>
           <p>
             Join us on Facebook! Ask any questions you have there and get answers from both
-            players and personel. We've chosen to embrace Facebook as our communication medium
+            players and personel. We&apos;ve chosen to embrace Facebook as our communication medium
             rather than build our own. Most everyone has an account already, and players have
             appreciated the convenience.
           </p>
