@@ -57,11 +57,11 @@ class Events extends React.Component {
     return (
       <EventsList>
         {this.state.events.data.map((event) => {
-          return(
+          return (
             <li key={event._id}>
               {event.date}
               <span className='location'>{event.location}</span>
-            </li>)
+            </li>);
         })}
       </EventsList>
     );

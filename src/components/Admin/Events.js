@@ -214,7 +214,7 @@ export default class AdminEvents extends React.Component {
     this.setState({
       [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value
     });
-  };
+  }
 
   handleSubmit(e) {
     e.preventDefault();
@@ -233,7 +233,7 @@ export default class AdminEvents extends React.Component {
         area: this.state.area
       });
     }
-  };
+  }
 
   pageClick(e) {
     e.preventDefault();
@@ -244,7 +244,7 @@ export default class AdminEvents extends React.Component {
   removeAlert(key) {
     this.setState({
       alerts: this.state.alerts.filter(alert => alert.key != key)
-    })
+    });
   }
 
   render () {
@@ -291,7 +291,7 @@ export default class AdminEvents extends React.Component {
                 actionClick = () => {
                   this.createEvent(alert.data);
                   this.removeAlert(alert.key);
-                }
+                };
               }
               return (
                 <Notification
