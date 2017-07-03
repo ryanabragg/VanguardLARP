@@ -8,8 +8,13 @@ const Main = styled.main`
   padding-left: 2em;
   padding-right: 2em;
   max-width: ${props => props.theme.breakpoints.l}px;
-  color: ${props => Color(props.theme.colors.font).mix(Color(props.theme.colors.background), props.theme.alpha.primary).hex()};
-  color: rgba(${props => props.theme.colors.font}, ${props => props.theme.alpha.primary});
+  background-color: ${props => props.theme.colors.background};
+  color: ${props => {
+    let background = Color(props.theme.colors.background);
+    let base = Color(background.dark() ? 'white' : 'black');
+    let alpha = background.light() ? props.theme.alphaDarkText.primary : props.theme.alphaLightText.primary;
+    return base.mix(background, alpha).hex();
+  }};
   font-family: ${props => props.theme.font.standard};
   line-height: 1.2;
   font-size: 18px;

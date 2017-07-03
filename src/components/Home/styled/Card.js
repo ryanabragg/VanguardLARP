@@ -31,7 +31,7 @@ const Card = styled.div`
     font-size: .8em;
   }
   :hover {
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
   }
 `;
 

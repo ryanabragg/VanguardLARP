@@ -17,7 +17,12 @@ const Navigation = styled.nav`
     line-height: 60px;
     font-size: 2em;
     font-family: ${props => props.theme.font.trebuchet};
-    color: ${props => Color(Color(props.theme.colors.primary).grayscale().dark() ? 'white' : 'black').mix(Color(props.theme.colors.primary).grayscale(), props.theme.alpha.primary).hex()};
+    color: ${props => {
+      let background = Color(props.theme.colors.primary).grayscale();
+      let base = Color(background.dark() ? 'white' : 'black');
+      let alpha = background.light() ? props.theme.alphaDarkText.primary : props.theme.alphaLightText.primary;
+      return base.mix(background, alpha).hex();
+    }};
   }
   a:hover {
     color: ${props => props.theme.colors.secondary};

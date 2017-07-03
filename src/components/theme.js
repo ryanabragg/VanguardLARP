@@ -37,7 +37,7 @@ const theme = {
     trebuchet: '"Segoe UI", Candara, "Bitstream Vera Sans", "DejaVu Sans", "Bitstream Vera Sans", "Trebuchet MS", Verdana, "Verdana Ref", sans-serif',
     verdana: 'Corbel, "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", "Bitstream Vera Sans", "Liberation Sans", Verdana, "Verdana Ref", sans-serif',
   },
-  alpha: {
+  alphaDarkText: {
     primary: 0.87,
     secondary: 0.54,
     hint: 0.38,
@@ -45,17 +45,16 @@ const theme = {
     dividers: 0.12,
     icon: 0.54,
     iconInactive: 0.26,
-  }
-};
-/*  light: (
+  },
+  alphaLightText: {
     primary: 1,
     secondary: 0.7,
     hint: 0.5,
     disabled: 0.38,
     dividers: 0.12,
     icon: 1,
-    icon-inactive: 0.3,
-  ),
-)*/
+    iconInactive: 0.3,
+  }
+};
 
 module.exports = theme;

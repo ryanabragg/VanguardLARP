@@ -47,7 +47,12 @@ const Form = styled.form`
   }
   button {
     background-color: ${props => props.theme.colors.secondary};
-    color: ${props => Color(Color(props.theme.colors.secondary).dark() ? 'white' : 'black').mix(Color(props.theme.colors.secondary), props.theme.alpha.secondary).hex()};
+    color: ${props => {
+      let background = Color(props.theme.colors.secondary);
+      let base = Color(background.dark() ? 'white' : 'black');
+      let alpha = background.light() ? props.theme.alphaDarkText.primary : props.theme.alphaLightText.primary;
+      return base.mix(background, alpha).hex();
+    }};
     font-size: 1.3em;
     padding: 14px 20px;
     margin: 1em 1em 0.5em 0;
@@ -55,17 +60,27 @@ const Form = styled.form`
     cursor: pointer;
   }
   button:hover {
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   }
   button[value='submit'] {
     background-color: ${props => props.theme.colors.primary};
-    color: ${props => Color(Color(props.theme.colors.primary).dark() ? 'white' : 'black').mix(Color(props.theme.colors.primary), props.theme.alpha.primary).hex()};
+    color: ${props => {
+      let background = Color(props.theme.colors.primary);
+      let base = Color(background.dark() ? 'white' : 'black');
+      let alpha = background.light() ? props.theme.alphaDarkText.primary : props.theme.alphaLightText.primary;
+      return base.mix(background, alpha).hex();
+    }};
     //margin: 1em 0 1em 0;
     //width: 100%;
   }
   button[value='delete'] {
     background-color: ${props => props.theme.colors.alert};
-    color: ${props => Color(Color(props.theme.colors.alert).dark() ? 'white' : 'black').mix(Color(props.theme.colors.alert), props.theme.alpha.primary).hex()};
+    color: ${props => {
+      let background = Color(props.theme.colors.alert);
+      let base = Color(background.dark() ? 'white' : 'black');
+      let alpha = background.light() ? props.theme.alphaDarkText.primary : props.theme.alphaLightText.primary;
+      return base.mix(background, alpha).hex();
+    }};
   }
 `;
 
