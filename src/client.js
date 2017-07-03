@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { AppContainer } from 'react-hot-loader';
+import PropTypes from 'prop-types';
 
 import App from './components/App';
 
@@ -14,6 +15,10 @@ function HotLoader(props) {
     </BrowserRouter>
   );
 }
+
+HotLoader.propTypes = {
+  children: PropTypes.node.isRequired
+};
 
 window.onload = () => {
   ReactDOM.render(

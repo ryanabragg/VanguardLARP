@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const Modal = (props) => {
   const rest = Object.assign({}, props);
@@ -16,6 +17,19 @@ const Modal = (props) => {
       </div>
     </div>
   );
-}
+};
+
+Modal.defaultProps = {
+  visible: false,
+  type: 'info',
+  timeoutDuration: 3000
+};
+
+Modal.propTypes = {
+  visible: PropTypes.bool,
+  closeOnClickOutside: PropTypes.bool,
+  closeModal: PropTypes.func.isRequired,
+  children: PropTypes.node.isRequired
+};
 
 export default Modal;

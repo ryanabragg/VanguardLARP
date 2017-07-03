@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const Pagination = (props) => {
   const rest = Object.assign({}, props);
@@ -11,17 +12,34 @@ const Pagination = (props) => {
   delete rest.linkLast;
   return (
     <div {...rest}>
-      <a id={1} onClick={props.onClick}>{props.linkFirst || '«'}</a>
-      <a id={Math.max(1, props.current-1)} onClick={props.onClick}>{props.linkPrevious || '‹'}</a>
+      <a id={1} onClick={props.onClick}>{props.linkFirst}</a>
+      <a id={Math.max(1, props.current-1)} onClick={props.onClick}>{props.linkPrevious}</a>
       {(props.current > 2) ? <a id={props.current-2} onClick={props.onClick}>{props.current-2}</a> : null}
       {(props.current > 1) ? <a id={props.current-1} onClick={props.onClick}>{props.current-1}</a> : null}
       <a id={props.current} onClick={props.onClick} className='current'>{props.current}</a>
       {(props.current < props.total) ? <a id={props.current+1} onClick={props.onClick}>{props.current+1}</a> : null}
       {(props.current < props.total-1) ? <a id={props.current+2} onClick={props.onClick}>{props.current+2}</a> : null}
-      <a id={props.current + (props.total > props.current)} onClick={props.onClick}>{props.linkNext || '›'}</a>
-      <a id={props.total} onClick={props.onClick}>{props.linkLast || '»'}</a>
+      <a id={props.current + (props.total > props.current)} onClick={props.onClick}>{props.linkNext}</a>
+      <a id={props.total} onClick={props.onClick}>{props.linkLast}</a>
     </div>
   );
-}
+};
+
+Pagination.defaultProps = {
+  linkFirst: '«',
+  linkPrevious: '‹',
+  linkNext: '›',
+  linkLast: '»'
+};
+
+Pagination.propTypes = {
+  onClick: PropTypes.func.isRequired,
+  current: PropTypes.number.isRequired,
+  total: PropTypes.number.isRequired,
+  linkFirst: PropTypes.string,
+  linkPrevious: PropTypes.string,
+  linkNext: PropTypes.string,
+  linkLast: PropTypes.string
+};
 
 export default Pagination;

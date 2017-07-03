@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class Notification extends React.Component {
   constructor(props) {
@@ -35,7 +36,6 @@ class Notification extends React.Component {
   }
 
   render(){
-    console.log(this.props.actionClick);
     let dismissButton = this.props.showDismiss === true ? 'DISMISS' : this.props.showDismiss;
     return (
       <div data-notification-type={this.props.type}>
@@ -48,12 +48,25 @@ class Notification extends React.Component {
   }
 }
 
-//Notification.propTypes = defaultPropTypes;
-
 Notification.defaultProps = {
   showDismiss: false,
   type: 'info',
   timeoutDuration: 3000
+};
+
+Notification.propTypes = {
+  key: PropTypes.string.isRequired,
+  type: PropTypes.string,
+  title: PropTypes.string,
+  message: PropTypes.string,
+  action: PropTypes.string,
+  actionClick: PropTypes.func,
+  timeoutDuration: PropTypes.number,
+  timeoutFunction: PropTypes.func.isRequired,
+  showDismiss: PropTypes.oneOfType([
+    PropTypes.bool,
+    PropTypes.string
+  ])
 };
 
 export default Notification;
