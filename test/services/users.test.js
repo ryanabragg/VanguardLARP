@@ -1,10 +1,11 @@
-const assert = require('assert');
-const app = require('../../src/server');
+import { expect } from 'chai';
+
+import app from '../../src/server';
 
 describe('\'users\' service', () => {
   it('registered the service', () => {
     const service = app.service('users');
 
-    assert.ok(service, 'Registered the service');
+    expect(service).to.exist;
   });
 });

@@ -1,6 +1,7 @@
-const assert = require('assert');
-const rp = require('request-promise');
-const app = require('../src/server');
+import { expect } from 'chai';
+import request from 'request';
+
+import app from '../src/server';
 
 describe('Feathers application tests', () => {
   before(function(done) {
@@ -9,37 +10,38 @@ describe('Feathers application tests', () => {
   });
 
   after(function(done) {
-    this.server.close(done);
+    this.server.close();
+    done();
   });
 
-  it('starts and shows the index page', () => {
-    return rp('http://localhost:3030').then(body =>
-      assert.ok(body.indexOf('<html>') !== -1)
-    );
+  it('starts and shows the homepage', () => {
+    request('http://localhost:3030', (error, response, body) => {
+      expect(body.indexOf('<html>')).to.not.equal(-1);
+    });
   });
 
   describe('404', function() {
     it('shows a 404 HTML page', () => {
-      return rp({
+      request({
         url: 'http://localhost:3030/path/to/nowhere',
         headers: {
           'Accept': 'text/html'
         }
-      }).catch(res => {
-        assert.equal(res.statusCode, 404);
-        assert.ok(res.error.indexOf('<html>') !== -1);
+      }, (error, response, body) => {
+        expect(response.statusCode).to.equal(404);
+        expect(response.error.indexOf('<html>')).to.not.equal(-1);
       });
     });
 
     it('shows a 404 JSON error without stack trace', () => {
-      return rp({
+      request({
         url: 'http://localhost:3030/path/to/nowhere',
         json: true
-      }).catch(res => {
-        assert.equal(res.statusCode, 404);
-        assert.equal(res.error.code, 404);
-        assert.equal(res.error.message, 'Page not found');
-        assert.equal(res.error.name, 'NotFound');
+      }, (error, response, body) => {
+        expect(response.statusCode).to.equal(404);
+        expect(response.error.code).to.equal(404);
+        expect(response.error.message).to.equal('Page not found');
+        expect(response.error.name).to.equal('NotFound');
       });
     });
   });
