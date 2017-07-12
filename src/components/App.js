@@ -8,6 +8,8 @@ import AdminMenu from './Admin/Menu';
 import AdminDashboard from './Admin/Dashboard';
 import AdminEvents from './Admin/Events';
 
+import Character from './Character/Character';
+
 import PageNotFound from './PageNotFound';
 
 import theme from './theme';
@@ -42,8 +44,10 @@ export default class App extends React.Component {
             <Route exact path='/admin/characters' component={PageNotFound} />
             <Route path='/admin/characters/:id' component={PageNotFound} />
           </Switch>
-          <Route exact path='/character' component={PageNotFound} />
-          <Route exact path='/character/:id' component={PageNotFound} />
+          <Switch>
+            <Route exact path='/character' component={Character} />
+            <Route path='/character/:id' component={Character} />
+          </Switch>
         </div>
       </ThemeProvider>
     );
