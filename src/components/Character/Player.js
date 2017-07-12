@@ -13,8 +13,7 @@ class Player extends React.Component {
     let edit = {
       player: {
         build: Number(e.target.value)
-      },
-      build: 0
+      }
     };
     this.props.editCharacter(edit);
   }

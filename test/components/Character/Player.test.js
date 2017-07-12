@@ -30,6 +30,7 @@ describe('<Player />', () => {
     expect(wrapper.prop('name')).to.equal('test');
     expect(wrapper.find('[data-character="player-name"]').text()).to.equal('test');
     wrapper.setProps({name: 'testing'});
+    expect(wrapper.prop('name')).to.equal('testing');
     expect(wrapper.find('[data-character="player-name"]').text()).to.equal('testing');
   });
 
@@ -48,19 +49,18 @@ describe('<Player />', () => {
   it('calls the editCharacter prop when the build is changed', () => {
     const callback = spy();
     const wrapper = mount(<Player name='test' build={42} editCharacter={callback}/>);
-    wrapper.find('[data-character="player-build"]').find('input').simulate('change', {target: {name: 'build', value: 13}});
+    wrapper.find('[data-character="player-build"]').simulate('change', {target: {name: 'build', value: 13}});
     expect(callback.calledOnce).to.equal(true);
   });
 
   it('calls the editCharacter prop with the correct args', () => {
     const callback = spy();
     const wrapper = mount(<Player name='test' build={42} editCharacter={callback}/>);
-    wrapper.find('[data-character="player-build"]').find('input').simulate('change', {target: {name: 'build', value: 13}});
+    wrapper.find('[data-character="player-build"]').simulate('change', {target: {name: 'build', value: 13}});
     let edit = {
       player: {
         build: 13
-      },
-      build: 0
+      }
     };
     expect(callback.calledWith(edit)).to.equal(true);
   });
