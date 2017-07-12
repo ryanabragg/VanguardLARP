@@ -20,10 +20,12 @@ class Player extends React.Component {
     return (
       <div data-character='bio'>
         <input data-character='character-name' name='name' onChange={this.handleInputChange} value={this.props.name} />
+        <span data-character='character-race' onClick={this.props.editRace}>{this.props.race}</span>
         <span data-character='character-build'>{this.props.build}</span>
         <span data-character='character-level'>{this.props.level}</span>
         <span data-character='character-body'>{this.props.body}</span>
         <span data-character='character-buffs'>{this.props.buffs}</span>
+        <span data-character='character-inscriptions'>{this.props.inscriptions}</span>
         <span data-character='character-armor'>{this.props.armor}</span>
       </div>
     );
@@ -32,24 +34,29 @@ class Player extends React.Component {
 
 Player.defaultProps = {
   name: 'NPC',
-  build: 0,
-  level: 0,
-  body: 0,
-  buffs: 0,
+  race: '',
+  build: 35,
+  level: 1,
+  body: 15,
+  buffs: 3,
+  inscriptions: 1,
   armor: ''
 };
 
 Player.propTypes = {
   name: PropTypes.string.isRequired,
-  build: PropTypes.number.isRequired,
-  level: PropTypes.number.isRequired,
-  body: PropTypes.number.isRequired,
-  buffs: PropTypes.number.isRequired,
+  race: PropTypes.string,
+  build: PropTypes.number,
+  level: PropTypes.number,
+  body: PropTypes.number,
+  buffs: PropTypes.number,
+  inscriptions: PropTypes.number,
   armor: PropTypes.oneOfType([
     PropTypes.number,
     PropTypes.string
   ]),
-  editCharacter: PropTypes.func.isRequired
+  editCharacter: PropTypes.func.isRequired,
+  editRace: PropTypes.func.isRequired
 };
 
 export default Player;

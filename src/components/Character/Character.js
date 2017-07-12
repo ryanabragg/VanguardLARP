@@ -28,6 +28,7 @@ class Character extends React.Component {
           name: '',
           culture: ''
         },
+        recoveries: 6,
         racials: {},
         skills: {},
         free: {}
@@ -39,6 +40,7 @@ class Character extends React.Component {
     this.saveCharacter = this.saveCharacter.bind(this);
     this.characterHas = this.characterHas.bind(this);
     this.editCharacter = this.editCharacter.bind(this);
+    this.editRace = this.editRace.bind(this);
   }
 
   componentDidMount () {
@@ -49,12 +51,14 @@ class Character extends React.Component {
 
   getLevelValues() {
     const build = this.state.character.build;
+    const level = Math.floor((build - 25) / 10);
     return {
       buildAvailable: this.state.character.player.build,
       buildUsed: build,
-      level: (build - 25) / 10,
-      body: 10 + 5 * (build - 25) / 10,
-      buffs: 1 + (build - 25) / 10 / 5
+      level: level,
+      body: 10 + 5 * level,
+      buffs: 3 + Math.floor(level / 5),
+      inscriptions: 1 + Math.floor(level / 5)
     };
   }
 
@@ -84,10 +88,10 @@ class Character extends React.Component {
     });
   }
 
+  editRace() {}
+
   render() {
-    console.log(this.state.character);
-    console.log(this.getLevelValues());
-    const { buildAvailable, buildUsed, level, body, buffs } = this.getLevelValues();
+    const { buildAvailable, buildUsed, level, body, buffs, inscriptions } = this.getLevelValues();
     const { character } = this.state;
     return (
       <div data-character='container'>
@@ -98,11 +102,14 @@ class Character extends React.Component {
         />
         <Bio
           name={character.name}
+          race={character.race.name + character.race.culture ? ' - ' + character.race.name + ''}
           build={character.build}
           level={level}
           body={body}
           buffs={buffs}
+          inscriptions={inscriptions}
           editCharacter={this.editCharacter}
+          editRace={this.editRace}
         />
       </div>
     );
