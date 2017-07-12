@@ -102,7 +102,7 @@ class Character extends React.Component {
         />
         <Bio
           name={character.name}
-          race={character.race.name + character.race.culture ? ' - ' + character.race.name + ''}
+          race={character.race.name + character.race.culture ? ' - ' + character.race.name : ''}
           build={character.build}
           level={level}
           body={body}
