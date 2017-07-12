@@ -3,6 +3,7 @@ import React from 'react';
 //import UUID from 'uuid/v1';
 
 import Player from './Player';
+import Bio from './Bio';
 
 class Character extends React.Component {
   constructor (props) {
@@ -49,11 +50,15 @@ class Character extends React.Component {
   getLevelValues() {
     const build = this.state.character.build;
     return {
+      buildAvailable: this.state.character.player.build,
+      buildUsed: build,
       level: (build - 25) / 10,
       body: 10 + 5 * (build - 25) / 10,
       buffs: 1 + (build - 25) / 10 / 5
     };
   }
+
+  getRuleData(id) {}
 
   updateURI() {}
   saveCharacter() {}
@@ -66,6 +71,10 @@ class Character extends React.Component {
     return list[id];
   }
 
+  characterCanGet(id) {
+    return true;
+  }
+
   editCharacter(edit) {
     this.setState((prevState, props) => {
       let updated = Object.assign({}, prevState.character, edit);
@@ -76,13 +85,23 @@ class Character extends React.Component {
   }
 
   render() {
-    //const { level, body, buffs } = this.getLevelValues();
+    console.log(this.state.character);
+    console.log(this.getLevelValues());
+    const { buildAvailable, buildUsed, level, body, buffs } = this.getLevelValues();
     const { character } = this.state;
     return (
       <div data-character='container'>
         <Player
           name={character.player.name}
           build={character.player.build}
+          editCharacter={this.editCharacter}
+        />
+        <Bio
+          name={character.name}
+          build={character.build}
+          level={level}
+          body={body}
+          buffs={buffs}
           editCharacter={this.editCharacter}
         />
       </div>
