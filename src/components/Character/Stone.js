@@ -10,11 +10,10 @@ class Stone extends React.Component {
 
   handleClick(e) {
     e.preventDefault();
-    console.log(this.props.id);
-    if(!this.props.id)
+    if(!this.props.color)
       this.props.stoneClick();
     else
-      this.props.stoneClick(this.props.id);
+      this.props.stoneClick(this.props.color);
   }
 
   render() {

@@ -60,7 +60,7 @@ describe('<Stone />', () => {
     const stoneClick = spy();
     mount(<Stone stoneClick={stoneClick} />).find('div').simulate('click');
     expect(stoneClick.firstCall.args.length).to.equal(0);
-    let test = mount(<Stone id='testing' stoneClick={stoneClick} />).find('div').simulate('click');
-    expect(stoneClick.secondCall.args[0]).to.equal('testing');
+    mount(<Stone color='blue' stoneClick={stoneClick} />).find('div').simulate('click');
+    expect(stoneClick.secondCall.args[0]).to.equal('blue');
   });
 });
