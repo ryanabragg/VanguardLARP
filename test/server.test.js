@@ -29,7 +29,9 @@ describe('Feathers application tests', () => {
         }
       }, (error, response, body) => {
         expect(response.statusCode).to.equal(404);
-        expect(response.error.indexOf('<html>')).to.not.equal(-1);
+        expect(response.statusMessage).to.equal('Not Found');
+        expect(body.indexOf('<html>')).to.equal(0);
+        expect(body.lastIndexOf('</html>')).to.equal(body.length - 7);
       });
     });
 
@@ -39,9 +41,9 @@ describe('Feathers application tests', () => {
         json: true
       }, (error, response, body) => {
         expect(response.statusCode).to.equal(404);
-        expect(response.error.code).to.equal(404);
-        expect(response.error.message).to.equal('Page not found');
-        expect(response.error.name).to.equal('NotFound');
+        expect(response.statusMessage).to.equal('Not Found');
+        expect(JSON.stringify(body).indexOf('{')).to.equal(0);
+        expect(JSON.stringify(body).lastIndexOf('}')).to.equal(JSON.stringify(body).length - 1);
       });
     });
   });
