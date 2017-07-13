@@ -22,7 +22,8 @@ class Character extends React.Component {
           blue: 1,
           black: 1,
           red: 2,
-          white: 9
+          white: 9,
+          lost: 0
         },
         race: {
           name: '',
