@@ -39,10 +39,6 @@ Stone.defaultProps = {
 };
 
 Stone.propTypes = {
-  id: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.string
-  ]),
   color: PropTypes.string,
   colorLetters: PropTypes.object,
   disable: PropTypes.bool,
