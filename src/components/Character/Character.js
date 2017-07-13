@@ -4,6 +4,7 @@ import React from 'react';
 
 import Player from './Player';
 import Bio from './Bio';
+import Stones from './Stones';
 
 class Character extends React.Component {
   constructor (props) {
@@ -112,6 +113,8 @@ class Character extends React.Component {
           editCharacter={this.editCharacter}
           editRace={this.editRace}
         />
+        <Stones label='ressurection-bag' stones={this.state.character.lives} />
+        <Stones label='recoveries' stones={this.state.character.recoveries} />
       </div>
     );
   }
