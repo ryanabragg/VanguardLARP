@@ -29,10 +29,11 @@ describe('<AbilityGroup />', () => {
       id: 42,
       name: 'test'
     }];
-    const wrapper = shallow(<AbilityGroup tier={1} abilities={list} viewDescription={view} updateCharacterAbility={update}/>);
+    const wrapper = shallow(<AbilityGroup label={1} abilities={list} viewDescription={view} updateCharacterAbility={update}/>);
     expect(wrapper.find('div')).to.have.length(1);
     expect(wrapper.find('div').childAt(0).type()).to.equal('span');
     expect(wrapper.find('span')).to.have.length(1);
+    expect(wrapper.find('span').text()).to.equal('1');
     expect(wrapper.find('div').childAt(1).type()).to.equal(Ability);
     expect(wrapper.find(Ability)).to.have.length(list.length);
     list = list.concat([{
@@ -46,8 +47,9 @@ describe('<AbilityGroup />', () => {
       display: 'tiers',
       count: 1
     }]);
-    wrapper.setProps({abilities: list});
+    wrapper.setProps({label: 'Tier I', abilities: list});
     expect(wrapper.find(Ability)).to.have.length(list.length);
+    expect(wrapper.find('span').text()).to.equal('Tier I');
   });
 
   it('renders the Ability components with the propper props from the array object', () => {
@@ -61,7 +63,7 @@ describe('<AbilityGroup />', () => {
       display: 'checkbox',
       count: 11
     }];
-    const wrapper = shallow(<AbilityGroup tier={1} abilities={list} viewDescription={view} updateCharacterAbility={update}/>);
+    const wrapper = shallow(<AbilityGroup label={1} abilities={list} viewDescription={view} updateCharacterAbility={update}/>);
     expect(wrapper.find(Ability).at(0).prop('id')).to.equal(list[0].id);
     expect(wrapper.find(Ability).at(0).prop('name')).to.equal(list[0].name);
     expect(wrapper.find(Ability).at(0).prop('display')).to.equal(undefined);

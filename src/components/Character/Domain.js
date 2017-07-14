@@ -21,8 +21,7 @@ class Domain extends React.Component {
           return (
             <AbilityGroup
               key={tier}
-              domain={this.props.name}
-              tier={tier}
+              label={tier}
               abilities= {this.props.abilities.filter(ability => tier === ability.tier)}
               viewDescription={this.props.viewDescription}
               updateCharacterAbility={this.props.updateCharacterAbility}

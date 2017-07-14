@@ -10,8 +10,8 @@ class AbilityGroup extends React.Component {
 
   render() {
     return (
-      <div data-character='tier'>
-        <span data-character='tier-label'>Tier {this.props.tier}</span>
+      <div data-character='ability-group'>
+        <span data-character='label'>{this.props.label}</span>
         {this.props.abilities.map(ability => {
           return (
             <Ability
@@ -33,7 +33,10 @@ class AbilityGroup extends React.Component {
 //AbilityGroup.defaultProps = {};
 
 AbilityGroup.propTypes = {
-  tier: PropTypes.number.isRequired,
+  label: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number
+  ]).isRequired,
   abilities: PropTypes.array.isRequired,
   viewDescription: PropTypes.func.isRequired,
   updateCharacterAbility: PropTypes.func.isRequired

@@ -86,15 +86,15 @@ describe('<Domain />', () => {
     }];
     const tiers = list.map(ability => ability.tier).filter((tier, index, self) => index === self.indexOf(tier)).sort((a, b) => a - b);
     const wrapper = shallow(<Domain name='test' abilities={list} viewDescription={view} updateCharacterAbility={update}/>);
-    expect(wrapper.find(AbilityGroup).at(0).prop('tier')).to.equal(tiers[0]);
+    expect(wrapper.find(AbilityGroup).at(0).prop('label')).to.equal(tiers[0]);
     expect(wrapper.find(AbilityGroup).at(0).prop('abilities')).to.deep.equal(list.filter(ability => tiers[0] === ability.tier));
     expect(wrapper.find(AbilityGroup).at(0).prop('viewDescription')).to.equal(view);
     expect(wrapper.find(AbilityGroup).at(0).prop('updateCharacterAbility')).to.equal(update);
-    expect(wrapper.find(AbilityGroup).at(1).prop('tier')).to.equal(tiers[1]);
+    expect(wrapper.find(AbilityGroup).at(1).prop('label')).to.equal(tiers[1]);
     expect(wrapper.find(AbilityGroup).at(1).prop('abilities')).to.deep.equal(list.filter(ability => tiers[1] === ability.tier));
     expect(wrapper.find(AbilityGroup).at(1).prop('viewDescription')).to.equal(view);
     expect(wrapper.find(AbilityGroup).at(1).prop('updateCharacterAbility')).to.equal(update);
-    expect(wrapper.find(AbilityGroup).at(2).prop('tier')).to.equal(tiers[2]);
+    expect(wrapper.find(AbilityGroup).at(2).prop('label')).to.equal(tiers[2]);
     expect(wrapper.find(AbilityGroup).at(2).prop('abilities')).to.deep.equal(list.filter(ability => tiers[2] === ability.tier));
     expect(wrapper.find(AbilityGroup).at(2).prop('viewDescription')).to.equal(view);
     expect(wrapper.find(AbilityGroup).at(2).prop('updateCharacterAbility')).to.equal(update);
