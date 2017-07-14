@@ -50,7 +50,7 @@ describe('<DomainTier />', () => {
     expect(wrapper.find(Ability)).to.have.length(list.length);
   });
 
-  it('renders an Ability component with the propper props from the array object', () => {
+  it('renders the Ability components with the propper props from the array object', () => {
     const view = spy(), update = spy();
     const list = [{
       id: 42,
