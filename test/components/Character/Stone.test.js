@@ -59,10 +59,10 @@ describe('<Stone />', () => {
   it('calls the stoneClick prop with the correct args', () => {
     const stoneClick = spy();
     const wrapper = mount(<Stone stoneClick={stoneClick} />);
-    wrapper.find('div').simulate('click')
+    wrapper.find('div').simulate('click');
     expect(stoneClick.firstCall.args.length).to.equal(0);
     wrapper.setProps({color: 'blue'});
-    wrapper.find('div').simulate('click')
+    wrapper.find('div').simulate('click');
     expect(stoneClick.secondCall.args[0]).to.equal('blue');
   });
 });
