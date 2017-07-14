@@ -29,7 +29,7 @@ describe('<DomainTier />', () => {
       id: 42,
       name: 'test'
     }];
-    const wrapper = shallow(<DomainTier domain='test' tier={1} abilities={list} viewDescription={view} updateCharacterAbility={update}/>);
+    const wrapper = shallow(<DomainTier tier={1} abilities={list} viewDescription={view} updateCharacterAbility={update}/>);
     expect(wrapper.find('div')).to.have.length(1);
     expect(wrapper.find('div').childAt(0).type()).to.equal('span');
     expect(wrapper.find('span')).to.have.length(1);
@@ -61,7 +61,7 @@ describe('<DomainTier />', () => {
       display: 'checkbox',
       count: 11
     }];
-    const wrapper = shallow(<DomainTier domain='test' tier={1} abilities={list} viewDescription={view} updateCharacterAbility={update}/>);
+    const wrapper = shallow(<DomainTier tier={1} abilities={list} viewDescription={view} updateCharacterAbility={update}/>);
     expect(wrapper.find(Ability).at(0).prop('id')).to.equal(list[0].id);
     expect(wrapper.find(Ability).at(0).prop('name')).to.equal(list[0].name);
     expect(wrapper.find(Ability).at(0).prop('display')).to.equal(undefined);

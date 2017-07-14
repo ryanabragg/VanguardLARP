@@ -33,7 +33,6 @@ class DomainTier extends React.Component {
 //DomainTier.defaultProps = {};
 
 DomainTier.propTypes = {
-  domain: PropTypes.string.isRequired,
   tier: PropTypes.number.isRequired,
   abilities: PropTypes.array.isRequired,
   viewDescription: PropTypes.func.isRequired,
