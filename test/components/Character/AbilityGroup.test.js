@@ -4,7 +4,7 @@ import { spy } from 'sinon';
 import { shallow } from 'enzyme';
 import { JSDOM } from 'jsdom';
 
-import DomainTier from '../../../src/components/Character/DomainTier';
+import AbilityGroup from '../../../src/components/Character/AbilityGroup';
 import Ability from '../../../src/components/Character/Ability';
 
 const window = (new JSDOM('<!doctype html><html><body></body></html>')).window;
@@ -22,14 +22,14 @@ function copyProps(src, target) {
 }
 copyProps(window, global);
 
-describe('<DomainTier />', () => {
+describe('<AbilityGroup />', () => {
   it('renders a div with a span and an Ability component for each object in the abilities prop', () => {
     const view = spy(), update = spy();
     let list = [{
       id: 42,
       name: 'test'
     }];
-    const wrapper = shallow(<DomainTier tier={1} abilities={list} viewDescription={view} updateCharacterAbility={update}/>);
+    const wrapper = shallow(<AbilityGroup tier={1} abilities={list} viewDescription={view} updateCharacterAbility={update}/>);
     expect(wrapper.find('div')).to.have.length(1);
     expect(wrapper.find('div').childAt(0).type()).to.equal('span');
     expect(wrapper.find('span')).to.have.length(1);
@@ -61,7 +61,7 @@ describe('<DomainTier />', () => {
       display: 'checkbox',
       count: 11
     }];
-    const wrapper = shallow(<DomainTier tier={1} abilities={list} viewDescription={view} updateCharacterAbility={update}/>);
+    const wrapper = shallow(<AbilityGroup tier={1} abilities={list} viewDescription={view} updateCharacterAbility={update}/>);
     expect(wrapper.find(Ability).at(0).prop('id')).to.equal(list[0].id);
     expect(wrapper.find(Ability).at(0).prop('name')).to.equal(list[0].name);
     expect(wrapper.find(Ability).at(0).prop('display')).to.equal(undefined);

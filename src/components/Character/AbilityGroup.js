@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import Ability from './Ability';
 
-class DomainTier extends React.Component {
+class AbilityGroup extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -30,13 +30,13 @@ class DomainTier extends React.Component {
   }
 }
 
-//DomainTier.defaultProps = {};
+//AbilityGroup.defaultProps = {};
 
-DomainTier.propTypes = {
+AbilityGroup.propTypes = {
   tier: PropTypes.number.isRequired,
   abilities: PropTypes.array.isRequired,
   viewDescription: PropTypes.func.isRequired,
   updateCharacterAbility: PropTypes.func.isRequired
 };
 
-export default DomainTier;
+export default AbilityGroup;

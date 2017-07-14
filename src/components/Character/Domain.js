@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import DomainTier from './DomainTier';
+import AbilityGroup from './AbilityGroup';
 
 class Domain extends React.Component {
   constructor(props) {
@@ -19,7 +19,7 @@ class Domain extends React.Component {
         <span data-character='domain-label'>{this.props.name}</span>
         {tiers.map(tier => {
           return (
-            <DomainTier
+            <AbilityGroup
               key={tier}
               domain={this.props.name}
               tier={tier}
