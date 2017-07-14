@@ -6,6 +6,8 @@ import { JSDOM } from 'jsdom';
 
 import Character from '../../../src/components/Character/Character';
 import Player from '../../../src/components/Character/Player';
+import Bio from '../../../src/components/Character/Bio';
+import Stones from '../../../src/components/Character/Stones';
 
 const window = (new JSDOM('<!doctype html><html><body></body></html>')).window;
 global.window = window;
@@ -30,15 +32,43 @@ describe('<Character />', () => {
     expect(Character.prototype.componentDidMount.calledOnce).to.be.true;
   });
 
-  describe('Component children', () => {
-    it('contains a player component', () => {
+  describe('Children', () => {
+    it('contains a Player component', () => {
       const wrapper = shallow(<Character />);
       expect(wrapper.find(Player)).to.have.length(1);
+      expect(wrapper.find(Player).prop('name')).to.equal('Unknown');
+      expect(wrapper.find(Player).prop('build')).to.equal(0);
+      expect(wrapper.find(Player).prop('editCharacter')).to.be.a('function');
     });
 
-    it('contains a bio component');
-    it('contains a recoveries component');
-    it('contains a ressurection component');
+    it('contains a Bio component', () => {
+      const wrapper = shallow(<Character />);
+      expect(wrapper.find(Bio)).to.have.length(1);
+      expect(wrapper.find(Bio).prop('name')).to.equal('NPC');
+      expect(wrapper.find(Bio).prop('race')).to.equal('');
+      expect(wrapper.find(Bio).prop('build')).to.equal(0);
+      expect(wrapper.find(Bio).prop('level')).to.equal(-3);
+      expect(wrapper.find(Bio).prop('body')).to.equal(-5);
+      expect(wrapper.find(Bio).prop('buffs')).to.equal(2);
+      expect(wrapper.find(Bio).prop('inscriptions')).to.equal(0);
+      expect(wrapper.find(Bio).prop('editCharacter')).to.be.a('function');
+      expect(wrapper.find(Bio).prop('editRace')).to.be.a('function');
+    });
+
+    it('contains a Stones ressurection bag component', () => {
+      const wrapper = shallow(<Character />);
+      expect(wrapper.find(Stones).find({label: 'ressurection-bag'})).to.have.length(1);
+      expect(wrapper.find(Stones).find({label: 'ressurection-bag'}).prop('stones')).to.deep.equal({blue: 1, black: 1, red: 2, white: 9, lost: 0});
+      expect(wrapper.find(Stones).find({label: 'ressurection-bag'}).prop('stoneClick')).to.be.a('function');
+    });
+
+    it('contains a Stones recoveries component', () => {
+      const wrapper = shallow(<Character />);
+      expect(wrapper.find(Stones).find({label: 'recoveries'})).to.have.length(1);
+      expect(wrapper.find(Stones).find({label: 'recoveries'}).prop('stones')).to.equal(6);
+      expect(wrapper.find(Stones).find({label: 'recoveries'}).prop('stoneClick')).to.be.a('function');
+    });
+
     it('contains a racial skills component');
     it('contains a constant skills component');
     it('contains a crafting skills component');

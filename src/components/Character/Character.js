@@ -43,6 +43,8 @@ class Character extends React.Component {
     this.characterHas = this.characterHas.bind(this);
     this.editCharacter = this.editCharacter.bind(this);
     this.editRace = this.editRace.bind(this);
+    this.editLives = this.editLives.bind(this);
+    this.editRecoveries = this.editRecoveries.bind(this);
   }
 
   componentDidMount () {
@@ -92,6 +94,10 @@ class Character extends React.Component {
 
   editRace() {}
 
+  editLives() {}
+
+  editRecoveries() {}
+
   render() {
     const { buildAvailable, buildUsed, level, body, buffs, inscriptions } = this.getLevelValues();
     const { character } = this.state;
@@ -99,13 +105,13 @@ class Character extends React.Component {
       <div data-character='container'>
         <Player
           name={character.player.name}
-          build={character.player.build}
+          build={buildAvailable}
           editCharacter={this.editCharacter}
         />
         <Bio
           name={character.name}
           race={character.race.name + character.race.culture ? ' - ' + character.race.name : ''}
-          build={character.build}
+          build={buildUsed}
           level={level}
           body={body}
           buffs={buffs}
@@ -113,8 +119,16 @@ class Character extends React.Component {
           editCharacter={this.editCharacter}
           editRace={this.editRace}
         />
-        <Stones label='ressurection-bag' stones={this.state.character.lives} />
-        <Stones label='recoveries' stones={this.state.character.recoveries} />
+        <Stones
+          label='ressurection-bag'
+          stones={this.state.character.lives}
+          stoneClick={this.editLives}
+        />
+        <Stones
+          label='recoveries' 
+          stones={this.state.character.recoveries}
+          stoneClick={this.editRecoveries}
+        />
       </div>
     );
   }
