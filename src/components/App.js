@@ -7,6 +7,7 @@ import Home from './Home/Home';
 import AdminMenu from './Admin/Menu';
 import AdminDashboard from './Admin/Dashboard';
 import AdminEvents from './Admin/Events';
+import AdminRules from './Admin/Rules';
 
 import Character from './Character/Character';
 
@@ -39,8 +40,8 @@ export default class App extends React.Component {
             <Route exact path='/admin' component={AdminDashboard} />
             <Route exact path='/admin/events' component={AdminEvents} />
             <Route path='/admin/events/:id' component={AdminEvents} />
-            <Route exact path='/admin/rules' component={PageNotFound} />
-            <Route path='/admin/rules/:id' component={PageNotFound} />
+            <Route exact path='/admin/rules' component={AdminRules} />
+            <Route path='/admin/rules/:id' component={AdminRules} />
             <Route exact path='/admin/characters' component={PageNotFound} />
             <Route path='/admin/characters/:id' component={PageNotFound} />
           </Switch>
