@@ -37,20 +37,21 @@ export default class Rules extends React.Component {
       conflicts: '', // can't add to character if any value matches
       replaces: '', // adding this to a character will remove the listed values, and increment count for each removed
       grants: '' // adding this to a character will add each value as well
-    }
+    };
+
+    this.syncData = {
+      interval: 500, // ms
+      paginate: 50,
+      total: 0,
+      progress: [],
+      add: [],
+      modify: [],
+      remove:[]
+    };
 
     this.state = {
       alerts: [],
       list: [],
-      sync: {
-        interval: 500, // ms
-        paginate: 50,
-        total: 0,
-        progress: [],
-        add: [],
-        modify: [],
-        remove:[]
-      },
       search: {
         modified: '',
         name: '',
@@ -59,6 +60,7 @@ export default class Rules extends React.Component {
       selected: Object.assign({}, this.blankObj)
     };
 
+    this.startSync = this.startSync.bind(this);
     this.sync = this.sync.bind(this);
 
     this.createObj = this.createObj.bind(this);
@@ -83,8 +85,10 @@ export default class Rules extends React.Component {
     app.service('rules').on('created', obj => {
       this.setState((prevState, props) => {
         let nextState = Object.assign({}, prevState);
-        nextState.list = !this.syncInterval ? prevState.list.concat(obj) : prevState.list;
-        nextState.sync.add = this.syncInterval ? prevState.sync.add.concat(obj) : prevState.sync.add;
+        if(this.syncInProgress)
+          this.syncData.add = this.syncData.add.concat(obj);
+        else
+          nextState.list = prevState.list.concat(obj);
         return nextState;
       });
     });
@@ -105,12 +109,10 @@ export default class Rules extends React.Component {
             data: obj
           });
         }
-        if(this.syncInterval) {
-          nextState.sync.modify = prevState.sync.modify.concat(obj);
-        }
-        else {
+        if(this.syncInProgress)
+          this.syncData.modify = this.syncData.modify.concat(obj);
+        else
           nextState.list[prevState.list.map(item => item._id).indexOf(obj._id)] = Object.assign({}, obj);
-        }
         return nextState;
       });
     });
@@ -132,14 +134,14 @@ export default class Rules extends React.Component {
           });
         }
         else {
-          nextState.list = !this.syncInterval ? prevState.list.filter(old => obj._id != old._id) : prevState.list;
-          nextState.sync.remove = this.syncInterval ? prevState.sync.remove.concat(obj) : prevState.sync.remove;
+          nextState.list = !this.syncInProgress ? prevState.list.filter(old => obj._id != old._id) : prevState.list;
+          this.syncData.remove = this.syncInProgress ? this.syncData.remove.concat(obj) : this.syncData.remove;
         }
         return nextState;
       });
     });
 
-    this.sync();
+    this.startSync();
   }
 
   componentWillUnmount () {
@@ -148,42 +150,38 @@ export default class Rules extends React.Component {
     app.service('rules').removeListener('removed');
   }
 
+  startSync() {
+    this.syncData = {
+      interval: 500, // ms
+      paginate: 50,
+      total: 0,
+      progress: [],
+      add: [],
+      modify: [],
+      remove:[]
+    };
+    this.syncInProgress = setInterval(this.sync, this.syncData.interval);
+  }
+
   sync() {
-    app.service('rules').find({query:{$sort:{category: 1, group: 1, name: 1},$limit:this.state.sync.paginate,$skip:this.state.sync.progress.length}}).then(page => {
-      this.setState((prevState, props) => {
-        let nextState = Object.assign({}, prevState);
-        nextState.sync.total = page.total;
-        nextState.sync.progress = prevState.sync.progress.concat(page.data);
-        return nextState;
-      }, () => {
-        if(this.state.sync.total == this.state.sync.progress.length + this.state.sync.add.length - this.state.sync.remove.length) {
-          if(this.syncInterval)
-            clearInterval(this.syncInterval);
-          this.setState((prevState, props) => {
-            let modifyIDs = prevState.sync.modify.map(obj => obj._id);
-            let removeIDs = prevState.sync.remove.map(obj => obj._id);
-            return {
-              list: prevState.sync.progress
-                .filter(obj => removeIDs.indexOf(obj._id) === -1)
-                .filter(obj => modifyIDs.indexOf(obj._id) === -1)
-                .concat(prevState.sync.modify)
-                .concat(prevState.sync.add),
-              sync: {
-                interval: 500, // ms
-                paginate: 50,
-                total: 0,
-                progress: [],
-                add: [],
-                modify: [],
-                remove: []
-              }
-            };
-          });
-        }
-        else if(!this.syncInterval) {
-          this.syncInterval = setInterval(this.sync, this.state.sync.interval);
-        }
-      });
+    app.service('rules').find({query:{$sort:{category: 1, group: 1, name: 1},$limit:this.syncData.paginate,$skip:this.syncData.progress.length}}).then(page => {
+      this.syncData.total = page.total;
+      this.syncData.progress = this.syncData.progress.concat(page.data);
+      if(this.syncData.total == this.syncData.progress.length + this.syncData.add.length - this.syncData.remove.length) {
+        clearInterval(this.syncInProgress);
+        this.syncInProgress = 0;
+        let modifyIDs = this.syncData.modify.map(obj => obj._id);
+        let removeIDs = this.syncData.remove.map(obj => obj._id);
+        this.setState((prevState, props) => {
+          let nextState = Object.assign({}, prevState);
+          nextState.list = this.syncData.progress
+            .filter(obj => removeIDs.indexOf(obj._id) === -1)
+            .filter(obj => modifyIDs.indexOf(obj._id) === -1)
+            .concat(this.syncData.modify)
+            .concat(this.syncData.add);
+          return nextState;
+        });
+      }
     });
   }
 
@@ -513,7 +511,7 @@ export default class Rules extends React.Component {
       <div>
         <main>
           <div data-rules='manage'>
-            <button type='button' value='refresh' onClick={this.sync}>Refresh</button>
+            <button type='button' value='refresh' onClick={this.startSync}>Refresh</button>
             <button type='button' value='new' onClick={this.handleFormNew}>Add Rule</button>
             <div data-rules='@todo search rules'></div>
           </div>
@@ -521,7 +519,7 @@ export default class Rules extends React.Component {
             {this.state.selected._id == 'new' ? this.renderObjForm(this.state.selected) : null}
           </RuleList>
           <RuleList {...this.props} data-rules='list'>
-            {this.state.sync.progress.length > 0 ? Spinner : null}
+            {this.syncData.progress.length > 0 ? Spinner : null}
             {this.state.list.length == 0 ? null : this.state.list.map(obj => {
               return obj._id == this.state.selected._id ? this.renderObjForm(obj) : this.renderObj(obj);
             })}
