@@ -15,11 +15,7 @@ const RuleList = styled.div`
     margin-left: 15px;
   }
   div > div:first-child {
-    display: inline-block;
-    height: 1.5em;
-    line-height: 1.5em;
     width: 200px;
-    margin-left: 15px;
   }
   [data-rule="placeholder"] {
     color: lightgrey;
