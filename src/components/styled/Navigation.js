@@ -6,54 +6,58 @@ const Navigation = styled.nav`
   background: ${props => Color(props.theme.colors.primary).grayscale().hex()};
   width: 100%;
   margin-bottom: 10px;
-  a {
+  font-variant: small-caps;
+  text-align: center;
+  line-height: 60px;
+  font-size: 2em;
+  font-family: ${props => props.theme.font.trebuchet};
+  color: ${props => {
+    let background = Color(props.theme.colors.primary).grayscale();
+    let base = Color(background.dark() ? 'white' : 'black');
+    let alpha = background.light() ? props.theme.alphaDarkText.primary : props.theme.alphaLightText.primary;
+    return base.mix(background, alpha).hex();
+  }};
+  a, span {
     float: left;
     height: 100%;
     padding: 0 0.5em 0 0.5em;
     text-decoration: none;
-    font-variant: small-caps;
-    text-align: center;
-    line-height: 60px;
-    font-size: 2em;
-    font-family: ${props => props.theme.font.trebuchet};
-    color: ${props => {
-      let background = Color(props.theme.colors.primary).grayscale();
-      let base = Color(background.dark() ? 'white' : 'black');
-      let alpha = background.light() ? props.theme.alphaDarkText.primary : props.theme.alphaLightText.primary;
-      return base.mix(background, alpha).hex();
-    }};
+    color: inherit;
   }
   a:hover {
+    background: ${props => Color(props.theme.colors.primary).grayscale().darken(0.5).hex()};
+    color: ${props => props.theme.colors.secondary};
+  }
+  a.nav-active {
     color: ${props => props.theme.colors.secondary};
   }
   img {
     height: 40px;
     vertical-align: text-bottom;
   }
-  a:last-child {
+  .menu-toggle {
     position: absolute;
     top: 0;
     right: 0;
+    height: 100%;
+    padding: 0 0.5em 0 0.5em;
     display: none;
   }
-  .nav-active {
-    color: ${props => props.theme.colors.secondary};
-  }
   @media (max-width: ${props => props.theme.breakpoints.s}px) {
-    a:first-child {
-      float: ${props => props.isMenuHidden ? 'left' : 'none'};
+    .menu-logo {
+      padding-right: ${props => props.isMenuHidden ? '0.5em' : '100%'};
     }
-    a:not(:first-child) {
+    a {
       float: none;
       display: ${props => props.isMenuHidden ? 'none' : 'block'};
       text-align: left;
     }
-    a:last-child {
+    a.nav-active {
+      float: left;
       display: block;
     }
-    .nav-active {
-      float: left;
-      display: block !important;
+    .menu-toggle {
+      display: block;
     }
   }
 `;

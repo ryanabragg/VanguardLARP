@@ -3,12 +3,18 @@ import { Link, NavLink } from 'react-router-dom';
 
 import Navigation from '../styled/Navigation';
 
+import routes from '../../routes';
+
 class Menu extends React.Component {
   constructor (props) {
     super(props);
+
+    this.linkTo = routes.filter(route => route.slice(0, 6) === '/admin' && route.slice(route.length - 4, route.length) != '/:id');
+
     this.state = {
       isMenuHidden: true
     };
+
     this.toggleMenu = this.toggleMenu.bind(this);
   }
 
@@ -20,13 +26,24 @@ class Menu extends React.Component {
 
   render() {
     return (
-      <Navigation isMenuHidden={this.state.isMenuHidden} onClick={this.toggleMenu}>
-        <Link to='/'><img src='../logo.svg'/></Link>
-        <NavLink exact to='/admin' activeClassName='nav-active'>Dashboard</NavLink>
-        <NavLink to='/admin/events' activeClassName='nav-active'>Events</NavLink>
-        <NavLink to='/admin/rules' activeClassName='nav-active'>Rules</NavLink>
-        <NavLink to='/admin/characters' activeClassName='nav-active'>Characters</NavLink>
-        <a className='nav-icon' href='javascript:void(0);'>&#9776;</a>
+      <Navigation isMenuHidden={this.state.isMenuHidden}>
+        <span className='menu-logo'><img src='../logo.svg'/></span>
+        {this.linkTo.map((link, index) => {
+          let dashboard = link === '/admin';
+          let name = dashboard ? 'dashboard' : link.slice(7, link.length);
+          name = name.charAt(0).toUpperCase() + name.substr(1).toLowerCase();
+          return (
+            <NavLink
+              key={index}
+              exact={dashboard}
+              to={link}
+              activeClassName='nav-active'
+            >
+              {name}
+            </NavLink>
+          );
+        })}
+        <span className='menu-toggle' onClick={this.toggleMenu}>&#9776;</span>
       </Navigation>
     );
   }
