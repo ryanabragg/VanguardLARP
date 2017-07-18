@@ -55,7 +55,6 @@ Notification.defaultProps = {
 };
 
 Notification.propTypes = {
-  key: PropTypes.string.isRequired,
   type: PropTypes.string,
   title: PropTypes.string,
   message: PropTypes.string,
