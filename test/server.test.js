@@ -4,13 +4,16 @@ import request from 'request';
 import app from '../src/server';
 
 describe('Feathers application tests', () => {
+  let running = false;
   before(function(done) {
     this.server = app.listen(3030);
+    this.server.once('error', () => {running = true; return done();});
     this.server.once('listening', () => done());
   });
 
   after(function(done) {
-    this.server.close();
+    if(!running)
+      this.server.close();
     done();
   });
 
