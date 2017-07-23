@@ -1,7 +1,9 @@
 import styled from 'styled-components';
 import Color from 'color';
 
-const RuleList = styled.div`
+import RuleList from '../RuleList';
+
+const StyledRuleList = styled(RuleList)`
   display: block;
   width: 100%;
   & > div {
@@ -17,30 +19,41 @@ const RuleList = styled.div`
   div > div:first-child {
     width: 200px;
   }
-  [data-rule="placeholder"] {
+  .placeholder {
     color: lightgrey;
   }
   form {
-    padding: 15px;
+    padding: 1em;
     border-bottom: 1px solid ${props => props.theme.colors.primary};
   }
   fieldset {
     display: block;
     border: none;
+    padding: 0;
+  }
+  fieldset > div {
+    display: inline-block;
+    width: 200px;
+    margin: 0 15px 1em 0;
   }
   label {
-    margin-right: 15px;
+    display: block;
   }
   input {
-    margin-right: 15px;
+    width: 100%;
   }
-  fieldset[data-rule="description"] > label {
-    display: block;
+  fieldset.description > div {
+    width: 100%;
   }
-  fieldset[data-rule="description"] > textarea {
+  textarea {
     display: block;
     width: 100%;
+    max-width: 630px;
+  }
+  button {
+    width: 200px;
+    margin: 0 15px 15px 0;
   }
 `;
 
-export default RuleList;
+export default StyledRuleList;

@@ -19,7 +19,7 @@ export default class Rules extends React.Component {
   constructor (props) {
     super(props);
 
-    this.blankObj = {
+    this.emptyRule = {
       _id: '',
       name: '',
       build: '',
@@ -57,7 +57,7 @@ export default class Rules extends React.Component {
         name: '',
         text: ''
       },
-      selected: Object.assign({}, this.blankObj)
+      selected: Object.assign({}, this.emptyRule)
     };
 
     this.startSync = this.startSync.bind(this);
@@ -76,9 +76,6 @@ export default class Rules extends React.Component {
     this.handleFormNew = this.handleFormNew.bind(this);
 
     this.removeAlert = this.removeAlert.bind(this);
-
-    this.renderObj = this.renderObj.bind(this);
-    this.renderObjForm = this.renderObjForm.bind(this);
   }
 
   componentDidMount() {
@@ -201,7 +198,7 @@ export default class Rules extends React.Component {
             });
           }
           else {
-            //nextState.selected = Object.assign({}, this.blankObj);
+            //nextState.selected = Object.assign({}, this.emptyRule);
             nextState.alerts = prevState.alerts.concat({
               key: UUID(),
               added: Date.now(),
@@ -247,7 +244,7 @@ export default class Rules extends React.Component {
             });
           }
           else {
-            nextState.selected = Object.assign({}, this.blankObj);
+            nextState.selected = Object.assign({}, this.emptyRule);
             nextState.alerts = prevState.alerts.concat({
               key: UUID(),
               added: Date.now(),
@@ -285,7 +282,7 @@ export default class Rules extends React.Component {
             });
           }
           else {
-            nextState.selected = Object.assign({}, this.blankObj);
+            nextState.selected = Object.assign({}, this.emptyRule);
             nextState.alerts = prevState.alerts.concat({
               key: UUID(),
               added: Date.now(),
@@ -333,7 +330,7 @@ export default class Rules extends React.Component {
   handleFormCancel() {
     this.setState((prevState, props) => {
       let nextState = Object.assign({}, prevState);
-      nextState.selected = Object.assign({}, this.blankObj);
+      nextState.selected = Object.assign({}, this.emptyRule);
       return nextState;
     });
   }
@@ -345,7 +342,7 @@ export default class Rules extends React.Component {
   handleFormNew() {
     this.setState((prevState, props) => {
       let nextState = Object.assign({}, prevState);
-      nextState.selected = Object.assign({}, this.blankObj);
+      nextState.selected = Object.assign({}, this.emptyRule);
       nextState.selected._id = 'new';
       return nextState;
     });
@@ -359,153 +356,6 @@ export default class Rules extends React.Component {
     });
   }
 
-  renderObj(obj) {
-    return (
-      <div key={obj._id} name='rule' onClick={this.handleListClick}>
-        <div id={obj._id} name='name'>
-          {obj.name || <span data-rule='placeholder' id={obj._id}>name</span>}
-        </div>
-        <div id={obj._id} name='category'>
-          {obj.category || <span data-rule='placeholder' id={obj._id}>category</span>}
-        </div>
-        <div id={obj._id} name='group'>
-          {obj.group || <span data-rule='placeholder' id={obj._id}>group</span>}
-        </div>
-        <div id={obj._id} name='tier'>
-          {obj.tier || <span data-rule='placeholder' id={obj._id}>tier</span>}
-        </div>
-        <div id={obj._id} name='race'>
-          {obj.race || <span data-rule='placeholder' id={obj._id}>race</span>}
-        </div>
-        <div id={obj._id} name='culture'>
-          {obj.culture || <span data-rule='placeholder' id={obj._id}>culture</span>}
-        </div>
-      </div>
-    );
-  }
-
-  renderObjForm(rule) {
-    return (
-      <form key={rule._id} name='rule' onSubmit={rule.handleFormSubmit}>
-        <fieldset>
-          <label>Name</label>
-          <input type='text'
-            name='name'
-            onChange={this.handleFormInputChange}
-            value={rule.name}
-          />
-          <label>Build</label>
-          <input type='number'
-            name='build'
-            onChange={this.handleFormInputChange}
-            value={rule.build}
-          />
-          <label>Delivery</label>
-          <input type='text'
-            name='delivery'
-            onChange={this.handleFormInputChange}
-            value={rule.delivery}
-          />
-        </fieldset>
-        <fieldset>
-          <label>Category</label>
-          <input type='text'
-            name='category'
-            onChange={this.handleFormInputChange}
-            value={rule.category}
-          />
-          <label>Group</label>
-          <input type='text'
-            name='group'
-            onChange={this.handleFormInputChange}
-            value={rule.group}
-          />
-          <label>Tier</label>
-          <input type='text'
-            name='tier'
-            onChange={this.handleFormInputChange}
-            value={rule.tier}
-          />
-        </fieldset>
-        <fieldset>
-          <label>Race</label>
-          <input type='text'
-            name='race'
-            onChange={this.handleFormInputChange}
-            value={rule.race}
-          />
-          <label>Culture</label>
-          <input type='text'
-            name='culture'
-            onChange={this.handleFormInputChange}
-            value={rule.culture}
-          />
-        </fieldset>
-        <fieldset data-rule='description'>
-          <label>Description</label>
-          <textarea rows="10" cols="50"
-            name='description'
-            onChange={this.handleFormInputChange}
-            value={rule.description}
-          />
-        </fieldset>
-        <fieldset>
-          <label>Max</label>
-          <input type='number'
-            name='max'
-            onChange={this.handleFormInputChange}
-            value={rule.max}
-          />
-        </fieldset>
-        <fieldset>
-          <label>Extra Uses</label>
-          <input type='text'
-            name='extraUses'
-            onChange={this.handleFormInputChange}
-            value={rule.extraUses}
-          />
-        </fieldset>
-        <fieldset>
-          <label>Requires</label>
-          <input type='text'
-            name='requires'
-            onChange={this.handleFormInputChange}
-            value={rule.requires}
-          />
-          <label>Requires Any Of</label>
-          <input type='text'
-            name='requeresAny'
-            onChange={this.handleFormInputChange}
-            value={rule.requeresAny}
-          />
-          <label>Conflicts With</label>
-          <input type='text'
-            name='conflicts'
-            onChange={this.handleFormInputChange}
-            value={rule.conflicts}
-          />
-        </fieldset>
-        <fieldset>
-          <label>Replaces</label>
-          <input type='text'
-            name='replaces'
-            onChange={this.handleFormInputChange}
-            value={rule.replaces}
-          />
-          <label>Grants</label>
-          <input type='text'
-            name='grants'
-            onChange={this.handleFormInputChange}
-            value={rule.grants}
-          />
-        </fieldset>
-        <button type='button' value="submit" onClick={this.handleFormSubmit}>Submit</button>
-        <button type='button' value="cancel" onClick={this.handleFormCancel}>Cancel</button>
-        <button type='button' value="delete" onClick={this.handleFormDelete}>Delete</button>
-      </form>
-    );
-  }
-
   render() {
     return (
       <div>
@@ -515,15 +365,31 @@ export default class Rules extends React.Component {
             <button type='button' value='new' onClick={this.handleFormNew}>Add Rule</button>
             <div data-rules='@todo search rules'></div>
           </div>
-          <RuleList {...this.props} data-rules='new'>
-            {this.state.selected._id == 'new' ? this.renderObjForm(this.state.selected) : null}
-          </RuleList>
-          <RuleList {...this.props} data-rules='list'>
-            {this.syncData.progress.length > 0 ? Spinner : null}
-            {this.state.list.length == 0 ? null : this.state.list.map(obj => {
-              return obj._id == this.state.selected._id ? this.renderObjForm(obj) : this.renderObj(obj);
-            })}
-          </RuleList>
+          {this.state.selected._id != 'new'
+          ? null
+          : <RuleList
+              list={[this.state.selected]}
+              selectedID={this.state.selected._id}
+              onClick={this.handleListClick}
+              onChange={this.handleFormInputChange}
+              onSubmit={this.handleFormSubmit}
+              onCancel={this.handleFormCancel}
+              onDelete={this.handleFormDelete}
+            />
+          }
+          {this.state.list.length == 0
+          ? <Spinner />
+          : <RuleList
+              list={this.state.list}
+              selectedID={this.state.selected._id}
+              onClick={this.handleListClick}
+              onChange={this.handleFormInputChange}
+              onSubmit={this.handleFormSubmit}
+              onCancel={this.handleFormCancel}
+              onDelete={this.handleFormDelete}
+              scrollToForm={true}
+            />
+          }
           {!this.state.alerts.length ? null :
             <NotificationList>
               {this.state.alerts.map((alert, index) => {
