@@ -22,26 +22,26 @@ class RuleList extends React.Component {
     return (
       <article {...rest}>
         {this.props.list.length == 0 ? null : this.props.list.map(rule => (
-          rule._id == this.props.selectedID
+          rule._id == this.props.selected._id
           ? <RuleForm
-              key={rule._id}
-              id={rule._id}
-              name={rule.name}
-              build={Number(rule.build)}
-              delivery={rule.delivery}
-              category={rule.category}
-              group={rule.group}
-              tier={rule.tier}
-              race={rule.race}
-              culture={rule.culture}
-              description={rule.description}
-              max={Number(rule.max)}
-              extraUses={rule.extraUses}
-              requires={rule.requires}
-              requeresAny={rule.requeresAny}
-              conflicts={rule.conflicts}
-              replaces={rule.replaces}
-              grants={rule.grants}
+              key={this.props.selected._id}
+              id={this.props.selected._id}
+              name={this.props.selected.name}
+              build={Number(this.props.selected.build)}
+              delivery={this.props.selected.delivery}
+              category={this.props.selected.category}
+              group={this.props.selected.group}
+              tier={this.props.selected.tier}
+              race={this.props.selected.race}
+              culture={this.props.selected.culture}
+              description={this.props.selected.description}
+              max={Number(this.props.selected.max)}
+              extraUses={this.props.selected.extraUses}
+              requires={this.props.selected.requires}
+              requeresAny={this.props.selected.requeresAny}
+              conflicts={this.props.selected.conflicts}
+              replaces={this.props.selected.replaces}
+              grants={this.props.selected.grants}
               onChange={this.props.onChange}
               onSubmit={this.props.onSubmit}
               onCancel={this.props.onCancel}
@@ -73,7 +73,7 @@ RuleList.defaultProps = {
 
 RuleList.propTypes = {
   list: PropTypes.array.isRequired,
-  selectedID: PropTypes.string,
+  selected: PropTypes.object,
   onClick: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,

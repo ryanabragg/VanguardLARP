@@ -33,6 +33,7 @@ describe('<RuleList />', () => {
     const wrapper = shallow(
       <RuleList
         list={[]}
+        selected={{_id: ''}}
         onClick={onClick}
         onChange={onChange}
         onSubmit={onSubmit}
@@ -59,7 +60,7 @@ describe('<RuleList />', () => {
     expect(wrapper.find(Rule)).to.have.length(2);
   });
 
-  it('renders a RuleForm instead of a Rule for the array object with selectedID', () => {
+  it('renders a RuleForm instead of a Rule for the array object matching the selected object id', () => {
     const onClick = spy(),
       onChange = spy(),
       onSubmit = spy(),
@@ -68,6 +69,7 @@ describe('<RuleList />', () => {
     const wrapper = shallow(
       <RuleList
         list={[]}
+        selected={{_id: ''}}
         onClick={onClick}
         onChange={onChange}
         onSubmit={onSubmit}
@@ -88,7 +90,11 @@ describe('<RuleList />', () => {
         name: 'lucky',
         category: 'number'
       }],
-      selectedID: '42'
+      selected: {
+        _id: '42',
+        name: 'test',
+        category: 'case'
+      }
     });
     expect(wrapper.find('article')).to.have.length(1);
     expect(wrapper.find(RuleForm)).to.have.length(1);
@@ -104,6 +110,7 @@ describe('<RuleList />', () => {
     const wrapper = shallow(
       <RuleList
         list={[]}
+        selected={{_id: ''}}
         onClick={onClick}
         onChange={onChange}
         onSubmit={onSubmit}
@@ -130,8 +137,7 @@ describe('<RuleList />', () => {
         conflicts: 'bugs',
         replaces: 'unwritten',
         grants: 'reliability'
-      }],
-      selectedID: ''
+      }]
     });
     expect(wrapper.find(Rule).prop('id')).to.equal('42');
     expect(wrapper.find(Rule).prop('name')).to.equal('test');
@@ -152,6 +158,7 @@ describe('<RuleList />', () => {
     const wrapper = shallow(
       <RuleList
         list={[]}
+        selected={{_id: ''}}
         onClick={onClick}
         onChange={onChange}
         onSubmit={onSubmit}
@@ -161,6 +168,25 @@ describe('<RuleList />', () => {
     );
     wrapper.setProps({
       list: [{
+        _id: '42',
+        name: 'these are not used',
+        build: NaN,
+        delivery: 'these are not used',
+        category: 'these are not used',
+        group: 'these are not used',
+        tier: 'these are not used',
+        race: 'these are not used',
+        culture: 'these are not used',
+        description: 'these are not used',
+        max: NaN,
+        extraUses: 'these are not used',
+        requires: 'these are not used',
+        requeresAny: 'these are not used',
+        conflicts: 'these are not used',
+        replaces: 'these are not used',
+        grants: 'these are not used'
+      }],
+      selected: {
         _id: '42',
         name: 'test',
         build: 42,
@@ -178,8 +204,7 @@ describe('<RuleList />', () => {
         conflicts: 'bugs',
         replaces: 'unwritten',
         grants: 'reliability'
-      }],
-      selectedID: '42',
+      },
       scrollToForm: true
     });
     expect(wrapper.find(RuleForm).prop('id')).to.equal('42');

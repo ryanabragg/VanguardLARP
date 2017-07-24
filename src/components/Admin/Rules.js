@@ -323,7 +323,7 @@ export default class Rules extends React.Component {
           ? null
           : <RuleList
               list={[this.state.selected]}
-              selectedID={this.state.selected._id}
+              selected={this.state.selected}
               onClick={this.handleListClick}
               onChange={this.handleFormInputChange}
               onSubmit={this.handleFormSubmit}
@@ -335,7 +335,7 @@ export default class Rules extends React.Component {
           ? <Spinner />
           : <RuleList
               list={this.state.list}
-              selectedID={this.state.selected._id}
+              selected={this.state.selected}
               onClick={this.handleListClick}
               onChange={this.handleFormInputChange}
               onSubmit={this.handleFormSubmit}
