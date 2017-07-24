@@ -9,8 +9,8 @@ import UUID from 'uuid/v1';
 import RuleList from './styled/RuleList';
 import Spinner from '../styled/Spinner';
 
-import NotificationList from './styled/NotificationList';
-import Notification from '../Notification';
+// import the notifications component to access static methods (don't import styled version)
+import NotificationList from '../NotificationList';
 
 const socket = io('localhost:3030');
 const app = feathers().configure(socketio(socket));
@@ -50,7 +50,6 @@ export default class Rules extends React.Component {
     };
 
     this.state = {
-      alerts: [],
       list: [],
       search: {
         modified: '',
@@ -63,10 +62,10 @@ export default class Rules extends React.Component {
     this.startSync = this.startSync.bind(this);
     this.sync = this.sync.bind(this);
 
-    this.createObj = this.createObj.bind(this);
-    this.selectObj = this.selectObj.bind(this);
-    this.updateObj = this.updateObj.bind(this);
-    this.deleteObj = this.deleteObj.bind(this);
+    this.createRule = this.createRule.bind(this);
+    this.selectRule = this.selectRule.bind(this);
+    this.updateRule = this.updateRule.bind(this);
+    this.deleteRule = this.deleteRule.bind(this);
 
     this.handleListClick = this.handleListClick.bind(this);
     this.handleFormInputChange = this.handleFormInputChange.bind(this);
@@ -74,67 +73,68 @@ export default class Rules extends React.Component {
     this.handleFormCancel = this.handleFormCancel.bind(this);
     this.handleFormDelete = this.handleFormDelete.bind(this);
     this.handleFormNew = this.handleFormNew.bind(this);
-
-    this.removeAlert = this.removeAlert.bind(this);
   }
 
   componentDidMount() {
-    app.service('rules').on('created', obj => {
+    app.service('rules').on('created', rule => {
       this.setState((prevState, props) => {
         let nextState = Object.assign({}, prevState);
         if(this.syncInProgress)
-          this.syncData.add = this.syncData.add.concat(obj);
+          this.syncData.add = this.syncData.add.concat(rule);
         else
-          nextState.list = prevState.list.concat(obj);
+          nextState.list = prevState.list.concat(rule);
         return nextState;
       });
     });
 
-    app.service('rules').on('patched', obj => {
+    app.service('rules').on('patched', rule => {
+      let notification = undefined;
       this.setState((prevState, props) => {
         let nextState = Object.assign({}, prevState);
-        if(obj._id === prevState.selected._id) {
-          nextState.alerts = prevState.alerts.concat({
-            key: UUID(),
-            added: Date.now(),
-            timeout: 7000,
-            type: 'alert',
+        if(rule._id === prevState.selected._id && rule._id != this.update) {
+          this.update = undefined;
+          notification = {
+            timeout: 0,
+            type: 'warning',
             title: 'Updated',
             message: 'The rule you are viewing has been modified.',
-            action: 'APPLY',
-            actionType: 'select',
-            data: obj
-          });
+            action: 'APPLY CHANGES',
+            actionFunction: (param) => this.selectRule(param),
+            actionParam: rule._id
+          };
         }
         if(this.syncInProgress)
-          this.syncData.modify = this.syncData.modify.concat(obj);
+          this.syncData.modify = this.syncData.modify.concat(rule);
         else
-          nextState.list[prevState.list.map(item => item._id).indexOf(obj._id)] = Object.assign({}, obj);
+          nextState.list[prevState.list.map(item => item._id).indexOf(rule._id)] = Object.assign({}, rule);
         return nextState;
+      }, () => {
+        if(notification)
+          NotificationList.notify(notification);
       });
     });
 
-    app.service('rules').on('removed', obj => {
+    app.service('rules').on('removed', rule => {
+      let notification = undefined;
       this.setState((prevState, props) => {
         let nextState = Object.assign({}, prevState);
-        if(obj._id === prevState.selected._id) {
-          nextState.alerts = prevState.alerts.concat({
-            key: UUID(),
-            added: Date.now(),
-            timeout: 7000,
+        if(rule._id === prevState.selected._id && rule._id != this.delete) {
+          this.delete = undefined;
+          notification = {
+            timeout: 0,
             type: 'alert',
             title: 'Deleted',
-            message: 'The rule you are viewing has been deleted.',
-            action: 'UNDO',
-            actionType: 'create',
-            data: obj
-          });
+            message: 'The rule you are viewing has been deleted. Clicking Submit will recreate it.'
+          };
         }
         else {
-          nextState.list = !this.syncInProgress ? prevState.list.filter(old => obj._id != old._id) : prevState.list;
-          this.syncData.remove = this.syncInProgress ? this.syncData.remove.concat(obj) : this.syncData.remove;
+          nextState.list = !this.syncInProgress ? prevState.list.filter(listed => rule._id != listed._id) : prevState.list;
+          this.syncData.remove = this.syncInProgress ? this.syncData.remove.concat(rule) : this.syncData.remove;
         }
         return nextState;
+      }, () => {
+        if(notification)
+          NotificationList.notify(notification);
       });
     });
 
@@ -167,13 +167,13 @@ export default class Rules extends React.Component {
       if(this.syncData.total == this.syncData.progress.length + this.syncData.add.length - this.syncData.remove.length) {
         clearInterval(this.syncInProgress);
         this.syncInProgress = 0;
-        let modifyIDs = this.syncData.modify.map(obj => obj._id);
-        let removeIDs = this.syncData.remove.map(obj => obj._id);
+        let modifyIDs = this.syncData.modify.map(rule => rule._id);
+        let removeIDs = this.syncData.remove.map(rule => rule._id);
         this.setState((prevState, props) => {
           let nextState = Object.assign({}, prevState);
           nextState.list = this.syncData.progress
-            .filter(obj => removeIDs.indexOf(obj._id) === -1)
-            .filter(obj => modifyIDs.indexOf(obj._id) === -1)
+            .filter(rule => removeIDs.indexOf(rule._id) === -1)
+            .filter(rule => modifyIDs.indexOf(rule._id) === -1)
             .concat(this.syncData.modify)
             .concat(this.syncData.add);
           return nextState;
@@ -182,129 +182,89 @@ export default class Rules extends React.Component {
     });
   }
 
-  createObj(obj) {
+  createRule(rule) {
     app.service('rules').create(
-      obj,
+      rule,
       (error, created) => {
-        this.setState((prevState, props) => {
-          let nextState = Object.assign({}, prevState);
-          if(error) {
-            nextState.alerts = prevState.alerts.concat({
-              key: UUID(),
-              added: Date.now(),
-              type: 'alert',
-              title: 'Create',
-              message: error
-            });
-          }
-          else {
-            //nextState.selected = Object.assign({}, this.emptyRule);
-            nextState.alerts = prevState.alerts.concat({
-              key: UUID(),
-              added: Date.now(),
-              timeout: 2000,
-              type: 'success',
-              title: 'Created',
-              message: created.category + ': ' + created.name,
-              action: 'UNDO',
-              service: 'rules',
-              actionType: 'delete',
-              data: created
-            });
-          }
-          return nextState;
-        });
+        if(error)
+          NotificationList.alert(error, 'Create Error');
+        else {
+          //nextState.selected = Object.assign({}, this.emptyRule);
+          NotificationList.notify({
+            type: 'success',
+            title: 'Created',
+            message: created.category + ': ' + created.name,
+            action: 'UNDO',
+            actionFunction: (param) => this.deleteRule(param),
+            actionParam: rule._id
+          });
+        }
       }
     );
   }
 
-  selectObj(id) {
+  selectRule(id) {
     this.setState((prevState, props) => {
       let nextState = Object.assign({}, prevState);
-      nextState.selected = prevState.list.filter(obj => obj._id == id)[0];
+      nextState.selected = Object.assign({}, prevState.list.filter(rule => rule._id == id)[0]);
       return nextState;
     });
   }
 
-  updateObj(obj) {
-    const old = Object.assign({}, this.state.list.filter(item => item._id == obj._id)[0]);
+  updateRule(rule) {
+    const preUpdate = Object.assign({}, this.state.list.filter(item => item._id == rule._id)[0]);
     app.service('rules').patch(
-      obj._id,
-      obj,
+      rule._id,
+      rule,
       (error, updated) => {
-        this.setState((prevState, props) => {
-          let nextState = Object.assign({}, prevState);
-          if(error) {
-            nextState.alerts = prevState.alerts.concat({
-              key: UUID(),
-              added: Date.now(),
-              type: 'alert',
-              title: 'Update',
-              message: error
-            });
-          }
-          else {
-            nextState.selected = Object.assign({}, this.emptyRule);
-            nextState.alerts = prevState.alerts.concat({
-              key: UUID(),
-              added: Date.now(),
-              timeout: 2000,
-              type: 'success',
-              title: 'Updated',
-              message: updated.category + ': ' + updated.name,
-              action: 'UNDO',
-              service: 'rules',
-              actionType: 'update',
-              data: old
-            });
-          }
-          return nextState;
-        });
+        if(error)
+          NotificationList.alert(error, 'Update Error');
+        else {
+          this.update = updated._id;
+          NotificationList.notify({
+            type: 'success',
+            title: 'Updated',
+            message: updated.category + ': ' + updated.name,
+            action: 'UNDO',
+            actionFunction: (param) => {this.updateRule(param); this.selectRule(updated._id)},
+            actionParam: preUpdate
+          });
+        }
       }
     );
   }
 
-  deleteObj(id) {
+  deleteRule(id) {
     if(!id)
       return;
     app.service('rules').remove(
       id,
       (error, deleted) => {
-        this.setState((prevState, props) => {
-          let nextState = Object.assign({}, prevState);
-          if(error) {
-            nextState.alerts = prevState.alerts.concat({
-              key: UUID(),
-              added: Date.now(),
-              type: 'alert',
-              title: 'Delete',
-              message: error
-            });
-          }
-          else {
+        if(error)
+          NotificationList.alert(error, 'Delete Error');
+        else {
+          this.setState((prevState, props) => {
+            let nextState = Object.assign({}, prevState);
             nextState.selected = Object.assign({}, this.emptyRule);
-            nextState.alerts = prevState.alerts.concat({
-              key: UUID(),
-              added: Date.now(),
-              timeout: 7000,
-              type: 'success',
-              title: 'Deleted',
-              message: deleted.category + ': ' + deleted.name,
-              action: 'UNDO',
-              service: 'rules',
-              actionType: 'create',
-              data: deleted
-            });
-          }
-          return nextState;
-        });
+            return nextState;
+          });
+          this.delete = deleted._id;
+          NotificationList.notify({
+            type: 'success',
+            title: 'Deleted',
+            message: deleted.category + ': ' + deleted.name,
+            action: 'UNDO',
+            actionFunction: (param) => this.createRule(param),
+            actionParam: deleted
+          });
+        }
       }
     );
   }
 
   handleListClick (e) {
     e.preventDefault();
-    this.selectObj(e.target.id);
+    this.selectRule(e.target.id);
   }
 
   handleFormInputChange(e) {
@@ -318,13 +278,15 @@ export default class Rules extends React.Component {
   }
 
   handleFormSubmit() {
-    let obj = Object.assign({}, this.state.selected);
-    if(obj._id == 'new') {
-      delete obj._id;
-      this.createObj(obj);
+    let rule = Object.assign({}, this.state.selected);
+    if(rule._id == 'new') {
+      delete rule._id;
+      this.createRule(rule);
     }
+    else if(!this.state.list.filter(item => item._id == rule._id))
+      this.createRule(rule);
     else
-      this.updateObj(obj);
+      this.updateRule(rule);
   }
 
   handleFormCancel() {
@@ -336,7 +298,7 @@ export default class Rules extends React.Component {
   }
 
   handleFormDelete() {
-    this.deleteObj(this.state.selected._id);
+    this.deleteRule(this.state.selected._id);
   }
 
   handleFormNew() {
@@ -344,14 +306,6 @@ export default class Rules extends React.Component {
       let nextState = Object.assign({}, prevState);
       nextState.selected = Object.assign({}, this.emptyRule);
       nextState.selected._id = 'new';
-      return nextState;
-    });
-  }
-
-  removeAlert(key) {
-    this.setState((prevState, props) => {
-      let nextState = Object.assign({}, prevState);
-      nextState.alerts = prevState.alerts.filter(alert => alert.key != key);
       return nextState;
     });
   }
@@ -389,58 +343,6 @@ export default class Rules extends React.Component {
               onDelete={this.handleFormDelete}
               scrollToForm={true}
             />
-          }
-          {!this.state.alerts.length ? null :
-            <NotificationList>
-              {this.state.alerts.map((alert, index) => {
-                let actionClick = null;
-                switch(alert.actionType) {
-                case 'create':
-                  actionClick = () => {
-                    this.createObj(alert.data);
-                    this.removeAlert(alert.key);
-                  };
-                  break;
-                case 'select':
-                  actionClick = () => {
-                    this.selectObj(alert.data);
-                    this.removeAlert(alert.key);
-                  };
-                  break;
-                case 'update':
-                  actionClick = () => {
-                    this.updateObj(alert.data);
-                    this.removeAlert(alert.key);
-                  };
-                  break;
-                case 'delete':
-                  actionClick = () => {
-                    this.deleteObj(alert.data._id);
-                    this.removeAlert(alert.key);
-                  };
-                  break;
-                case 'dismiss':
-                  actionClick = () => {
-                    this.removeAlert(alert.key);
-                  };
-                  break;
-                }
-                return (
-                  <Notification
-                    key={alert.key}
-                    id={alert.key}
-                    type={alert.type}
-                    title={alert.title}
-                    message={alert.message}
-                    action={alert.action}
-                    actionFunction={actionClick}
-                    timeoutDuration={alert.timeout}
-                    dismiss={this.removeAlert.bind(this, alert.key)}
-                    showDismiss={!alert.action}
-                  />
-                );
-              })}
-            </NotificationList>
           }
         </main>
       </div>

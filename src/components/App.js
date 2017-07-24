@@ -11,6 +11,8 @@ import AdminRules from './Admin/Rules';
 
 import Character from './Character/Character';
 
+import NotificationList from './styled/NotificationList';
+
 import PageNotFound from './PageNotFound';
 
 import theme from './theme';
@@ -49,6 +51,7 @@ export default class App extends React.Component {
             <Route exact path='/character' component={Character} />
             <Route path='/character/:id' component={Character} />
           </Switch>
+          <NotificationList />
         </div>
       </ThemeProvider>
     );
