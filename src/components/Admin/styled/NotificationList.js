@@ -16,7 +16,7 @@ const NotificationList = styled.div`
     padding: 0.5em 1em;
     margin-bottom: 5px;
   }
-  div[data-notification-type=primary] {
+  div.primary {
     background-color: ${props => props.theme.colors.primary};
     color: ${props => {
       let background = Color(props.theme.colors.primary);
@@ -25,7 +25,7 @@ const NotificationList = styled.div`
       return base.mix(background, alpha).hex();
     }};
   }
-  div[data-notification-type=info] {
+  div.info {
     background-color: ${props => props.theme.colors.secondary};
     color: ${props => {
       let background = Color(props.theme.colors.secondary);
@@ -34,7 +34,7 @@ const NotificationList = styled.div`
       return base.mix(background, alpha).hex();
     }};
   }
-  div[data-notification-type=accent] {
+  div.accent {
     background-color: ${props => props.theme.colors.accent};
     color: ${props => {
       let background = Color(props.theme.colors.accent);
@@ -43,7 +43,7 @@ const NotificationList = styled.div`
       return base.mix(background, alpha).hex();
     }};
   }
-  div[data-notification-type=asside] {
+  div.asside {
     background-color: ${props => props.theme.colors.asside};
     color: ${props => {
       let background = Color(props.theme.colors.asside);
@@ -52,7 +52,7 @@ const NotificationList = styled.div`
       return base.mix(background, alpha).hex();
     }};
   }
-  div[data-notification-type=success] {
+  div.success {
     background-color: ${props => props.theme.colors.success};
     color: ${props => {
       let background = Color(props.theme.colors.success);
@@ -61,7 +61,7 @@ const NotificationList = styled.div`
       return base.mix(background, alpha).hex();
     }};
   }
-  div[data-notification-type=warning] {
+  div.warning {
     background-color: ${props => props.theme.colors.warning};
     color: ${props => {
       let background = Color(props.theme.colors.warning);
@@ -70,7 +70,7 @@ const NotificationList = styled.div`
       return base.mix(background, alpha).hex();
     }};
   }
-  div[data-notification-type=alert] {
+  div.alert {
     background-color: ${props => props.theme.colors.alert};
     color: ${props => {
       let background = Color(props.theme.colors.alert);
@@ -79,11 +79,11 @@ const NotificationList = styled.div`
       return base.mix(background, alpha).hex();
     }};
   }
-  span[data-notification=title] {
+  span.title {
     margin-right: 0.5em;
     font-weight: bold;
   }
-  span[data-notification=button] {
+  span.action, span.dismiss {
     margin-left: 0.5em;
     font-weight: bold;
     cursor: pointer;

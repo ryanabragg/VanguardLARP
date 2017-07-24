@@ -395,46 +395,47 @@ export default class Rules extends React.Component {
               {this.state.alerts.map((alert, index) => {
                 let actionClick = null;
                 switch(alert.actionType) {
-                  case 'create':
-                    actionClick = () => {
-                      this.createObj(alert.data);
-                      this.removeAlert(alert.key);
-                    };
-                    break;
-                  case 'select':
-                    actionClick = () => {
-                      this.selectObj(alert.data);
-                      this.removeAlert(alert.key);
-                    };
-                    break;
-                  case 'update':
-                    actionClick = () => {
-                      this.updateObj(alert.data);
-                      this.removeAlert(alert.key);
-                    };
-                    break;
-                  case 'delete':
-                    actionClick = () => {
-                      this.deleteObj(alert.data._id);
-                      this.removeAlert(alert.key);
-                    };
-                    break;
-                  case 'dismiss':
-                    actionClick = () => {
-                      this.removeAlert(alert.key);
-                    };
-                    break;
+                case 'create':
+                  actionClick = () => {
+                    this.createObj(alert.data);
+                    this.removeAlert(alert.key);
+                  };
+                  break;
+                case 'select':
+                  actionClick = () => {
+                    this.selectObj(alert.data);
+                    this.removeAlert(alert.key);
+                  };
+                  break;
+                case 'update':
+                  actionClick = () => {
+                    this.updateObj(alert.data);
+                    this.removeAlert(alert.key);
+                  };
+                  break;
+                case 'delete':
+                  actionClick = () => {
+                    this.deleteObj(alert.data._id);
+                    this.removeAlert(alert.key);
+                  };
+                  break;
+                case 'dismiss':
+                  actionClick = () => {
+                    this.removeAlert(alert.key);
+                  };
+                  break;
                 }
                 return (
                   <Notification
                     key={alert.key}
+                    id={alert.key}
                     type={alert.type}
                     title={alert.title}
                     message={alert.message}
                     action={alert.action}
-                    actionClick={actionClick}
-                    timeoutDuration={Math.max(0, alert.added - Date.now() + (alert.timeout || 3000) + index * 1000)}
-                    timeoutFunction={this.removeAlert.bind(this, alert.key)}
+                    actionFunction={actionClick}
+                    timeoutDuration={alert.timeout}
+                    dismiss={this.removeAlert.bind(this, alert.key)}
                     showDismiss={!alert.action}
                   />
                 );
