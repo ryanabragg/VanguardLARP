@@ -97,7 +97,7 @@ export default class Rules extends React.Component {
             timeout: 0,
             type: 'warning',
             title: 'Updated',
-            message: 'The rule you are viewing has been modified.',
+            message: 'The rule you are viewing has been modified. Clicking Submit without applying changes will override them.',
             action: 'APPLY CHANGES',
             actionFunction: (param) => this.selectRule(param),
             actionParam: rule._id
@@ -127,10 +127,10 @@ export default class Rules extends React.Component {
             message: 'The rule you are viewing has been deleted. Clicking Submit will recreate it.'
           };
         }
-        else {
-          nextState.list = !this.syncInProgress ? prevState.list.filter(listed => rule._id != listed._id) : prevState.list;
-          this.syncData.remove = this.syncInProgress ? this.syncData.remove.concat(rule) : this.syncData.remove;
-        }
+        if(this.syncInProgress)
+          this.syncData.remove = this.syncData.remove.concat(rule);
+        else
+          nextState.list = prevState.list.filter(listed => rule._id != listed._id);
         return nextState;
       }, () => {
         if(notification)
@@ -161,7 +161,17 @@ export default class Rules extends React.Component {
   }
 
   sync() {
-    app.service('rules').find({query:{$sort:{category: 1, group: 1, name: 1},$limit:this.syncData.paginate,$skip:this.syncData.progress.length}}).then(page => {
+    app.service('rules').find({
+      query:{
+        $sort:{
+          category: 1,
+          group: 1,
+          name: 1
+        },
+        $limit: this.syncData.paginate,
+        $skip: this.syncData.progress.length
+      }
+    }).then(page => {
       this.syncData.total = page.total;
       this.syncData.progress = this.syncData.progress.concat(page.data);
       if(this.syncData.total == this.syncData.progress.length + this.syncData.add.length - this.syncData.remove.length) {
