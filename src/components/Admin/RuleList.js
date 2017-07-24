@@ -12,7 +12,7 @@ class RuleList extends React.Component {
   render() {
     const rest = Object.assign({}, this.props);
     delete rest.list;
-    delete rest.selectedID;
+    delete rest.selected;
     delete rest.onClick;
     delete rest.onChange;
     delete rest.onSubmit;
