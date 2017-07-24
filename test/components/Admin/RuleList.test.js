@@ -60,6 +60,41 @@ describe('<RuleList />', () => {
     expect(wrapper.find(Rule)).to.have.length(2);
   });
 
+  it('handles a blank selected prop', () => {
+    const onClick = spy(),
+      onChange = spy(),
+      onSubmit = spy(),
+      onCancel = spy(),
+      onDelete = spy();
+    const wrapper = shallow(
+      <RuleList
+        list={[]}
+        onClick={onClick}
+        onChange={onChange}
+        onSubmit={onSubmit}
+        onCancel={onCancel}
+        onDelete={onDelete}
+      />
+    );
+    expect(wrapper.find('article')).to.have.length(1);
+    expect(wrapper.find(RuleForm)).to.have.length(0);
+    expect(wrapper.find(Rule)).to.have.length(0);
+    wrapper.setProps({
+      list: [{
+        _id: '42',
+        name: 'test',
+        category: 'case'
+      }, {
+        _id: '7',
+        name: 'lucky',
+        category: 'number'
+      }]
+    });
+    expect(wrapper.find('article')).to.have.length(1);
+    expect(wrapper.find(RuleForm)).to.have.length(0);
+    expect(wrapper.find(Rule)).to.have.length(2);
+  });
+
   it('renders a RuleForm instead of a Rule for the array object matching the selected object id', () => {
     const onClick = spy(),
       onChange = spy(),

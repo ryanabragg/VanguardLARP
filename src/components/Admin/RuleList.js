@@ -21,7 +21,10 @@ class RuleList extends React.Component {
     delete rest.scrollToForm;
     return (
       <article {...rest}>
-        {this.props.list.length == 0 ? null : this.props.list.map(rule => (
+        {this.props.list.length == 0
+        ? null
+        : this.props.list.map(rule => (
+          this.props.selected &&
           rule._id == this.props.selected._id
           ? <RuleForm
               key={this.props.selected._id}
@@ -67,7 +70,6 @@ class RuleList extends React.Component {
 
 RuleList.defaultProps = {
   list: [],
-  selectedID: '',
   scrollToForm: false
 }
 
