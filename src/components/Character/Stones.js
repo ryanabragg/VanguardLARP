@@ -9,6 +9,10 @@ class Stones extends React.Component {
   }
 
   render() {
+    const rest = Object.assign({}, this.props);
+    delete rest.label;
+    delete rest.stones;
+    delete rest.stoneClick;
     let stones = [];
     if(typeof this.props.stones === 'number')
       stones = new Array(this.props.stones).fill({color: undefined, disabled: false});
@@ -19,7 +23,7 @@ class Stones extends React.Component {
         });
       }));
     return (
-      <div data-character={this.props.label || 'stones'}>
+      <div data-character={this.props.label || 'stones'} {...rest}>
         {stones.map((stone, index) => <Stone key={index} color={stone.color} disabled={stone.disabled} stoneClick={this.props.stoneClick} />)}
       </div>
     );

@@ -17,11 +17,17 @@ class Stone extends React.Component {
   }
 
   render() {
+    let className = [
+      this.props.color,
+      'stone',
+      this.props.disabled ? 'disabled' : undefined
+    ];
     return (
-      <div className={(this.props.color || '') + 'stone'} onClick={this.handleClick}>
-        <span className={this.props.disabled ? 'disabled' : undefined}>
-          {this.props.colorLetters[this.props.color] || ''}
-        </span>
+      <div
+        className={className.filter(name => name != undefined).join(' ')}
+        onClick={this.handleClick}
+      >
+        {this.props.colorLetters[this.props.color] || ''}
       </div>
     );
   }

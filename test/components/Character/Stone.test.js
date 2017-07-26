@@ -22,30 +22,29 @@ function copyProps(src, target) {
 copyProps(window, global);
 
 describe('<Stone />', () => {
-  it('renders a div containing a span', () => {
+  it('renders a div', () => {
     const wrapper = shallow(<Stone />);
     expect(wrapper.find('div')).to.have.length(1);
-    expect(wrapper.find('div').find('span')).to.have.length(1);
   });
 
-  it('renders a div with className prop of "{color prop value}stone"', () => {
+  it('renders a div with className prop of "{color prop value} stone"', () => {
     expect(shallow(<Stone />).find('div').prop('className')).to.equal('stone');
-    expect(shallow(<Stone color='test' />).find('div').prop('className')).to.equal('teststone');
+    expect(shallow(<Stone color='test' />).find('div').prop('className')).to.equal('test stone');
   });
 
-  it('renders a span with className prop with a value of disabled if the disabled prop is true', () => {
-    expect(shallow(<Stone />).find('span').prop('className')).to.equal(undefined);
-    expect(shallow(<Stone disabled={true} />).find('span').prop('className')).to.equal('disabled');
+  it('adds "disabled" to the className prop if the disabled prop is true', () => {
+    expect(shallow(<Stone />).find('div').prop('className')).to.equal('stone');
+    expect(shallow(<Stone disabled={true} />).find('div').prop('className')).to.equal('stone disabled');
   });
 
   it('has a text value based on the color and colorLetters props', () => {
-    expect(shallow(<Stone />).find('span').text()).to.equal('');
-    expect(shallow(<Stone color='black' />).find('span').text()).to.equal('B');
-    expect(shallow(<Stone color='blue' />).find('span').text()).to.equal('U');
-    expect(shallow(<Stone color='red' />).find('span').text()).to.equal('R');
-    expect(shallow(<Stone color='white' />).find('span').text()).to.equal('W');
-    expect(shallow(<Stone color='rainbow' />).find('span').text()).to.equal('');
-    expect(shallow(<Stone color='rainbow' colorLetters={{rainbow: 'unicorn'}} />).find('span').text()).to.equal('unicorn');
+    expect(shallow(<Stone />).text()).to.equal('');
+    expect(shallow(<Stone color='black' />).text()).to.equal('B');
+    expect(shallow(<Stone color='blue' />).text()).to.equal('U');
+    expect(shallow(<Stone color='red' />).text()).to.equal('R');
+    expect(shallow(<Stone color='white' />).text()).to.equal('W');
+    expect(shallow(<Stone color='rainbow' />).text()).to.equal('');
+    expect(shallow(<Stone color='rainbow' colorLetters={{rainbow: 'unicorn'}} />).text()).to.equal('unicorn');
   });
 
   it('calls the stoneClick prop when the div is clicked', () => {
