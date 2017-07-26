@@ -9,14 +9,19 @@ class AbilityGroup extends React.Component {
   }
 
   render() {
+    const rest = Object.assign({}, this.props);
+    delete rest.label;
+    delete rest.abilities;
+    delete rest.viewDescription;
+    delete rest.editCharacter;
     return (
-      <div data-character='ability-group'>
-        <span data-character='label'>{this.props.label}</span>
+      <div {...rest} data-character='ability-group'>
+        <span>{this.props.label}</span>
         {this.props.abilities.map(ability => {
           return (
             <Ability
-              key={ability.id}
-              id={ability.id}
+              key={ability._id}
+              id={ability._id}
               name={ability.name}
               display={ability.display}
               count= {ability.count}

@@ -26,7 +26,7 @@ describe('<AbilityGroup />', () => {
   it('renders a div with a span and an Ability component for each object in the abilities prop', () => {
     const view = spy(), update = spy();
     let list = [{
-      id: 42,
+      _id: 42,
       name: 'test'
     }];
     const wrapper = shallow(<AbilityGroup label={1} abilities={list} viewDescription={view} editCharacter={update}/>);
@@ -37,12 +37,12 @@ describe('<AbilityGroup />', () => {
     expect(wrapper.find('div').childAt(1).type()).to.equal(Ability);
     expect(wrapper.find(Ability)).to.have.length(list.length);
     list = list.concat([{
-      id: 7,
+      _id: 7,
       name: 'lucky',
       display: 'checkbox',
       count: 11
     }, {
-      id: 0,
+      _id: 0,
       name: 'choice',
       display: 'tiers',
       count: 1
@@ -55,22 +55,22 @@ describe('<AbilityGroup />', () => {
   it('renders the Ability components with the propper props from the array object', () => {
     const view = spy(), update = spy();
     const list = [{
-      id: 42,
+      _id: 42,
       name: 'test'
     }, {
-      id: 7,
+      _id: 7,
       name: 'lucky',
       display: 'checkbox',
       count: 11
     }];
     const wrapper = shallow(<AbilityGroup label={1} abilities={list} viewDescription={view} editCharacter={update}/>);
-    expect(wrapper.find(Ability).at(0).prop('id')).to.equal(list[0].id);
+    expect(wrapper.find(Ability).at(0).prop('id')).to.equal(list[0]._id);
     expect(wrapper.find(Ability).at(0).prop('name')).to.equal(list[0].name);
     expect(wrapper.find(Ability).at(0).prop('display')).to.equal(undefined);
     expect(wrapper.find(Ability).at(0).prop('count')).to.equal(0);
     expect(wrapper.find(Ability).at(0).prop('viewDescription')).to.equal(view);
     expect(wrapper.find(Ability).at(0).prop('editCharacter')).to.equal(update);
-    expect(wrapper.find(Ability).at(1).prop('id')).to.equal(list[1].id);
+    expect(wrapper.find(Ability).at(1).prop('id')).to.equal(list[1]._id);
     expect(wrapper.find(Ability).at(1).prop('name')).to.equal(list[1].name);
     expect(wrapper.find(Ability).at(1).prop('display')).to.equal(list[1].display);
     expect(wrapper.find(Ability).at(1).prop('count')).to.equal(list[1].count);

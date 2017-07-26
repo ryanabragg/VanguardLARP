@@ -3,11 +3,14 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { mount, shallow } from 'enzyme';
 import { JSDOM } from 'jsdom';
+import { ThemeProvider } from 'styled-components';
+
+import theme from '../../../src/components/theme';
 
 import Character from '../../../src/components/Character/Character';
-import Player from '../../../src/components/Character/Player';
-import Bio from '../../../src/components/Character/Bio';
-import Stones from '../../../src/components/Character/Stones';
+import Player from '../../../src/components/Character/styled/Player';
+import Bio from '../../../src/components/Character/styled/Bio';
+import Stones from '../../../src/components/Character/styled/Stones';
 
 const window = (new JSDOM('<!doctype html><html><body></body></html>')).window;
 global.window = window;
@@ -28,23 +31,23 @@ describe('<Character />', () => {
   it('calls componentDidMount', () => {
     spy(Character.prototype, 'componentDidMount');
     expect(Character.prototype.componentDidMount.calledOnce).to.be.false;
-    const wrapper = mount(<Character />); // eslint-disable-line no-unused-vars
+    const wrapper = mount(<ThemeProvider theme={theme}><Character /></ThemeProvider>); // eslint-disable-line no-unused-vars
     expect(Character.prototype.componentDidMount.calledOnce).to.be.true;
   });
 
   describe('Children', () => {
-    it('contains a Player component', () => {
+    it('contains a styled Player component', () => {
       const wrapper = shallow(<Character />);
       expect(wrapper.find(Player)).to.have.length(1);
-      expect(wrapper.find(Player).prop('name')).to.equal('Unknown');
+      expect(wrapper.find(Player).prop('name')).to.equal('Player Name');
       expect(wrapper.find(Player).prop('build')).to.equal(0);
       expect(wrapper.find(Player).prop('editCharacter')).to.be.a('function');
     });
 
-    it('contains a Bio component', () => {
+    it('contains a styled Bio component', () => {
       const wrapper = shallow(<Character />);
       expect(wrapper.find(Bio)).to.have.length(1);
-      expect(wrapper.find(Bio).prop('name')).to.equal('NPC');
+      expect(wrapper.find(Bio).prop('name')).to.equal('New Character');
       expect(wrapper.find(Bio).prop('race')).to.equal('');
       expect(wrapper.find(Bio).prop('build')).to.equal(0);
       expect(wrapper.find(Bio).prop('level')).to.equal(-3);
@@ -55,26 +58,31 @@ describe('<Character />', () => {
       expect(wrapper.find(Bio).prop('editRace')).to.be.a('function');
     });
 
-    it('contains a Stones ressurection bag component', () => {
+    it('contains a styled Stones ressurection bag component', () => {
       const wrapper = shallow(<Character />);
-      expect(wrapper.find(Stones).find({label: 'ressurection-bag'})).to.have.length(1);
-      expect(wrapper.find(Stones).find({label: 'ressurection-bag'}).prop('stones')).to.deep.equal({blue: 1, black: 1, red: 2, white: 9, lost: 0});
-      expect(wrapper.find(Stones).find({label: 'ressurection-bag'}).prop('stoneClick')).to.be.a('function');
+      expect(wrapper.find(Stones).find({label: 'Ressurection Bag'})).to.have.length(1);
+      expect(wrapper.find(Stones).find({label: 'Ressurection Bag'}).prop('stones')).to.deep.equal([
+        { color: 'blue', count: 1, disabled: 0 },
+        { color: 'black', count: 1, disabled: 0 },
+        { color: 'red', count: 2, disabled: 0 },
+        { color: 'white', count: 9, disabled: 0 }
+      ]);
+      expect(wrapper.find(Stones).find({label: 'Ressurection Bag'}).prop('stoneClick')).to.be.a('function');
     });
 
-    it('contains a Stones recoveries component', () => {
+    it('contains a styled Stones recoveries component', () => {
       const wrapper = shallow(<Character />);
-      expect(wrapper.find(Stones).find({label: 'recoveries'})).to.have.length(1);
-      expect(wrapper.find(Stones).find({label: 'recoveries'}).prop('stones')).to.equal(6);
-      expect(wrapper.find(Stones).find({label: 'recoveries'}).prop('stoneClick')).to.be.a('function');
+      expect(wrapper.find(Stones).find({label: 'Recoveries'})).to.have.length(1);
+      expect(wrapper.find(Stones).find({label: 'Recoveries'}).prop('stones')).to.equal(6);
+      expect(wrapper.find(Stones).find({label: 'Recoveries'}).prop('stoneClick')).to.equal(undefined);
     });
 
-    it('contains a racial skills component');
-    it('contains a constant skills component');
-    it('contains a crafting skills component');
-    it('contains a combat pools component');
-    it('contains a domains component');
-    it('contains an advanced arts component');
+    it('contains a styled racial skills component');
+    it('contains a styled constant skills component');
+    it('contains a styled crafting skills component');
+    it('contains a styled combat pools component');
+    it('contains a styled domains component');
+    it('contains a styled advanced arts component');
   });
 
   describe('State', () => {

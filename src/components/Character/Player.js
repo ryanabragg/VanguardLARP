@@ -17,17 +17,25 @@ class Player extends React.Component {
   }
 
   render() {
+    const rest = Object.assign({}, this.props);
+    delete rest.name;
+    delete rest.build;
+    delete rest.editCharacter;
     return (
-      <div data-character='player'>
-        <span data-character='player-name'>{this.props.name}</span>
-        <input data-character='player-build' name='build' onChange={this.handleInputChange} value={this.props.build} />
+      <div {...rest} data-character='player'>
+        <div data-character='player-name'>{this.props.name}</div>
+        <input data-character='player-build'
+          className='number'
+          name='build' onChange={this.handleInputChange}
+          value={this.props.build}
+        />
       </div>
     );
   }
 }
 
 Player.defaultProps = {
-  name: 'Unknown',
+  name: 'Player Name',
   build: 0
 };
 

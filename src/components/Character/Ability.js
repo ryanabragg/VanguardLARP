@@ -14,21 +14,25 @@ class Ability extends React.Component {
     let newCount = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
     this.props.editCharacter({
       type: this.props.count < newCount ? 'ADD SKILL' : 'REMOVE SKILL',
-      data: this.props.id
+      data: {
+        id: this.props.id,
+        count: Math.abs(newCount - this.props.count)
+      }
     });
   }
 
   handleView(e) {
+    e.preventDefault();
     this.props.viewDescription(this.props.id);
   }
 
   render() {
     let input = null;
     if(this.props.display === 'checkbox')
-      input = <input type='checkbox' data-character='ability-count' name='count' onChange={this.handleInputChange} value={this.props.count} />;
+      input = <input type='checkbox' name='count' onChange={this.handleInputChange} value={this.props.count} />;
     else if(this.props.display === 'tiers') {
       input = (
-        <select data-character='ability-count' name='count' onChange={this.handleInputChange} value={this.props.count}>
+        <select name='count' onChange={this.handleInputChange} value={this.props.count}>
           <option value={0}></option>
           <option value={1}>Apprentice</option>
           <option value={2}>Journeyman</option>
@@ -39,11 +43,11 @@ class Ability extends React.Component {
       );
     }
     else
-      input = <input type='number' data-character='ability-count' name='count' onChange={this.handleInputChange} value={this.props.count} />;
+      input = <input type='number' name='count' onChange={this.handleInputChange} value={this.props.count} />;
     return (
-      <div data-character='ability'>
+      <div className='ability'>
         {input}
-        <label data-character='ability-name' onClick={this.handleView}>{this.props.name}</label>
+        <label className='ability' onClick={this.handleView}>{this.props.name}</label>
       </div>
     );
   }
@@ -62,7 +66,7 @@ Ability.propTypes = {
   display: PropTypes.string,
   count: PropTypes.number,
   viewDescription: PropTypes.func.isRequired,
-  updateCharacterAbility: PropTypes.func.isRequired
+  editCharacter: PropTypes.func.isRequired
 };
 
 export default Ability;

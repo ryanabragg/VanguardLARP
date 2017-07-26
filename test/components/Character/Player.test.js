@@ -22,11 +22,11 @@ function copyProps(src, target) {
 copyProps(window, global);
 
 describe('<Player />', () => {
-  it('renders a span with the player name from props', () => {
+  it('renders a div with the player name from props', () => {
     const callback = spy();
     const wrapper = mount(<Player name='test' build={42} editCharacter={callback}/>);
     expect(wrapper.find('[data-character="player-name"]')).to.have.length(1);
-    expect(wrapper.find('[data-character="player-name"]').type()).to.equal('span');
+    expect(wrapper.find('[data-character="player-name"]').type()).to.equal('div');
     expect(wrapper.prop('name')).to.equal('test');
     expect(wrapper.find('[data-character="player-name"]').text()).to.equal('test');
     wrapper.setProps({name: 'testing'});

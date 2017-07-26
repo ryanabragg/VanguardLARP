@@ -17,29 +17,45 @@ class Player extends React.Component {
   }
 
   render() {
+    const rest = Object.assign({}, this.props);
+    delete rest.name;
+    delete rest.race;
+    delete rest.build;
+    delete rest.level;
+    delete rest.body;
+    delete rest.buffs;
+    delete rest.inscriptions;
+    delete rest.armor;
+    delete rest.editCharacter;
+    delete rest.editRace;
     return (
-      <div data-character='bio'>
-        <input data-character='character-name' name='name' onChange={this.handleInputChange} value={this.props.name} />
-        <span data-character='character-race' onClick={this.props.editRace}>{this.props.race}</span>
-        <span data-character='character-build'>{this.props.build}</span>
-        <span data-character='character-level'>{this.props.level}</span>
-        <span data-character='character-body'>{this.props.body}</span>
-        <span data-character='character-buffs'>{this.props.buffs}</span>
-        <span data-character='character-inscriptions'>{this.props.inscriptions}</span>
-        <span data-character='character-armor'>{this.props.armor}</span>
+      <div {...rest} data-character='bio'>
+        <input data-character='character-name'
+          name='name' onChange={this.handleInputChange}
+          value={this.props.name}
+        />
+        <div data-character='character-build' className='number'>{this.props.build}</div>
+        <div data-character='character-race'
+          onClick={this.props.editRace}
+        >{this.props.race}</div>
+        <div data-character='character-level' className='number'>{this.props.level}</div>
+        <div data-character='character-body' className='number under-text'>{this.props.body}</div>
+        <div data-character='character-buffs' className='number under-text'>{this.props.buffs}</div>
+        <div data-character='character-inscriptions' className='number under-text'>{this.props.inscriptions}</div>
+        <div data-character='character-armor' className='number under-text'>{this.props.armor}</div>
       </div>
     );
   }
 }
 
 Player.defaultProps = {
-  name: 'NPC',
+  name: 'New Character',
   race: '',
-  build: 35,
-  level: 1,
-  body: 15,
-  buffs: 3,
-  inscriptions: 1,
+  build: 0,
+  level: 0,
+  body: 0,
+  buffs: 0,
+  inscriptions: 0,
   armor: ''
 };
 

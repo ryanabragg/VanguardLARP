@@ -19,18 +19,21 @@ class Stones extends React.Component {
     else
       stones = [].concat.apply([], this.props.stones.map(stone => {
         return new Array(stone.count).fill(null).map((i, index) => {
-          return {color: stone.color, disabled: index < stone.disabled};
+          return {color: stone.color, disabled: index >= stone.count - stone.disabled};
         });
       }));
     return (
-      <div data-character={this.props.label || 'stones'} {...rest}>
+      <div data-character={this.props.label.toLowerCase().replace(/\s/, '-') || 'stones'} {...rest}>
+        {this.props.label && <label>{this.props.label}</label>}
         {stones.map((stone, index) => <Stone key={index} color={stone.color} disabled={stone.disabled} stoneClick={this.props.stoneClick} />)}
       </div>
     );
   }
 }
 
-//Stones.defaultProps = {};
+Stones.defaultProps = {
+  label: ''
+};
 
 Stones.propTypes = {
   label: PropTypes.string,
