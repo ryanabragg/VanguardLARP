@@ -3,7 +3,7 @@ import Color from 'color';
 
 import Stones from '../Stones';
 
-const StyledStone = styled(Stones)`
+const StyledStones = styled(Stones)`
   display: block;
   max-width: 300px;
   height: 20px;
@@ -45,4 +45,4 @@ const StyledStone = styled(Stones)`
   }
 `;
 
-export default StyledStone;
+export default StyledStones;
