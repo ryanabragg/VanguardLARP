@@ -21,7 +21,7 @@ class AbilityGroup extends React.Component {
               display={ability.display}
               count= {ability.count}
               viewDescription={this.props.viewDescription}
-              updateCharacterAbility={this.props.updateCharacterAbility}
+              editCharacter={this.props.editCharacter}
             />
           );
         })}
@@ -39,7 +39,7 @@ AbilityGroup.propTypes = {
   ]).isRequired,
   abilities: PropTypes.array.isRequired,
   viewDescription: PropTypes.func.isRequired,
-  updateCharacterAbility: PropTypes.func.isRequired
+  editCharacter: PropTypes.func.isRequired
 };
 
 export default AbilityGroup;

@@ -57,11 +57,6 @@ describe('<Player />', () => {
     const callback = spy();
     const wrapper = mount(<Player name='test' build={42} editCharacter={callback}/>);
     wrapper.find('[data-character="player-build"]').simulate('change', {target: {name: 'build', value: 13}});
-    let edit = {
-      player: {
-        build: 13
-      }
-    };
-    expect(callback.calledWith(edit)).to.equal(true);
+    expect(callback.calledWith({ type: 'CHANGE PLAYER BUILD', data: 13 })).to.equal(true);
   });
 });

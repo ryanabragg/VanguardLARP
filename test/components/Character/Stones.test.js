@@ -34,29 +34,54 @@ describe('<Stones />', () => {
   it('renders a Stone component stone prop times', () => {
     const wrapper = shallow(<Stones stones={3}/>);
     expect(wrapper.find(Stone)).to.have.length(3);
-    wrapper.setProps({stones: {blue: 1, black: 1, red: 2, white: 9, lost: 0}});
+    wrapper.setProps({
+      stones: [
+        { color: 'blue', count: 1, disabled: 0 },
+        { color: 'black', count: 1, disabled: 0 },
+        { color: 'red', count: 2, disabled: 0 },
+        { color: 'white', count: 9, disabled: 0 }
+      ]
+    });
     expect(wrapper.find(Stone)).to.have.length(13);
   });
 
-  it('renders a Stone component with the color prop based on the passed stones prop', () => {
-    const wrapper = shallow(<Stones stones={{blue: 1, black: 1, red: 2, white: 9, lost: 0}}/>);
-    expect(wrapper.find({color: 'blue'})).to.have.length(1);
-    expect(wrapper.find({color: 'black'})).to.have.length(1);
-    expect(wrapper.find({color: 'red'})).to.have.length(2);
-    expect(wrapper.find({color: 'white'})).to.have.length(9);
-    expect(wrapper.find({color: 'lost'})).to.have.length(0);
-    expect(wrapper.find({color: null})).to.have.length(0);
-    wrapper.setProps({stones: 7});
-    expect(wrapper.find({color: null})).to.have.length(7);
+  it('renders a Stone component with the props based on the passed stones prop', () => {
+    const wrapper = shallow(<Stones stones={3}/>);
+    expect(wrapper.find(Stone).find({color: undefined})).to.have.length(3);
+    wrapper.setProps({
+      stones: [
+        { color: 'blue', count: 1, disabled: 0 },
+        { color: 'black', count: 1, disabled: 1 },
+        { color: 'red', count: 2, disabled: 1 },
+        { color: 'white', count: 9, disabled: 3 }
+      ]
+    });
+    expect(wrapper.find(Stone).find({color: 'blue'})).to.have.length(1);
+    expect(wrapper.find(Stone).find({color: 'black'})).to.have.length(1);
+    expect(wrapper.find(Stone).find({color: 'red'})).to.have.length(2);
+    expect(wrapper.find(Stone).find({color: 'white'})).to.have.length(9);
+    expect(wrapper.find(Stone).find({color: undefined})).to.have.length(0);
+    expect(wrapper.find(Stone).find({disabled: true})).to.have.length(5);
+    expect(wrapper.find(Stone).find({color: 'white', disabled: true})).to.have.length(3);
+    expect(wrapper.find(Stone).find({color: 'white', disabled: false})).to.have.length(6);
   });
 
-  it('calls the stoneClick prop when a Stone is clicked', () => {
+  it('passes the stoneClick prop to each child Stone', () => {
     const stoneClick = spy();
-    const wrapper = mount(<Stones stones={{blue: 1, black: 1, red: 2, white: 9, lost: 0}} stoneClick={stoneClick} />);
-    wrapper.find(Stone).forEach((node) => node.simulate('click'));
-    expect(stoneClick.callCount).to.equal(13);
-    wrapper.setProps({stones: 7});
-    wrapper.find(Stone).forEach((node) => node.simulate('click'));
-    expect(stoneClick.callCount).to.equal(20);
+    const wrapper = mount(<Stones stones={3} stoneClick={stoneClick} />);
+    wrapper.find(Stone).forEach((node) => {
+      expect(node.prop('stoneClick')).to.equal(stoneClick);
+    });
+    wrapper.setProps({
+      stones: [
+        { color: 'blue', count: 1, disabled: 0 },
+        { color: 'black', count: 1, disabled: 0 },
+        { color: 'red', count: 2, disabled: 0 },
+        { color: 'white', count: 9, disabled: 0 }
+      ]
+    });
+    wrapper.find(Stone).forEach((node) => {
+      expect(node.prop('stoneClick')).to.equal(stoneClick);
+    });
   });
 });

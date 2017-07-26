@@ -28,14 +28,14 @@ describe('<Stone />', () => {
     expect(wrapper.find('div').find('span')).to.have.length(1);
   });
 
-  it('renders a div with data-stone prop of "{color prop value}stone"', () => {
-    expect(shallow(<Stone />).find('div').prop('data-stone')).to.equal('stone');
-    expect(shallow(<Stone color='test' />).find('div').prop('data-stone')).to.equal('teststone');
+  it('renders a div with className prop of "{color prop value}stone"', () => {
+    expect(shallow(<Stone />).find('div').prop('className')).to.equal('stone');
+    expect(shallow(<Stone color='test' />).find('div').prop('className')).to.equal('teststone');
   });
 
-  it('renders a span with data-stone-disable prop with the value of the disable prop', () => {
-    expect(shallow(<Stone />).find('span').prop('data-stone-disable')).to.equal(false);
-    expect(shallow(<Stone disable={true} />).find('span').prop('data-stone-disable')).to.equal(true);
+  it('renders a span with className prop with a value of disabled if the disabled prop is true', () => {
+    expect(shallow(<Stone />).find('span').prop('className')).to.equal(undefined);
+    expect(shallow(<Stone disabled={true} />).find('span').prop('className')).to.equal('disabled');
   });
 
   it('has a text value based on the color and colorLetters props', () => {
@@ -44,7 +44,6 @@ describe('<Stone />', () => {
     expect(shallow(<Stone color='blue' />).find('span').text()).to.equal('U');
     expect(shallow(<Stone color='red' />).find('span').text()).to.equal('R');
     expect(shallow(<Stone color='white' />).find('span').text()).to.equal('W');
-    expect(shallow(<Stone color='lost' />).find('span').text()).to.equal('W');
     expect(shallow(<Stone color='rainbow' />).find('span').text()).to.equal('');
     expect(shallow(<Stone color='rainbow' colorLetters={{rainbow: 'unicorn'}} />).find('span').text()).to.equal('unicorn');
   });
@@ -60,9 +59,13 @@ describe('<Stone />', () => {
     const stoneClick = spy();
     const wrapper = mount(<Stone stoneClick={stoneClick} />);
     wrapper.find('div').simulate('click');
-    expect(stoneClick.firstCall.args.length).to.equal(0);
-    wrapper.setProps({color: 'blue'});
+    expect(stoneClick.firstCall.args.length).to.equal(1);
+    expect(stoneClick.firstCall.args[0]).to.deep.equal({type: 'DISABLE STONE', data: undefined});
+    wrapper.setProps({
+      color: 'blue',
+      disabled: true
+    });
     wrapper.find('div').simulate('click');
-    expect(stoneClick.secondCall.args[0]).to.equal('blue');
+    expect(stoneClick.secondCall.args[0]).to.deep.equal({type: 'ENABLE STONE', data: 'blue'});
   });
 });

@@ -11,12 +11,16 @@ class Stones extends React.Component {
   render() {
     let stones = [];
     if(typeof this.props.stones === 'number')
-      stones = new Array(this.props.stones).fill(null);
+      stones = new Array(this.props.stones).fill({color: undefined, disabled: false});
     else
-      stones = [].concat.apply([], Object.keys(this.props.stones).map(key => new Array(this.props.stones[key]).fill(key)));
+      stones = [].concat.apply([], this.props.stones.map(stone => {
+        return new Array(stone.count).fill(null).map((i, index) => {
+          return {color: stone.color, disabled: index < stone.disabled};
+        });
+      }));
     return (
       <div data-character={this.props.label || 'stones'}>
-        {stones.map((stone, index) => <Stone key={index} color={stone} disable={stone === 'lost'} stoneClick={this.props.stoneClick} />)}
+        {stones.map((stone, index) => <Stone key={index} color={stone.color} disabled={stone.disabled} stoneClick={this.props.stoneClick} />)}
       </div>
     );
   }
@@ -27,13 +31,13 @@ class Stones extends React.Component {
 Stones.propTypes = {
   label: PropTypes.string,
   stones: PropTypes.oneOfType([
-    PropTypes.shape({
-      blue: PropTypes.number,
-      black: PropTypes.number,
-      red: PropTypes.number,
-      white: PropTypes.number,
-      lost: PropTypes.number
-    }),
+    PropTypes.arrayOf(
+      PropTypes.shape({
+        color: PropTypes.string,
+        count: PropTypes.number,
+        disabled: PropTypes.number
+      })
+    ),
     PropTypes.number
   ]).isRequired,
   stoneClick: PropTypes.func

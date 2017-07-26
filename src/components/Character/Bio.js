@@ -10,10 +10,10 @@ class Player extends React.Component {
 
   handleInputChange(e) {
     e.preventDefault();
-    let edit = {
-      name: e.target.value
-    };
-    this.props.editCharacter(edit);
+    this.props.editCharacter({
+      type: 'CHANGE NAME',
+      data: e.target.value
+    });
   }
 
   render() {

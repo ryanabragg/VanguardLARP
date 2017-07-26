@@ -29,7 +29,7 @@ describe('<AbilityGroup />', () => {
       id: 42,
       name: 'test'
     }];
-    const wrapper = shallow(<AbilityGroup label={1} abilities={list} viewDescription={view} updateCharacterAbility={update}/>);
+    const wrapper = shallow(<AbilityGroup label={1} abilities={list} viewDescription={view} editCharacter={update}/>);
     expect(wrapper.find('div')).to.have.length(1);
     expect(wrapper.find('div').childAt(0).type()).to.equal('span');
     expect(wrapper.find('span')).to.have.length(1);
@@ -63,18 +63,18 @@ describe('<AbilityGroup />', () => {
       display: 'checkbox',
       count: 11
     }];
-    const wrapper = shallow(<AbilityGroup label={1} abilities={list} viewDescription={view} updateCharacterAbility={update}/>);
+    const wrapper = shallow(<AbilityGroup label={1} abilities={list} viewDescription={view} editCharacter={update}/>);
     expect(wrapper.find(Ability).at(0).prop('id')).to.equal(list[0].id);
     expect(wrapper.find(Ability).at(0).prop('name')).to.equal(list[0].name);
     expect(wrapper.find(Ability).at(0).prop('display')).to.equal(undefined);
     expect(wrapper.find(Ability).at(0).prop('count')).to.equal(0);
     expect(wrapper.find(Ability).at(0).prop('viewDescription')).to.equal(view);
-    expect(wrapper.find(Ability).at(0).prop('updateCharacterAbility')).to.equal(update);
+    expect(wrapper.find(Ability).at(0).prop('editCharacter')).to.equal(update);
     expect(wrapper.find(Ability).at(1).prop('id')).to.equal(list[1].id);
     expect(wrapper.find(Ability).at(1).prop('name')).to.equal(list[1].name);
     expect(wrapper.find(Ability).at(1).prop('display')).to.equal(list[1].display);
     expect(wrapper.find(Ability).at(1).prop('count')).to.equal(list[1].count);
     expect(wrapper.find(Ability).at(1).prop('viewDescription')).to.equal(view);
-    expect(wrapper.find(Ability).at(1).prop('updateCharacterAbility')).to.equal(update);
+    expect(wrapper.find(Ability).at(1).prop('editCharacter')).to.equal(update);
   });
 });

@@ -24,7 +24,7 @@ class Domain extends React.Component {
               label={tier}
               abilities= {this.props.abilities.filter(ability => tier === ability.tier)}
               viewDescription={this.props.viewDescription}
-              updateCharacterAbility={this.props.updateCharacterAbility}
+              editCharacter={this.props.editCharacter}
             />
           );
         })}
@@ -39,7 +39,7 @@ Domain.propTypes = {
   name: PropTypes.string.isRequired,
   abilities: PropTypes.array.isRequired,
   viewDescription: PropTypes.func.isRequired,
-  updateCharacterAbility: PropTypes.func.isRequired
+  editCharacter: PropTypes.func.isRequired
 };
 
 export default Domain;

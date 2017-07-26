@@ -45,10 +45,7 @@ describe('<Bio />', () => {
     const editCharacter = spy(), editRace = spy();
     const wrapper = mount(<Bio name='test' editCharacter={editCharacter} editRace={editRace}/>);
     wrapper.find('[data-character="character-name"]').simulate('change', {target: {name: 'name', value: 'testing'}});
-    let edit = {
-      name: 'testing'
-    };
-    expect(editCharacter.calledWith(edit)).to.equal(true);
+    expect(editCharacter.calledWith({ type: 'CHANGE NAME', data: 'testing' })).to.equal(true);
   });
 
   it('renders a span with the character race from props', () => {

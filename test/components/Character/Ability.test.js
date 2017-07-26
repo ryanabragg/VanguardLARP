@@ -24,7 +24,7 @@ copyProps(window, global);
 describe('<Ability />', () => {
   it('renders an div with an input (count prop) and label (name prop)', () => {
     const view = spy(), update = spy();
-    const wrapper = shallow(<Ability id={42} name='test' count={1} viewDescription={view} updateCharacterAbility={update}/>);
+    const wrapper = shallow(<Ability id={42} name='test' count={1} viewDescription={view} editCharacter={update}/>);
     expect(wrapper.find('div')).to.have.length(1);
     expect(wrapper.find('div').childAt(0).type()).to.equal('input');
     expect(wrapper.find('div').childAt(0).prop('value')).to.equal(1);
@@ -37,7 +37,7 @@ describe('<Ability />', () => {
 
   it('renders an checkbox input if the display prop is checkbox', () => {
     const view = spy(), update = spy();
-    const wrapper = shallow(<Ability id={42} name='test' display='checkbox' viewDescription={view} updateCharacterAbility={update}/>);
+    const wrapper = shallow(<Ability id={42} name='test' display='checkbox' viewDescription={view} editCharacter={update}/>);
     expect(wrapper.find('div')).to.have.length(1);
     expect(wrapper.find('div').childAt(0).type()).to.equal('input');
     expect(wrapper.find('div').childAt(0).prop('type')).to.equal('checkbox');
@@ -46,7 +46,7 @@ describe('<Ability />', () => {
 
   it('renders a select with five options instead of an input if the display prop is tiers', () => {
     const view = spy(), update = spy();
-    const wrapper = shallow(<Ability id={42} name='test' display='tiers' viewDescription={view} updateCharacterAbility={update}/>);
+    const wrapper = shallow(<Ability id={42} name='test' display='tiers' viewDescription={view} editCharacter={update}/>);
     expect(wrapper.find('div')).to.have.length(1);
     expect(wrapper.find('div').childAt(0).type()).to.equal('select');
     expect(wrapper.find('div').childAt(1).type()).to.equal('label');
@@ -61,21 +61,21 @@ describe('<Ability />', () => {
 
   it('calls the viewDescription prop when the name is clicked', () => {
     const view = spy(), update = spy();
-    const wrapper = mount(<Ability id={42} name='test' viewDescription={view} updateCharacterAbility={update}/>);
+    const wrapper = mount(<Ability id={42} name='test' viewDescription={view} editCharacter={update}/>);
     wrapper.find('label').simulate('click');
     expect(view.calledOnce).to.equal(true);
   });
 
   it('calls the viewDescription prop with the correct args', () => {
     const view = spy(), update = spy();
-    const wrapper = mount(<Ability id={42} name='test' viewDescription={view} updateCharacterAbility={update}/>);
+    const wrapper = mount(<Ability id={42} name='test' viewDescription={view} editCharacter={update}/>);
     wrapper.find('label').simulate('click');
     expect(view.calledWith(42)).to.equal(true);
   });
 
-  it('calls the updateCharacterAbility prop when the count is changed', () => {
+  it('calls the editCharacter prop when the count is changed', () => {
     const view = spy(), update = spy();
-    const wrapper = mount(<Ability id={42} name='test' viewDescription={view} updateCharacterAbility={update}/>);
+    const wrapper = mount(<Ability id={42} name='test' viewDescription={view} editCharacter={update}/>);
     wrapper.find('input').simulate('change', {target: {name: 'count', value: 1}});
     expect(update.callCount).to.equal(1);
     wrapper.setProps({display: 'tiers'});
@@ -83,13 +83,13 @@ describe('<Ability />', () => {
     expect(update.callCount).to.equal(2);
   });
 
-  it('calls the updateCharacterAbility prop with the correct args', () => {
+  it('calls the editCharacter prop with the correct args', () => {
     const view = spy(), update = spy();
-    const wrapper = mount(<Ability id={42} name='test' viewDescription={view} updateCharacterAbility={update}/>);
+    const wrapper = mount(<Ability id={42} name='test' viewDescription={view} editCharacter={update}/>);
     wrapper.find('input').simulate('change', {target: {name: 'count', value: 1}});
-    expect(update.firstCall.calledWith(42, 0, 1)).to.equal(true);
-    wrapper.setProps({display: 'tiers', count: 1});
+    expect(update.firstCall.calledWith({ type: 'ADD SKILL', data: 42 })).to.equal(true);
+    wrapper.setProps({display: 'tiers', count: 3});
     wrapper.find('select').simulate('change', {target: {name: 'count', value: 2}});
-    expect(update.secondCall.calledWith(42, 1, 2)).to.equal(true);
+    expect(update.secondCall.calledWith({ type: 'REMOVE SKILL', data: 42 })).to.equal(true);
   });
 });

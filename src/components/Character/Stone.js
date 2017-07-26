@@ -10,16 +10,16 @@ class Stone extends React.Component {
 
   handleClick(e) {
     e.preventDefault();
-    if(!this.props.color)
-      this.props.stoneClick();
-    else
-      this.props.stoneClick(this.props.color);
+    this.props.stoneClick({
+      type: this.props.disabled ? 'ENABLE STONE' : 'DISABLE STONE',
+      data: this.props.color
+    });
   }
 
   render() {
     return (
-      <div data-stone={(this.props.color || '') + 'stone'} onClick={this.handleClick}>
-        <span data-stone-disable={this.props.disable}>
+      <div className={(this.props.color || '') + 'stone'} onClick={this.handleClick}>
+        <span className={this.props.disabled ? 'disabled' : undefined}>
           {this.props.colorLetters[this.props.color] || ''}
         </span>
       </div>
@@ -32,16 +32,15 @@ Stone.defaultProps = {
     black: 'B',
     blue: 'U',
     red: 'R',
-    white: 'W',
-    lost: 'W'
+    white: 'W'
   },
-  disable: false
+  disabled: false
 };
 
 Stone.propTypes = {
   color: PropTypes.string,
   colorLetters: PropTypes.object,
-  disable: PropTypes.bool,
+  disabled: PropTypes.bool,
   stoneClick: PropTypes.func
 };
 

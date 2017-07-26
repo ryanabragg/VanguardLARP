@@ -11,7 +11,11 @@ class Ability extends React.Component {
 
   handleInputChange(e) {
     e.preventDefault();
-    this.props.updateCharacterAbility(this.props.id, this.props.count, e.target.type === 'checkbox' ? e.target.checked : e.target.value);
+    let newCount = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+    this.props.editCharacter({
+      type: this.props.count < newCount ? 'ADD SKILL' : 'REMOVE SKILL',
+      data: this.props.id
+    });
   }
 
   handleView(e) {
@@ -60,29 +64,5 @@ Ability.propTypes = {
   viewDescription: PropTypes.func.isRequired,
   updateCharacterAbility: PropTypes.func.isRequired
 };
-
-/*
-Ability.propTypes = {
-  id: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number
-  ]),
-  name: PropTypes.string.isRequired,
-  build: PropTypes.number,
-  group: PropTypes.string,
-  type: PropTypes.string,
-  race: PropTypes.string,
-  culture: PropTypes.string,
-  max: PropTypes.number,
-  count: PropTypes.number,
-  description: PropTypes.string,
-  requires: PropTypes.array,
-  replaces: PropTypes.array,
-  grants: PropTypes.array,
-  invokes: PropTypes.array,
-  viewDescription: PropTypes.func.isRequired,
-  updateCharacterAbility: PropTypes.func.isRequired
-};
-*/
 
 export default Ability;
