@@ -87,9 +87,9 @@ describe('<Ability />', () => {
     const view = spy(), update = spy();
     const wrapper = mount(<Ability id={42} name='test' viewDescription={view} editCharacter={update}/>);
     wrapper.find('input').simulate('change', {target: {name: 'count', value: 1}});
-    expect(update.firstCall.args[0]).to.deep.equal({ type: 'ADD SKILL', data: { id: 42, count: 1 }});
-    wrapper.setProps({display: 'tiers', count: 3});
+    expect(update.firstCall.args[0]).to.deep.equal({ type: 'SKILL', data: { id: 42, count: 1, source: 'build' }});
+    wrapper.setProps({display: 'tiers', count: 3, source: 'race'});
     wrapper.find('select').simulate('change', {target: {name: 'count', value: 2}});
-    expect(update.secondCall.args[0]).to.deep.equal({ type: 'REMOVE SKILL', data: { id: 42, count: 1 }});
+    expect(update.secondCall.args[0]).to.deep.equal({ type: 'SKILL', data: { id: 42, count: 2, source: 'race'}});
   });
 });

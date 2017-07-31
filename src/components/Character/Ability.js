@@ -10,13 +10,13 @@ class Ability extends React.Component {
   }
 
   handleInputChange(e) {
-    e.preventDefault();
-    let newCount = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+    e.stopPropagation();
     this.props.editCharacter({
-      type: this.props.count < newCount ? 'ADD SKILL' : 'REMOVE SKILL',
+      type: 'SKILL',
       data: {
         id: this.props.id,
-        count: Math.abs(newCount - this.props.count)
+        count: Number(e.target.type === 'checkbox' ? e.target.checked : e.target.value),
+        source: this.props.source
       }
     });
   }
@@ -29,7 +29,7 @@ class Ability extends React.Component {
   render() {
     let input = null;
     if(this.props.display === 'checkbox')
-      input = <input type='checkbox' name='count' onChange={this.handleInputChange} value={this.props.count} />;
+      input = <input type='checkbox' name='count' onChange={this.handleInputChange} value={this.props.count} checked={this.props.count} />;
     else if(this.props.display === 'tiers') {
       input = (
         <select name='count' onChange={this.handleInputChange} value={this.props.count}>
@@ -54,7 +54,8 @@ class Ability extends React.Component {
 }
 
 Ability.defaultProps = {
-  count: 0
+  count: 0,
+  source: 'build'
 };
 //@todo: replace count with purchases & uses
 Ability.propTypes = {
@@ -65,6 +66,7 @@ Ability.propTypes = {
   name: PropTypes.string.isRequired,
   display: PropTypes.string,
   count: PropTypes.number,
+  source: PropTypes.string,
   viewDescription: PropTypes.func.isRequired,
   editCharacter: PropTypes.func.isRequired
 };

@@ -20,6 +20,7 @@ class Character extends React.Component {
     super(props);
 
     this.newCharacter = {
+      _id: '',
       player: {
         name: 'Player Name',
         build: 0
@@ -46,7 +47,7 @@ class Character extends React.Component {
         innate: '',
         known: []
       },
-      skills: []
+      skills: [] // { id, count, source } (source: 'race', 'culture', 'build', level number, 'code' )
     };
 
     this.syncData = {
@@ -68,18 +69,20 @@ class Character extends React.Component {
     this.sync = this.sync.bind(this);
 
     this.viewRule = this.viewRule.bind(this);
+
+    this.getRules = this.getRules.bind(this);
     this.parseRules = this.parseRules.bind(this);
 
-    this.updateURI = this.updateURI.bind(this);
-    this.saveCharacter = this.saveCharacter.bind(this);
-
     this.levelValues = this.levelValues.bind(this);
+
+    this.encode = this.encode.bind(this);
+    this.decode = this.decode.bind(this);
+    this.saveCharacter = this.saveCharacter.bind(this);
 
     this.editCharacter = this.editCharacter.bind(this);
     this.editRace = this.editRace.bind(this);
     this.editLives = this.editLives.bind(this);
-    this.addSkill = this.addSkill.bind(this);
-    this.removeSkill = this.removeSkill.bind(this);
+    this.stateSkillChange = this.stateSkillChange.bind(this);
   }
 
   componentDidMount () {
@@ -175,19 +178,54 @@ class Character extends React.Component {
 
   viewRule(id) {}
 
-  parseRules() {
-    const rules = this.state.rules.map(rule => {
-      if(rule.max == 1)
-        rule.display = 'checkbox';
-      else if (rule.category == 'Craft')
-        rule.display = 'tiers';
-      return rule;
+  getRules() {
+    return this.state.rules.map(rule => {
+      let display = {
+        display: rule.max == 1 ? 'checkbox' : rule.category == 'Craft' ? 'tiers' : ''
+      };
+      let skill = this.state.character.skills.filter(skill => skill.id == rule._id);
+      if(!skill.length)
+        return Object.assign({}, rule, { count: 0 }, display);
+      let count = skill.reduce((reduced, skill) => {
+        return {
+          count: reduced.count + skill.count
+        };
+      });
+      return Object.assign({}, rule, count, display);
     });
+  }
+
+  parseRules() {
+    const rules = this.getRules();
     const { race } = this.state.character;
-    return {
-      weapons: rules.filter(rule => rule.category == 'Weapon'),
-      aptitudes: rules.filter(rule => rule.category == 'Aptitude'),
-      crafts: rules.filter(rule => rule.category == 'Craft'),
+    return { // @todo: change sort to be part of data entry
+      weapons: rules.filter(rule => rule.category == 'Weapon')
+        .sort((a, b) => {
+          return a.name == 'Student of War' ? -1
+          : b.name == 'Student of War' ? 1
+          : a.name == 'Elemental Source Mark' ? -1
+          : b.name == 'Elemental Source Mark' ? 1
+          : a.name > b.name ? 1
+          : -1;
+        }),
+      aptitudes: rules.filter(rule => rule.category == 'Aptitude')
+        .sort((a, b) => {
+          return a.name == 'Student of War' ? -1
+          : b.name == 'Student of War' ? 1
+          : a.name == 'Source Mark' ? -1
+          : b.name == 'Source Mark' ? 1
+          : a.name == 'Armor' ? 1
+          : b.name == 'Armor' ? -1
+          : a.name > b.name ? 1
+          : -1;
+        }),
+      crafts: rules.filter(rule => rule.category == 'Craft')
+        .sort((a, b) => {
+          return a.name == 'Jack of All Trades' ? -1
+          : b.name == 'Jack of All Trades' ? 1
+          : a.name > b.name ? 1
+          : -1;
+        }),
       domains: rules.filter(rule => rule.category == 'Domain'),
       advancedArts: rules.filter(rule => rule.category == 'Advanced Arts'),
       pools: rules.filter(rule => rule.category == 'Pool' && !rule.race),
@@ -215,9 +253,6 @@ class Character extends React.Component {
     };
   }
 
-  updateURI() {}
-  saveCharacter() {}
-
   levelValues() {
     const build = this.state.character.build.spent;
     const level = Math.floor((build - 25) / 10);
@@ -233,47 +268,52 @@ class Character extends React.Component {
     };
   }
 
+  encode() {}
+
+  decode(code) {}
+
+  saveCharacter() {}
+
+  loadCharacter() {}
+
   editCharacter(action) {
+    console.log(this.state);
     console.log(action);
-    let edit = {};
-    switch(action.type) {
-    case 'CHANGE PLAYER NAME':
-      edit = { player: { name: action.data }}; break;
-    case 'CHANGE PLAYER BUILD':
-      edit = { player: { build: action.data }}; break;
-    case 'CHANGE NAME':
-      edit = { name: action.data }; break;
-    case 'CHANGE BUILD TOTAL':
-      edit = { build: { total: action.data }}; break;
-    case 'CHANGE BUILD SPENT':
-      edit = { build: { spent: action.data }}; break;
-    case 'CHANGE BUILD NONDOMAIN':
-      edit = { build: { nonDomain: action.data }}; break;
-    case 'CHANGE LIVES':
-      edit = { lives: action.data }; break;
-    case 'CHANGE RECOVERIES':
-      edit = { lives: action.data }; break;
-    case 'CHANGE RACE':
-      edit = { race: { name: action.data }}; break;
-    case 'CHANGE CULTURE':
-      edit = { race: { culture: action.data }}; break;
-    case 'ADD SKILL':
-      edit = addSkill(action.data.id, action.data.count);
-      if(!edit)
-        return;
-      break;
-    case 'REMOVE SKILL':
-      edit = removeSkill(action.data.id, action.data.count);
-      if(!edit)
-        return;
-      break;
-    default:
-      return;
-    }
     this.setState((prevState, props) => {
       let nextState = Object.assign({}, prevState);
-      nextState.character = Object.assign({}, prevState.character, edit);
+      switch(action.type) {
+      case 'CHANGE PLAYER NAME':
+        nextState.character.player.name = action.data; break;
+      case 'CHANGE PLAYER BUILD':
+        nextState.character.player.build = action.data; break;
+      case 'CHANGE NAME':
+        nextState.character.name = action.data; break;
+      case 'CHANGE BUILD TOTAL':
+        nextState.character.build.total = action.data; break;
+      case 'CHANGE BUILD SPENT':
+        nextState.character.build.spent = action.data; break;
+      case 'CHANGE BUILD NONDOMAIN':
+        nextState.character.build.nonDomain = action.data; break;
+      case 'CHANGE LIVES':
+        nextState.character.lives = action.data; break;
+      case 'CHANGE RACE':
+        nextState.character.race.name = action.data; break;
+      case 'CHANGE CULTURE':
+        nextState.character.race.culture = action.data; break;
+      case 'SKILL':
+        let {
+          build,
+          skills
+        } = this.stateSkillChange(prevState, action);
+        nextState.character.build = build;
+        nextState.character.skills = skills;
+        break;
+      default:
+        return prevState;
+      }
       return nextState;
+    }, () => {
+      console.log(this.state);
     });
   }
 
@@ -321,9 +361,56 @@ class Character extends React.Component {
     });
   }
 
-  addSkill() {}
+  stateSkillChange(prevState, action) {
+    let { id, count, source } = action.data;
+    if(!id || count < 0)
+      return { build: prevState.character.build, skills: prevState.character.skills };
 
-  removeSkill() {}
+    let rule = prevState.rules.filter(rule => rule._id == id);
+    if(!rule.length || (rule[0].race && rule[0].race != prevState.character.race.name))
+      return { build: prevState.character.build, skills: prevState.character.skills };
+
+    let skills = prevState.character.skills.slice();
+
+    let { total, spent, nonDomain } = prevState.character.build;
+    let cost = source == 'build' ? rule[0].build : 0;
+
+    let index = skills.findIndex(skill => skill.id == id && skill.source == source);
+
+    if(index == -1)
+      return {
+        build: {
+          total: total,
+          spent: spent + count * cost,
+          nonDomain: nonDomain + (rule[0].category == 'Domain' ? count * cost : 0)
+        },
+        skills: skills.concat({
+          id: id,
+          count: count,
+          source: source
+        })
+      };
+
+    if(skills[index].count >= rule.max)
+      return { build: prevState.character.build, skills: prevState.character.skills };
+
+    let diff = count - skills[index].count;
+
+    skills[index] = {
+      id: id,
+      count: count,
+      source: source
+    };
+
+    return {
+      build: {
+        total: total,
+        spent: spent + diff * cost,
+        nonDomain: nonDomain + (rule[0].category == 'Domain' ? (count - skills[index].count) * cost : 0)
+      },
+      skills: skills
+    };
+  }
 
   render() {
     const {
