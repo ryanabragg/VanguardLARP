@@ -4,7 +4,6 @@ import io from 'socket.io-client';
 import feathers from 'feathers/client';
 import socketio from 'feathers-socketio/client';
 
-import Player from './styled/Player';
 import Bio from './styled/Bio';
 import Stones from './styled/Stones';
 import AbilityGroup from './styled/AbilityGroup';
@@ -22,7 +21,7 @@ class Character extends React.Component {
     this.newCharacter = {
       _id: '',
       player: {
-        name: 'Player Name',
+        name: 'Anonymous',
         build: 0
       },
       name: 'New Character',
@@ -285,15 +284,15 @@ class Character extends React.Component {
       case 'CHANGE PLAYER NAME':
         nextState.character.player.name = action.data; break;
       case 'CHANGE PLAYER BUILD':
-        nextState.character.player.build = action.data; break;
+        nextState.character.player.build = Number(action.data); break;
       case 'CHANGE NAME':
         nextState.character.name = action.data; break;
       case 'CHANGE BUILD TOTAL':
-        nextState.character.build.total = action.data; break;
+        nextState.character.build.total = Number(action.data); break;
       case 'CHANGE BUILD SPENT':
-        nextState.character.build.spent = action.data; break;
+        nextState.character.build.spent = Number(action.data); break;
       case 'CHANGE BUILD NONDOMAIN':
-        nextState.character.build.nonDomain = action.data; break;
+        nextState.character.build.nonDomain = Number(action.data); break;
       case 'CHANGE LIVES':
         nextState.character.lives = action.data; break;
       case 'CHANGE RACE':
@@ -317,7 +316,9 @@ class Character extends React.Component {
     });
   }
 
-  editRace() {}
+  editRace() {
+    console.log('clicked');
+  }
 
   editLives(action) {
     if(action.data == undefined)
@@ -447,15 +448,13 @@ class Character extends React.Component {
     } = this.parseRules();
     return (
       <div data-character='container'>
-        <Player
-          name={player.name}
-          build={player.build}
-          editCharacter={this.editCharacter}
-        />
         <Bio
+          player={player.name}
+          playerBuild={player.build}
           name={name}
-          race={race.name + race.culture ? ' - ' + race.culture : ''}
-          build={build.spent}
+          race={race.name + (race.culture ? ' - ' + race.culture : '')}
+          build={build.total}
+          spent={build.spent}
           level={level}
           body={body}
           buffs={buffs}

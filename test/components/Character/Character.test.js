@@ -36,20 +36,15 @@ describe('<Character />', () => {
   });
 
   describe('Children', () => {
-    it('contains a styled Player component', () => {
-      const wrapper = shallow(<Character />);
-      expect(wrapper.find(Player)).to.have.length(1);
-      expect(wrapper.find(Player).prop('name')).to.equal('Player Name');
-      expect(wrapper.find(Player).prop('build')).to.equal(0);
-      expect(wrapper.find(Player).prop('editCharacter')).to.be.a('function');
-    });
-
     it('contains a styled Bio component', () => {
       const wrapper = shallow(<Character />);
       expect(wrapper.find(Bio)).to.have.length(1);
+      expect(wrapper.find(Bio).prop('player')).to.equal('Anonymous');
+      expect(wrapper.find(Bio).prop('playerBuild')).to.equal(0);
       expect(wrapper.find(Bio).prop('name')).to.equal('New Character');
       expect(wrapper.find(Bio).prop('race')).to.equal('');
-      expect(wrapper.find(Bio).prop('build')).to.equal(0);
+      expect(wrapper.find(Bio).prop('build')).to.equal(35);
+      expect(wrapper.find(Bio).prop('spent')).to.equal(0);
       expect(wrapper.find(Bio).prop('level')).to.equal(-3);
       expect(wrapper.find(Bio).prop('body')).to.equal(-5);
       expect(wrapper.find(Bio).prop('buffs')).to.equal(2);

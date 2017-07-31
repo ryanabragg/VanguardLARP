@@ -15,7 +15,7 @@ const StyledStones = styled(Stones)`
     margin: 0 0 2px 0;
   }
   div {
-    float: left;
+    display: inline-block;
     width: 20px;
     height: 20px;
     border: 1px solid #000000;

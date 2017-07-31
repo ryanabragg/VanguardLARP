@@ -11,16 +11,19 @@ class Player extends React.Component {
   handleInputChange(e) {
     e.preventDefault();
     this.props.editCharacter({
-      type: 'CHANGE NAME',
+      type: 'CHANGE ' + e.target.name.toUpperCase(),
       data: e.target.value
     });
   }
 
   render() {
     const rest = Object.assign({}, this.props);
+    delete rest.player;
+    delete rest.playerBuild;
     delete rest.name;
     delete rest.race;
     delete rest.build;
+    delete rest.spent;
     delete rest.level;
     delete rest.body;
     delete rest.buffs;
@@ -30,28 +33,73 @@ class Player extends React.Component {
     delete rest.editRace;
     return (
       <div {...rest} data-character='bio'>
-        <input data-character='character-name'
-          name='name' onChange={this.handleInputChange}
-          value={this.props.name}
-        />
-        <div data-character='character-build' className='number'>{this.props.build}</div>
-        <div data-character='character-race'
-          onClick={this.props.editRace}
-        >{this.props.race}</div>
-        <div data-character='character-level' className='number'>{this.props.level}</div>
-        <div data-character='character-body' className='number under-text'>{this.props.body}</div>
-        <div data-character='character-buffs' className='number under-text'>{this.props.buffs}</div>
-        <div data-character='character-inscriptions' className='number under-text'>{this.props.inscriptions}</div>
-        <div data-character='character-armor' className='number under-text'>{this.props.armor}</div>
+        <div data-character='player-name' className='form-field'>
+          <label>Player</label>
+          <input value={this.props.player} />
+          <span></span>
+        </div>
+        <div data-character='character-name' className='form-field'>
+          <label>Character</label>
+          <input name='name' onChange={this.handleInputChange}
+            type='text' value={this.props.name}
+          />
+          <span className='edit'></span>
+        </div>
+        <div data-character='race' className='form-field'>
+          <label>Race</label>
+          <input value={this.props.race} />
+          <span className='edit'
+            onClick={this.props.editRace}>Select</span>
+        </div>
+        <div data-character='build-player' className='form-field x3'>
+          <label>Player Build</label>
+          <input name='player build' onChange={this.handleInputChange}
+            type='number' value={this.props.playerBuild}
+          />
+          <span className='edit'></span>
+        </div>
+        <div data-character='build-total' className='form-field x3'>
+          <label>Build Total</label>
+          <input value={this.props.build} />
+          <span></span>
+        </div>
+        <div data-character='build-spent' className='form-field x3e'>
+          <label>Build Spent</label>
+          <input value={this.props.spent} />
+          <span></span>
+        </div>
+        <div data-character='level' className='form-field x4'>
+          <label>Level</label>
+          <input value={this.props.level} />
+          <span></span>
+        </div>
+        <div data-character='body' className='form-field x4'>
+          <label>Body</label>
+          <input value={this.props.body} />
+          <span></span>
+        </div>
+        <div data-character='buffs' className='form-field x4'>
+          <label>Buffs</label>
+          <input value={this.props.buffs} />
+          <span></span>
+        </div>
+        <div data-character='inscriptions' className='form-field x4e'>
+          <label>Tattoos</label>
+          <input value={this.props.inscriptions} />
+          <span></span>
+        </div>
       </div>
     );
   }
 }
 
 Player.defaultProps = {
+  player: 'Anonymous',
+  playerBuild: 0,
   name: 'New Character',
   race: '',
   build: 0,
+  spent: 0,
   level: 0,
   body: 0,
   buffs: 0,
@@ -60,9 +108,12 @@ Player.defaultProps = {
 };
 
 Player.propTypes = {
+  player: PropTypes.string,
+  playerBuild: PropTypes.number,
   name: PropTypes.string.isRequired,
   race: PropTypes.string,
   build: PropTypes.number,
+  spent: PropTypes.number,
   level: PropTypes.number,
   body: PropTypes.number,
   buffs: PropTypes.number,
