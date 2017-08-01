@@ -36,57 +36,46 @@ class Player extends React.Component {
         <div data-character='player-name' className='form-field'>
           <label>Player</label>
           <input value={this.props.player} />
-          <span></span>
         </div>
-        <div data-character='character-name' className='form-field'>
+        <div data-character='character-name' className='form-field edit'>
           <label>Character</label>
           <input name='name' onChange={this.handleInputChange}
             type='text' value={this.props.name}
           />
-          <span className='edit'></span>
         </div>
-        <div data-character='race' className='form-field'>
+        <div data-character='race' className='form-field edit' onClick={this.props.editRace}>
           <label>Race</label>
           <input value={this.props.race} />
-          <span className='edit'
-            onClick={this.props.editRace}>Select</span>
         </div>
-        <div data-character='build-player' className='form-field x3'>
+        <div data-character='build-player' className='form-field x3 edit'>
           <label>Player Build</label>
           <input name='player build' onChange={this.handleInputChange}
             type='number' value={this.props.playerBuild}
           />
-          <span className='edit'></span>
         </div>
         <div data-character='build-total' className='form-field x3'>
           <label>Build Total</label>
           <input value={this.props.build} />
-          <span></span>
         </div>
         <div data-character='build-spent' className='form-field x3e'>
           <label>Build Spent</label>
           <input value={this.props.spent} />
-          <span></span>
         </div>
         <div data-character='level' className='form-field x4'>
           <label>Level</label>
           <input value={this.props.level} />
-          <span></span>
         </div>
         <div data-character='body' className='form-field x4'>
           <label>Body</label>
           <input value={this.props.body} />
-          <span></span>
         </div>
         <div data-character='buffs' className='form-field x4'>
           <label>Buffs</label>
           <input value={this.props.buffs} />
-          <span></span>
         </div>
         <div data-character='inscriptions' className='form-field x4e'>
           <label>Tattoos</label>
           <input value={this.props.inscriptions} />
-          <span></span>
         </div>
       </div>
     );

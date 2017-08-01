@@ -4,6 +4,7 @@ import io from 'socket.io-client';
 import feathers from 'feathers/client';
 import socketio from 'feathers-socketio/client';
 
+import Section from './styled/Section';
 import Bio from './styled/Bio';
 import Stones from './styled/Stones';
 import AbilityGroup from './styled/AbilityGroup';
@@ -448,6 +449,7 @@ class Character extends React.Component {
     } = this.parseRules();
     return (
       <div data-character='container'>
+        <Section>
         <Bio
           player={player.name}
           playerBuild={player.build}
@@ -471,6 +473,8 @@ class Character extends React.Component {
           label='Recoveries' 
           stones={recoveries}
         />
+        </Section>
+        <Section>
         <AbilityGroup
           label='Weapon Skills'
           abilities={weapons}
@@ -483,6 +487,7 @@ class Character extends React.Component {
           viewDescription={this.viewRule}
           editCharacter={this.editCharacter}
         />
+        </Section>
       </div>
     );
   }

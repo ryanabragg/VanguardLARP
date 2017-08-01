@@ -16,7 +16,7 @@ class AbilityGroup extends React.Component {
     delete rest.editCharacter;
     return (
       <div {...rest} data-character='ability-group'>
-        <span>{this.props.label}</span>
+        <label>{this.props.label}</label>
         {this.props.abilities.map(ability => {
           return (
             <Ability

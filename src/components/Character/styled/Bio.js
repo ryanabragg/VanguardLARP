@@ -8,14 +8,16 @@ const StyledBio = styled(Bio)`
     max-width: ${props => props.theme.breakpoints.xs}px;
   }
   display: inline-block;
-  padding: 10px;
+  padding: 0;
   margin: 0;
   div {
+    position: relative;
     display: inline-block;
     width: 100%;
-    padding: 9px;
+    padding: 9px 0 0 0;
     border: 1px solid ${props => Color(props.theme.colors.secondary).grayscale().hex()};
-    margin-bottom: 10px;
+    border-bottom: 3px solid ${props => Color(props.theme.colors.secondary).grayscale().hex()};
+    margin-top: 10px;
     border-radius: 3px;
   }
   div.x3 {
@@ -34,9 +36,12 @@ const StyledBio = styled(Bio)`
     width: 20%;
     margin-right: 0;
   }
+  div.edit {
+    border-bottom: 3px solid ${props => props.theme.colors.secondary};
+  }
   label {
     float: left;
-    margin-top: -16px;
+    margin: -16px 0 0 3px;
     background: ${props => Color(props.theme.colors.background).grayscale().hex()};
     padding: 2px;
     color: ${props => {
@@ -51,13 +56,11 @@ const StyledBio = styled(Bio)`
     font-family: Arial, Helvetica, sans-serif;
   }
   span {
-    background: ${props => Color(props.theme.colors.secondary).grayscale().hex()};
+    background: ${props => props.theme.colors.secondary};
     display: block;
-    padding: 3px;
-    margin: 0 -9px -9px -9px;
     text-align: center;
     color: ${props => {
-      let background = Color(props.theme.colors.secondary).grayscale();
+      let background = Color(props.theme.colors.secondary);
       let base = Color(background.dark() ? 'white' : 'black');
       let alpha = background.light() ? props.theme.alphaDarkText.primary : props.theme.alphaLightText.primary;
       return base.mix(background, alpha).hex();
@@ -65,14 +68,10 @@ const StyledBio = styled(Bio)`
     font-family: Arial, Helvetica, sans-serif;
     font-size: 11px;
   }
-  span.edit {
-    background: ${props => Color(props.theme.colors.secondary).hex()};
-    color: ${props => {
-      let background = Color(props.theme.colors.secondary);
-      let base = Color(background.dark() ? 'white' : 'black');
-      let alpha = background.light() ? props.theme.alphaDarkText.primary : props.theme.alphaLightText.primary;
-      return base.mix(background, alpha).hex();
-    }};
+  button {
+    position: absolute;
+    top: 9px;
+    right: 10px;
   }
   textarea{
     resize:none;
@@ -83,7 +82,7 @@ const StyledBio = styled(Bio)`
     width: 100%;
     height: 25px;
     line-height: 25px;
-    padding: 0;
+    padding: 0 3px 0 3px;
     border: none;
     outline: none;
   }
