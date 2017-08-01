@@ -12,7 +12,7 @@ const StyledAbilityGroup = styled(AbilityGroup)`
   padding: 9px 9px 3px 9px;
   margin: 10px 0 0 10px;
   border: 1px solid ${props => Color(props.theme.colors.secondary).grayscale().hex()};
-  border-bottom: 3px solid ${props => {let color = Color(props.theme.colors.secondary); return typeof props.stoneClick == 'function' ? color.hex() : color.grayscale().hex();}};
+  border-bottom: 3px solid ${props => props.theme.colors.secondary};
   border-radius: 3px;
   label {
     float: left;
