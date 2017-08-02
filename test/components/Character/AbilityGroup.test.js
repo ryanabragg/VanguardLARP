@@ -23,7 +23,7 @@ function copyProps(src, target) {
 copyProps(window, global);
 
 describe('<AbilityGroup />', () => {
-  it('renders a div with a span and an Ability component for each object in the abilities prop', () => {
+  it('renders a div with a label and an Ability component for each object in the abilities prop', () => {
     const view = spy(), update = spy();
     let list = [{
       _id: 42,
@@ -31,9 +31,9 @@ describe('<AbilityGroup />', () => {
     }];
     const wrapper = shallow(<AbilityGroup label={1} abilities={list} viewDescription={view} editCharacter={update}/>);
     expect(wrapper.find('div')).to.have.length(1);
-    expect(wrapper.find('div').childAt(0).type()).to.equal('span');
-    expect(wrapper.find('span')).to.have.length(1);
-    expect(wrapper.find('span').text()).to.equal('1');
+    expect(wrapper.find('div').childAt(0).type()).to.equal('label');
+    expect(wrapper.find('label')).to.have.length(1);
+    expect(wrapper.find('label').text()).to.equal('1');
     expect(wrapper.find('div').childAt(1).type()).to.equal(Ability);
     expect(wrapper.find(Ability)).to.have.length(list.length);
     list = list.concat([{
@@ -49,7 +49,7 @@ describe('<AbilityGroup />', () => {
     }]);
     wrapper.setProps({label: 'Tier I', abilities: list});
     expect(wrapper.find(Ability)).to.have.length(list.length);
-    expect(wrapper.find('span').text()).to.equal('Tier I');
+    expect(wrapper.find('label').text()).to.equal('Tier I');
   });
 
   it('renders the Ability components with the propper props from the array object', () => {

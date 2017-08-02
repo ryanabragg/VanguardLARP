@@ -4,9 +4,6 @@ import Color from 'color';
 import Bio from '../Bio';
 
 const StyledBio = styled(Bio)`
-  @media (min-width: ${props => props.theme.breakpoints.s + 1}px) {
-    max-width: ${props => props.theme.breakpoints.xs}px;
-  }
   display: inline-block;
   padding: 0;
   margin: 0;
@@ -39,7 +36,13 @@ const StyledBio = styled(Bio)`
   div.edit {
     border-bottom: 3px solid ${props => props.theme.colors.secondary};
   }
-  label {
+  div.click {
+    cursor: pointer;
+  }
+  div.click > input {
+    cursor: pointer;
+  }
+  label.floating {
     float: left;
     margin: -16px 0 0 3px;
     background: ${props => Color(props.theme.colors.background).grayscale().hex()};

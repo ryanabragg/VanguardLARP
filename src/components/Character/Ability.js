@@ -47,7 +47,7 @@ class Ability extends React.Component {
     return (
       <div className='ability'>
         {input}
-        <span onClick={this.handleView}>{this.props.name}</span>
+        <label onClick={this.handleView}>{this.props.name}</label>
       </div>
     );
   }

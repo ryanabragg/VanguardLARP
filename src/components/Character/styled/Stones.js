@@ -11,7 +11,7 @@ const StyledStones = styled(Stones)`
   border: 1px solid ${props => Color(props.theme.colors.secondary).grayscale().hex()};
   border-bottom: 3px solid ${props => {let color = Color(props.theme.colors.secondary); return typeof props.stoneClick == 'function' ? color.hex() : color.grayscale().hex();}};
   border-radius: 3px;
-  label {
+  label.floating {
     float: left;
     margin-top: -16px;
     background: ${props => Color(props.theme.colors.background).grayscale().hex()};
@@ -39,9 +39,7 @@ const StyledStones = styled(Stones)`
     font-size: 0.8em;
     line-height: 19px;
   }
-  div:hover {
-    cursor: pointer;
-  }
+  ${props => typeof props.stoneClick == 'function' ? 'div:hover { cursor: pointer; }' : ''}
   div.black {
     color: white;
     background: black;
@@ -61,6 +59,13 @@ const StyledStones = styled(Stones)`
   div.disabled {
     color: #AAA;
     background: #666;
+  }
+  div.plus,
+  div.and,
+  div.equals {
+    color: black;
+    background: white;
+    border: none;
   }
 `;
 

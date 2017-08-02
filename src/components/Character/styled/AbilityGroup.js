@@ -4,17 +4,15 @@ import Color from 'color';
 import AbilityGroup from '../AbilityGroup';
 
 const StyledAbilityGroup = styled(AbilityGroup)`
-  @media (min-width: ${props => props.theme.breakpoints.s + 1}px) {
-    max-width: ${props => props.theme.breakpoints.xs}px;
-  }
   display: inline-block;
   vertical-align: top;
+  width: 100%;
   padding: 9px 9px 3px 9px;
-  margin: 10px 0 0 10px;
+  margin: 10px 0 0 0;
   border: 1px solid ${props => Color(props.theme.colors.secondary).grayscale().hex()};
   border-bottom: 3px solid ${props => props.theme.colors.secondary};
   border-radius: 3px;
-  label {
+  label.floating {
     float: left;
     margin-top: -16px;
     background: ${props => Color(props.theme.colors.background).grayscale().hex()};

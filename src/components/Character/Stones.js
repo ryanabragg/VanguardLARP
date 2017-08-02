@@ -24,7 +24,7 @@ class Stones extends React.Component {
       }));
     return (
       <div data-character={this.props.label.toLowerCase().replace(/\s/, '-') || 'stones'} {...rest}>
-        {this.props.label && <label>{this.props.label}</label>}
+        {this.props.label && <label className='floating'>{this.props.label}</label>}
         {stones.map((stone, index) => <Stone key={index} color={stone.color} disabled={stone.disabled} stoneClick={this.props.stoneClick} />)}
       </div>
     );

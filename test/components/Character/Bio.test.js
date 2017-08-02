@@ -62,7 +62,6 @@ describe('<Bio />', () => {
     expect(wrapper.find('[data-character="race"]')).to.have.length(1);
     expect(wrapper.find('[data-character="race"]').type()).to.equal('div');
     expect(wrapper.find('[data-character="race"]').find('label').text()).to.equal('Race');
-    expect(wrapper.find('[data-character="race"]').find('span').text()).to.equal('Select');
     expect(wrapper.prop('race')).to.equal('angel');
     expect(wrapper.find('[data-character="race"]').find('input').prop('value')).to.equal('angel');
     wrapper.setProps({race: 'demon'});
@@ -70,10 +69,10 @@ describe('<Bio />', () => {
     expect(wrapper.find('[data-character="race"]').find('input').prop('value')).to.equal('demon');
   });
 
-  it('calls the editRace prop when the race Select span is clicked on', () => {
+  it('calls the editRace prop when the race div is clicked on', () => {
     const editCharacter = spy(), editRace = spy();
     const wrapper = mount(<Bio name='test' race='angel' editCharacter={editCharacter} editRace={editRace}/>);
-    wrapper.find('[data-character="race"]').find('span').simulate('click');
+    wrapper.find('[data-character="race"]').simulate('click');
     expect(editRace.calledOnce).to.equal(true);
   });
 

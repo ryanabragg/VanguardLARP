@@ -34,47 +34,47 @@ class Player extends React.Component {
     return (
       <div {...rest} data-character='bio'>
         <div data-character='player-name' className='form-field'>
-          <label>Player</label>
+          <label className='floating'>Player</label>
           <input value={this.props.player} readOnly />
         </div>
         <div data-character='character-name' className='form-field edit'>
-          <label>Character</label>
+          <label className='floating'>Character</label>
           <input name='name' onChange={this.handleInputChange}
             type='text' value={this.props.name}
           />
         </div>
-        <div data-character='race' className='form-field edit' onClick={this.props.editRace}>
-          <label>Race</label>
+        <div data-character='race' className='form-field edit click' onClick={this.props.editRace}>
+          <label className='floating'>Race</label>
           <input value={this.props.race} readOnly />
         </div>
         <div data-character='build-player' className='form-field x3 edit'>
-          <label>Player Build</label>
+          <label className='floating'>Player Build</label>
           <input name='player build' onChange={this.handleInputChange}
             type='number' value={this.props.playerBuild}
           />
         </div>
         <div data-character='build-total' className='form-field x3'>
-          <label>Build Total</label>
+          <label className='floating'>Build Total</label>
           <input value={this.props.build} readOnly />
         </div>
         <div data-character='build-spent' className='form-field x3e'>
-          <label>Build Spent</label>
+          <label className='floating'>Build Spent</label>
           <input value={this.props.spent} readOnly />
         </div>
         <div data-character='level' className='form-field x4'>
-          <label>Level</label>
+          <label className='floating'>Level</label>
           <input value={this.props.level} readOnly />
         </div>
         <div data-character='body' className='form-field x4'>
-          <label>Body</label>
+          <label className='floating'>Body</label>
           <input value={this.props.body} readOnly />
         </div>
         <div data-character='buffs' className='form-field x4'>
-          <label>Buffs</label>
+          <label className='floating'>Buffs</label>
           <input value={this.props.buffs} readOnly />
         </div>
         <div data-character='inscriptions' className='form-field x4e'>
-          <label>Tattoos</label>
+          <label className='floating'>Tattoos</label>
           <input value={this.props.inscriptions} readOnly />
         </div>
       </div>
