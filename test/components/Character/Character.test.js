@@ -8,9 +8,10 @@ import { ThemeProvider } from 'styled-components';
 import theme from '../../../src/components/theme';
 
 import Character from '../../../src/components/Character/Character';
-import Player from '../../../src/components/Character/styled/Player';
 import Bio from '../../../src/components/Character/styled/Bio';
 import Stones from '../../../src/components/Character/styled/Stones';
+import AbilityGroup from '../../../src/components/Character/styled/AbilityGroup';
+import Crafting from '../../../src/components/Character/styled/Crafting';
 
 const window = (new JSDOM('<!doctype html><html><body></body></html>')).window;
 global.window = window;
@@ -73,8 +74,30 @@ describe('<Character />', () => {
     });
 
     it('contains a styled racial skills component');
-    it('contains a styled constant skills component');
-    it('contains a styled crafting skills component');
+
+    it('contains a styled weapon skills component', () => {
+      const wrapper = shallow(<Character />);
+      expect(wrapper.find(AbilityGroup).find({label: 'Weapon Skills'})).to.have.length(1);
+      //@todo: check props
+    });
+
+    it('contains a styled aptitude skills component', () => {
+      const wrapper = shallow(<Character />);
+      expect(wrapper.find(AbilityGroup).find({label: 'Aptitudes'})).to.have.length(1);
+      //@todo: check props
+    });
+
+    it('contains a styled crafting info component', () => {
+      const wrapper = shallow(<Character />);
+      expect(wrapper.find(Crafting)).to.have.length(1);
+    });
+
+    it('contains a styled crafting skills component', () => {
+      const wrapper = shallow(<Character />);
+      expect(wrapper.find(AbilityGroup).find({label: 'Craft Skills'})).to.have.length(1);
+      //@todo: check props
+    });
+
     it('contains a styled combat pools component');
     it('contains a styled domains component');
     it('contains a styled advanced arts component');

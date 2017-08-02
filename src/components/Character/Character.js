@@ -8,6 +8,7 @@ import Section from './styled/Section';
 import Bio from './styled/Bio';
 import Stones from './styled/Stones';
 import AbilityGroup from './styled/AbilityGroup';
+import Crafting from './styled/Crafting';
 
 // import the notifications component to access static methods (don't import styled version)
 import NotificationList from '../NotificationList';
@@ -450,43 +451,52 @@ class Character extends React.Component {
     return (
       <div data-character='container'>
         <Section>
-        <Bio
-          player={player.name}
-          playerBuild={player.build}
-          name={name}
-          race={race.name + (race.culture ? ' - ' + race.culture : '')}
-          build={build.total}
-          spent={build.spent}
-          level={level}
-          body={body}
-          buffs={buffs}
-          inscriptions={inscriptions}
-          editCharacter={this.editCharacter}
-          editRace={this.editRace}
-        />
-        <Stones
-          label='Ressurection Bag'
-          stones={lives}
-          stoneClick={this.editLives}
-        />
-        <Stones
-          label='Recoveries' 
-          stones={recoveries}
-        />
+          <Bio
+            player={player.name}
+            playerBuild={player.build}
+            name={name}
+            race={race.name + (race.culture ? ' - ' + race.culture : '')}
+            build={build.total}
+            spent={build.spent}
+            level={level}
+            body={body}
+            buffs={buffs}
+            inscriptions={inscriptions}
+            editCharacter={this.editCharacter}
+            editRace={this.editRace}
+          />
+          <Stones
+            label='Ressurection Bag'
+            stones={lives}
+            stoneClick={this.editLives}
+          />
+          <Stones
+            label='Recoveries' 
+            stones={recoveries}
+          />
         </Section>
         <Section>
-        <AbilityGroup
-          label='Weapon Skills'
-          abilities={weapons}
-          viewDescription={this.viewRule}
-          editCharacter={this.editCharacter}
-        />
-        <AbilityGroup
-          label='Aptitudes'
-          abilities={aptitudes}
-          viewDescription={this.viewRule}
-          editCharacter={this.editCharacter}
-        />
+          <AbilityGroup
+            label='Weapon Skills'
+            abilities={weapons}
+            viewDescription={this.viewRule}
+            editCharacter={this.editCharacter}
+          />
+          <AbilityGroup
+            label='Aptitudes'
+            abilities={aptitudes}
+            viewDescription={this.viewRule}
+            editCharacter={this.editCharacter}
+          />
+        </Section>
+        <Section>
+          <Crafting />
+          <AbilityGroup
+            label='Craft Skills'
+            abilities={crafts}
+            viewDescription={this.viewRule}
+            editCharacter={this.editCharacter}
+          />
         </Section>
       </div>
     );
