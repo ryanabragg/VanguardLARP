@@ -283,23 +283,23 @@ class Character extends React.Component {
     this.setState((prevState, props) => {
       let nextState = Object.assign({}, prevState);
       switch(action.type) {
-      case 'CHANGE PLAYER NAME':
+      case 'PLAYER NAME':
         nextState.character.player.name = action.data; break;
-      case 'CHANGE PLAYER BUILD':
+      case 'PLAYER BUILD':
         nextState.character.player.build = Number(action.data); break;
-      case 'CHANGE NAME':
+      case 'NAME':
         nextState.character.name = action.data; break;
-      case 'CHANGE BUILD TOTAL':
+      case 'BUILD TOTAL':
         nextState.character.build.total = Number(action.data); break;
-      case 'CHANGE BUILD SPENT':
+      case 'BUILD SPENT':
         nextState.character.build.spent = Number(action.data); break;
-      case 'CHANGE BUILD NONDOMAIN':
+      case 'BUILD NONDOMAIN':
         nextState.character.build.nonDomain = Number(action.data); break;
-      case 'CHANGE LIVES':
+      case 'LIVES':
         nextState.character.lives = action.data; break;
-      case 'CHANGE RACE':
+      case 'RACE':
         nextState.character.race.name = action.data; break;
-      case 'CHANGE CULTURE':
+      case 'CULTURE':
         nextState.character.race.culture = action.data; break;
       case 'SKILL':
         let {
@@ -359,7 +359,7 @@ class Character extends React.Component {
       return;
     }
     this.editCharacter({
-      type: 'CHANGE LIVES',
+      type: 'LIVES',
       data: edit
     });
   }

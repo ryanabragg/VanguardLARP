@@ -11,7 +11,7 @@ class Player extends React.Component {
   handleInputChange(e) {
     e.preventDefault();
     this.props.editCharacter({
-      type: 'CHANGE ' + e.target.name.toUpperCase(),
+      type: e.target.name.toUpperCase(),
       data: e.target.value
     });
   }

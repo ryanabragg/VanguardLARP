@@ -53,7 +53,7 @@ describe('<Bio />', () => {
     const wrapper = mount(<Bio name='test' editCharacter={editCharacter} editRace={editRace}/>);
     wrapper.find('[data-character="character-name"]').find('input').simulate('change', {target: {name: 'name', value: 'testing'}});
     expect(editCharacter.calledOnce).to.equal(true);
-    expect(editCharacter.firstCall.args[0]).to.deep.equal({ type: 'CHANGE NAME', data: 'testing' });
+    expect(editCharacter.firstCall.args[0]).to.deep.equal({ type: 'NAME', data: 'testing' });
   });
 
   it('renders a div with the character race from props', () => {
