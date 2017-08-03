@@ -11,6 +11,7 @@ import Character from '../../../src/components/Character/Character';
 import Bio from '../../../src/components/Character/styled/Bio';
 import Stones from '../../../src/components/Character/styled/Stones';
 import AbilityGroup from '../../../src/components/Character/styled/AbilityGroup';
+import SourceMarks from '../../../src/components/Character/styled/SourceMarks';
 import Crafting from '../../../src/components/Character/styled/Crafting';
 
 const window = (new JSDOM('<!doctype html><html><body></body></html>')).window;
@@ -87,6 +88,12 @@ describe('<Character />', () => {
       //@todo: check props
     });
 
+    it('contains a styled source mark list component', () => {
+      const wrapper = shallow(<Character />);
+      expect(wrapper.find(SourceMarks)).to.have.length(1);
+      //@todo: check props
+    });
+
     it('contains a styled crafting info component', () => {
       const wrapper = shallow(<Character />);
       expect(wrapper.find(Crafting)).to.have.length(1);
@@ -107,6 +114,8 @@ describe('<Character />', () => {
     it('loads rules data after mounting');
     it('loads character data after mounting');
     it('tracks build spent');
+    it('has a reset character fucntion');
+    it('has a remake character funciton');
     it('allows editing the build available if the user is an admin');
     it('alerts on missing requirements for abilities');
     it('renders a save/cancel prompt after changes');

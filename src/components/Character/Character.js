@@ -8,6 +8,7 @@ import Section from './styled/Section';
 import Bio from './styled/Bio';
 import Stones from './styled/Stones';
 import AbilityGroup from './styled/AbilityGroup';
+import SourceMarks from './styled/SourceMarks';
 import Crafting from './styled/Crafting';
 
 // import the notifications component to access static methods (don't import styled version)
@@ -43,11 +44,7 @@ class Character extends React.Component {
         name: '',
         culture: ''
       },
-      sourceMark: {
-        limit: 0,
-        innate: '',
-        known: []
-      },
+      sourceMarks: [],
       skills: [] // { id, count, source } (source: 'race', 'culture', 'build', level number, 'code' )
     };
 
@@ -184,20 +181,19 @@ class Character extends React.Component {
       let display = {
         display: rule.max == 1 ? 'checkbox' : rule.category == 'Craft' ? 'tiers' : ''
       };
-      let skill = this.state.character.skills.filter(skill => skill.id == rule._id);
-      if(!skill.length)
+      let skills = this.state.character.skills.filter(skill => skill.id == rule._id);
+      if(!skills.length)
         return Object.assign({}, rule, { count: 0 }, display);
-      let count = skill.reduce((reduced, skill) => {
-        return {
-          count: reduced.count + skill.count
-        };
-      });
+      let count = {
+        count: skills.reduce((total, skill) => { return total + skill.count}, 0)
+      };
       return Object.assign({}, rule, count, display);
     });
   }
 
   parseRules() {
     const rules = this.getRules();
+    const granted = rules.filter(rule => rule.grants);
     const { race } = this.state.character;
     return { // @todo: change sort to be part of data entry
       weapons: rules.filter(rule => rule.category == 'Weapon')
@@ -250,7 +246,31 @@ class Character extends React.Component {
         rule.category != 'Pool' &&
         rule.race != '' &&
         rule.culture == race.culture
-      )
+      ),
+      bodyMod: {
+        extra: granted.reduce((total, rule) => {
+          let count = rule.grants.split(', ')
+            .filter(g => g.includes('Body:'))
+            .reduce((count, g) => count + (parseInt(g.split(': ')[1]) || 0), 0);
+          return total + rule.count * count;
+        }, 0),
+        perLevel: granted.reduce((total, rule) => {
+          let count = rule.grants.split(', ')
+            .filter(g => g.includes('Body Per Level:'))
+            .reduce((count, g) => count + (parseInt(g.split(': ')[1]) || 0), 0);
+          return total + rule.count * count;
+        }, 0),
+        double: Boolean(granted.reduce((check, rule) => check || (rule.grants.includes('Double Body') && rule.count), false))
+      },
+      sourceMark: {
+        limit: granted.reduce((total, rule) => {
+          let count = rule.grants.split(', ')
+            .filter(g => g.includes('Source Mark:'))
+            .reduce((count, g) => count + (parseInt(g.split(': ')[1]) || 0), 0);
+          return total + rule.count * count;
+        }, 0),
+        mastery: Boolean(granted.reduce((check, rule) => check || (rule.grants.includes('Source Mastery') && rule.count), false))
+      }
     };
   }
 
@@ -301,6 +321,8 @@ class Character extends React.Component {
         nextState.character.race.name = action.data; break;
       case 'CULTURE':
         nextState.character.race.culture = action.data; break;
+      case 'SOURCE MARK':
+        nextState.character.sourceMarks = action.data; break;
       case 'SKILL':
         let {
           build,
@@ -433,7 +455,7 @@ class Character extends React.Component {
       lives,
       race,
       recoveries,
-      sourceMark,
+      sourceMarks,
       skills
     } = this.state.character;
     const {
@@ -446,8 +468,11 @@ class Character extends React.Component {
       racialPools,
       culturalPools,
       racials,
-      culturals
+      culturals,
+      bodyMod,
+      sourceMark
     } = this.parseRules();
+    let bodyTotal = (body + bodyMod.extra + bodyMod.perLevel * level) * (bodyMod.double ? 2 : 1);
     return (
       <div data-character='container'>
         <Section>
@@ -459,7 +484,7 @@ class Character extends React.Component {
             build={build.total}
             spent={build.spent}
             level={level}
-            body={body}
+            body={bodyTotal}
             buffs={buffs}
             inscriptions={inscriptions}
             editCharacter={this.editCharacter}
@@ -486,6 +511,12 @@ class Character extends React.Component {
             label='Aptitudes'
             abilities={aptitudes}
             viewDescription={this.viewRule}
+            editCharacter={this.editCharacter}
+          />
+          <SourceMarks
+            limit={sourceMark.limit}
+            mastery={sourceMark.mastery}
+            known={sourceMarks}
             editCharacter={this.editCharacter}
           />
         </Section>
