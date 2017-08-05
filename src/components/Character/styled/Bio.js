@@ -81,7 +81,7 @@ const StyledBio = styled(Bio)`
     width: 100%;
     height: 25px;
     line-height: 25px;
-    padding: 0 3px 0 3px;
+    padding: 0 9px 0 9px;
     border: none;
     outline: none;
   }

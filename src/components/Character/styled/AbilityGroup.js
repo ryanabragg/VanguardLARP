@@ -5,8 +5,8 @@ import AbilityGroup from '../AbilityGroup';
 
 const StyledAbilityGroup = styled(AbilityGroup)`
   display: inline-block;
-  vertical-align: top;
   width: 100%;
+  vertical-align: top;
   padding: 9px 9px 3px 9px;
   margin: 10px 0 0 0;
   border: 1px solid ${props => Color(props.theme.colors.secondary).grayscale().hex()};

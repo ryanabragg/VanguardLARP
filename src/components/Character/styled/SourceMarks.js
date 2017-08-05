@@ -4,7 +4,8 @@ import Color from 'color';
 import SourceMarks from '../SourceMarks';
 
 const StyledSourceMarks = styled(SourceMarks)`
-  display: block;
+  display: inline-block;
+  width: 100%;
   padding: 9px 9px 3px 9px;
   margin: 10px 0 0 0;
   border: 1px solid ${props => Color(props.theme.colors.secondary).grayscale().hex()};
