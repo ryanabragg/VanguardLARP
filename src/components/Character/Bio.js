@@ -22,6 +22,9 @@ class Player extends React.Component {
     delete rest.playerBuild;
     delete rest.name;
     delete rest.race;
+    delete rest.races;
+    delete rest.culture;
+    delete rest.cultures;
     delete rest.build;
     delete rest.spent;
     delete rest.level;
@@ -43,9 +46,23 @@ class Player extends React.Component {
             type='text' value={this.props.name}
           />
         </div>
-        <div data-character='race' className='form-field edit click' onClick={this.props.editRace}>
+        <div data-character='race' className='form-field x2 edit'>
           <label className='floating'>Race</label>
-          <input value={this.props.race} readOnly />
+          <select name='race' onChange={this.handleInputChange}
+            type='text' value={this.props.race}
+          >
+            <option value=''></option>
+            {this.props.races.map(race => <option key={race} value={race}>{race}</option>)}
+          </select>
+        </div>
+        <div data-character='culture' className='form-field x2e edit'>
+          <label className='floating'>Culture</label>
+          <select name='culture' onChange={this.handleInputChange}
+            type='text' value={this.props.culture}
+          >
+            <option value=''></option>
+            {this.props.cultures.map(culture => <option key={culture} value={culture}>{culture}</option>)}
+          </select>
         </div>
         <div data-character='build-player' className='form-field x3 edit'>
           <label className='floating'>Player Build</label>
@@ -87,6 +104,9 @@ Player.defaultProps = {
   playerBuild: 0,
   name: 'New Character',
   race: '',
+  races: [],
+  culture: '',
+  cultures: [],
   build: 0,
   spent: 0,
   level: 0,
@@ -101,6 +121,9 @@ Player.propTypes = {
   playerBuild: PropTypes.number,
   name: PropTypes.string.isRequired,
   race: PropTypes.string,
+  races: PropTypes.array,
+  culture: PropTypes.string,
+  cultures: PropTypes.array,
   build: PropTypes.number,
   spent: PropTypes.number,
   level: PropTypes.number,
@@ -111,8 +134,7 @@ Player.propTypes = {
     PropTypes.number,
     PropTypes.string
   ]),
-  editCharacter: PropTypes.func.isRequired,
-  editRace: PropTypes.func.isRequired
+  editCharacter: PropTypes.func.isRequired
 };
 
 export default Player;

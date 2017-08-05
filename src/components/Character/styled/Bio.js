@@ -17,6 +17,14 @@ const StyledBio = styled(Bio)`
     margin-top: 10px;
     border-radius: 3px;
   }
+  div.x2 {
+    width: 47.5%;
+    margin-right: 5%;
+  }
+  div.x2e {
+    width: 47.5%;
+    margin-right: 0;
+  }
   div.x3 {
     width: 30%;
     margin-right: 5%;
@@ -44,9 +52,10 @@ const StyledBio = styled(Bio)`
   }
   label.floating {
     float: left;
-    margin: -16px 0 0 3px;
-    background: ${props => Color(props.theme.colors.background).grayscale().hex()};
+    margin-top: -16px;
+    margin-left: 9px;
     padding: 2px;
+    background: ${props => Color(props.theme.colors.background).grayscale().hex()};
     color: ${props => {
       let background = Color(props.theme.colors.background).grayscale();
       let base = Color(background.dark() ? 'white' : 'black');

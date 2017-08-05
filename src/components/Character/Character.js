@@ -196,6 +196,14 @@ class Character extends React.Component {
     const granted = rules.filter(rule => rule.grants);
     const { race } = this.state.character;
     return { // @todo: change sort to be part of data entry
+      races: rules.filter(rule => rule.category == 'Race')
+        .sort((a, b) => {
+          return a.name > b.name ? 1 : -1;
+        }),
+      cultures: rules.filter(rule => rule.category == 'Culture')
+        .sort((a, b) => {
+          return a.name > b.name ? 1 : -1;
+        }),
       weapons: rules.filter(rule => rule.category == 'Weapon')
         .sort((a, b) => {
           return a.name == 'Student of War' ? -1
@@ -382,7 +390,7 @@ class Character extends React.Component {
   }
 
   stateRaceChange(prevState, action) {
-    console.log('clicked');
+    console.log('@todo');
     return {
       build: {
         total: 0,
@@ -468,6 +476,8 @@ class Character extends React.Component {
       skills
     } = this.state.character;
     const {
+      races,
+      cultures,
       weapons,
       aptitudes,
       crafts,
@@ -489,7 +499,10 @@ class Character extends React.Component {
             player={player.name}
             playerBuild={player.build}
             name={name}
-            race={race.name + (race.culture ? ' - ' + race.culture : '')}
+            race={race.name}
+            races={races.map(rule => rule.name)}
+            culture={race.culture}
+            cultures={cultures.map(rule => rule.name)}
             build={build.total}
             spent={build.spent}
             level={level}
@@ -497,7 +510,6 @@ class Character extends React.Component {
             buffs={buffs}
             inscriptions={inscriptions}
             editCharacter={this.editCharacter}
-            editRace={this.editCharacter}
           />
           <Stones
             label='Ressurection Bag'
