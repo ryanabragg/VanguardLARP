@@ -13,7 +13,7 @@ const StyledBio = styled(Bio)`
     width: 100%;
     padding: 9px 0 0 0;
     border: 1px solid ${props => Color(props.theme.colors.secondary).grayscale().hex()};
-    border-bottom: 3px solid ${props => Color(props.theme.colors.secondary).grayscale().hex()};
+    border-top: 3px solid ${props => Color(props.theme.colors.secondary).grayscale().hex()};
     margin-top: 10px;
     border-radius: 3px;
   }
@@ -34,7 +34,7 @@ const StyledBio = styled(Bio)`
     margin-right: 0;
   }
   div.edit {
-    border-bottom: 3px solid ${props => props.theme.colors.secondary};
+    border-top: 3px solid ${props => props.theme.colors.secondary};
   }
   div.click {
     cursor: pointer;
@@ -57,19 +57,6 @@ const StyledBio = styled(Bio)`
     line-height: 1em;
     overflow: hidden;
     font-family: Arial, Helvetica, sans-serif;
-  }
-  span {
-    background: ${props => props.theme.colors.secondary};
-    display: block;
-    text-align: center;
-    color: ${props => {
-      let background = Color(props.theme.colors.secondary);
-      let base = Color(background.dark() ? 'white' : 'black');
-      let alpha = background.light() ? props.theme.alphaDarkText.primary : props.theme.alphaLightText.primary;
-      return base.mix(background, alpha).hex();
-    }};
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 11px;
   }
   button {
     position: absolute;

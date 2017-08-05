@@ -8,7 +8,7 @@ const StyledSourceMarks = styled(SourceMarks)`
   padding: 9px 9px 3px 9px;
   margin: 10px 0 0 0;
   border: 1px solid ${props => Color(props.theme.colors.secondary).grayscale().hex()};
-  border-bottom: 3px solid ${props => {let color = Color(props.theme.colors.secondary); return props.limit > 0 ? color.hex() : color.grayscale().hex();}};
+  border-top: 3px solid ${props => {let color = Color(props.theme.colors.secondary); return props.limit > 0 ? color.hex() : color.grayscale().hex();}};
   border-radius: 3px;
   label.floating {
     float: left;

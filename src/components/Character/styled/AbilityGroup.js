@@ -10,7 +10,7 @@ const StyledAbilityGroup = styled(AbilityGroup)`
   padding: 9px 9px 3px 9px;
   margin: 10px 0 0 0;
   border: 1px solid ${props => Color(props.theme.colors.secondary).grayscale().hex()};
-  border-bottom: 3px solid ${props => props.theme.colors.secondary};
+  border-top: 3px solid ${props => props.theme.colors.secondary};
   border-radius: 3px;
   label.floating {
     float: left;
@@ -36,14 +36,15 @@ const StyledAbilityGroup = styled(AbilityGroup)`
   }
   span {
     display: inline-block;
-    position: relative;
   }
   span:hover {
     cursor: pointer;
   }
+  input, select {
+    margin: 0 5px 0 0;
+  }
   input {
     width: 20px;
-    margin: 0 5px 0 0;
     border: 1px solid ${props => props.theme.colors.primary};
     text-align: center;
   }

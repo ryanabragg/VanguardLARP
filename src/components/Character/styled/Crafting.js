@@ -8,12 +8,12 @@ const StyledCrafting = styled(Crafting)`
   padding: 9px 9px 3px 9px;
   margin: 10px 0 0 0;
   border: 1px solid ${props => Color(props.theme.colors.secondary).grayscale().hex()};
-  border-bottom: 3px solid ${props => Color(props.theme.colors.secondary).grayscale().hex()};
+  border-top: 3px solid ${props => Color(props.theme.colors.secondary).grayscale().hex()};
   border-radius: 3px;
   label.floating {
     float: left;
     margin-top: -16px;
-    background: ${props => Color(props.theme.colors.background).grayscale().hex()};
+    background: ${props => props.theme.colors.background};
     padding: 2px;
     color: ${props => {
       let background = Color(props.theme.colors.background).grayscale();
@@ -72,7 +72,7 @@ const StyledCrafting = styled(Crafting)`
   div.equals {
     color: black;
     background: white;
-    border: none;
+    border: 1px solid ${props => props.theme.colors.background};
   }
 `;
 
