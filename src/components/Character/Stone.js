@@ -10,10 +10,11 @@ class Stone extends React.Component {
 
   handleClick(e) {
     e.preventDefault();
-    this.props.stoneClick({
-      type: this.props.disabled ? 'ENABLE STONE' : 'DISABLE STONE',
-      data: this.props.color
-    });
+    if(typeof this.props.stoneClick == 'function')
+      this.props.stoneClick({
+        type: this.props.disabled ? 'ENABLE STONE' : 'DISABLE STONE',
+        data: this.props.color
+      });
   }
 
   render() {
