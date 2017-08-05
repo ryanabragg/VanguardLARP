@@ -78,8 +78,8 @@ class Character extends React.Component {
     this.saveCharacter = this.saveCharacter.bind(this);
 
     this.editCharacter = this.editCharacter.bind(this);
-    this.editRace = this.editRace.bind(this);
-    this.editLives = this.editLives.bind(this);
+    this.stateLivesChange = this.stateLivesChange.bind(this);
+    this.stateRaceChange = this.stateRaceChange.bind(this);
     this.stateSkillChange = this.stateSkillChange.bind(this);
   }
 
@@ -302,6 +302,7 @@ class Character extends React.Component {
     console.log(action);
     this.setState((prevState, props) => {
       let nextState = Object.assign({}, prevState);
+      let change = {};
       switch(action.type) {
       case 'PLAYER NAME':
         nextState.character.player.name = action.data; break;
@@ -315,21 +316,21 @@ class Character extends React.Component {
         nextState.character.build.spent = Number(action.data); break;
       case 'BUILD NONDOMAIN':
         nextState.character.build.nonDomain = Number(action.data); break;
-      case 'LIVES':
-        nextState.character.lives = action.data; break;
+      case 'ENABLE LIFE':
+      case 'DISABLE LIFE':
+        change = this.stateLivesChange(prevState, action);
+        nextState.character.lives = change.lives;
+        break;
       case 'RACE':
-        nextState.character.race.name = action.data; break;
       case 'CULTURE':
-        nextState.character.race.culture = action.data; break;
+        change = this.stateRaceChange(prevState, action);
+        break;
       case 'SOURCE MARK':
         nextState.character.sourceMarks = action.data; break;
       case 'SKILL':
-        let {
-          build,
-          skills
-        } = this.stateSkillChange(prevState, action);
-        nextState.character.build = build;
-        nextState.character.skills = skills;
+        change = this.stateSkillChange(prevState, action);
+        nextState.character.build = change.build;
+        nextState.character.skills = change.skills;
         break;
       default:
         return prevState;
@@ -340,18 +341,13 @@ class Character extends React.Component {
     });
   }
 
-  editRace() {
-    console.log('clicked');
-  }
-
-  editLives(action) {
-    if(action.data == undefined)
-      return;
+  stateLivesChange(prevState, action) {
+    let color = action.data;
     let edit = [];
     switch(action.type) {
-    case 'ENABLE STONE':
-      edit = this.state.character.lives.map(stone => {
-        if(stone.color != action.data ||
+    case 'ENABLE LIFE':
+      edit = prevState.character.lives.map(stone => {
+        if(stone.color != color ||
           stone.disabled == 0 ||
           stone.count == 0
         )
@@ -363,9 +359,9 @@ class Character extends React.Component {
         };
       });
       break;
-    case 'DISABLE STONE':
-      edit = this.state.character.lives.map(stone => {
-        if(stone.color != action.data ||
+    case 'DISABLE LIFE':
+      edit = prevState.character.lives.map(stone => {
+        if(stone.color != color ||
           stone.disabled == stone.count ||
           stone.count == 0
         )
@@ -378,12 +374,25 @@ class Character extends React.Component {
       });
       break;
     default:
-      return;
+      edit = prevState.character.slice();
     }
-    this.editCharacter({
-      type: 'LIVES',
-      data: edit
-    });
+    return {
+      lives: edit
+    };
+  }
+
+  stateRaceChange(prevState, action) {
+    console.log('clicked');
+    return {
+      build: {
+        total: 0,
+        spent: 0,
+        nonDomain: 0
+      },
+      race: '',
+      culture: '',
+      skills: []
+    }
   }
 
   stateSkillChange(prevState, action) {
@@ -488,12 +497,13 @@ class Character extends React.Component {
             buffs={buffs}
             inscriptions={inscriptions}
             editCharacter={this.editCharacter}
-            editRace={this.editRace}
+            editRace={this.editCharacter}
           />
           <Stones
             label='Ressurection Bag'
             stones={lives}
-            stoneClick={this.editLives}
+            type='life'
+            stoneClick={this.editCharacter}
           />
           <Stones
             label='Recoveries' 

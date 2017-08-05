@@ -12,7 +12,7 @@ class Stone extends React.Component {
     e.preventDefault();
     if(typeof this.props.stoneClick == 'function')
       this.props.stoneClick({
-        type: this.props.disabled ? 'ENABLE STONE' : 'DISABLE STONE',
+        type: (this.props.disabled ? 'ENABLE ' : 'DISABLE ') + this.props.type.toUpperCase(),
         data: this.props.color
       });
   }
@@ -41,13 +41,15 @@ Stone.defaultProps = {
     red: 'R',
     white: 'W'
   },
-  disabled: false
+  disabled: false,
+  type: 'stone'
 };
 
 Stone.propTypes = {
   color: PropTypes.string,
   colorLetters: PropTypes.object,
   disabled: PropTypes.bool,
+  type: PropTypes.string,
   stoneClick: PropTypes.func
 };
 

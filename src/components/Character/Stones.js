@@ -12,6 +12,7 @@ class Stones extends React.Component {
     const rest = Object.assign({}, this.props);
     delete rest.label;
     delete rest.stones;
+    delete rest.type;
     delete rest.stoneClick;
     let stones = [];
     if(typeof this.props.stones === 'number')
@@ -25,7 +26,7 @@ class Stones extends React.Component {
     return (
       <div data-character={this.props.label.toLowerCase().replace(/\s/, '-') || 'stones'} {...rest}>
         {this.props.label && <label className='floating'>{this.props.label}</label>}
-        {stones.map((stone, index) => <Stone key={index} color={stone.color} disabled={stone.disabled} stoneClick={this.props.stoneClick} />)}
+        {stones.map((stone, index) => <Stone key={index} color={stone.color} disabled={stone.disabled} type={this.props.type} stoneClick={this.props.stoneClick} />)}
       </div>
     );
   }
@@ -47,6 +48,7 @@ Stones.propTypes = {
     ),
     PropTypes.number
   ]).isRequired,
+  type: PropTypes.string,
   stoneClick: PropTypes.func
 };
 
