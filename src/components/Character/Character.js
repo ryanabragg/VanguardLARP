@@ -200,8 +200,8 @@ class Character extends React.Component {
         .sort((a, b) => {
           return a.name == 'Student of War' ? -1
           : b.name == 'Student of War' ? 1
-          : a.name == 'Elemental Source Mark' ? -1
-          : b.name == 'Elemental Source Mark' ? 1
+          : a.name == 'Source Mark' ? -1
+          : b.name == 'Source Mark' ? 1
           : a.name > b.name ? 1
           : -1;
         }),
