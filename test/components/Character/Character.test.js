@@ -45,6 +45,7 @@ describe('<Character />', () => {
       expect(wrapper.find(Bio).prop('playerBuild')).to.equal(0);
       expect(wrapper.find(Bio).prop('name')).to.equal('New Character');
       expect(wrapper.find(Bio).prop('race')).to.equal('');
+      expect(wrapper.find(Bio).prop('culture')).to.equal('');
       expect(wrapper.find(Bio).prop('build')).to.equal(35);
       expect(wrapper.find(Bio).prop('spent')).to.equal(0);
       expect(wrapper.find(Bio).prop('level')).to.equal(-3);
@@ -52,7 +53,6 @@ describe('<Character />', () => {
       expect(wrapper.find(Bio).prop('buffs')).to.equal(2);
       expect(wrapper.find(Bio).prop('inscriptions')).to.equal(0);
       expect(wrapper.find(Bio).prop('editCharacter')).to.be.a('function');
-      expect(wrapper.find(Bio).prop('editRace')).to.be.a('function');
     });
 
     it('contains a styled Stones ressurection bag component', () => {
