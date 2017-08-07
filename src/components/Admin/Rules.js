@@ -24,6 +24,7 @@ export default class Rules extends React.Component {
       name: '',
       build: '',
       delivery: '',
+      tags: '',
       category: '', // constant, weapon, aptitude, source mark, craft, combat pool, domain, advanced art, racial, hidden
       group: '', // pool/domain name
       tier: '',

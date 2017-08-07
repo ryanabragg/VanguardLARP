@@ -42,10 +42,24 @@ class RuleForm extends React.Component {
             value={this.props.build}
             onChange={this.props.onChange}
           />
+          <FormField type='number'
+            name='max'
+            label='Max'
+            value={this.props.max}
+            onChange={this.props.onChange}
+          />
+        </fieldset>
+        <fieldset>
           <FormField type='text'
             name='delivery'
             label='Delivery'
             value={this.props.delivery}
+            onChange={this.props.onChange}
+          />
+          <FormField type='number'
+            name='tags'
+            label='Tags'
+            value={this.props.tags}
             onChange={this.props.onChange}
           />
         </fieldset>
@@ -93,20 +107,6 @@ class RuleForm extends React.Component {
           />
         </fieldset>
         <fieldset>
-          <FormField type='number'
-            name='max'
-            label='Max'
-            value={this.props.max}
-            onChange={this.props.onChange}
-          />
-          <FormField type='text'
-            name='extraUses'
-            label='Extra Uses From'
-            value={this.props.extraUses}
-            onChange={this.props.onChange}
-          />
-        </fieldset>
-        <fieldset>
           <FormField type='text'
             name='requires'
             label='Requires'
@@ -127,6 +127,12 @@ class RuleForm extends React.Component {
           />
         </fieldset>
         <fieldset>
+          <FormField type='text'
+            name='extraUses'
+            label='Extra Uses From'
+            value={this.props.extraUses}
+            onChange={this.props.onChange}
+          />
           <FormField type='text'
             name='replaces'
             label='Replaces'
@@ -153,6 +159,7 @@ RuleForm.propTypes = {
   name: PropTypes.string,
   build: PropTypes.number,
   delivery: PropTypes.string,
+  tags: PropTypes.number,
   category: PropTypes.string,
   group: PropTypes.string,
   tier: PropTypes.string,

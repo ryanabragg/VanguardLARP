@@ -23,7 +23,7 @@ function copyProps(src, target) {
 copyProps(window, global);
 
 describe('<RuleForm />', () => {
-  it('renders a form with seven fieldsets holding sixteen FormField components and three buttons', () => {
+  it('renders a form with seven fieldsets holding seventeen FormField components and three buttons', () => {
     const onChange = spy(),
       onSubmit = spy(),
       onCancel = spy(),
@@ -35,7 +35,7 @@ describe('<RuleForm />', () => {
     expect(wrapper.find('form').children()).to.have.length(10);
     expect(wrapper.find('fieldset')).to.have.length(7);
     expect(wrapper.find('button')).to.have.length(3);
-    expect(wrapper.find(FormField)).to.have.length(16);
+    expect(wrapper.find(FormField)).to.have.length(17);
   });
 
   it('has a button for submit, cancel, and delete', () => {
@@ -102,6 +102,7 @@ describe('<RuleForm />', () => {
       name: 'Dog',
       build: 5,
       delivery: 'pounce',
+      tags: 2,
       category: 'pet',
       group: 'cat',
       tier: '3',
@@ -129,58 +130,58 @@ describe('<RuleForm />', () => {
     expect(wrapper.find(FormField).at(1).prop('value')).to.equal(5);
     expect(wrapper.find(FormField).at(1).prop('onChange')).to.equal(onChange);
 
-    expect(wrapper.find(FormField).at(2).prop('type')).to.equal('text');
-    expect(wrapper.find(FormField).at(2).prop('name')).to.equal('delivery');
-    expect(wrapper.find(FormField).at(2).prop('label')).to.equal('Delivery');
-    expect(wrapper.find(FormField).at(2).prop('value')).to.equal('pounce');
+    expect(wrapper.find(FormField).at(2).prop('type')).to.equal('number');
+    expect(wrapper.find(FormField).at(2).prop('name')).to.equal('max');
+    expect(wrapper.find(FormField).at(2).prop('label')).to.equal('Max');
+    expect(wrapper.find(FormField).at(2).prop('value')).to.equal(1);
     expect(wrapper.find(FormField).at(2).prop('onChange')).to.equal(onChange);
 
     expect(wrapper.find(FormField).at(3).prop('type')).to.equal('text');
-    expect(wrapper.find(FormField).at(3).prop('name')).to.equal('category');
-    expect(wrapper.find(FormField).at(3).prop('label')).to.equal('Category');
-    expect(wrapper.find(FormField).at(3).prop('value')).to.equal('pet');
+    expect(wrapper.find(FormField).at(3).prop('name')).to.equal('delivery');
+    expect(wrapper.find(FormField).at(3).prop('label')).to.equal('Delivery');
+    expect(wrapper.find(FormField).at(3).prop('value')).to.equal('pounce');
     expect(wrapper.find(FormField).at(3).prop('onChange')).to.equal(onChange);
 
-    expect(wrapper.find(FormField).at(4).prop('type')).to.equal('text');
-    expect(wrapper.find(FormField).at(4).prop('name')).to.equal('group');
-    expect(wrapper.find(FormField).at(4).prop('label')).to.equal('Group');
-    expect(wrapper.find(FormField).at(4).prop('value')).to.equal('cat');
+    expect(wrapper.find(FormField).at(4).prop('type')).to.equal('number');
+    expect(wrapper.find(FormField).at(4).prop('name')).to.equal('tags');
+    expect(wrapper.find(FormField).at(4).prop('label')).to.equal('Tags');
+    expect(wrapper.find(FormField).at(4).prop('value')).to.equal(2);
     expect(wrapper.find(FormField).at(4).prop('onChange')).to.equal(onChange);
 
     expect(wrapper.find(FormField).at(5).prop('type')).to.equal('text');
-    expect(wrapper.find(FormField).at(5).prop('name')).to.equal('tier');
-    expect(wrapper.find(FormField).at(5).prop('label')).to.equal('Tier');
-    expect(wrapper.find(FormField).at(5).prop('value')).to.equal('3');
+    expect(wrapper.find(FormField).at(5).prop('name')).to.equal('category');
+    expect(wrapper.find(FormField).at(5).prop('label')).to.equal('Category');
+    expect(wrapper.find(FormField).at(5).prop('value')).to.equal('pet');
     expect(wrapper.find(FormField).at(5).prop('onChange')).to.equal(onChange);
 
     expect(wrapper.find(FormField).at(6).prop('type')).to.equal('text');
-    expect(wrapper.find(FormField).at(6).prop('name')).to.equal('race');
-    expect(wrapper.find(FormField).at(6).prop('label')).to.equal('Race');
-    expect(wrapper.find(FormField).at(6).prop('value')).to.equal('feline');
+    expect(wrapper.find(FormField).at(6).prop('name')).to.equal('group');
+    expect(wrapper.find(FormField).at(6).prop('label')).to.equal('Group');
+    expect(wrapper.find(FormField).at(6).prop('value')).to.equal('cat');
     expect(wrapper.find(FormField).at(6).prop('onChange')).to.equal(onChange);
 
     expect(wrapper.find(FormField).at(7).prop('type')).to.equal('text');
-    expect(wrapper.find(FormField).at(7).prop('name')).to.equal('culture');
-    expect(wrapper.find(FormField).at(7).prop('label')).to.equal('Culture');
-    expect(wrapper.find(FormField).at(7).prop('value')).to.equal('hunter');
+    expect(wrapper.find(FormField).at(7).prop('name')).to.equal('tier');
+    expect(wrapper.find(FormField).at(7).prop('label')).to.equal('Tier');
+    expect(wrapper.find(FormField).at(7).prop('value')).to.equal('3');
     expect(wrapper.find(FormField).at(7).prop('onChange')).to.equal(onChange);
 
-    expect(wrapper.find(FormField).at(8).prop('type')).to.equal('textarea');
-    expect(wrapper.find(FormField).at(8).prop('name')).to.equal('description');
-    expect(wrapper.find(FormField).at(8).prop('label')).to.equal('Description');
-    expect(wrapper.find(FormField).at(8).prop('value')).to.equal('lazy');
+    expect(wrapper.find(FormField).at(8).prop('type')).to.equal('text');
+    expect(wrapper.find(FormField).at(8).prop('name')).to.equal('race');
+    expect(wrapper.find(FormField).at(8).prop('label')).to.equal('Race');
+    expect(wrapper.find(FormField).at(8).prop('value')).to.equal('feline');
     expect(wrapper.find(FormField).at(8).prop('onChange')).to.equal(onChange);
 
-    expect(wrapper.find(FormField).at(9).prop('type')).to.equal('number');
-    expect(wrapper.find(FormField).at(9).prop('name')).to.equal('max');
-    expect(wrapper.find(FormField).at(9).prop('label')).to.equal('Max');
-    expect(wrapper.find(FormField).at(9).prop('value')).to.equal(1);
+    expect(wrapper.find(FormField).at(9).prop('type')).to.equal('text');
+    expect(wrapper.find(FormField).at(9).prop('name')).to.equal('culture');
+    expect(wrapper.find(FormField).at(9).prop('label')).to.equal('Culture');
+    expect(wrapper.find(FormField).at(9).prop('value')).to.equal('hunter');
     expect(wrapper.find(FormField).at(9).prop('onChange')).to.equal(onChange);
 
-    expect(wrapper.find(FormField).at(10).prop('type')).to.equal('text');
-    expect(wrapper.find(FormField).at(10).prop('name')).to.equal('extraUses');
-    expect(wrapper.find(FormField).at(10).prop('label')).to.equal('Extra Uses From');
-    expect(wrapper.find(FormField).at(10).prop('value')).to.equal('entertainment');
+    expect(wrapper.find(FormField).at(10).prop('type')).to.equal('textarea');
+    expect(wrapper.find(FormField).at(10).prop('name')).to.equal('description');
+    expect(wrapper.find(FormField).at(10).prop('label')).to.equal('Description');
+    expect(wrapper.find(FormField).at(10).prop('value')).to.equal('lazy');
     expect(wrapper.find(FormField).at(10).prop('onChange')).to.equal(onChange);
 
     expect(wrapper.find(FormField).at(11).prop('type')).to.equal('text');
@@ -202,16 +203,22 @@ describe('<RuleForm />', () => {
     expect(wrapper.find(FormField).at(13).prop('onChange')).to.equal(onChange);
 
     expect(wrapper.find(FormField).at(14).prop('type')).to.equal('text');
-    expect(wrapper.find(FormField).at(14).prop('name')).to.equal('replaces');
-    expect(wrapper.find(FormField).at(14).prop('label')).to.equal('Replaces');
-    expect(wrapper.find(FormField).at(14).prop('value')).to.equal('master');
+    expect(wrapper.find(FormField).at(14).prop('name')).to.equal('extraUses');
+    expect(wrapper.find(FormField).at(14).prop('label')).to.equal('Extra Uses From');
+    expect(wrapper.find(FormField).at(14).prop('value')).to.equal('entertainment');
     expect(wrapper.find(FormField).at(14).prop('onChange')).to.equal(onChange);
 
     expect(wrapper.find(FormField).at(15).prop('type')).to.equal('text');
-    expect(wrapper.find(FormField).at(15).prop('name')).to.equal('grants');
-    expect(wrapper.find(FormField).at(15).prop('label')).to.equal('Grants');
-    expect(wrapper.find(FormField).at(15).prop('value')).to.equal('purring');
+    expect(wrapper.find(FormField).at(15).prop('name')).to.equal('replaces');
+    expect(wrapper.find(FormField).at(15).prop('label')).to.equal('Replaces');
+    expect(wrapper.find(FormField).at(15).prop('value')).to.equal('master');
     expect(wrapper.find(FormField).at(15).prop('onChange')).to.equal(onChange);
+
+    expect(wrapper.find(FormField).at(16).prop('type')).to.equal('text');
+    expect(wrapper.find(FormField).at(16).prop('name')).to.equal('grants');
+    expect(wrapper.find(FormField).at(16).prop('label')).to.equal('Grants');
+    expect(wrapper.find(FormField).at(16).prop('value')).to.equal('purring');
+    expect(wrapper.find(FormField).at(16).prop('onChange')).to.equal(onChange);
   });
 
   it('grabs the ref to the DOM form after mounting');
