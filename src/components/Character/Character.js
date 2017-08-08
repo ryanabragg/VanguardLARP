@@ -10,6 +10,7 @@ import Stones from './styled/Stones';
 import AbilityGroup from './styled/AbilityGroup';
 import SourceMarks from './styled/SourceMarks';
 import Crafting from './styled/Crafting';
+import Pools from './styled/Pools';
 
 // import the notifications component to access static methods (don't import styled version)
 import NotificationList from '../NotificationList';
@@ -233,28 +234,12 @@ class Character extends React.Component {
         }),
       domains: rules.filter(rule => rule.category == 'Domain'),
       advancedArts: rules.filter(rule => rule.category == 'Advanced Arts'),
-      pools: rules.filter(rule => rule.category == 'Pool' && !rule.race),
-      racialPools: rules.filter(rule =>
-        rule.category == 'Pool' &&
-        rule.race != '' &&
-        rule.race == race.name &&
-        !rule.culture
+      pools: rules.filter(rule =>
+        (rule.category == 'Pool' || rule.category == 'Pool Ability' ) &&
+        !rule.race && !rule.culture
       ),
-      culturalPools: rules.filter(rule =>
-        rule.category == 'Pool' &&
-        rule.race != '' &&
-        rule.culture == race.culture
-      ),
-      racials: rules.filter(rule =>
-        rule.category != 'Pool' &&
-        rule.race != '' &&
-        rule.race == race.name
-      ),
-      culturals: rules.filter(rule =>
-        rule.category != 'Pool' &&
-        rule.race != '' &&
-        rule.culture == race.culture
-      ),
+      racial: rules.filter(rule => rule.race == race.name),
+      cultural: rules.filter(rule => rule.culture == race.culture),
       bodyMod: {
         extra: granted.reduce((total, rule) => {
           let count = rule.grants.split(', ')
@@ -484,10 +469,8 @@ class Character extends React.Component {
       domains,
       advancedArts,
       pools,
-      racialPools,
-      culturalPools,
-      racials,
-      culturals,
+      racial,
+      cultural,
       bodyMod,
       sourceMark
     } = this.parseRules();
@@ -547,6 +530,14 @@ class Character extends React.Component {
           <AbilityGroup
             label='Craft Skills'
             abilities={crafts}
+            viewDescription={this.viewRule}
+            editCharacter={this.editCharacter}
+          />
+        </Section>
+        <Section>
+          <Pools
+            label='Combat Pools'
+            abilities={pools}
             viewDescription={this.viewRule}
             editCharacter={this.editCharacter}
           />

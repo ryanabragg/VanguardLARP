@@ -24,7 +24,7 @@ class AbilityGroup extends React.Component {
               id={ability._id}
               name={ability.name}
               display={ability.display}
-              count= {ability.count}
+              count={ability.count}
               viewDescription={this.props.viewDescription}
               editCharacter={this.props.editCharacter}
             />

@@ -27,8 +27,10 @@ class Ability extends React.Component {
   }
 
   render() {
-    let input = null;
-    if(this.props.display === 'checkbox')
+    let input = undefined;
+    if(this.props.display === 'none')
+      input = null;
+    else if(this.props.display === 'checkbox')
       input = <input type='checkbox' name='count' onChange={this.handleInputChange} value={this.props.count} checked={this.props.count} />;
     else if(this.props.display === 'tiers') {
       input = (
@@ -45,7 +47,7 @@ class Ability extends React.Component {
     else
       input = <input type='number' name='count' onChange={this.handleInputChange} value={this.props.count} />;
     return (
-      <div className='ability'>
+      <div data-character='ability'>
         {input}
         <label onClick={this.handleView}>{this.props.name}</label>
       </div>

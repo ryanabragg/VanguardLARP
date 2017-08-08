@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import Color from 'color';
 
-import AbilityGroup from '../AbilityGroup';
+import Pools from '../Pools';
 
-const StyledAbilityGroup = styled(AbilityGroup)`
+const StyledPools = styled(Pools)`
   display: inline-block;
   width: 100%;
   vertical-align: top;
@@ -28,11 +28,19 @@ const StyledAbilityGroup = styled(AbilityGroup)`
     overflow: hidden;
     font-family: Arial, Helvetica, sans-serif;
   }
-  div {
-    position: relative;
+  div[data-character="pool-abilities"] {
+    display: block;
+    width: 100%;
     padding: 0;
-    height: 1.2em;
-    margin: 0 5px 2px 5px;
+    margin: 5px 0 10px 0;
+  }
+  div[data-character="pool-abilities"] > div {
+    display: inline-block;
+    min-width: 100px;
+    max-width: 150px;
+    padding: 0;
+    margin: 0 0 0 10px;
+    font-size: 0.9em;
   }
   span {
     display: inline-block;
@@ -40,12 +48,12 @@ const StyledAbilityGroup = styled(AbilityGroup)`
   span:hover {
     cursor: pointer;
   }
-  input, select, textarea {
+  input, select {
     margin: 0 5px 0 0;
-    border: 1px solid ${props => props.theme.colors.primary};
   }
   input {
     width: 20px;
+    border: 1px solid ${props => props.theme.colors.primary};
     text-align: center;
   }
   input[type="number"] {
@@ -58,4 +66,4 @@ const StyledAbilityGroup = styled(AbilityGroup)`
   }
 `;
 
-export default StyledAbilityGroup;
+export default StyledPools;

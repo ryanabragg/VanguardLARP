@@ -1,0 +1,114 @@
+import React from 'react';
+import { expect } from 'chai';
+import { spy } from 'sinon';
+import { shallow } from 'enzyme';
+import { JSDOM } from 'jsdom';
+
+import Pools from '../../../src/components/Character/Pools';
+import Pool from '../../../src/components/Character/Pool';
+
+const window = (new JSDOM('<!doctype html><html><body></body></html>')).window;
+global.window = window;
+global.document = window.document;
+global.navigator = {
+  userAgent: 'node.js',
+};
+
+function copyProps(src, target) {
+  const props = Object.getOwnPropertyNames(src)
+    .filter(prop => typeof target[prop] === 'undefined')
+    .map(prop => Object.getOwnPropertyDescriptor(src, prop));
+  Object.defineProperties(target, props);
+}
+copyProps(window, global);
+
+describe('<Pools />', () => {
+  it('renders a div with a label and an Pool component for each object in the abilities prop with a Pool category property', () => {
+    const view = spy(), update = spy();
+    let list = [{
+      _id: 42,
+      name: 'test',
+      category: 'Pool'
+    }];
+    const wrapper = shallow(<Pools label={1} abilities={list} viewDescription={view} editCharacter={update}/>);
+    expect(wrapper.find('div')).to.have.length(1);
+    expect(wrapper.find('div').childAt(0).type()).to.equal('label');
+    expect(wrapper.find('label')).to.have.length(1);
+    expect(wrapper.find('label').text()).to.equal('1');
+    expect(wrapper.find('div').childAt(1).type()).to.equal(Pool);
+    expect(wrapper.find(Pool)).to.have.length(1);
+    list = list.concat([{
+      _id: 7,
+      name: 'lucky',
+      display: 'checkbox',
+      count: 11,
+      category: 'Pool Ability',
+      group: 'aim'
+    }, {
+      _id: 'target',
+      name: 'aim',
+      count: 3,
+      category: 'Pool'
+    }, {
+      _id: 0,
+      name: 'choice',
+      display: 'tiers',
+      count: 1,
+      category: 'not a pool nor pool ability'
+    }]);
+    wrapper.setProps({
+      label: 'testing',
+      abilities: list
+    });
+    expect(wrapper.find('label').text()).to.equal('testing');
+    expect(wrapper.find(Pool)).to.have.length(2);
+  });
+
+  it('renders the Pool components with the propper props from the array object', () => {
+    const view = spy(), update = spy();
+    const list = [{
+      _id: 42,
+      name: 'test',
+      category: 'Pool'
+    }, {
+      _id: 7,
+      name: 'lucky',
+      display: 'checkbox',
+      count: 11,
+      category: 'Pool Ability',
+      group: 'aim'
+    }, {
+      _id: 'target',
+      name: 'aim',
+      count: 3,
+      category: 'Pool'
+    }, {
+      _id: 0,
+      name: 'choice',
+      display: 'tiers',
+      count: 1,
+      category: 'not a pool nor pool ability'
+    }];
+    const wrapper = shallow(<Pools label={1} abilities={list} viewDescription={view} editCharacter={update}/>);
+    expect(wrapper.find(Pool)).to.have.length(2);
+    expect(wrapper.find(Pool).at(0).prop('id')).to.equal(42);
+    expect(wrapper.find(Pool).at(0).prop('name')).to.equal('test');
+    expect(wrapper.find(Pool).at(0).prop('count')).to.equal(undefined);
+    expect(wrapper.find(Pool).at(0).prop('source')).to.equal('build');
+    expect(wrapper.find(Pool).at(0).prop('abilities')).to.deep.equal([]);
+    expect(wrapper.find(Pool).at(0).prop('viewDescription')).to.equal(view);
+    expect(wrapper.find(Pool).at(0).prop('editCharacter')).to.equal(update);
+    expect(wrapper.find(Pool).at(1).prop('id')).to.equal('target');
+    expect(wrapper.find(Pool).at(1).prop('name')).to.equal('aim');
+    expect(wrapper.find(Pool).at(1).prop('count')).to.equal(3);
+    expect(wrapper.find(Pool).at(1).prop('source')).to.equal('build');
+    expect(wrapper.find(Pool).at(1).prop('abilities')).to.deep.equal(list.filter(rule => rule.group == 'aim'));
+    expect(wrapper.find(Pool).at(1).prop('viewDescription')).to.equal(view);
+    expect(wrapper.find(Pool).at(1).prop('editCharacter')).to.equal(update);
+    wrapper.setProps({
+      source: 'testing'
+    });
+    expect(wrapper.find(Pool).at(0).prop('source')).to.equal('testing');
+    expect(wrapper.find(Pool).at(1).prop('source')).to.equal('testing');
+  });
+});
