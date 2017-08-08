@@ -104,9 +104,6 @@ class SourceMarks extends React.Component {
 SourceMarks.defaultProps = {
   elements: [{
     basic: true,
-    mark: 'Air'
-  }, {
-    basic: true,
     mark: 'Earth'
   }, {
     basic: true,
@@ -115,8 +112,8 @@ SourceMarks.defaultProps = {
     basic: true,
     mark: 'Water'
   }, {
-    basic: false,
-    mark: 'Lightning'
+    basic: true,
+    mark: 'Wind'
   }, {
     basic: false,
     mark: 'Crystal'
@@ -126,6 +123,9 @@ SourceMarks.defaultProps = {
   }, {
     basic: false,
     mark: 'Ice'
+  }, {
+    basic: false,
+    mark: 'Lightning'
   }, {
     basic: false,
     mark: 'Light'
