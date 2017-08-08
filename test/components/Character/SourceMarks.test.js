@@ -170,7 +170,7 @@ describe('<SourceMarks />', () => {
     });
     expect(wrapper.find('select')).to.have.length(6);
     wrapper.setProps({
-      known: ['Air']
+      known: ['Wind']
     });
     expect(wrapper.find('select')).to.have.length(5);
     wrapper.setProps({
@@ -194,14 +194,14 @@ describe('<SourceMarks />', () => {
     expect(wrapper.find('select').at(0).find('option')).to.have.length(6);
     expect(wrapper.find('select').at(0).find('option').at(0).prop('value')).to.equal('');
     expect(wrapper.find('select').at(0).find('option').at(0).text()).to.equal('');
-    expect(wrapper.find('select').at(0).find('option').at(1).prop('value')).to.equal('Air');
-    expect(wrapper.find('select').at(0).find('option').at(1).text()).to.equal('Air');
-    expect(wrapper.find('select').at(0).find('option').at(2).prop('value')).to.equal('Earth');
-    expect(wrapper.find('select').at(0).find('option').at(2).text()).to.equal('Earth');
-    expect(wrapper.find('select').at(0).find('option').at(3).prop('value')).to.equal('Fire');
-    expect(wrapper.find('select').at(0).find('option').at(3).text()).to.equal('Fire');
-    expect(wrapper.find('select').at(0).find('option').at(4).prop('value')).to.equal('Water');
-    expect(wrapper.find('select').at(0).find('option').at(4).text()).to.equal('Water');
+    expect(wrapper.find('select').at(0).find('option').at(1).prop('value')).to.equal('Earth');
+    expect(wrapper.find('select').at(0).find('option').at(1).text()).to.equal('Earth');
+    expect(wrapper.find('select').at(0).find('option').at(2).prop('value')).to.equal('Fire');
+    expect(wrapper.find('select').at(0).find('option').at(2).text()).to.equal('Fire');
+    expect(wrapper.find('select').at(0).find('option').at(3).prop('value')).to.equal('Water');
+    expect(wrapper.find('select').at(0).find('option').at(3).text()).to.equal('Water');
+    expect(wrapper.find('select').at(0).find('option').at(4).prop('value')).to.equal('Wind');
+    expect(wrapper.find('select').at(0).find('option').at(4).text()).to.equal('Wind');
     expect(wrapper.find('select').at(0).find('option').at(5).prop('value')).to.equal('test1');
     expect(wrapper.find('select').at(0).find('option').at(5).text()).to.equal('test1');
     wrapper.setProps({
@@ -210,22 +210,22 @@ describe('<SourceMarks />', () => {
     expect(wrapper.find('select').at(0).find('option')).to.have.length(13);
     expect(wrapper.find('select').at(0).find('option').at(0).prop('value')).to.equal('');
     expect(wrapper.find('select').at(0).find('option').at(0).text()).to.equal('');
-    expect(wrapper.find('select').at(0).find('option').at(1).prop('value')).to.equal('Air');
-    expect(wrapper.find('select').at(0).find('option').at(1).text()).to.equal('Air');
-    expect(wrapper.find('select').at(0).find('option').at(2).prop('value')).to.equal('Earth');
-    expect(wrapper.find('select').at(0).find('option').at(2).text()).to.equal('Earth');
-    expect(wrapper.find('select').at(0).find('option').at(3).prop('value')).to.equal('Fire');
-    expect(wrapper.find('select').at(0).find('option').at(3).text()).to.equal('Fire');
-    expect(wrapper.find('select').at(0).find('option').at(4).prop('value')).to.equal('Water');
-    expect(wrapper.find('select').at(0).find('option').at(4).text()).to.equal('Water');
-    expect(wrapper.find('select').at(0).find('option').at(5).prop('value')).to.equal('Lightning');
-    expect(wrapper.find('select').at(0).find('option').at(5).text()).to.equal('Lightning');
-    expect(wrapper.find('select').at(0).find('option').at(6).prop('value')).to.equal('Crystal');
-    expect(wrapper.find('select').at(0).find('option').at(6).text()).to.equal('Crystal');
-    expect(wrapper.find('select').at(0).find('option').at(7).prop('value')).to.equal('Plasma');
-    expect(wrapper.find('select').at(0).find('option').at(7).text()).to.equal('Plasma');
-    expect(wrapper.find('select').at(0).find('option').at(8).prop('value')).to.equal('Ice');
-    expect(wrapper.find('select').at(0).find('option').at(8).text()).to.equal('Ice');
+    expect(wrapper.find('select').at(0).find('option').at(1).prop('value')).to.equal('Earth');
+    expect(wrapper.find('select').at(0).find('option').at(1).text()).to.equal('Earth');
+    expect(wrapper.find('select').at(0).find('option').at(2).prop('value')).to.equal('Fire');
+    expect(wrapper.find('select').at(0).find('option').at(2).text()).to.equal('Fire');
+    expect(wrapper.find('select').at(0).find('option').at(3).prop('value')).to.equal('Water');
+    expect(wrapper.find('select').at(0).find('option').at(3).text()).to.equal('Water');
+    expect(wrapper.find('select').at(0).find('option').at(4).prop('value')).to.equal('Wind');
+    expect(wrapper.find('select').at(0).find('option').at(4).text()).to.equal('Wind');
+    expect(wrapper.find('select').at(0).find('option').at(5).prop('value')).to.equal('Crystal');
+    expect(wrapper.find('select').at(0).find('option').at(5).text()).to.equal('Crystal');
+    expect(wrapper.find('select').at(0).find('option').at(6).prop('value')).to.equal('Plasma');
+    expect(wrapper.find('select').at(0).find('option').at(6).text()).to.equal('Plasma');
+    expect(wrapper.find('select').at(0).find('option').at(7).prop('value')).to.equal('Ice');
+    expect(wrapper.find('select').at(0).find('option').at(7).text()).to.equal('Ice');
+    expect(wrapper.find('select').at(0).find('option').at(8).prop('value')).to.equal('Lightning');
+    expect(wrapper.find('select').at(0).find('option').at(8).text()).to.equal('Lightning');
     expect(wrapper.find('select').at(0).find('option').at(9).prop('value')).to.equal('Light');
     expect(wrapper.find('select').at(0).find('option').at(9).text()).to.equal('Light');
     expect(wrapper.find('select').at(0).find('option').at(10).prop('value')).to.equal('Darkness');
