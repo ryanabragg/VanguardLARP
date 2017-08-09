@@ -238,8 +238,8 @@ class Character extends React.Component {
         (rule.category == 'Pool' || rule.category == 'Pool Ability' ) &&
         !rule.race && !rule.culture
       ),
-      racial: rules.filter(rule => rule.race == race.name),
-      cultural: rules.filter(rule => rule.culture == race.culture),
+      racial: rules.filter(rule => rule.race == race.name && rule.race != ''),
+      cultural: rules.filter(rule => rule.culture == race.culture && rule.culture != ''),
       bodyMod: {
         extra: granted.reduce((total, rule) => {
           let count = rule.grants.split(', ')
