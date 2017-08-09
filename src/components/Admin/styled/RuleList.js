@@ -13,7 +13,7 @@ const StyledRuleList = styled(RuleList)`
     display: inline-block;
     height: 1.5em;
     line-height: 1.5em;
-    width: 100px;
+    width: 150px;
     margin-left: 15px;
   }
   div > div:first-child {
