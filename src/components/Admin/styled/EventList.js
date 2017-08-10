@@ -13,11 +13,11 @@ const StyledEventList = styled(EventList)`
     display: inline-block;
     height: 1.5em;
     line-height: 1.5em;
-    width: 100px;
+    width: 250px;
     margin-left: 15px;
   }
   div > div:first-child {
-    width: 200px;
+    width: 100px;
   }
   .placeholder {
     color: lightgrey;

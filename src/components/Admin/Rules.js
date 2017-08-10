@@ -6,8 +6,8 @@ import socketio from 'feathers-socketio/client';
 
 import UUID from 'uuid/v1';
 
-import RuleList from './styled/RuleList';
 import Spinner from '../styled/Spinner';
+import RuleList from './styled/RuleList';
 
 // import the notifications component to access static methods (don't import styled version)
 import NotificationList from '../NotificationList';
@@ -165,6 +165,8 @@ export default class Rules extends React.Component {
     app.service('rules').find({
       query:{
         $sort:{
+          race: 1,
+          culture: 1,
           category: 1,
           group: 1,
           name: 1
