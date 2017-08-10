@@ -17,7 +17,7 @@ const StyledRuleList = styled(RuleList)`
     margin-left: 15px;
   }
   div > div:first-child {
-    width: 200px;
+    width: 250px;
   }
   .placeholder {
     color: lightgrey;
