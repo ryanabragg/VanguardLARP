@@ -32,9 +32,9 @@
       "passwordField": "password"
     },
     "facebook": {
-      "clientID": "your facebook client id",
-      "clientSecret": "your facebook client secret",
-      "successRedirect": "/",
+      "clientID": "FB_ID",
+      "clientSecret": "FB_SECRET",
+      "successRedirect": "/admin",
       "scope": [
         "public_profile",
         "email"
