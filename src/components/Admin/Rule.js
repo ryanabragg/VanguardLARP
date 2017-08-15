@@ -25,12 +25,6 @@ const Rule = (props) => (
     />
     <Field
       id={props.id}
-      name='tier'
-      text={props.tier}
-      onClick={props.onClick}
-    />
-    <Field
-      id={props.id}
       name='race'
       text={props.race}
       onClick={props.onClick}
@@ -49,7 +43,6 @@ Rule.propTypes = {
   name: PropTypes.string.isRequired,
   category: PropTypes.string.isRequired,
   group: PropTypes.string,
-  tier: PropTypes.string,
   race: PropTypes.string,
   culture: PropTypes.string,
   onClick: PropTypes.func

@@ -57,8 +57,7 @@ class RuleList extends React.Component {
               id={rule._id}
               name={rule.name}
               category={rule.category}
-              group={rule.group}
-              tier={rule.tier}
+              group={rule.group + (rule.tier ? ' (' + rule.tier + ')' : '')}
               race={rule.race}
               culture={rule.culture}
               onClick={this.props.onClick}
