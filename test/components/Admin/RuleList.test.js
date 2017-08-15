@@ -177,8 +177,7 @@ describe('<RuleList />', () => {
     expect(wrapper.find(Rule).prop('id')).to.equal('42');
     expect(wrapper.find(Rule).prop('name')).to.equal('test');
     expect(wrapper.find(Rule).prop('category')).to.equal('case');
-    expect(wrapper.find(Rule).prop('group')).to.equal('testing');
-    expect(wrapper.find(Rule).prop('tier')).to.equal('trial');
+    expect(wrapper.find(Rule).prop('group')).to.equal('testing (trial)');
     expect(wrapper.find(Rule).prop('race')).to.equal('mocha');
     expect(wrapper.find(Rule).prop('culture')).to.equal('expect');
     expect(wrapper.find(Rule).prop('onClick')).to.equal(onClick);

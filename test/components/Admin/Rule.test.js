@@ -23,11 +23,11 @@ function copyProps(src, target) {
 copyProps(window, global);
 
 describe('<Rule />', () => {
-  it('renders a div with a span and six Field components', () => {
+  it('renders a div with a span and five Field components', () => {
     const onClick = spy();
     const wrapper = shallow(<Rule id={1} name='dog' category='cat' onClick={onClick} />);
     expect(wrapper.find('div')).to.have.length(1);
-    expect(wrapper.find('div').children()).to.have.length(6);
+    expect(wrapper.find('div').children()).to.have.length(5);
     wrapper.find('div').children().forEach(node => {
       expect(node.type()).to.equal(Field);
     });
@@ -54,18 +54,13 @@ describe('<Rule />', () => {
     expect(wrapper.find(Field).at(2).prop('onClick')).to.equal(onClick);
 
     expect(wrapper.find(Field).at(3).prop('id')).to.equal(1);
-    expect(wrapper.find(Field).at(3).prop('name')).to.equal('tier');
-    expect(wrapper.find(Field).at(3).prop('text')).to.equal('3');
+    expect(wrapper.find(Field).at(3).prop('name')).to.equal('race');
+    expect(wrapper.find(Field).at(3).prop('text')).to.equal('feline');
     expect(wrapper.find(Field).at(3).prop('onClick')).to.equal(onClick);
 
     expect(wrapper.find(Field).at(4).prop('id')).to.equal(1);
-    expect(wrapper.find(Field).at(4).prop('name')).to.equal('race');
-    expect(wrapper.find(Field).at(4).prop('text')).to.equal('feline');
+    expect(wrapper.find(Field).at(4).prop('name')).to.equal('culture');
+    expect(wrapper.find(Field).at(4).prop('text')).to.equal('hunter');
     expect(wrapper.find(Field).at(4).prop('onClick')).to.equal(onClick);
-
-    expect(wrapper.find(Field).at(5).prop('id')).to.equal(1);
-    expect(wrapper.find(Field).at(5).prop('name')).to.equal('culture');
-    expect(wrapper.find(Field).at(5).prop('text')).to.equal('hunter');
-    expect(wrapper.find(Field).at(5).prop('onClick')).to.equal(onClick);
   });
 });
