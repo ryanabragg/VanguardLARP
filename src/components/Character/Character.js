@@ -15,7 +15,9 @@ import Pools from './styled/Pools';
 // import the notifications component to access static methods (don't import styled version)
 import NotificationList from '../NotificationList';
 
-const socket = io('localhost:3030');
+let socket = io('localhost:3030');
+if(!socket.connected)
+  socket = io('192.168.1.167:3030');
 const app = feathers().configure(socketio(socket));
 
 class Character extends React.Component {
