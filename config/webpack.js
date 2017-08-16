@@ -26,6 +26,7 @@ module.exports = {
     }),*/
   ],
   module: {
+    noParse: /node_modules\/localforage\/dist\/localforage.js/,
     rules: [
       { test: /\.js$/,
         exclude: /node_modules/,
