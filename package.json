@@ -26,7 +26,8 @@
     "mocha": "mocha test/ --recursive --compilers js:babel-core/register",
     "build": "NODE_ENV=production node_modules/.bin/webpack --config config/webpack-production.js --progress --colors --hide-modules",
     "start:dev": "NODE_ENV=development babel-node src/",
-    "start:prod": "NODE_ENV=production babel-node src/"
+    "start:prod": "NODE_ENV=production babel-node src/",
+    "archive": "tar -czvf ../vanguardlarp.tar.gz ."
   },
   "dependencies": {
     "babel-cli": "^6.24.1",
