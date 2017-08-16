@@ -1,8 +1,6 @@
 import React from 'react';
 
-import io from 'socket.io-client';
-import feathers from 'feathers/client';
-import socketio from 'feathers-socketio/client';
+import app from '../../util/feathersApp';
 
 import Section from './styled/Section';
 import Bio from './styled/Bio';
@@ -14,11 +12,6 @@ import Pools from './styled/Pools';
 
 // import the notifications component to access static methods (don't import styled version)
 import NotificationList from '../NotificationList';
-
-let socket = io('localhost:3030');
-if(!socket.connected)
-  socket = io('192.168.1.167:3030');
-const app = feathers().configure(socketio(socket));
 
 class Character extends React.Component {
   constructor (props) {

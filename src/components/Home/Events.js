@@ -1,14 +1,8 @@
 import React from 'react';
 
-import io from 'socket.io-client';
-import feathers from 'feathers/client';
-import socketio from 'feathers-socketio/client';
+import app from '../../util/feathersApp';
 
 import EventsList from './styled/EventsList';
-
-const socket = io('localhost:3030');
-const app = feathers()
-  .configure(socketio(socket));
 
 class Events extends React.Component {
   constructor(props) {
