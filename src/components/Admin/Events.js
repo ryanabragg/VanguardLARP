@@ -174,7 +174,7 @@ class Events extends React.Component {
       event,
       (error, created) => {
         if(error)
-          NotificationList.alert(error, 'Create Error');
+          NotificationList.alert(error.name, 'Create Error');
         else {
           //nextState.selected = Object.assign({}, this.emptyEvent);
           NotificationList.notify({
@@ -205,7 +205,7 @@ class Events extends React.Component {
       event,
       (error, updated) => {
         if(error)
-          NotificationList.alert(error, 'Update Error');
+          NotificationList.alert(error.name, 'Update Error');
         else {
           this.update = updated._id;
           NotificationList.notify({
@@ -227,8 +227,9 @@ class Events extends React.Component {
     this.props.api.service('events').remove(
       id,
       (error, deleted) => {
+        console.log(error);
         if(error)
-          NotificationList.alert(error, 'Delete Error');
+          NotificationList.alert(error.name, 'Delete Error');
         else {
           this.setState((prevState, props) => {
             let nextState = Object.assign({}, prevState);

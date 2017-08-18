@@ -192,7 +192,7 @@ class Rules extends React.Component {
       rule,
       (error, created) => {
         if(error)
-          NotificationList.alert(error, 'Create Error');
+          NotificationList.alert(error.name, 'Create Error');
         else {
           //nextState.selected = Object.assign({}, this.emptyRule);
           NotificationList.notify({
@@ -223,7 +223,7 @@ class Rules extends React.Component {
       rule,
       (error, updated) => {
         if(error)
-          NotificationList.alert(error, 'Update Error');
+          NotificationList.alert(error.name, 'Update Error');
         else {
           this.update = updated._id;
           NotificationList.notify({
@@ -246,7 +246,7 @@ class Rules extends React.Component {
       id,
       (error, deleted) => {
         if(error)
-          NotificationList.alert(error, 'Delete Error');
+          NotificationList.alert(error.name, 'Delete Error');
         else {
           this.setState((prevState, props) => {
             let nextState = Object.assign({}, prevState);
