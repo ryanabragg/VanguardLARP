@@ -38,20 +38,20 @@ export default class App extends React.Component {
     return (
       <ThemeProvider theme={theme}>
         <div>
-          <Route exact path='/' render={props => <Home api={api} />} />
-          <Route path='/admin' component={AdminMenu} />
+          <Route exact path='/' render={props => <Home {...props} api={api} />} />
+          <Route path='/admin' render={props => <AdminMenu {...props} api={api} />} />
           <Switch>
             <Route exact path='/admin' component={AdminDashboard} />
-            <Route exact path='/admin/events' render={props => <AdminEvents api={api} />} />
-            <Route path='/admin/events/:id' render={props => <AdminEvents api={api} />} />
-            <Route exact path='/admin/rules' render={props => <AdminRules api={api} />} />
-            <Route path='/admin/rules/:id' render={props => <AdminRules api={api} />} />
+            <Route exact path='/admin/events' render={props => <AdminEvents {...props} api={api} />} />
+            <Route path='/admin/events/:id' render={props => <AdminEvents {...props} api={api} />} />
+            <Route exact path='/admin/rules' render={props => <AdminRules {...props} api={api} />} />
+            <Route path='/admin/rules/:id' render={props => <AdminRules {...props} api={api} />} />
             <Route exact path='/admin/characters' component={PageNotFound} />
             <Route path='/admin/characters/:id' component={PageNotFound} />
           </Switch>
           <Switch>
-            <Route exact path='/character' render={props => <Character api={api} />} />
-            <Route path='/character/:id' render={props => <Character api={api} />} />
+            <Route exact path='/character' render={props => <Character {...props} api={api} />} />
+            <Route path='/character/:id' render={props => <Character {...props} api={api} />} />
           </Switch>
           <NotificationList />
         </div>

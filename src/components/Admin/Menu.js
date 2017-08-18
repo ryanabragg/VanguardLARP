@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
-
-import api from '../../util/api';
+import PropTypes from 'prop-types';
 
 import Navigation from './styled/Navigation';
 
@@ -24,7 +23,7 @@ class Menu extends React.Component {
   }
 
   componentDidMount() {
-    api.auth().then(user => this.setState({user: user}));
+    this.props.api.auth().then(user => this.setState({user: user}));
   }
 
   toggleMenu(){
@@ -34,11 +33,11 @@ class Menu extends React.Component {
   }
 
   login(name, pass) {
-    api.login(name, pass).then(user => this.setState({user: user}));
+    this.props.api.login(name, pass).then(user => this.setState({user: user}));
   }
 
   logout() {
-    api.logout();
+    this.props.api.logout();
     this.setState({user: {}});
   }
 
@@ -76,6 +75,10 @@ class Menu extends React.Component {
       </Navigation>
     );
   }
+}
+
+Menu.propTypes = {
+  api: PropTypes.object.isRequired
 }
 
 export default Menu;
