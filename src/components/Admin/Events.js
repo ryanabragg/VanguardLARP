@@ -5,7 +5,7 @@ import Spinner from '../styled/Spinner';
 import EventList from './styled/EventList';
 
 // import the notifications component to access static methods (don't import styled version)
-import NotificationList from '../NotificationList';
+import NotificationList from '../util/NotificationList';
 
 class Events extends React.Component {
   constructor (props) {

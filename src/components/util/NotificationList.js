@@ -4,7 +4,7 @@ import UUID from 'uuid/v1';
 
 import Notification from './Notification';
 
-import createStore from '../util/createStore';
+import createStore from '../../util/createStore';
 
 const NotificationListReducerInsert = (state = [], action) => {
   return [...state, action.data];

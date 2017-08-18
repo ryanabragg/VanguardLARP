@@ -13,7 +13,7 @@ import AdminRules from './Admin/Rules';
 
 import Character from './Character/Character';
 
-import NotificationList from './styled/NotificationList';
+import NotificationList from './util/styled/NotificationList';
 
 import PageNotFound from './PageNotFound';
 

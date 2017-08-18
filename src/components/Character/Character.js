@@ -10,7 +10,7 @@ import Crafting from './styled/Crafting';
 import Pools from './styled/Pools';
 
 // import the notifications component to access static methods (don't import styled version)
-import NotificationList from '../NotificationList';
+import NotificationList from '../util/NotificationList';
 
 class Character extends React.Component {
   constructor (props) {

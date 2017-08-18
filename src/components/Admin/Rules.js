@@ -5,7 +5,7 @@ import Spinner from '../styled/Spinner';
 import RuleList from './styled/RuleList';
 
 // import the notifications component to access static methods (don't import styled version)
-import NotificationList from '../NotificationList';
+import NotificationList from '../util/NotificationList';
 
 class Rules extends React.Component {
   constructor (props) {
