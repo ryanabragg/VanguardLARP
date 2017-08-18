@@ -1,6 +1,5 @@
 import React from 'react';
-
-import api from '../../util/api';
+import PropTypes from 'prop-types';
 
 import Section from './styled/Section';
 import Bio from './styled/Bio';
@@ -83,7 +82,7 @@ class Character extends React.Component {
     // load user authentication
     // load character
 
-    api.service('rules').on('created', rule => {
+    this.props.api.service('rules').on('created', rule => {
       this.setState((prevState, props) => {
         let nextState = Object.assign({}, prevState);
         if(this.syncInProgress)
@@ -94,7 +93,7 @@ class Character extends React.Component {
       });
     });
 
-    api.service('rules').on('patched', rule => {
+    this.props.api.service('rules').on('patched', rule => {
       this.setState((prevState, props) => {
         let nextState = Object.assign({}, prevState);
         if(this.syncInProgress)
@@ -105,7 +104,7 @@ class Character extends React.Component {
       });
     });
 
-    api.service('rules').on('removed', rule => {
+    this.props.api.service('rules').on('removed', rule => {
       this.setState((prevState, props) => {
         let nextState = Object.assign({}, prevState);
         if(this.syncInProgress)
@@ -120,9 +119,9 @@ class Character extends React.Component {
   }
 
   componentWillUnmount () {
-    api.service('rules').removeListener('created');
-    api.service('rules').removeListener('patched');
-    api.service('rules').removeListener('removed');
+    this.props.api.service('rules').removeListener('created');
+    this.props.api.service('rules').removeListener('patched');
+    this.props.api.service('rules').removeListener('removed');
   }
 
   startSync() {
@@ -139,7 +138,7 @@ class Character extends React.Component {
   }
 
   sync() {
-    api.service('rules').find({
+    this.props.api.service('rules').find({
       query:{
         $sort:{
           category: 1,
@@ -541,5 +540,9 @@ class Character extends React.Component {
     );
   }
 }
+
+Character.propTypes = {
+  api: PropTypes.object.isRequired
+};
 
 export default Character;

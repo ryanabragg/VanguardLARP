@@ -1,6 +1,5 @@
 import React from 'react';
-
-import api from '../../util/api';
+import PropTypes from 'prop-types';
 
 import Spinner from '../styled/Spinner';
 import EventList from './styled/EventList';
@@ -8,7 +7,7 @@ import EventList from './styled/EventList';
 // import the notifications component to access static methods (don't import styled version)
 import NotificationList from '../NotificationList';
 
-export default class Events extends React.Component {
+class Events extends React.Component {
   constructor (props) {
     super(props);
 
@@ -56,7 +55,7 @@ export default class Events extends React.Component {
   }
 
   componentDidMount () {
-    api.service('events').on('created', event => {
+    this.props.api.service('events').on('created', event => {
       this.setState((prevState, props) => {
         let nextState = Object.assign({}, prevState);
         if(this.syncInProgress)
@@ -67,7 +66,7 @@ export default class Events extends React.Component {
       });
     });
 
-    api.service('events').on('patched', event => {
+    this.props.api.service('events').on('patched', event => {
       let notification = undefined;
       this.setState((prevState, props) => {
         let nextState = Object.assign({}, prevState);
@@ -94,7 +93,7 @@ export default class Events extends React.Component {
       });
     });
 
-    api.service('events').on('removed', event => {
+    this.props.api.service('events').on('removed', event => {
       let notification = undefined;
       this.setState((prevState, props) => {
         let nextState = Object.assign({}, prevState);
@@ -122,9 +121,9 @@ export default class Events extends React.Component {
   }
 
   componentWillUnmount () {
-    api.service('events').removeListener('created');
-    api.service('events').removeListener('patched');
-    api.service('events').removeListener('removed');
+    this.props.api.service('events').removeListener('created');
+    this.props.api.service('events').removeListener('patched');
+    this.props.api.service('events').removeListener('removed');
   }
 
   startSync() {
@@ -141,7 +140,7 @@ export default class Events extends React.Component {
   }
 
   sync() {
-    api.service('events').find({
+    this.props.api.service('events').find({
       query:{
         $sort:{
           date: 1
@@ -171,7 +170,7 @@ export default class Events extends React.Component {
   }
 
   createEvent(event) {
-    api.service('events').create(
+    this.props.api.service('events').create(
       event,
       (error, created) => {
         if(error)
@@ -201,7 +200,7 @@ export default class Events extends React.Component {
 
   updateEvent(event) {
     const preUpdate = Object.assign({}, this.state.list.filter(item => item._id == event._id)[0]);
-    api.service('events').patch(
+    this.props.api.service('events').patch(
       event._id,
       event,
       (error, updated) => {
@@ -225,7 +224,7 @@ export default class Events extends React.Component {
   deleteEvent(id) {
     if(!id)
       return;
-    api.service('events').remove(
+    this.props.api.service('events').remove(
       id,
       (error, deleted) => {
         if(error)
@@ -337,3 +336,9 @@ export default class Events extends React.Component {
     );
   }
 }
+
+Events.propTypes = {
+  api: PropTypes.object.isRequired
+};
+
+export default Events;

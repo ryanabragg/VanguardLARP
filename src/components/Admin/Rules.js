@@ -1,6 +1,5 @@
 import React from 'react';
-
-import api from '../../util/api';
+import PropTypes from 'prop-types';
 
 import Spinner from '../styled/Spinner';
 import RuleList from './styled/RuleList';
@@ -8,7 +7,7 @@ import RuleList from './styled/RuleList';
 // import the notifications component to access static methods (don't import styled version)
 import NotificationList from '../NotificationList';
 
-export default class Rules extends React.Component {
+class Rules extends React.Component {
   constructor (props) {
     super(props);
 
@@ -70,7 +69,7 @@ export default class Rules extends React.Component {
   }
 
   componentDidMount() {
-    api.service('rules').on('created', rule => {
+    this.props.api.service('rules').on('created', rule => {
       this.setState((prevState, props) => {
         let nextState = Object.assign({}, prevState);
         if(this.syncInProgress)
@@ -81,7 +80,7 @@ export default class Rules extends React.Component {
       });
     });
 
-    api.service('rules').on('patched', rule => {
+    this.props.api.service('rules').on('patched', rule => {
       let notification = undefined;
       this.setState((prevState, props) => {
         let nextState = Object.assign({}, prevState);
@@ -108,7 +107,7 @@ export default class Rules extends React.Component {
       });
     });
 
-    api.service('rules').on('removed', rule => {
+    this.props.api.service('rules').on('removed', rule => {
       let notification = undefined;
       this.setState((prevState, props) => {
         let nextState = Object.assign({}, prevState);
@@ -136,9 +135,9 @@ export default class Rules extends React.Component {
   }
 
   componentWillUnmount () {
-    api.service('rules').removeListener('created');
-    api.service('rules').removeListener('patched');
-    api.service('rules').removeListener('removed');
+    this.props.api.service('rules').removeListener('created');
+    this.props.api.service('rules').removeListener('patched');
+    this.props.api.service('rules').removeListener('removed');
   }
 
   startSync() {
@@ -155,7 +154,7 @@ export default class Rules extends React.Component {
   }
 
   sync() {
-    api.service('rules').find({
+    this.props.api.service('rules').find({
       query:{
         $sort:{
           race: 1,
@@ -189,7 +188,7 @@ export default class Rules extends React.Component {
   }
 
   createRule(rule) {
-    api.service('rules').create(
+    this.props.api.service('rules').create(
       rule,
       (error, created) => {
         if(error)
@@ -219,7 +218,7 @@ export default class Rules extends React.Component {
 
   updateRule(rule) {
     const preUpdate = Object.assign({}, this.state.list.filter(item => item._id == rule._id)[0]);
-    api.service('rules').patch(
+    this.props.api.service('rules').patch(
       rule._id,
       rule,
       (error, updated) => {
@@ -243,7 +242,7 @@ export default class Rules extends React.Component {
   deleteRule(id) {
     if(!id)
       return;
-    api.service('rules').remove(
+    this.props.api.service('rules').remove(
       id,
       (error, deleted) => {
         if(error)
@@ -355,3 +354,9 @@ export default class Rules extends React.Component {
     );
   }
 }
+
+Rules.propTypes = {
+  api: PropTypes.object.isRequired
+};
+
+export default Rules;

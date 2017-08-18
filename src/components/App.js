@@ -2,6 +2,8 @@ import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { injectGlobal, ThemeProvider } from 'styled-components';
 
+import api from '../util/api';
+
 import Home from './Home/Home';
 
 import AdminMenu from './Admin/Menu';
@@ -36,20 +38,20 @@ export default class App extends React.Component {
     return (
       <ThemeProvider theme={theme}>
         <div>
-          <Route exact path='/' component={Home}/>
+          <Route exact path='/' render={props => <Home api={api} />} />
           <Route path='/admin' component={AdminMenu} />
           <Switch>
             <Route exact path='/admin' component={AdminDashboard} />
-            <Route exact path='/admin/events' component={AdminEvents} />
-            <Route path='/admin/events/:id' component={AdminEvents} />
-            <Route exact path='/admin/rules' component={AdminRules} />
-            <Route path='/admin/rules/:id' component={AdminRules} />
+            <Route exact path='/admin/events' render={props => <AdminEvents api={api} />} />
+            <Route path='/admin/events/:id' render={props => <AdminEvents api={api} />} />
+            <Route exact path='/admin/rules' render={props => <AdminRules api={api} />} />
+            <Route path='/admin/rules/:id' render={props => <AdminRules api={api} />} />
             <Route exact path='/admin/characters' component={PageNotFound} />
             <Route path='/admin/characters/:id' component={PageNotFound} />
           </Switch>
           <Switch>
-            <Route exact path='/character' component={Character} />
-            <Route path='/character/:id' component={Character} />
+            <Route exact path='/character' render={props => <Character api={api} />} />
+            <Route path='/character/:id' render={props => <Character api={api} />} />
           </Switch>
           <NotificationList />
         </div>
