@@ -23,7 +23,7 @@ class Menu extends React.Component {
   }
 
   componentDidMount() {
-    this.props.api.auth().then(user => this.setState({user: user}));
+    this.props.api.user().then(user => this.setState({user: user}));
   }
 
   toggleMenu(){

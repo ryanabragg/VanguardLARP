@@ -24,7 +24,7 @@ const api = feathers()
   .configure(socketio(socket))
   .configure(auth({storage: store}));
 
-api.signup = async (email, password) => {
+api.register = async (email, password) => {
   try {
     return await api.service('users').create({
       email: email,
@@ -47,7 +47,7 @@ api.login = async (email, password) => {
   }
 };
 
-api.auth = async () => {
+api.user = async () => {
   try {
     const token = localStorage.getItem('feathers-jwt');
     const payload = await api.passport.verifyJWT(token);
