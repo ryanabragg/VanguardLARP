@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import Color from 'color';
 
-const StyledHome = styled.div`
+const Home = styled.div`
   header {
     position: relative;
     background: ${props => props.theme.colors.secondary};
@@ -164,4 +164,4 @@ const StyledHome = styled.div`
   }
 `;
 
-export default StyledHome;
+export default Home;
