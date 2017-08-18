@@ -6,17 +6,7 @@ import IconCharacter from '../svg/Character';
 import IconFacebook from '../svg/Facebook';
 import IconGoogleDoc from '../svg/GoogleDoc';
 
-import EventsList from './styled/EventsList';
-
-import Article from './styled/Article';
-import Card from './styled/Card';
-import Cards from './styled/Cards';
-import Footer from './styled/Footer';
-import H1 from './styled/H1';
-import Header from './styled/Header';
-import HeaderImage from './styled/HeaderImage';
-import Main from './styled/Main';
-import Navigation from './styled/Navigation';
+import Homepage from './styled/Home';
 
 class Home extends React.Component {
   constructor(props) {
@@ -47,13 +37,13 @@ class Home extends React.Component {
 
   render() {
     return (
-      <div>
-        <Header>
-          <HeaderImage />
-        </Header>
-        <Main>
-          <Article splitView>
-            <H1>Welcome!</H1>
+      <Homepage>
+        <header>
+          <div className='header-image' />
+        </header>
+        <main className='content-container'>
+          <article className='content column'>
+            <h1 className='title'>Welcome!</h1>
             <p>
               We are a boffer steampunk fantasy fusion game geared towards
               making the player feel epic from the start. That seems like a mouthful, but in truth,
@@ -73,9 +63,9 @@ class Home extends React.Component {
               and a kitchen in each camp area. You can bring your own food, or buy in on meals
               (check the Facebook event for details).
             </p>
-          </Article>
-          <Article splitView>
-            <H1>The Story</H1>
+          </article>
+          <article className='content column'>
+            <h1 className='title'>The Story</h1>
             <p>
               One thousand years ago, the beings now considered myth vanished. Technology has
               grown, and the world has shrunk as travel has expanded beyond foot and hoof. A
@@ -91,23 +81,29 @@ class Home extends React.Component {
               Recently the town has been plagued by strange creatures and events the likes of which
               have not been seen in a millenium.
             </p>
-          </Article>
-          <Article>
-            <H1>Game Rules</H1>
-            <Cards>
-              <Card>
-                <a target='_new' href='character-sheet.pdf'>
-                  <IconCharacter />
-                  <p>Character Sheet</p>
-                </a>
-              </Card>
-              <Card>
-                <a target='_new' href='https://docs.google.com/document/d/1qhpAflKwudtAlP0mCH43gbcQifZwSJe7aII-nm1PzeI/edit'>
+          </article>
+          <article className='content'>
+            <h1 className='title'>Game Rules</h1>
+            <div className='title-icon'>
+              <a target='_new' href='https://docs.google.com/document/d/1qhpAflKwudtAlP0mCH43gbcQifZwSJe7aII-nm1PzeI/edit'>
+                <div className='icon'>
                   <IconGoogleDoc />
-                  <p>Rules Document</p>
-                </a>
-              </Card>
-            </Cards>
+                </div>
+                <div className='icon-label'>
+                  Rules Document
+                </div>
+              </a>
+            </div>
+            <div className='title-icon'>
+              <a target='_new' href='character-sheet.pdf'>
+                <div className='icon'>
+                  <IconCharacter />
+                </div>
+                <div className='icon-label'>
+                  Character Sheet
+                </div>
+              </a>
+            </div>
             <p>
               The game&apos;s rules are maintained as Google Documents. The rules can be a bit
               intimidating, but people pick them up fairly quickly after a game or two. We use a
@@ -115,28 +111,30 @@ class Home extends React.Component {
               rulebooks are availble at game. Most importantly, if an ability is used on you, it&apos;s
               up to the user to explain it if you ask what it does.
             </p>
-          </Article>
-          <Article>
-            <H1>Contact Us</H1>
-            <Cards>
-              <Card>
-                <a target='_new' href='https://www.facebook.com/groups/544631092325451/'>
+          </article>
+          <article className='content'>
+            <h1 className='title'>Contact Us</h1>
+            <div className='title-icon'>
+              <a target='_new' href='https://www.facebook.com/groups/544631092325451/'>
+                <div className='icon'>
                   <IconFacebook />
-                  <p>Facebook Group</p>
-                </a>
-              </Card>
-            </Cards>
+                </div>
+                <div className='icon-label'>
+                  Facebook Group
+                </div>
+              </a>
+            </div>
             <p>
               Join us on Facebook! Ask any questions you have there and get answers from both
               players and personel. We&apos;ve chosen to embrace Facebook as our communication medium
               rather than build our own. Most everyone has an account already, and players have
               appreciated the convenience.
             </p>
-          </Article>
-          <Article splitView>
-            <H1>Schedule</H1>
+          </article>
+          <article className='content column'>
+            <h1 className='title'>Schedule</h1>
             <p>The camp reservations are done yearly.</p>
-            <EventsList>
+            <ol className='events'>
               {this.state.events.map(event => {
                 return (
                   <li key={event._id}>
@@ -145,10 +143,10 @@ class Home extends React.Component {
                   </li>
                 );
               })}
-            </EventsList>
-          </Article>
-          <Article splitView>
-            <H1>Location</H1>
+            </ol>
+          </article>
+          <article className='content column'>
+            <h1 className='title'>Location</h1>
             <p className='location-address'>2090 Scout Rd, Lenoir, North Carolina 28645</p>
             <div className='location-detail'>
               <p>
@@ -171,13 +169,12 @@ class Home extends React.Component {
                 Going straight will pass though camp HQ and complete the circle.
               </p>
             </div>
-          </Article>
-        </Main>
-        <Navigation />
-        <Footer>
+          </article>
+        </main>
+        <footer>
           <p>©2015 RedTape Productions</p>
-        </Footer>
-      </div>
+        </footer>
+      </Homepage>
     );
   }
 }
