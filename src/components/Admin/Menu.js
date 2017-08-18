@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 
-import app from '../../util/feathersApp';
+import api from '../../util/api';
 
 import Navigation from './styled/Navigation';
 
@@ -24,7 +24,7 @@ class Menu extends React.Component {
   }
 
   componentDidMount() {
-    app.auth().then(user => this.setState({user: user}));
+    api.auth().then(user => this.setState({user: user}));
   }
 
   toggleMenu(){
@@ -34,11 +34,11 @@ class Menu extends React.Component {
   }
 
   login(name, pass) {
-    app.login(name, pass).then(user => this.setState({user: user}));
+    api.login(name, pass).then(user => this.setState({user: user}));
   }
 
   logout() {
-    app.logout();
+    api.logout();
     this.setState({user: {}});
   }
 

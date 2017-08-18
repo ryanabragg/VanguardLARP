@@ -19,14 +19,14 @@ const store = localforage.createInstance({
   name: 'VanguardLARP-auth'
 });
 
-const app = feathers()
+const api = feathers()
   .configure(hooks())
   .configure(socketio(socket))
   .configure(auth({storage: store}));
 
-app.signup = async (email, password) => {
+api.signup = async (email, password) => {
   try {
-    return await app.service('users').create({
+    return await api.service('users').create({
       email: email,
       password: password
     });
@@ -35,9 +35,9 @@ app.signup = async (email, password) => {
   }
 }
 
-app.login = async (email, password) => {
+api.login = async (email, password) => {
   try {
-    return await app.authenticate({
+    return await api.authenticate({
       strategy: 'local',
       email: email,
       password: password
@@ -47,15 +47,15 @@ app.login = async (email, password) => {
   }
 };
 
-app.auth = async () => {
+api.auth = async () => {
   try {
     const token = localStorage.getItem('feathers-jwt');
-    const payload = await app.passport.verifyJWT(token);
-    const user = await app.service('users').get(payload.userId);
+    const payload = await api.passport.verifyJWT(token);
+    const user = await api.service('users').get(payload.userId);
     return user;
   } catch (err) {
     return {};
   }
 };
 
-export default app;
+export default api;

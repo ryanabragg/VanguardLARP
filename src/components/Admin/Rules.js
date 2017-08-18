@@ -1,6 +1,6 @@
 import React from 'react';
 
-import app from '../../util/feathersApp';
+import api from '../../util/api';
 
 import Spinner from '../styled/Spinner';
 import RuleList from './styled/RuleList';
@@ -70,7 +70,7 @@ export default class Rules extends React.Component {
   }
 
   componentDidMount() {
-    app.service('rules').on('created', rule => {
+    api.service('rules').on('created', rule => {
       this.setState((prevState, props) => {
         let nextState = Object.assign({}, prevState);
         if(this.syncInProgress)
@@ -81,7 +81,7 @@ export default class Rules extends React.Component {
       });
     });
 
-    app.service('rules').on('patched', rule => {
+    api.service('rules').on('patched', rule => {
       let notification = undefined;
       this.setState((prevState, props) => {
         let nextState = Object.assign({}, prevState);
@@ -108,7 +108,7 @@ export default class Rules extends React.Component {
       });
     });
 
-    app.service('rules').on('removed', rule => {
+    api.service('rules').on('removed', rule => {
       let notification = undefined;
       this.setState((prevState, props) => {
         let nextState = Object.assign({}, prevState);
@@ -136,9 +136,9 @@ export default class Rules extends React.Component {
   }
 
   componentWillUnmount () {
-    app.service('rules').removeListener('created');
-    app.service('rules').removeListener('patched');
-    app.service('rules').removeListener('removed');
+    api.service('rules').removeListener('created');
+    api.service('rules').removeListener('patched');
+    api.service('rules').removeListener('removed');
   }
 
   startSync() {
@@ -155,7 +155,7 @@ export default class Rules extends React.Component {
   }
 
   sync() {
-    app.service('rules').find({
+    api.service('rules').find({
       query:{
         $sort:{
           race: 1,
@@ -189,7 +189,7 @@ export default class Rules extends React.Component {
   }
 
   createRule(rule) {
-    app.service('rules').create(
+    api.service('rules').create(
       rule,
       (error, created) => {
         if(error)
@@ -219,7 +219,7 @@ export default class Rules extends React.Component {
 
   updateRule(rule) {
     const preUpdate = Object.assign({}, this.state.list.filter(item => item._id == rule._id)[0]);
-    app.service('rules').patch(
+    api.service('rules').patch(
       rule._id,
       rule,
       (error, updated) => {
@@ -243,7 +243,7 @@ export default class Rules extends React.Component {
   deleteRule(id) {
     if(!id)
       return;
-    app.service('rules').remove(
+    api.service('rules').remove(
       id,
       (error, deleted) => {
         if(error)

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import app from '../../util/feathersApp';
+import api from '../../util/api';
 
 import Logo from '../svg/Logo';
 import IconCharacter from '../svg/Character';
@@ -20,7 +20,7 @@ class Home extends React.Component {
 
   componentDidMount() {
     let startDate = (new Date()).toJSON().slice(0, 10); // get the 'YYYY-MM-DD' from the JSON date string
-    app.service('events').find({
+    api.service('events').find({
       query: {
         date: {
           $gte: startDate

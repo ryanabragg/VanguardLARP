@@ -1,6 +1,6 @@
 import React from 'react';
 
-import app from '../../util/feathersApp';
+import api from '../../util/api';
 
 import Spinner from '../styled/Spinner';
 import EventList from './styled/EventList';
@@ -56,7 +56,7 @@ export default class Events extends React.Component {
   }
 
   componentDidMount () {
-    app.service('events').on('created', event => {
+    api.service('events').on('created', event => {
       this.setState((prevState, props) => {
         let nextState = Object.assign({}, prevState);
         if(this.syncInProgress)
@@ -67,7 +67,7 @@ export default class Events extends React.Component {
       });
     });
 
-    app.service('events').on('patched', event => {
+    api.service('events').on('patched', event => {
       let notification = undefined;
       this.setState((prevState, props) => {
         let nextState = Object.assign({}, prevState);
@@ -94,7 +94,7 @@ export default class Events extends React.Component {
       });
     });
 
-    app.service('events').on('removed', event => {
+    api.service('events').on('removed', event => {
       let notification = undefined;
       this.setState((prevState, props) => {
         let nextState = Object.assign({}, prevState);
@@ -122,9 +122,9 @@ export default class Events extends React.Component {
   }
 
   componentWillUnmount () {
-    app.service('events').removeListener('created');
-    app.service('events').removeListener('patched');
-    app.service('events').removeListener('removed');
+    api.service('events').removeListener('created');
+    api.service('events').removeListener('patched');
+    api.service('events').removeListener('removed');
   }
 
   startSync() {
@@ -141,7 +141,7 @@ export default class Events extends React.Component {
   }
 
   sync() {
-    app.service('events').find({
+    api.service('events').find({
       query:{
         $sort:{
           date: 1
@@ -171,7 +171,7 @@ export default class Events extends React.Component {
   }
 
   createEvent(event) {
-    app.service('events').create(
+    api.service('events').create(
       event,
       (error, created) => {
         if(error)
@@ -201,7 +201,7 @@ export default class Events extends React.Component {
 
   updateEvent(event) {
     const preUpdate = Object.assign({}, this.state.list.filter(item => item._id == event._id)[0]);
-    app.service('events').patch(
+    api.service('events').patch(
       event._id,
       event,
       (error, updated) => {
@@ -225,7 +225,7 @@ export default class Events extends React.Component {
   deleteEvent(id) {
     if(!id)
       return;
-    app.service('events').remove(
+    api.service('events').remove(
       id,
       (error, deleted) => {
         if(error)

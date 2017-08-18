@@ -1,6 +1,6 @@
 import React from 'react';
 
-import app from '../../util/feathersApp';
+import api from '../../util/api';
 
 import Section from './styled/Section';
 import Bio from './styled/Bio';
@@ -83,7 +83,7 @@ class Character extends React.Component {
     // load user authentication
     // load character
 
-    app.service('rules').on('created', rule => {
+    api.service('rules').on('created', rule => {
       this.setState((prevState, props) => {
         let nextState = Object.assign({}, prevState);
         if(this.syncInProgress)
@@ -94,7 +94,7 @@ class Character extends React.Component {
       });
     });
 
-    app.service('rules').on('patched', rule => {
+    api.service('rules').on('patched', rule => {
       this.setState((prevState, props) => {
         let nextState = Object.assign({}, prevState);
         if(this.syncInProgress)
@@ -105,7 +105,7 @@ class Character extends React.Component {
       });
     });
 
-    app.service('rules').on('removed', rule => {
+    api.service('rules').on('removed', rule => {
       this.setState((prevState, props) => {
         let nextState = Object.assign({}, prevState);
         if(this.syncInProgress)
@@ -120,9 +120,9 @@ class Character extends React.Component {
   }
 
   componentWillUnmount () {
-    app.service('rules').removeListener('created');
-    app.service('rules').removeListener('patched');
-    app.service('rules').removeListener('removed');
+    api.service('rules').removeListener('created');
+    api.service('rules').removeListener('patched');
+    api.service('rules').removeListener('removed');
   }
 
   startSync() {
@@ -139,7 +139,7 @@ class Character extends React.Component {
   }
 
   sync() {
-    app.service('rules').find({
+    api.service('rules').find({
       query:{
         $sort:{
           category: 1,
