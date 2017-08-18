@@ -2,6 +2,7 @@ import React from 'react';
 
 import app from '../../util/feathersApp';
 
+import Logo from '../svg/Logo';
 import IconCharacter from '../svg/Character';
 import IconFacebook from '../svg/Facebook';
 import IconGoogleDoc from '../svg/GoogleDoc';
@@ -39,7 +40,9 @@ class Home extends React.Component {
     return (
       <Homepage>
         <header>
-          <div className='header-image' />
+          <div className='header-image'>
+          <Logo />
+          </div>
         </header>
         <main className='content-container'>
           <article className='content column'>

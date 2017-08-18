@@ -3,6 +3,7 @@ import Color from 'color';
 
 const StyledHome = styled.div`
   header {
+    position: relative;
     background: ${props => props.theme.colors.secondary};
     background: linear-gradient(0deg, white, ${props => Color(props.theme.colors.secondary).mix(Color('black')).hex()});
     width: 100%;
@@ -10,19 +11,11 @@ const StyledHome = styled.div`
     padding-bottom: 100px;
   }
   div.header-image {
-    background-repeat: no-repeat;
-    background-position: center;
-    background-image: url(./logo.svg);
-    background-size: contain;
-    @media (max-width: ${props => props.theme.breakpoints.s}px) {
-      height: 240px;
-    }
-    @media (min-width: ${props => props.theme.breakpoints.s + 1}px) and (max-width: ${props => props.theme.breakpoints.m}px) {
-      height: 300px;
-    }
-    @media (min-width: ${props => props.theme.breakpoints.m + 1}px) {
-      height: 360px;
-    }
+    position: relative;
+    max-width: 648px;
+    width: 90vw;
+    left: 50%;
+    transform: translate(-50%, 0);
   }
 
   footer {
