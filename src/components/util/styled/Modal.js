@@ -9,37 +9,29 @@ const StyledModal = styled(Modal)`
   left: 0;
   width: 100%;
   height: 100%;
-  padding: 60px 0 0 0;
+  padding: 10%;
   margin: 0;
   z-index: 42;
   ${props => props.noBackdrop ? '' : 'background-color: rgb(0, 0, 0); background-color: rgba(0, 0, 0, 0.3);'}
-  span.modal-close {
+  [data-modal="close-button"] {
     position: absolute;
     top: 0;
-    right: 0px;
-    width: 1em;
+    right: 0;
     line-height: 1em;
     text-align: center;
     font-size: 40px;
     font-weight: bold;
   }
-  span.modal-close:hover,
-  span.modal-close:focus {
+  [data-modal="close-button"]:hover,
+  [data-modal="close-button"]:focus {
     cursor: pointer;
     color: ${props => props.theme.colors.primary};
   }
-  div.modal-content {
+  div[data-modal="content"] {
     position: relative;
-    width: 80%;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #888;
-    background-color: ${props => props.theme.colors.background};
-    animation: animatezoom 0.2s
-  }
-  @keyframes animatezoom {
-      from {transform: scale(0)} 
-      to {transform: scale(1)}
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 `;
 
