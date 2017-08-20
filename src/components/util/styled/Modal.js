@@ -17,6 +17,8 @@ const StyledModal = styled(Modal)`
     position: absolute;
     top: 0;
     right: 0;
+    height: 40px;
+    width: 40px;
     line-height: 1em;
     text-align: center;
     font-size: 40px;
