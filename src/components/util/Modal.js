@@ -56,7 +56,7 @@ class Modal extends React.Component {
         <div data-modal='content' onClick={this.handleClickInside}>
           {this.props.children}
           {this.props.closeButton && (
-            <span data-modal='close-button' title="Close Modal" onClick={this.props.closeModal}>
+            <span data-modal='close-button' title="Close Modal" onClick={this.props.close}>
               &times;
             </span>
           )}
