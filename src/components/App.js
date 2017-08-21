@@ -34,12 +34,26 @@ html, body {
 
 // update ../routes.js to include possible routes
 export default class App extends React.Component {
+  constructor (props) {
+    super(props);
+
+    this.state = {
+      user: {}
+    };
+
+    this.setUser = this.setUser.bind(this);
+  }
+
+  setUser(user) {
+    this.setState({user: user});
+  }
+
   render() {
     return (
       <ThemeProvider theme={theme}>
         <div>
           <Route exact path='/' render={props => <Home {...props} api={api} />} />
-          <Route path='/admin' render={props => <AdminMenu {...props} api={api} />} />
+          <Route path='/admin' render={props => <AdminMenu {...props} api={api} user={this.state.user} setUser={this.setUser} />} />
           <Switch>
             <Route exact path='/admin' component={AdminDashboard} />
             <Route exact path='/admin/events' render={props => <AdminEvents {...props} api={api} />} />
