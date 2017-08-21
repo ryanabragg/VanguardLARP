@@ -2,7 +2,13 @@ import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
+import IconExpandMore from '../svg/IconExpandMore';
+import IconExpandLess from '../svg/IconExpandLess';
+import IconMoreVertical from '../svg/IconMoreVertical';
+
 import Navigation from './styled/Navigation';
+import Modal from '../util/styled/Modal';
+import LoginForm from '../auth/styled/LoginForm';
 
 import routes from '../../routes';
 
@@ -12,73 +18,142 @@ class Menu extends React.Component {
 
     this.links = routes.filter(route => route.slice(0, 6) === '/admin' && route.slice(route.length - 4, route.length) != '/:id');
 
-    this.state = {
-      user: {},
-      isMenuHidden: true
+    this.resetState = {
+      isMenuHidden: true,
+      showLoginForm: false
     };
 
-    this.toggleMenu = this.toggleMenu.bind(this);
+    this.state = Object.assign({}, this.resetState);
+
+    this.toggleCollapsedMenu = this.toggleCollapsedMenu.bind(this);
+    this.toggleLoginForm = this.toggleLoginForm.bind(this);
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
   }
 
   componentDidMount() {
-    this.props.api.user().then(user => this.setState({user: user}));
+    this.props.api.on('reauthentication-error', error => {
+      if(!this.props.user)
+        return;
+      this.props.api.authenticate({
+        strategy: 'local',
+        email: this.props.user.email,
+        password: this.props.user.password
+      })
+      .then(response => {
+        // You are now authenticated again
+      })
+    });
+    this.props.api.user().then(user => this.props.setUser(user));
   }
 
-  toggleMenu(){
-    this.setState({
-      isMenuHidden: !this.state.isMenuHidden
+  componentWillReceiveProps(nextProps) {
+    if(this.props.location.pathname != nextProps.location.pathname)
+      this.setState(this.resetState);
+  }
+
+  componentWillUnmount() {
+    this.props.api.removeListener('reauthentication-error');
+  }
+
+  toggleCollapsedMenu(){
+    this.setState((prevState, props) => {
+      let nextState = Object.assign({}, prevState);
+      nextState.isMenuHidden = !prevState.isMenuHidden;
+      return nextState;
+    });
+  }
+
+  toggleLoginForm() {
+    this.setState((prevState, props) => {
+      let nextState = Object.assign({}, prevState);
+      nextState.showLoginForm = !prevState.showLoginForm;
+      return nextState;
     });
   }
 
   login(name, pass) {
-    this.props.api.login(name, pass).then(user => this.setState({user: user}));
+    this.props.api.login(name, pass).then(user => this.props.setUser(user));
   }
 
   logout() {
     this.props.api.logout();
-    this.setState({user: {}});
+    this.props.setUser({});
   }
 
   render() {
     return (
-      <Navigation>
-        <div className='menu-toggle' onClick={this.toggleMenu}></div>
-        <div className='menu-logo'><img src='../logo.svg'/></div>
-        {this.state.isMenuHidden
-        ? (<div className='menu-current'>
-            {(this.props.location.pathname.charAt(7).toUpperCase() + this.props.location.pathname.slice(8)) || 'Dashboard'}
-          </div>)
-        : null}
-        {this.links.map((link, index) => {
-          let dashboard = link === '/admin';
-          let name = dashboard ? 'dashboard' : link.slice(7);
-          return (
-            <div className={'menu-item' + (this.state.isMenuHidden ? '' : ' show')} key={index}>
-              <NavLink
-                exact={dashboard}
-                to={link}
-                activeClassName='nav-active'
-              >
-                {name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()}
-              </NavLink>
+      <div>
+        <Navigation>
+          <img src='../logo.svg'/>
+          <div className='menu-item menu-collapsing menu-right' onClick={this.toggleCollapsedMenu}>
+            {this.state.isMenuHidden
+            ? <IconExpandMore color='inherit' />
+            : <IconExpandLess color='inherit' />
+            }
+          </div>
+          {this.state.isMenuHidden
+          ? (<div className='menu-item menu-collapsing' onClick={this.toggleCollapsedMenu}>
+              {(this.props.location.pathname.charAt(7).toUpperCase() + this.props.location.pathname.slice(8)) || 'Dashboard'}
+            </div>)
+          : null}
+          {this.links.map((link, index) => {
+            let dashboard = link === '/admin';
+            let name = dashboard ? 'dashboard' : link.slice(7);
+            return (
+              <div className={'menu-item' + (this.state.isMenuHidden ? '' : ' menu-display')} key={index}>
+                <NavLink to={link}
+                  exact={dashboard}
+                  activeClassName='nav-active'
+                >
+                  {name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()}
+                </NavLink>
+              </div>
+            );
+          })}
+          {this.props.user.name
+          ? <div className='menu-item menu-right'>
+              {this.props.user.name}
+              <IconMoreVertical color='inherit' />
+              <div className={'menu-dropdown dropdown-right'}>
+                <div className='menu-item'
+                  onClick={this.logout}
+                >
+                  Log Out
+                </div>
+              </div>
             </div>
-          );
-        })}
-        <div className='menu-user'>
-          {this.state.user
-          ? <div onClick={this.login}>Login</div>
-          : <div onClick={this.logout}>Logout</div>
+          : <div className='menu-item menu-right'
+              onClick={this.toggleLoginForm}
+            >
+              Log In
+            </div>
           }
-        </div>
-      </Navigation>
+        </Navigation>
+        <Modal visible={this.state.showLoginForm}
+          close={this.toggleLoginForm}
+        >
+          <LoginForm
+            login={this.login}
+            register={this.props.api.register}
+            recoverPassword={this.props.api.user}
+            getUser={this.props.api.user}
+            close={this.toggleLoginForm}
+          />
+        </Modal>
+      </div>
     );
   }
 }
 
+Menu.defaultProps = {
+  user: {}
+}
+
 Menu.propTypes = {
-  api: PropTypes.object.isRequired
+  api: PropTypes.object.isRequired,
+  user: PropTypes.object,
+  setUser: PropTypes.func.isRequired
 }
 
 export default Menu;
