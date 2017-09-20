@@ -4,7 +4,7 @@ import { spy } from 'sinon';
 import { mount, shallow } from 'enzyme';
 import { JSDOM } from 'jsdom';
 
-import Notification from '../../src/components/Notification';
+import Notification from '../../../src/components/util/Notification';
 
 const window = (new JSDOM('<!doctype html><html><body></body></html>')).window;
 global.window = window;
