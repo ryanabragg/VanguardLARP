@@ -7,8 +7,6 @@ import IconExpandLess from '../svg/IconExpandLess';
 import IconMoreVertical from '../svg/IconMoreVertical';
 
 import Navigation from './styled/Navigation';
-import Modal from '../util/styled/Modal';
-import LoginForm from '../auth/styled/LoginForm';
 
 import routes from '../../routes';
 
@@ -32,7 +30,7 @@ class Menu extends React.Component {
   }
 
   componentDidMount() {
-    this.props.api.on('reauthentication-error', error => {
+    /*this.props.api.on('reauthentication-error', error => {
       if(!this.props.user)
         return;
       this.props.api.authenticate({
@@ -44,7 +42,7 @@ class Menu extends React.Component {
         // You are now authenticated again
       })
     });
-    this.props.api.user().then(user => this.props.setUser(user));
+    this.props.api.user().then(user => this.props.setUser(user));*/
   }
 
   componentWillReceiveProps(nextProps) {
@@ -53,7 +51,7 @@ class Menu extends React.Component {
   }
 
   componentWillUnmount() {
-    this.props.api.removeListener('reauthentication-error');
+    //this.props.api.removeListener('reauthentication-error');
   }
 
   toggleCollapsedMenu(){
@@ -123,24 +121,11 @@ class Menu extends React.Component {
                 </div>
               </div>
             </div>
-          : <div className='menu-item menu-right'
-              onClick={this.toggleLoginForm}
-            >
-              Log In
+          : <div className='menu-item menu-right'>
+              <Link to='/login'>Log In</Link>
             </div>
           }
         </Navigation>
-        <Modal visible={this.state.showLoginForm}
-          close={this.toggleLoginForm}
-        >
-          <LoginForm
-            login={this.login}
-            register={this.props.api.register}
-            recoverPassword={this.props.api.user}
-            getUser={this.props.api.user}
-            close={this.toggleLoginForm}
-          />
-        </Modal>
       </div>
     );
   }
