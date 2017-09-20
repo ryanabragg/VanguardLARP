@@ -28,6 +28,10 @@ const color = {
     value: '#fbd872',
     contrast: '#FFFFFF'
   },
+  navigation: {
+    value: '#660729',
+    contrast: '#FFFFFF'
+  },
   accent: {
     value: '#ffcc00',
     contrast: '#FFFFFF'
@@ -56,6 +60,9 @@ const color = {
     lighten: 5,
     darken: 10,
     blacken: 20
+  },
+  social: {
+    facebook: '#3B5998'
   }
 };
 
@@ -157,6 +164,7 @@ const values = {
     warning: '#fbd872',
     alert: '#ff5c42',
     link: '#0a0a0a',
+    facebook: '#3B5998'
   },
   breakpoints: {
     null: 0,
