@@ -1,5 +1,7 @@
 const routes = [
   '/',
+  '/register',
+  '/login',
   '/admin',
   '/admin/events',
   '/admin/events/:id',

@@ -4,6 +4,8 @@ import { injectGlobal, ThemeProvider } from 'styled-components';
 
 import api from '../util/api';
 
+import Login from './User/styled/Login';
+
 import Home from './Home/Home';
 
 import AdminMenu from './Admin/Menu';
@@ -67,6 +69,8 @@ export default class App extends React.Component {
             <Route exact path='/character' render={props => <Character {...props} api={api} />} />
             <Route path='/character/:id' render={props => <Character {...props} api={api} />} />
           </Switch>
+          <Route path='/login' render={props => <Login {...props} api={api} user={this.state.user} setUser={this.setUser} />} />
+          <Route path='/register' render={props => <Login {...props} api={api} user={this.state.user} setUser={this.setUser} />} />
           <NotificationList />
         </div>
       </ThemeProvider>
