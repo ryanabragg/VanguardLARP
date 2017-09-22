@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import Logo from '../svg/Logo';
 
-class LoginForm extends React.Component {
+class Login extends React.Component {
   constructor(props) {
     super(props);
 
@@ -16,13 +16,35 @@ class LoginForm extends React.Component {
       maxAttempts: 3
     }
 
+    this.loginFacebook = this.loginFacebook.bind(this);
+    this.loginLocal = this.loginLocal.bind(this);
+
     this.handleFormInputChange = this.handleFormInputChange.bind(this);
     this.handleFormLoginFacebook = this.handleFormLoginFacebook.bind(this);
     this.handleFormLoginLocal = this.handleFormLoginLocal.bind(this);
     this.handleFormPasswordRecovery = this.handleFormPasswordRecovery.bind(this);
+    this.handleFormRegisterFacebook = this.handleFormRegisterFacebook.bind(this);
+    this.handleFormRegisterLocal = this.handleFormRegisterLocal.bind(this);
     this.handleViewLogin = this.handleViewLogin.bind(this);
     this.handleViewRegister = this.handleViewRegister.bind(this);
     this.handleViewPasswordRecovery = this.handleViewPasswordRecovery.bind(this);
+  }
+
+  async loginFacebook(credentials, register = false) {
+    if(register)
+      return;
+  }
+
+  async loginLocal(credentials, register = false) {
+    if(register)
+      await this.props.api.register(credentials);
+    const user = await this.props.api.login(credentials);
+    this.props.setUser(user);
+    this.setState({password: ''});
+    if(register && user != {})
+      this.props.history.push('/account');
+    else if(user != {})
+      this.props.history.goBack();
   }
 
   handleFormInputChange(e) {
@@ -37,25 +59,35 @@ class LoginForm extends React.Component {
 
   handleFormLoginFacebook(e) {
     e.preventDefault();
+    loginFacebook();
   }
 
-  async handleFormLoginLocal(e) {
+  handleFormLoginLocal(e) {
     e.preventDefault();
-    if(typeof this.props.api.login != 'function')
-      return;
-    const user = await this.props.api.login(this.state.email, this.state.password);
-    console.log(user);
-    let acct = await this.props.api.user();
-    console.log(acct);
-    this.setState({password: ''});
+    const credentials = this.state.email && this.state.password
+    ? { email: this.state.email,
+        password: this.state.password
+      }
+    : null;
+    this.loginLocal(credentials);
   }
 
   handleFormPasswordRecovery(e) {
     e.preventDefault();
   }
 
-  handleFormRegister(e) {
+  handleFormRegisterFacebook(e) {
     e.preventDefault();
+  }
+
+  handleFormRegisterLocal(e) {
+    e.preventDefault();
+    // @todo email and pwd check
+    const credentials = {
+      email: this.state.email,
+      password: this.state.password
+    };
+    this.loginLocal(credentials, true);
   }
 
   handleViewLogin() {
@@ -105,7 +137,7 @@ class LoginForm extends React.Component {
         <span className='logo'>
           <Logo alt='logo' />
         </span>
-        <button type='button' value='facebook' onClick={this.handleFormLoginFacebook}>Sign up with Facebook</button>
+        <button type='button' value='facebook' onClick={this.handleFormRegisterFacebook}>Sign up with Facebook</button>
         <span className='divider'>
           or
         </span>
@@ -121,7 +153,7 @@ class LoginForm extends React.Component {
           value={this.state.password}
           onChange={this.handleFormInputChange}
         />
-        <button type='button' value="submit" onClick={this.handleFormRegister}>Sign Up</button>
+        <button type='button' value="submit" onClick={this.handleFormRegisterLocal}>Sign Up</button>
         <span className='option-right' onClick={this.handleViewLogin}>Sign In</span>
       </form>
     );
@@ -167,14 +199,14 @@ class LoginForm extends React.Component {
   }
 }
 
-LoginForm.defaultProps = {
+Login.defaultProps = {
   user: {}
 };
 
-LoginForm.propTypes = {
+Login.propTypes = {
   api: PropTypes.object.isRequired,
   user: PropTypes.object,
   setUser: PropTypes.func.isRequired
 };
 
-export default LoginForm;
+export default Login;

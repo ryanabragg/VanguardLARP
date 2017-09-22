@@ -17,15 +17,13 @@ class Menu extends React.Component {
     this.links = routes.filter(route => route.slice(0, 6) === '/admin' && route.slice(route.length - 4, route.length) != '/:id');
 
     this.resetState = {
-      isMenuHidden: true,
-      showLoginForm: false
+      isMenuHidden: true
     };
 
     this.state = Object.assign({}, this.resetState);
 
     this.toggleCollapsedMenu = this.toggleCollapsedMenu.bind(this);
-    this.toggleLoginForm = this.toggleLoginForm.bind(this);
-    this.login = this.login.bind(this);
+    this.account = this.account.bind(this);
     this.logout = this.logout.bind(this);
   }
 
@@ -62,16 +60,12 @@ class Menu extends React.Component {
     });
   }
 
-  toggleLoginForm() {
-    this.setState((prevState, props) => {
-      let nextState = Object.assign({}, prevState);
-      nextState.showLoginForm = !prevState.showLoginForm;
-      return nextState;
-    });
-  }
-
-  login(name, pass) {
-    this.props.api.login(name, pass).then(user => this.props.setUser(user));
+  account() {
+    console.log(this.props.user);
+    if(this.props.user != {})
+      this.props.history.push('/account');
+    else
+      this.props.history.push('/login');
   }
 
   logout() {
@@ -109,20 +103,24 @@ class Menu extends React.Component {
               </div>
             );
           })}
-          {this.props.user.name
+          {this.props.user._id
           ? <div className='menu-item menu-right'>
-              {this.props.user.name}
-              <IconMoreVertical color='inherit' />
-              <div className={'menu-dropdown dropdown-right'}>
+              Account
+              <div className='menu-dropdown dropdown-right'>
+                <div className='menu-item'
+                  onClick={this.account}
+                >
+                  {this.props.user.name || 'Profile'}
+                </div>
                 <div className='menu-item'
                   onClick={this.logout}
                 >
-                  Log Out
+                  Sign Out
                 </div>
               </div>
             </div>
           : <div className='menu-item menu-right'>
-              <Link to='/login'>Log In</Link>
+              <Link to='/login'>Sign In</Link>
             </div>
           }
         </Navigation>

@@ -48,7 +48,7 @@ const Navigation = styled.nav`
   div.menu-item {
     position: relative;
     display: inline-block;
-    padding: 0 0.25em 0 0.25em;
+    padding: 0 10px;
     line-height: 50px;
     vertical-align: top;
   }
@@ -75,7 +75,7 @@ const Navigation = styled.nav`
     display: none;
     position: absolute;
     overflow: auto;
-    min-width: 200px;
+    min-width: 120px;
     color: ${props => {
       let background = Color(props.theme.colors.primary).grayscale();
       let base = Color(background.dark() ? 'white' : 'black');
@@ -89,6 +89,9 @@ const Navigation = styled.nav`
     float: right;
     right: 0;
     text-align: right;
+  }
+  div.menu-dropdown > .menu-item {
+    display: block;
   }
 
   @media (max-width: ${props => props.theme.breakpoints.s}px) {
