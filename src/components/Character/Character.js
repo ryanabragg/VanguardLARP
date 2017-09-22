@@ -8,6 +8,8 @@ import AbilityGroup from './styled/AbilityGroup';
 import SourceMarks from './styled/SourceMarks';
 import Crafting from './styled/Crafting';
 import Pools from './styled/Pools';
+import Domain from './styled/Domain';
+import AdvancedArts from './styled/AdvancedArts';
 
 // import the notifications component to access static methods (don't import styled version)
 import NotificationList from '../util/NotificationList';
@@ -227,7 +229,7 @@ class Character extends React.Component {
           : -1;
         }),
       domains: rules.filter(rule => rule.category == 'Domain'),
-      advancedArts: rules.filter(rule => rule.category == 'Advanced Arts'),
+      advancedArts: rules.filter(rule => rule.category == 'Advanced Art').sort(),
       pools: rules.filter(rule =>
         (rule.category == 'Pool' || rule.category == 'Pool Ability' ) &&
         !rule.race && !rule.culture
@@ -468,7 +470,18 @@ class Character extends React.Component {
       bodyMod,
       sourceMark
     } = this.parseRules();
+    const domainNames = domains.map(rule => rule.group)
+      .filter((rule, index, self) => self.indexOf(rule) == index)
+      .sort((a, b) => {
+        return a == 'Generic' ? -1
+        : b == 'Generic' ? 1
+        : a == 'Burn' ? 1
+        : b == 'Burn' ? -1
+        : a > b ? 1
+        : -1;
+      });
     let bodyTotal = (body + bodyMod.extra + bodyMod.perLevel * level) * (bodyMod.double ? 2 : 1);
+    console.log(advancedArts);
     return (
       <div data-character='container'>
         <Section>
@@ -500,6 +513,17 @@ class Character extends React.Component {
           />
         </Section>
         <Section>
+          <Crafting />
+        </Section>
+        <Section>
+          <AbilityGroup
+            label='Craft Skills'
+            abilities={crafts}
+            viewDescription={this.viewRule}
+            editCharacter={this.editCharacter}
+          />
+        </Section>
+        <Section>
           <AbilityGroup
             label='Weapon Skills'
             abilities={weapons}
@@ -520,15 +544,6 @@ class Character extends React.Component {
           />
         </Section>
         <Section>
-          <Crafting />
-          <AbilityGroup
-            label='Craft Skills'
-            abilities={crafts}
-            viewDescription={this.viewRule}
-            editCharacter={this.editCharacter}
-          />
-        </Section>
-        <Section>
           <Pools
             label='Combat Pools'
             abilities={pools}
@@ -536,6 +551,18 @@ class Character extends React.Component {
             editCharacter={this.editCharacter}
           />
         </Section>
+        {domainNames.map(domain => {
+          return (
+            <Section key={domain}>
+              <Domain
+                name={domain}
+                abilities={domains.filter(rule => rule.group == domain)}
+                viewDescription={this.viewRule}
+                editCharacter={this.editCharacter}
+              />
+            </Section>
+          );
+        })}
       </div>
     );
   }
