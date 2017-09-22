@@ -33,11 +33,11 @@ const StyledPools = styled(Pools)`
     width: 100%;
     padding: 0;
     margin: 5px 0 10px 0;
+    font-size: 0.9em;
   }
   div[data-character="pool-abilities"] > div {
     display: inline-block;
-    min-width: 100px;
-    max-width: 150px;
+    width: 90px;
     padding: 0;
     margin: 0 0 0 10px;
     font-size: 0.9em;

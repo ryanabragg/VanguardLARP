@@ -168,7 +168,7 @@ const values = {
   },
   breakpoints: {
     null: 0,
-    xs: 360,
+    xs: 320,
     s: 720,
     m: 840,
     l: 1280,

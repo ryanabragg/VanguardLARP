@@ -77,7 +77,6 @@ const StyledLogin = styled(Login)`
       return base.mix(background, alpha).hex();
     }};
   }
-
   .divider::before,
   .divider::after {
     content: "";
@@ -92,11 +91,9 @@ const StyledLogin = styled(Login)`
       return base.mix(background, alpha).hex();
     }};
   }
-
   .divider::before {
     left: -5%;
   }
-
   .divider::after {
     right: -5%;
   }

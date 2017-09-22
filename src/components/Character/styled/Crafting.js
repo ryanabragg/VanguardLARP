@@ -32,6 +32,7 @@ const StyledCrafting = styled(Crafting)`
     margin: 0 5px 0 0;
   }
   div {
+    font-size: 0.8em;
     display: inline-block;
     vertical-align: top;
   }
