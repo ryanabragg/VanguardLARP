@@ -563,6 +563,14 @@ class Character extends React.Component {
             </Section>
           );
         })}
+        <Section>
+          <AdvancedArts
+            label='Advanced Arts'
+            abilities={advancedArts}
+            viewDescription={this.viewRule}
+            editCharacter={this.editCharacter}
+          />
+        </Section>
       </div>
     );
   }
