@@ -26,36 +26,36 @@ describe('<Domain />', () => {
   it('renders a div with a label for the domain, labels per tier, and Ability per item in the abilities prop', () => {
     const view = spy(), update = spy();
     const list = [{
-      id: 42,
+      _id: 42,
       name: 'test',
       tier: 2
     }, {
-      id: 7,
+      _id: 7,
       name: 'lucky',
       tier: 1,
       display: 'checkbox',
       count: 11
     }, {
-      id: 0,
+      _id: 0,
       name: 'choice',
       tier: 1,
       display: 'tiers',
       count: 1
     }, {
-      id: 0,
+      _id: 0,
       name: 'angels',
       tier: 3,
       display: 'host',
       count: 1
     }, {
-      id: 0,
+      _id: 0,
       name: 'demons',
       tier: 3,
       display: 'legion',
       count: 1
     }];
-    const sortedList = list.sort((a, b) => a.name > b.name ? -1 : 1);
-    const tiers = list.map(ability => ability.tier).filter((tier, index, self) => index === self.indexOf(tier)).sort((a, b) => a - b);
+    const sortedList = list.sort((a, b) => a.name < b.name ? -1 : 1);
+    const tiers = list.map(ability => ability.tier).filter((tier, index, self) => index == self.indexOf(tier)).sort((a, b) => a - b);
     const wrapper = shallow(<Domain name='name' abilities={list} viewDescription={view} editCharacter={update}/>);
     expect(wrapper.find('div')).to.have.length(1 + tiers.length);
     expect(wrapper.find('div').at(0).childAt(0).type()).to.equal('label');
@@ -65,12 +65,12 @@ describe('<Domain />', () => {
     expect(wrapper.find('label').at(1).text()).to.equal(tiers[0].toString());
     expect(wrapper.find('label').at(2).text()).to.equal(tiers[1].toString());
     expect(wrapper.find('label').at(3).text()).to.equal(tiers[2].toString());
-    expect(wrapper.find(Ability).at(0).prop('name')).to.equal(sortedList.filter(ability => tiers[0] === ability.tier)[0].name);
+    expect(wrapper.find(Ability).at(0).prop('name')).to.equal(sortedList.filter(ability => tiers[0] == ability.tier)[0].name);
     expect(wrapper.find(Ability).at(0).prop('viewDescription')).to.equal(view);
     expect(wrapper.find(Ability).at(0).prop('editCharacter')).to.equal(update);
-    expect(wrapper.find(Ability).at(1).prop('name')).to.equal(sortedList.filter(ability => tiers[0] === ability.tier)[1].name);
-    expect(wrapper.find(Ability).at(2).prop('name')).to.equal(sortedList.filter(ability => tiers[1] === ability.tier)[0].name);
-    expect(wrapper.find(Ability).at(3).prop('name')).to.equal(sortedList.filter(ability => tiers[2] === ability.tier)[0].name);
-    expect(wrapper.find(Ability).at(4).prop('name')).to.equal(sortedList.filter(ability => tiers[2] === ability.tier)[1].name);
+    expect(wrapper.find(Ability).at(1).prop('name')).to.equal(sortedList.filter(ability => tiers[0] == ability.tier)[1].name);
+    expect(wrapper.find(Ability).at(2).prop('name')).to.equal(sortedList.filter(ability => tiers[1] == ability.tier)[0].name);
+    expect(wrapper.find(Ability).at(3).prop('name')).to.equal(sortedList.filter(ability => tiers[2] == ability.tier)[0].name);
+    expect(wrapper.find(Ability).at(4).prop('name')).to.equal(sortedList.filter(ability => tiers[2] == ability.tier)[1].name);
   });
 });

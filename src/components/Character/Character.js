@@ -229,7 +229,8 @@ class Character extends React.Component {
           : -1;
         }),
       domains: rules.filter(rule => rule.category == 'Domain'),
-      advancedArts: rules.filter(rule => rule.category == 'Advanced Art').sort(),
+      advancedArts: rules.filter(rule => rule.category == 'Advanced Art')
+        .sort((a, b) => a.name > b.name ? 1 : -1),
       pools: rules.filter(rule =>
         (rule.category == 'Pool' || rule.category == 'Pool Ability' ) &&
         !rule.race && !rule.culture

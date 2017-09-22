@@ -11,6 +11,7 @@ class Pools extends React.Component {
   render() {
     const rest = Object.assign({}, this.props);
     delete rest.label;
+    delete rest.source;
     delete rest.abilities;
     delete rest.viewDescription;
     delete rest.editCharacter;
