@@ -25,7 +25,7 @@ describe('<Field />', () => {
 
   it('renders an input', () => {
     const edit = spy();
-    const wrapper = shallow(<Field name='test' />);
+    const wrapper = shallow(<Field name='test' value='try'/>);
     expect(wrapper.find('input')).to.have.length(1);
     expect(wrapper.find('input').prop('type')).to.equal('text');
     expect(wrapper.find('input').prop('name')).to.equal('test');
@@ -33,6 +33,7 @@ describe('<Field />', () => {
       type: 'number'
     });
     expect(wrapper.find('input').prop('type')).to.equal('number');
+    expect(wrapper.find('input').prop('value')).to.equal('try');
     expect(wrapper.find('input').prop('readOnly')).to.equal(true);
     wrapper.setProps({
       editCharacter: edit
@@ -47,15 +48,39 @@ describe('<Field />', () => {
       label: 'blah'
     });
     expect(wrapper.find('label')).to.have.length(1);
-    expect(wrapper.childAt(0).type()).to.equal('input');
-    expect(wrapper.childAt(1).type()).to.equal('label');
+    expect(wrapper.find('label').text()).to.equal('blah');
+    expect(wrapper.find('div').childAt(0).type()).to.equal('input');
+    expect(wrapper.find('div').childAt(1).type()).to.equal('label');
     wrapper.setProps({
       labelPosition: -1
     });
-    expect(wrapper.childAt(0).type()).to.equal('label');
-    expect(wrapper.childAt(1).type()).to.equal('input');
+    expect(wrapper.find('div').childAt(0).type()).to.equal('label');
+    expect(wrapper.find('div').childAt(1).type()).to.equal('input');
   });
 
-  it('renders a select instead of an input if type is select');
+  it('executes the editCharacter prop when the value is changed', () => {
+    const edit = spy();
+    const wrapper = shallow(<Field name='test' editCharacter={edit}/>);
+    wrapper.find('input').simulate('change', {target: {name: 'try', value: 'blah'}, preventDefault: () => {}});
+    expect(edit.callCount).to.equal(1);
+    expect(edit.firstCall.args[0]).to.deep.equal({type: 'TRY', data: 'blah'});
+  });
+
+  it('renders a select instead of an input if type is select', () => {
+    const wrapper = shallow(<Field name='test' />);
+    expect(wrapper.find('input')).to.have.length(1);
+    expect(wrapper.find('select')).to.have.length(0);
+    wrapper.setProps({
+      type: 'select'
+    });
+    expect(wrapper.find('input')).to.have.length(0);
+    expect(wrapper.find('select')).to.have.length(1);
+    expect(wrapper.find('option')).to.have.length(0);
+    wrapper.setProps({
+      options: ['one', 'two']
+    });
+    expect(wrapper.find('option')).to.have.length(2);
+  });
+
   it('renders a checkbox instead of an input if type is checkbox');
 });
