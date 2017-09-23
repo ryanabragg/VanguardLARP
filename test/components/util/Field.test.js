@@ -75,11 +75,18 @@ describe('<Field />', () => {
     });
     expect(wrapper.find('input')).to.have.length(0);
     expect(wrapper.find('select')).to.have.length(1);
-    expect(wrapper.find('option')).to.have.length(0);
+    expect(wrapper.find('option')).to.have.length(1);
     wrapper.setProps({
       options: ['one', 'two']
     });
-    expect(wrapper.find('option')).to.have.length(2);
+    expect(wrapper.find('option')).to.have.length(3);
+    expect(wrapper.find('option').at(0).text()).to.equal('');
+    expect(wrapper.find('option').at(1).text()).to.equal('one');
+    expect(wrapper.find('option').at(2).text()).to.equal('two');
+    wrapper.setProps({
+      options: ['one', 'two', 'one', 'one', 'two']
+    });
+    expect(wrapper.find('option')).to.have.length(3);
   });
 
   it('renders a checkbox instead of an input if type is checkbox');

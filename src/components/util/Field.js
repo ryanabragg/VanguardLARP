@@ -33,6 +33,8 @@ class Field extends React.Component {
   }
 
   renderSelect() {
+    const options = [''].concat(this.props.options)
+      .filter((rule, index, self) => self.indexOf(rule) == index);
     return (
       <select
         name={this.props.name}
@@ -40,7 +42,7 @@ class Field extends React.Component {
         onChange={this.handleInputChange}
         readOnly={typeof this.props.editCharacter != 'function'}
       >
-        {this.props.options.map(option => <option key={option} value={option}>{option}</option>)}
+        {options.map(option => <option key={option} value={option}>{option}</option>)}
       </select>
     );
   }

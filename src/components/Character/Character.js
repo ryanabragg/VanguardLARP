@@ -314,8 +314,14 @@ class Character extends React.Component {
         nextState.character.lives = change.lives;
         break;
       case 'RACE':
+        nextState.character.race.name = action.data;
+        if(prevState.character.race.name != action.data)
+          nextState.character.race.culture = '';
+        break;
       case 'CULTURE':
-        change = this.stateRaceChange(prevState, action);
+        nextState.character.race.culture = action.data;
+        let culture = prevState.rules.filter(rule => rule.category == 'Culture' && rule.name == action.data);
+        nextState.character.race.name = culture ? culture[0].group : '';
         break;
       case 'SOURCE MARK':
         nextState.character.sourceMarks = action.data; break;
@@ -374,17 +380,42 @@ class Character extends React.Component {
   }
 
   stateRaceChange(prevState, action) {
-    console.log('@todo');
-    return {
-      build: {
-        total: 0,
-        spent: 0,
-        nonDomain: 0
-      },
-      race: '',
-      culture: '',
-      skills: []
+    let edit = [];
+    switch(action.type) {
+    case 'RACE':
+      edit = prevState.character.lives.map(stone => {
+        if(stone.color != color ||
+          stone.disabled == 0 ||
+          stone.count == 0
+        )
+          return stone;
+        return {
+          color: stone.color,
+          count: stone.count,
+          disabled: stone.disabled - 1
+        };
+      });
+      break;
+    case 'DISABLE LIFE':
+      edit = prevState.character.lives.map(stone => {
+        if(stone.color != color ||
+          stone.disabled == stone.count ||
+          stone.count == 0
+        )
+          return stone;
+        return {
+          color: stone.color,
+          count: stone.count,
+          disabled: stone.disabled + 1
+        };
+      });
+      break;
+    default:
+      edit = prevState.character.slice();
     }
+    return {
+      lives: edit
+    };
   }
 
   stateSkillChange(prevState, action) {
@@ -553,6 +584,24 @@ class Character extends React.Component {
         <Box label='Recoveries'>
           <Stones
             stones={recoveries}
+          />
+        </Box>
+        <Box color label='Race' factor={0.5}>
+          <Field
+            name='race'
+            value={race.name}
+            type='select'
+            options={races.map(r => r.name)}
+            editCharacter={this.editCharacter}
+          />
+        </Box>
+        <Box color label='Culture' factor={0.5}>
+          <Field
+            name='culture'
+            value={race.culture}
+            type='select'
+            options={cultures.map(c => c.name)}
+            editCharacter={this.editCharacter}
           />
         </Box>
         <Box label='Crafting'>
