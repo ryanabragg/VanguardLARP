@@ -23,19 +23,15 @@ function copyProps(src, target) {
 copyProps(window, global);
 
 describe('<Pools />', () => {
-  it('renders a div with a label and an Pool component for each object in the abilities prop with a Pool category property', () => {
+  it('renders a div with a Pool component for each object in the abilities prop with a Pool category property', () => {
     const view = spy(), update = spy();
     let list = [{
       _id: 42,
       name: 'test',
       category: 'Pool'
     }];
-    const wrapper = shallow(<Pools label={1} abilities={list} viewDescription={view} editCharacter={update}/>);
+    const wrapper = shallow(<Pools abilities={list} viewDescription={view} editCharacter={update}/>);
     expect(wrapper.find('div')).to.have.length(1);
-    expect(wrapper.find('div').childAt(0).type()).to.equal('label');
-    expect(wrapper.find('label')).to.have.length(1);
-    expect(wrapper.find('label').text()).to.equal('1');
-    expect(wrapper.find('div').childAt(1).type()).to.equal(Pool);
     expect(wrapper.find(Pool)).to.have.length(1);
     list = list.concat([{
       _id: 7,
@@ -56,11 +52,7 @@ describe('<Pools />', () => {
       count: 1,
       category: 'not a pool nor pool ability'
     }]);
-    wrapper.setProps({
-      label: 'testing',
-      abilities: list
-    });
-    expect(wrapper.find('label').text()).to.equal('testing');
+    wrapper.setProps({abilities: list});
     expect(wrapper.find(Pool)).to.have.length(2);
   });
 
@@ -89,7 +81,7 @@ describe('<Pools />', () => {
       count: 1,
       category: 'not a pool nor pool ability'
     }];
-    const wrapper = shallow(<Pools label={1} abilities={list} viewDescription={view} editCharacter={update}/>);
+    const wrapper = shallow(<Pools abilities={list} viewDescription={view} editCharacter={update}/>);
     expect(wrapper.find(Pool)).to.have.length(2);
     expect(wrapper.find(Pool).at(0).prop('id')).to.equal(42);
     expect(wrapper.find(Pool).at(0).prop('name')).to.equal('test');

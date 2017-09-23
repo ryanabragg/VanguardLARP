@@ -23,7 +23,7 @@ function copyProps(src, target) {
 copyProps(window, global);
 
 describe('<Domain />', () => {
-  it('renders a div with a label for the domain, labels per tier, and Ability per item in the abilities prop', () => {
+  it('renders a div with labels per tier and Ability per item in the abilities prop', () => {
     const view = spy(), update = spy();
     const list = [{
       _id: 42,
@@ -58,13 +58,11 @@ describe('<Domain />', () => {
     const tiers = list.map(ability => ability.tier).filter((tier, index, self) => index == self.indexOf(tier)).sort((a, b) => a - b);
     const wrapper = shallow(<Domain name='name' abilities={list} viewDescription={view} editCharacter={update}/>);
     expect(wrapper.find('div')).to.have.length(1 + tiers.length);
-    expect(wrapper.find('div').at(0).childAt(0).type()).to.equal('label');
-    expect(wrapper.find('label')).to.have.length(1 + tiers.length);
+    expect(wrapper.find('label')).to.have.length(tiers.length);
     expect(wrapper.find(Ability)).to.have.length(5);
-    expect(wrapper.find('label').at(0).text()).to.equal('name');
-    expect(wrapper.find('label').at(1).text()).to.equal(tiers[0].toString());
-    expect(wrapper.find('label').at(2).text()).to.equal(tiers[1].toString());
-    expect(wrapper.find('label').at(3).text()).to.equal(tiers[2].toString());
+    expect(wrapper.find('label').at(0).text()).to.equal(tiers[0].toString());
+    expect(wrapper.find('label').at(1).text()).to.equal(tiers[1].toString());
+    expect(wrapper.find('label').at(2).text()).to.equal(tiers[2].toString());
     expect(wrapper.find(Ability).at(0).prop('name')).to.equal(sortedList.filter(ability => tiers[0] == ability.tier)[0].name);
     expect(wrapper.find(Ability).at(0).prop('viewDescription')).to.equal(view);
     expect(wrapper.find(Ability).at(0).prop('editCharacter')).to.equal(update);

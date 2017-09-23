@@ -20,11 +20,10 @@ class Domain extends React.Component {
       .filter((tier, index, self) => index === self.indexOf(tier))
       .sort((a, b) => a - b);
     return (
-      <div {...rest} data-character='domain'>
-        <label className='floating'>{this.props.name}</label>
+      <div {...rest}>
         {tiers.map(tier => {
           return (
-            <div key={tier}>
+            <div className='tier' key={tier}>
               <label className='tier'>{tier}</label>
               {this.props.abilities.filter(ability => tier === ability.tier).map(ability => {
                 return (

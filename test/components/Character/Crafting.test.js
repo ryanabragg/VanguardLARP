@@ -23,14 +23,8 @@ function copyProps(src, target) {
 copyProps(window, global);
 
 describe('<Crafting />', () => {
-  it('renders a div with a label and three divs', () => {
-    const wrapper = shallow(<Crafting />);
-    expect(wrapper.find('div')).to.have.length(4);
-    expect(wrapper.find('div').at(0).prop('data-character')).to.equal('crafting');
-    expect(wrapper.find('label')).to.have.length(1);
-  });
 
-  it('the first child div has a list of craft materials, wrapped in spans', () => {
+  it('has a list of craft materials, wrapped in spans', () => {
     const wrapper = shallow(<Crafting />);
     expect(wrapper.find('div').at(1).find('span')).to.have.length(6);
     expect(wrapper.find('div').at(1).find('span').at(0).text()).to.equal('Copper');
@@ -41,7 +35,7 @@ describe('<Crafting />', () => {
     expect(wrapper.find('div').at(1).find('span').at(5).text()).to.equal('Adamite');
   });
 
-  it('the second child div has a list of craft tiers for the materials, wrapped in spans', () => {
+  it('has a list of craft tiers for the materials, wrapped in spans', () => {
     const wrapper = shallow(<Crafting />);
     expect(wrapper.find('div').at(2).find('span')).to.have.length(6);
     expect(wrapper.find('div').at(2).find('span').at(0).text()).to.equal('Apprentice');
@@ -52,7 +46,7 @@ describe('<Crafting />', () => {
     expect(wrapper.find('div').at(2).find('span').at(5).text()).to.equal('Master');
   });
 
-  it('the third child div has a list of craft tier bag stones for each tier, wrapped in spans', () => {
+  it('has a list of craft tier bag stones for each tier, wrapped in spans', () => {
     const wrapper = shallow(<Crafting />);
     expect(wrapper.find('div').at(3).find('span')).to.have.length(6);
     expect(wrapper.find('div').at(3).find('span').at(0).find(Stone)).to.have.length(5);

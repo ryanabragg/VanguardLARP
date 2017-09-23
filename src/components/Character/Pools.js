@@ -10,7 +10,6 @@ class Pools extends React.Component {
 
   render() {
     const rest = Object.assign({}, this.props);
-    delete rest.label;
     delete rest.source;
     delete rest.abilities;
     delete rest.viewDescription;
@@ -18,8 +17,7 @@ class Pools extends React.Component {
     const pools = this.props.abilities.filter(rule => rule.category == 'Pool');
     const abilities = this.props.abilities.filter(rule => rule.category == 'Pool Ability');
     return (
-      <div {...rest} data-character='pool-group'>
-        <label className='floating'>{this.props.label}</label>
+      <div {...rest}>
         {pools.map(pool => {
           return (
             <Pool
@@ -45,7 +43,6 @@ Pool.defaultProps = {
 };
 
 Pool.propTypes = {
-  label: PropTypes.string.isRequired,
   source: PropTypes.string,
   abilities: PropTypes.array.isRequired,
   viewDescription: PropTypes.func.isRequired,

@@ -75,8 +75,7 @@ class SourceMarks extends React.Component {
         };
       }).concat(display.filter(mark => basicElements.indexOf(mark.element) == -1));
     return (
-      <div {...rest} data-character='source-marks'>
-        <label className='floating'>Source Mark Elements</label>
+      <div {...rest}>
         <ul>
           {display.map((mark, index) => (
             <li key={mark.element || index} className={mark.source}>

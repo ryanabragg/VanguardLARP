@@ -22,11 +22,10 @@ function copyProps(src, target) {
 copyProps(window, global);
 
 describe('<SourceMarks />', () => {
-  it('renders an div with a label and unordered list', () => {
+  it('renders an div with an unordered list', () => {
     const edit = spy();
     const wrapper = shallow(<SourceMarks editCharacter={edit} />);
     expect(wrapper.find('div')).to.have.length(1);
-    expect(wrapper.find('label')).to.have.length(1);
     expect(wrapper.find('ul')).to.have.length(1);
   });
 
@@ -34,7 +33,7 @@ describe('<SourceMarks />', () => {
     const edit = spy();
     const wrapper = mount(<SourceMarks editCharacter={edit} />);
     expect(wrapper.find('div')).to.have.length(1);
-    expect(wrapper.find('label')).to.have.length(1);
+    expect(wrapper.find('label')).to.have.length(0);
     expect(wrapper.find('input')).to.have.length(0);
     expect(wrapper.find('button')).to.have.length(0);
     wrapper.setProps({
@@ -43,14 +42,14 @@ describe('<SourceMarks />', () => {
     });
     expect(wrapper.find('div')).to.have.length(2);
     expect(wrapper.find('div').find('[className="customize"]')).to.have.length(1);
-    expect(wrapper.find('label')).to.have.length(2);
+    expect(wrapper.find('label')).to.have.length(1);
     expect(wrapper.find('input')).to.have.length(1);
     expect(wrapper.find('button')).to.have.length(1);
     wrapper.setProps({
       known: ['test']
     });
     expect(wrapper.find('div')).to.have.length(1);
-    expect(wrapper.find('label')).to.have.length(1);
+    expect(wrapper.find('label')).to.have.length(0);
     expect(wrapper.find('input')).to.have.length(0);
     expect(wrapper.find('button')).to.have.length(0);
   });

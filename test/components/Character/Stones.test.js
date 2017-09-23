@@ -23,13 +23,6 @@ function copyProps(src, target) {
 copyProps(window, global);
 
 describe('<Stones />', () => {
-  it('renders a div with the label prop as prop data-character', () => {
-    const wrapper = shallow(<Stones stones={1}/>);
-    expect(wrapper.find('div')).to.have.length(1);
-    expect(wrapper.find('div').prop('data-character')).to.equal('stones');
-    wrapper.setProps({label: 'test'});
-    expect(wrapper.find('div').prop('data-character')).to.equal('test');
-  });
 
   it('renders a Stone component stone prop times', () => {
     const wrapper = shallow(<Stones stones={3}/>);

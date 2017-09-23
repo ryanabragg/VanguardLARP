@@ -10,13 +10,11 @@ class AbilityGroup extends React.Component {
 
   render() {
     const rest = Object.assign({}, this.props);
-    delete rest.label;
     delete rest.abilities;
     delete rest.viewDescription;
     delete rest.editCharacter;
     return (
-      <div {...rest} data-character='ability-group'>
-        <label className='floating'>{this.props.label}</label>
+      <div {...rest}>
         {this.props.abilities.map(ability => {
           return (
             <Ability
@@ -38,10 +36,6 @@ class AbilityGroup extends React.Component {
 //AbilityGroup.defaultProps = {};
 
 AbilityGroup.propTypes = {
-  label: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number
-  ]).isRequired,
   abilities: PropTypes.array.isRequired,
   viewDescription: PropTypes.func.isRequired,
   editCharacter: PropTypes.func.isRequired

@@ -6,8 +6,7 @@ import Stone from './Stone';
 
 const Crafting = (props) => {
   return (
-    <div {...props} data-character='crafting'>
-      <label className='floating'>Crafting</label>
+    <div {...props}>
       <div>
         <span>Copper</span>
         <span>Silver</span>

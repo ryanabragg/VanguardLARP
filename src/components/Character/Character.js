@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Section from './styled/Section';
-import Bio from './styled/Bio';
+import Box from './styled/Box';
+
+import Field from '../util/styled/Field';
+
 import Stones from './styled/Stones';
 import AbilityGroup from './styled/AbilityGroup';
 import SourceMarks from './styled/SourceMarks';
@@ -484,94 +486,135 @@ class Character extends React.Component {
     let bodyTotal = (body + bodyMod.extra + bodyMod.perLevel * level) * (bodyMod.double ? 2 : 1);
     console.log(advancedArts);
     return (
-      <div data-character='container'>
-        <Section>
-          <Bio
-            player={player.name}
-            playerBuild={player.build}
-            name={name}
-            race={race.name}
-            races={races.map(rule => rule.name)}
-            culture={race.culture}
-            cultures={cultures.map(rule => rule.name)}
-            build={build.total}
-            spent={build.spent}
-            level={level}
-            body={bodyTotal}
-            buffs={buffs}
-            inscriptions={inscriptions}
+      <div data-character='sheet'>
+        <Box label='Player'>
+          <Field
+            name='player name'
+            value={player.name}
+          />
+        </Box>
+        <Box color label='Character'>
+          <Field
+            name='name'
+            value={name}
             editCharacter={this.editCharacter}
           />
+        </Box>
+        <Box color label='Player Build' factor={1/3}>
+          <Field
+            name='player build'
+            value={player.build}
+            editCharacter={this.editCharacter}
+          />
+        </Box>
+        <Box label='Build Total' factor={1/3}>
+          <Field
+            name='total build'
+            value={build.total}
+          />
+        </Box>
+        <Box label='Build Spent' factor={1/3}>
+          <Field
+            name='spent build'
+            value={build.spent}
+          />
+        </Box>
+        <Box label='Level' factor={0.25}>
+          <Field
+            name='level'
+            value={level}
+          />
+        </Box>
+        <Box label='Body' factor={0.25}>
+          <Field
+            name='body'
+            value={bodyTotal}
+          />
+        </Box>
+        <Box label='Buffs' factor={0.25}>
+          <Field
+            name='buffs'
+            value={buffs}
+          />
+        </Box>
+        <Box label='Tattoos' factor={0.25}>
+          <Field
+            name='inscriptions'
+            value={inscriptions}
+          />
+        </Box>
+        <Box color label='Ressurection Bag'>
           <Stones
-            label='Ressurection Bag'
             stones={lives}
             type='life'
             stoneClick={this.editCharacter}
           />
+        </Box>
+        <Box label='Recoveries'>
           <Stones
-            label='Recoveries' 
             stones={recoveries}
           />
-        </Section>
-        <Section>
+        </Box>
+        <Box label='Crafting'>
           <Crafting />
-        </Section>
-        <Section>
+        </Box>
+        <Box label='Craft Skills'>
           <AbilityGroup
-            label='Craft Skills'
             abilities={crafts}
             viewDescription={this.viewRule}
             editCharacter={this.editCharacter}
           />
-        </Section>
-        <Section>
+        </Box>
+        <Box color label='Weapon Skills'>
           <AbilityGroup
-            label='Weapon Skills'
             abilities={weapons}
             viewDescription={this.viewRule}
             editCharacter={this.editCharacter}
           />
+        </Box>
+        <Box color label='Aptitudes'>
           <AbilityGroup
-            label='Aptitudes'
             abilities={aptitudes}
             viewDescription={this.viewRule}
             editCharacter={this.editCharacter}
           />
+        </Box>
+        <Box color={sourceMark.limit}
+          label='Source Mark Elements'
+        >
           <SourceMarks
             limit={sourceMark.limit}
             mastery={sourceMark.mastery}
             known={sourceMarks}
             editCharacter={this.editCharacter}
           />
-        </Section>
-        <Section>
+        </Box>
+        <Box color label='Combat Pools'>
           <Pools
-            label='Combat Pools'
             abilities={pools}
             viewDescription={this.viewRule}
             editCharacter={this.editCharacter}
           />
-        </Section>
+        </Box>
         {domainNames.map(domain => {
           return (
-            <Section key={domain}>
+            <Box color label={domain} key={domain}>
               <Domain
                 name={domain}
                 abilities={domains.filter(rule => rule.group == domain)}
                 viewDescription={this.viewRule}
                 editCharacter={this.editCharacter}
               />
-            </Section>
+            </Box>
           );
         })}
-        <Section>
+        <Box color label='Advanced Arts'>
           <AdvancedArts
-            label='Advanced Arts'
             abilities={advancedArts}
             viewDescription={this.viewRule}
             editCharacter={this.editCharacter}
           />
-        </Section>
+        </Box>
       </div>
     );
   }

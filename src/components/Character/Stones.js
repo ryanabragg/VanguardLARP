@@ -10,12 +10,11 @@ class Stones extends React.Component {
 
   render() {
     const rest = Object.assign({}, this.props);
-    delete rest.label;
     delete rest.stones;
     delete rest.type;
     delete rest.stoneClick;
     let stones = [];
-    if(typeof this.props.stones === 'number')
+    if(typeof this.props.stones == 'number')
       stones = new Array(this.props.stones).fill({color: undefined, disabled: false});
     else
       stones = [].concat.apply([], this.props.stones.map(stone => {
@@ -24,20 +23,24 @@ class Stones extends React.Component {
         });
       }));
     return (
-      <div data-character={this.props.label.toLowerCase().replace(/\s/, '-') || 'stones'} {...rest}>
-        {this.props.label && <label className='floating'>{this.props.label}</label>}
-        {stones.map((stone, index) => <Stone key={index} color={stone.color} disabled={stone.disabled} type={this.props.type} stoneClick={this.props.stoneClick} />)}
+      <div {...rest}>
+        {stones.map((stone, index) => (
+          <Stone
+            key={index}
+            color={stone.color}
+            disabled={stone.disabled}
+            type={this.props.type}
+            stoneClick={this.props.stoneClick}
+          />
+        ))}
       </div>
     );
   }
 }
 
-Stones.defaultProps = {
-  label: ''
-};
+//Stones.defaultProps = {};
 
 Stones.propTypes = {
-  label: PropTypes.string,
   stones: PropTypes.oneOfType([
     PropTypes.arrayOf(
       PropTypes.shape({
