@@ -39,7 +39,10 @@ const Rule = (props) => (
 );
 
 Rule.propTypes = {
-  id: PropTypes.string.isRequired,
+  id: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number
+  ]).isRequired,
   name: PropTypes.string.isRequired,
   category: PropTypes.string.isRequired,
   group: PropTypes.string,

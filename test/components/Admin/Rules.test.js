@@ -4,6 +4,8 @@ import { spy } from 'sinon';
 import { mount } from 'enzyme';
 import { JSDOM } from 'jsdom';
 
+import api from '../../../src/util/api';
+
 import Rules from '../../../src/components/Admin/Rules';
 
 const window = (new JSDOM('<!doctype html><html><body></body></html>')).window;
@@ -22,12 +24,6 @@ function copyProps(src, target) {
 copyProps(window, global);
 
 describe('<Rules />', () => {
-  it('calls componentDidMount', () => {
-    spy(Rules.prototype, 'componentDidMount');
-    expect(Rules.prototype.componentDidMount.calledOnce).to.be.false;
-    const wrapper = mount(<Rules />);
-    //expect(Rules.prototype.componentDidMount.calledOnce).to.be.true;
-  });
 
   it('loads rules data after mounting');
   it('lists the rules');

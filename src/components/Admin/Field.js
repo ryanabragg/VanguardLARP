@@ -13,7 +13,10 @@ const Field = (props) => (
 );
 
 Field.propTypes = {
-  id: PropTypes.string,
+  id: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number
+  ]),
   name: PropTypes.string.isRequired,
   text: PropTypes.string,
   onClick: PropTypes.func

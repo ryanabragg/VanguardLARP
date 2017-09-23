@@ -5,11 +5,13 @@ import { mount, shallow } from 'enzyme';
 import { JSDOM } from 'jsdom';
 import { ThemeProvider } from 'styled-components';
 
+import api from '../../../src/util/api';
+
 import theme from '../../../src/components/theme';
 
-import Box from '../../../src/components/Character/styled/Box';
-
 import Character from '../../../src/components/Character/Character';
+
+import Box from '../../../src/components/Character/styled/Box';
 import Stones from '../../../src/components/Character/styled/Stones';
 import AbilityGroup from '../../../src/components/Character/styled/AbilityGroup';
 import SourceMarks from '../../../src/components/Character/styled/SourceMarks';
@@ -31,12 +33,6 @@ function copyProps(src, target) {
 copyProps(window, global);
 
 describe('<Character />', () => {
-  it('calls componentDidMount', () => {
-    spy(Character.prototype, 'componentDidMount');
-    expect(Character.prototype.componentDidMount.calledOnce).to.be.false;
-    const wrapper = mount(<ThemeProvider theme={theme}><Character /></ThemeProvider>); // eslint-disable-line no-unused-vars
-    expect(Character.prototype.componentDidMount.calledOnce).to.be.true;
-  });
 
   describe('Children', () => {
     it('contains a bio components'/*, () => {
@@ -57,7 +53,7 @@ describe('<Character />', () => {
     }*/);
 
     it('contains a styled Stones ressurection bag component', () => {
-      const wrapper = shallow(<Character />);
+      const wrapper = shallow(<Character api={api} />);
       expect(wrapper.find(Box).find({label: 'Ressurection Bag'}).find(Stones)).to.have.length(1);
       expect(wrapper.find(Box).find({label: 'Ressurection Bag'}).find(Stones).prop('stones')).to.deep.equal([
         { color: 'blue', count: 1, disabled: 0 },
@@ -69,7 +65,7 @@ describe('<Character />', () => {
     });
 
     it('contains a styled Stones recoveries component', () => {
-      const wrapper = shallow(<Character />);
+      const wrapper = shallow(<Character api={api} />);
       expect(wrapper.find(Box).find({label: 'Recoveries'}).find(Stones)).to.have.length(1);
       expect(wrapper.find(Box).find({label: 'Recoveries'}).find(Stones).prop('stones')).to.equal(6);
       expect(wrapper.find(Box).find({label: 'Recoveries'}).find(Stones).prop('stoneClick')).to.equal(undefined);
@@ -78,30 +74,30 @@ describe('<Character />', () => {
     it('contains a styled racial skills component');
 
     it('contains a styled weapon skills component', () => {
-      const wrapper = shallow(<Character />);
+      const wrapper = shallow(<Character api={api} />);
       expect(wrapper.find(Box).find({label: 'Weapon Skills'}).find(AbilityGroup)).to.have.length(1);
       //@todo: check props
     });
 
     it('contains a styled aptitude skills component', () => {
-      const wrapper = shallow(<Character />);
+      const wrapper = shallow(<Character api={api} />);
       expect(wrapper.find(Box).find({label: 'Aptitudes'}).find(AbilityGroup)).to.have.length(1);
       //@todo: check props
     });
 
     it('contains a styled source mark list component', () => {
-      const wrapper = shallow(<Character />);
+      const wrapper = shallow(<Character api={api} />);
       expect(wrapper.find(Box).find({label: 'Source Mark Elements'}).find(SourceMarks)).to.have.length(1);
       //@todo: check props
     });
 
     it('contains a styled crafting info component', () => {
-      const wrapper = shallow(<Character />);
+      const wrapper = shallow(<Character api={api} />);
       expect(wrapper.find(Box).find(Crafting)).to.have.length(1);
     });
 
     it('contains a styled crafting skills component', () => {
-      const wrapper = shallow(<Character />);
+      const wrapper = shallow(<Character api={api} />);
       expect(wrapper.find(Box).find({label: 'Craft Skills'}).find(AbilityGroup)).to.have.length(1);
       //@todo: check props
     });
