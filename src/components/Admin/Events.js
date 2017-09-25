@@ -227,7 +227,6 @@ class Events extends React.Component {
     this.props.api.service('events').remove(
       id,
       (error, deleted) => {
-        console.log(error);
         if(error)
           NotificationList.alert(error.name, 'Delete Error');
         else {

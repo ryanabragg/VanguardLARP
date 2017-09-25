@@ -61,7 +61,6 @@ class Menu extends React.Component {
   }
 
   account() {
-    console.log(this.props.user);
     if(this.props.user != {})
       this.props.history.push('/account');
     else
