@@ -6,9 +6,10 @@ import Box from './styled/Box';
 import Field from '../util/styled/Field';
 
 import Stones from './styled/Stones';
-import AbilityGroup from './styled/AbilityGroup';
 import SourceMarks from './styled/SourceMarks';
 import Crafting from './styled/Crafting';
+import AbilityGroup from './styled/AbilityGroup';
+import Racials from './styled/Racials';
 import Pools from './styled/Pools';
 import Domain from './styled/Domain';
 import AdvancedArts from './styled/AdvancedArts';
@@ -237,8 +238,8 @@ class Character extends React.Component {
         (rule.category == 'Pool' || rule.category == 'Pool Ability' ) &&
         !rule.race && !rule.culture
       ),
-      racial: rules.filter(rule => rule.race == race.name && rule.race != ''),
-      cultural: rules.filter(rule => rule.culture == race.culture && rule.culture != ''),
+      racials: rules.filter(rule => rule.race == race.name && rule.race != '' && !rule.culture && rule.category != 'Culture'),
+      culturals: rules.filter(rule => rule.culture == race.culture && rule.culture != ''),
       bodyMod: {
         extra: granted.reduce((total, rule) => {
           let count = rule.grants.split(', ')
@@ -290,8 +291,6 @@ class Character extends React.Component {
   loadCharacter() {}
 
   editCharacter(action) {
-    console.log(this.state);
-    console.log(action);
     this.setState((prevState, props) => {
       let nextState = Object.assign({}, prevState);
       let change = {};
@@ -311,17 +310,12 @@ class Character extends React.Component {
       case 'ENABLE LIFE':
       case 'DISABLE LIFE':
         change = this.stateLivesChange(prevState, action);
-        nextState.character.lives = change.lives;
+        nextState.character.lives = change;
         break;
       case 'RACE':
-        nextState.character.race.name = action.data;
-        if(prevState.character.race.name != action.data)
-          nextState.character.race.culture = '';
-        break;
       case 'CULTURE':
-        nextState.character.race.culture = action.data;
-        let culture = prevState.rules.filter(rule => rule.category == 'Culture' && rule.name == action.data);
-        nextState.character.race.name = culture ? culture[0].group : '';
+        change = this.stateRaceChange(prevState, action);
+        nextState.character.race = change;
         break;
       case 'SOURCE MARK':
         nextState.character.sourceMarks = action.data; break;
@@ -335,7 +329,7 @@ class Character extends React.Component {
       }
       return nextState;
     }, () => {
-      console.log(this.state);
+      
     });
   }
 
@@ -372,50 +366,35 @@ class Character extends React.Component {
       });
       break;
     default:
-      edit = prevState.character.slice();
+      edit = prevState.character.lives.slice();
     }
-    return {
-      lives: edit
-    };
+    return edit;
   }
 
   stateRaceChange(prevState, action) {
-    let edit = [];
+    //@todo: race/culture change should affect build and skills
+    let edit = {};
     switch(action.type) {
     case 'RACE':
-      edit = prevState.character.lives.map(stone => {
-        if(stone.color != color ||
-          stone.disabled == 0 ||
-          stone.count == 0
-        )
-          return stone;
-        return {
-          color: stone.color,
-          count: stone.count,
-          disabled: stone.disabled - 1
-        };
-      });
+      edit.name = action.data;
+      if(prevState.character.race.name != action.data)
+        edit.culture = '';
+      else
+        edit.culture = prevState.character.race.culture.slice();
       break;
-    case 'DISABLE LIFE':
-      edit = prevState.character.lives.map(stone => {
-        if(stone.color != color ||
-          stone.disabled == stone.count ||
-          stone.count == 0
-        )
-          return stone;
-        return {
-          color: stone.color,
-          count: stone.count,
-          disabled: stone.disabled + 1
-        };
-      });
+    case 'CULTURE':
+      edit.culture = action.data;
+      if(action.data)
+        edit.name = prevState.rules.filter(rule => {
+          return rule.category == 'Culture' && rule.name == action.data;
+        })[0].race;
+      else
+        edit.name = prevState.character.race.name;
       break;
     default:
-      edit = prevState.character.slice();
+      edit = Object.assign({}, prevState.character.race);
     }
-    return {
-      lives: edit
-    };
+    return edit;
   }
 
   stateSkillChange(prevState, action) {
@@ -423,18 +402,37 @@ class Character extends React.Component {
     if(!id || count < 0)
       return { build: prevState.character.build, skills: prevState.character.skills };
 
+    let { total, spent, nonDomain } = prevState.character.build;
+
     let rule = prevState.rules.filter(rule => rule._id == id);
     if(!rule.length || (rule[0].race && rule[0].race != prevState.character.race.name))
       return { build: prevState.character.build, skills: prevState.character.skills };
 
-    let skills = prevState.character.skills.slice();
-
-    let { total, spent, nonDomain } = prevState.character.build;
     let cost = source == 'build' ? rule[0].build : 0;
 
+    let skills = prevState.character.skills.slice();
     let index = skills.findIndex(skill => skill.id == id && skill.source == source);
 
-    if(index == -1)
+    let choice = {
+      limit: rule[0].max,
+      known: 0
+    };
+    if(rule[0].category == 'Choice') {
+      let option = prevState.rules.filter(r => r.name == rule[0].group && r.category == 'Option');
+      let optionIndex = 0;
+      if(option.length > 1) {
+        let parentSelection = option.map(o => prevState.rules.filter(r => r.name == o.group)[0])
+          .filter(o => skills.findIndex(skill => skill.id == o._id && skill.source == source && skill.count > 0) > -1)[0];
+        optionIndex = option.findIndex(o => o.group == parentSelection.name);
+      }
+      let choices = prevState.rules.filter(r => r.group == option[optionIndex].name);
+      choice.limit = option[optionIndex].max;
+      choice.known = choices.map(r => skills[skills.findIndex(s => s.id == r._id)])
+        .filter(skill => skill != undefined && skill.id != id)
+        .reduce((total, skill) => total + skill.count, 0);
+    }
+
+    if(index == -1 && count <= rule[0].max && count + choice.known <= choice.limit)
       return {
         build: {
           total: total,
@@ -448,7 +446,7 @@ class Character extends React.Component {
         })
       };
 
-    if(skills[index].count >= rule.max)
+    if(rule[0].max != 0 && (count > rule[0].max || count + choice.known > choice.limit))
       return { build: prevState.character.build, skills: prevState.character.skills };
 
     let diff = count - skills[index].count;
@@ -463,7 +461,7 @@ class Character extends React.Component {
       build: {
         total: total,
         spent: spent + diff * cost,
-        nonDomain: nonDomain + (rule[0].category == 'Domain' ? (count - skills[index].count) * cost : 0)
+        nonDomain: nonDomain + (rule[0].category == 'Domain' ? diff * cost : 0)
       },
       skills: skills
     };
@@ -499,8 +497,8 @@ class Character extends React.Component {
       domains,
       advancedArts,
       pools,
-      racial,
-      cultural,
+      racials,
+      culturals,
       bodyMod,
       sourceMark
     } = this.parseRules();
@@ -515,7 +513,6 @@ class Character extends React.Component {
         : -1;
       });
     let bodyTotal = (body + bodyMod.extra + bodyMod.perLevel * level) * (bodyMod.double ? 2 : 1);
-    console.log(advancedArts);
     return (
       <div data-character='sheet'>
         <Box label='Player'>
@@ -601,6 +598,20 @@ class Character extends React.Component {
             value={race.culture}
             type='select'
             options={cultures.map(c => c.name)}
+            editCharacter={this.editCharacter}
+          />
+        </Box>
+        <Box color label='Racial'>
+          <Racials
+            type='race'
+            abilities={racials.filter(racial => racial.race == race.name)}
+            viewDescription={this.viewRule}
+            editCharacter={this.editCharacter}
+          />
+          <Racials
+            type='culture'
+            abilities={culturals.filter(cultural => cultural.culture == race.culture)}
+            viewDescription={this.viewRule}
             editCharacter={this.editCharacter}
           />
         </Box>

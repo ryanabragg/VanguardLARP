@@ -10,6 +10,7 @@ class AbilityGroup extends React.Component {
 
   render() {
     const rest = Object.assign({}, this.props);
+    delete rest.source;
     delete rest.abilities;
     delete rest.viewDescription;
     delete rest.editCharacter;
@@ -19,6 +20,7 @@ class AbilityGroup extends React.Component {
           return (
             <Ability
               key={ability._id}
+              source={this.props.source}
               id={ability._id}
               name={ability.name}
               display={ability.display}
@@ -33,9 +35,12 @@ class AbilityGroup extends React.Component {
   }
 }
 
-//AbilityGroup.defaultProps = {};
+AbilityGroup.defaultProps = {
+  source: 'build'
+};
 
 AbilityGroup.propTypes = {
+  source: PropTypes.string,
   abilities: PropTypes.array.isRequired,
   viewDescription: PropTypes.func.isRequired,
   editCharacter: PropTypes.func.isRequired
