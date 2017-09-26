@@ -96,6 +96,12 @@ class RuleForm extends React.Component {
             value={this.props.culture}
             onChange={this.props.onChange}
           />
+          <FormField type='checkbox'
+            name='prodigy'
+            label='Prodigy'
+            value={this.props.prodigy}
+            onChange={this.props.onChange}
+          />
         </fieldset>
         <fieldset className='description'>
           <FormField type='textarea'
@@ -146,7 +152,7 @@ class RuleForm extends React.Component {
             onChange={this.props.onChange}
           />
         </fieldset>
-        <button type='button' value="submit" onClick={this.props.onSubmit}>Submit</button>
+        <button type='button' value="submit" onClick={this.props.onSubmit}>{this.props.id != 'new' ? 'Update' : 'Create'}</button>
         <button type='button' value="cancel" onClick={this.props.onCancel}>Cancel</button>
         {this.props.id != 'new' ? <button type='button' value="delete" onClick={this.props.onDelete}>Delete</button> : null}
       </form>
@@ -165,6 +171,7 @@ RuleForm.propTypes = {
   tier: PropTypes.string,
   race: PropTypes.string,
   culture: PropTypes.string,
+  prodigy: PropTypes.string,
   description: PropTypes.string,
   max: PropTypes.number,
   extraUses: PropTypes.string,

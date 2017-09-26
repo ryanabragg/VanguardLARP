@@ -32,12 +32,13 @@ class RuleList extends React.Component {
               name={this.props.selected.name}
               build={Number(this.props.selected.build)}
               delivery={this.props.selected.delivery}
-              tags={this.props.selected.tags}
+              tags={Number(this.props.selected.tags)}
               category={this.props.selected.category}
               group={this.props.selected.group}
               tier={this.props.selected.tier}
               race={this.props.selected.race}
               culture={this.props.selected.culture}
+              prodigy={this.props.selected.prodigy}
               description={this.props.selected.description}
               max={Number(this.props.selected.max)}
               extraUses={this.props.selected.extraUses}

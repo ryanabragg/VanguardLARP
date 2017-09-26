@@ -42,6 +42,9 @@ const StyledRuleList = styled(RuleList)`
   input {
     width: 100%;
   }
+  input[type="checkbox"] {
+    width: 30px;
+  }
   fieldset.description > div {
     width: 100%;
   }

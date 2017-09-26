@@ -22,6 +22,7 @@ class Rules extends React.Component {
       tier: '',
       race: '',
       culture: '',
+      prodigy: '',
       description: '',
       max: '', // @todo the complex components for editing the props after this
       extraUses: '', // extra uses based on +((count of key) / value) where key can be _id, category, or group (for pools, will add to tags)
