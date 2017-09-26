@@ -5,7 +5,6 @@ import Stones from '../Stones';
 
 const StyledStones = styled(Stones)`
   display: inline-block;
-  vertical-align: top;
   width: 100%;
   min-height: 25px;
 

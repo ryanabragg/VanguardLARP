@@ -5,7 +5,6 @@ import AbilityGroup from '../AbilityGroup';
 
 const StyledAbilityGroup = styled(AbilityGroup)`
   display: inline-block;
-  vertical-align: top;
   width: 100%;
 
   div {

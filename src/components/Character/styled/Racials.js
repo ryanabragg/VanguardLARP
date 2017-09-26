@@ -5,10 +5,9 @@ import Racials from '../Racials';
 
 const StyledRacials = styled(Racials)`
   display: inline-block;
-  vertical-align: top;
   width: 100%;
 
-  label.pool {
+  label.option {
     display: block;
     margin: 5px 0 0 0;
   }

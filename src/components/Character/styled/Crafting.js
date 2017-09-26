@@ -5,7 +5,6 @@ import Crafting from '../Crafting';
 
 const StyledCrafting = styled(Crafting)`
   display: inline-block;
-  vertical-align: top;
   width: 100%;
 
   span {

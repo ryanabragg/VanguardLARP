@@ -5,7 +5,6 @@ import Domain from '../Domain';
 
 const StyledDomain = styled(Domain)`
   display: inline-block;
-  vertical-align: top;
   width: 100%;
 
   div.tier {

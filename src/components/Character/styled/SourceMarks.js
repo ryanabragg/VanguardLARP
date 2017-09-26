@@ -5,7 +5,6 @@ import SourceMarks from '../SourceMarks';
 
 const StyledSourceMarks = styled(SourceMarks)`
   display: inline-block;
-  vertical-align: top;
   width: 100%;
   min-height: 25px;
 

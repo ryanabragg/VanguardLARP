@@ -5,7 +5,6 @@ import AdvancedArts from '../AdvancedArts';
 
 const StyledAdvancedArts = styled(AdvancedArts)`
   display: inline-block;
-  vertical-align: top;
   width: 100%;
   column-count: 2;
 

@@ -5,6 +5,7 @@ import Box from '../Box';
 
 const Boxed = styled(Box)`
   display: inline-block;
+  vertical-align: top;
   margin: 10px 5px 0 5px;
   width: ${props => {
     let width = props.width || 'xs';

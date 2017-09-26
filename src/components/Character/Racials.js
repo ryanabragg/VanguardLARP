@@ -20,10 +20,6 @@ class Racials extends React.Component {
       });
   }
 
-  renderConstant() {
-
-  }
-
   render() {
     const rest = Object.assign({}, this.props);
     delete rest.type;

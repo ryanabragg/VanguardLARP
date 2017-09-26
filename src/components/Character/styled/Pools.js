@@ -5,7 +5,6 @@ import Pools from '../Pools';
 
 const StyledPools = styled(Pools)`
   display: inline-block;
-  vertical-align: top;
   width: 100%;
 
   div[data-character="pool-abilities"] {
