@@ -263,6 +263,26 @@ class Character extends React.Component {
           return total + rule.count * count;
         }, 0),
         mastery: Boolean(granted.reduce((check, rule) => check || (rule.grants.includes('Source Mastery') && rule.count), false))
+      },
+      extraTags: {
+        chemix: granted.reduce((total, rule) => {
+          let count = rule.grants.split(', ')
+            .filter(g => g.includes('Chemix Tag:'))
+            .reduce((count, g) => count + (parseInt(g.split(': ')[1]) || 0), 0);
+          return total + rule.count * count;
+        }, 0),
+        melee: granted.reduce((total, rule) => {
+          let count = rule.grants.split(', ')
+            .filter(g => g.includes('Melee Tag:'))
+            .reduce((count, g) => count + (parseInt(g.split(': ')[1]) || 0), 0);
+          return total + rule.count * count;
+        }, 0),
+        spell: granted.reduce((total, rule) => {
+          let count = rule.grants.split(', ')
+            .filter(g => g.includes('Spell Tag:'))
+            .reduce((count, g) => count + (parseInt(g.split(': ')[1]) || 0), 0);
+          return total + rule.count * count;
+        }, 0),
       }
     };
   }
@@ -500,7 +520,8 @@ class Character extends React.Component {
       racials,
       culturals,
       bodyMod,
-      sourceMark
+      sourceMark,
+      extraTags
     } = this.parseRules();
     const domainNames = domains.map(rule => rule.group)
       .filter((rule, index, self) => self.indexOf(rule) == index)
@@ -651,6 +672,7 @@ class Character extends React.Component {
         </Box>
         <Box color label='Combat Pools'>
           <Pools
+            extraTags={extraTags}
             abilities={pools}
             viewDescription={this.viewRule}
             editCharacter={this.editCharacter}

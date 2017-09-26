@@ -11,6 +11,7 @@ class Pools extends React.Component {
   render() {
     const rest = Object.assign({}, this.props);
     delete rest.source;
+    delete rest.extraTags;
     delete rest.abilities;
     delete rest.viewDescription;
     delete rest.editCharacter;
@@ -39,11 +40,17 @@ class Pools extends React.Component {
 }
 
 Pool.defaultProps = {
-  source: 'build'
+  source: 'build',
+  extraTags: {
+    chemix: 0,
+    melee: 0,
+    spell: 0
+  }
 };
 
 Pool.propTypes = {
   source: PropTypes.string,
+  extraTags: PropTypes.object,
   abilities: PropTypes.array.isRequired,
   viewDescription: PropTypes.func.isRequired,
   editCharacter: PropTypes.func.isRequired
