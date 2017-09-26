@@ -38,7 +38,7 @@ class RuleList extends React.Component {
               tier={this.props.selected.tier}
               race={this.props.selected.race}
               culture={this.props.selected.culture}
-              prodigy={this.props.selected.prodigy}
+              prodigy={Number(this.props.selected.prodigy)}
               description={this.props.selected.description}
               max={Number(this.props.selected.max)}
               extraUses={this.props.selected.extraUses}

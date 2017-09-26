@@ -274,7 +274,7 @@ class Rules extends React.Component {
   }
 
   handleFormInputChange(e) {
-    e.preventDefault();
+    e.stopPropagation();
     let target = e.target; // e not available during callback
     this.setState((prevState, props) => {
       let nextState = Object.assign({}, prevState);

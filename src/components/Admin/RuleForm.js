@@ -171,7 +171,7 @@ RuleForm.propTypes = {
   tier: PropTypes.string,
   race: PropTypes.string,
   culture: PropTypes.string,
-  prodigy: PropTypes.string,
+  prodigy: PropTypes.number,
   description: PropTypes.string,
   max: PropTypes.number,
   extraUses: PropTypes.string,
