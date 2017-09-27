@@ -25,6 +25,7 @@ class Field extends React.Component {
       <input
         type={this.props.type}
         name={this.props.name}
+        placeholder={this.props.placeholder}
         value={this.props.value}
         onChange={this.handleInputChange}
         readOnly={typeof this.props.editCharacter != 'function'}
@@ -33,7 +34,7 @@ class Field extends React.Component {
   }
 
   renderSelect() {
-    const options = [''].concat(this.props.options)
+    const options = this.props.options
       .filter((rule, index, self) => self.indexOf(rule) == index);
     return (
       <select
@@ -42,6 +43,7 @@ class Field extends React.Component {
         onChange={this.handleInputChange}
         readOnly={typeof this.props.editCharacter != 'function'}
       >
+        <option default value={''}>{this.props.placeholder || ''}</option>
         {options.map(option => <option key={option} value={option}>{option}</option>)}
       </select>
     );
@@ -53,6 +55,7 @@ class Field extends React.Component {
     const rest = Object.assign({}, this.props);
     delete rest.type;
     delete rest.name;
+    delete rest.placeholder;
     delete rest.value;
     delete rest.options;
     delete rest.editCharacter;
@@ -82,6 +85,7 @@ Field.defaultProps = {
 Field.propTypes = {
   type: PropTypes.string,
   name: PropTypes.string.isRequired,
+  placeholder: PropTypes.string,
   value: PropTypes.any,
   options: PropTypes.array,
   editCharacter: PropTypes.func,

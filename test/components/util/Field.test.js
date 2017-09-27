@@ -30,10 +30,12 @@ describe('<Field />', () => {
     expect(wrapper.find('input').prop('type')).to.equal('text');
     expect(wrapper.find('input').prop('name')).to.equal('test');
     wrapper.setProps({
-      type: 'number'
+      type: 'number',
+      placeholder: '4'
     });
     expect(wrapper.find('input').prop('type')).to.equal('number');
     expect(wrapper.find('input').prop('value')).to.equal('try');
+    expect(wrapper.find('input').prop('placeholder')).to.equal('4');
     expect(wrapper.find('input').prop('readOnly')).to.equal(true);
     wrapper.setProps({
       editCharacter: edit
@@ -76,6 +78,8 @@ describe('<Field />', () => {
     expect(wrapper.find('input')).to.have.length(0);
     expect(wrapper.find('select')).to.have.length(1);
     expect(wrapper.find('option')).to.have.length(1);
+    expect(wrapper.find('option').prop('value')).to.equal('');
+    expect(wrapper.find('option').text()).to.equal('');
     wrapper.setProps({
       options: ['one', 'two']
     });
@@ -84,9 +88,12 @@ describe('<Field />', () => {
     expect(wrapper.find('option').at(1).text()).to.equal('one');
     expect(wrapper.find('option').at(2).text()).to.equal('two');
     wrapper.setProps({
+      placeholder: 'test',
       options: ['one', 'two', 'one', 'one', 'two']
     });
     expect(wrapper.find('option')).to.have.length(3);
+    expect(wrapper.find('option').at(0).prop('value')).to.equal('');
+    expect(wrapper.find('option').at(0).text()).to.equal('test');
   });
 
   it('renders a checkbox instead of an input if type is checkbox');
