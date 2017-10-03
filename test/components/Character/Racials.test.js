@@ -7,6 +7,7 @@ import { JSDOM } from 'jsdom';
 import Racials from '../../../src/components/Character/Racials';
 import Ability from '../../../src/components/Character/Ability';
 import AbilityGroup from '../../../src/components/Character/AbilityGroup';
+import Field from '../../../src/components/util/styled/Field';
 
 const window = (new JSDOM('<!doctype html><html><body></body></html>')).window;
 global.window = window;
@@ -25,30 +26,27 @@ copyProps(window, global);
 
 describe('<Racials />', () => {
 
-  it('renders an Ability or AbilityGroup per item in abilities', () => {
+  it('renders an Ability or AbilityGroup per item in racials', () => {
     const view = spy(), update = spy();
-    let list = [];
-    const wrapper = shallow(<Racials abilities={list} viewDescription={view} editCharacter={update}/>);
+    const wrapper = shallow(<Racials viewDescription={view} editCharacter={update}/>);
     expect(wrapper.find(Ability)).to.have.length(0);
     expect(wrapper.find('label')).to.have.length(0);
     expect(wrapper.find(AbilityGroup)).to.have.length(0);
-    list = [{
+    let list = [{
       _id: 1,
       name: 'lucky',
-      category: 'racial',
+      category: '',
       group: '',
       race: 'cat',
       culture: '',
-      display: '',
       count: 9
     }, {
       _id: 2,
       name: 'tail',
-      category: 'racial',
+      category: '',
       group: '',
       race: 'cat',
       culture: '',
-      display: '',
       count: 0
     }, {
       _id: 3,
@@ -57,7 +55,6 @@ describe('<Racials />', () => {
       group: '',
       race: 'cat',
       culture: '',
-      display: '',
       count: 0
     }, {
       _id: 4,
@@ -66,7 +63,6 @@ describe('<Racials />', () => {
       group: 'first',
       race: 'cat',
       culture: '',
-      display: '',
       count: 0
     }, {
       _id: 5,
@@ -75,7 +71,6 @@ describe('<Racials />', () => {
       group: 'first',
       race: 'cat',
       culture: '',
-      display: '',
       count: 0
     }, {
       _id: 6,
@@ -84,7 +79,6 @@ describe('<Racials />', () => {
       group: 'pounce',
       race: 'cat',
       culture: '',
-      display: '',
       count: 9
     }, {
       _id: 7,
@@ -93,7 +87,6 @@ describe('<Racials />', () => {
       group: 'second',
       race: 'cat',
       culture: '',
-      display: '',
       count: 0
     }, {
       _id: 8,
@@ -102,16 +95,157 @@ describe('<Racials />', () => {
       group: 'second',
       race: 'cat',
       culture: '',
-      display: '',
       count: 0
     }];
-    wrapper.setProps({abilities: list});
+    wrapper.setProps({racials: list});
+    expect(wrapper.find(Ability)).to.have.length(0);
+    expect(wrapper.find('label')).to.have.length(0);
+    expect(wrapper.find(AbilityGroup)).to.have.length(0);
+    wrapper.setProps({race: 'cat'});
     expect(wrapper.find(Ability)).to.have.length(2);
     expect(wrapper.find('label')).to.have.length(1);
     expect(wrapper.find(AbilityGroup)).to.have.length(1);
     list[3].count = 1;
-    wrapper.setProps({abilities: list});
+    wrapper.setProps({racials: list});
     expect(wrapper.find('label')).to.have.length(2);
     expect(wrapper.find(AbilityGroup)).to.have.length(2);
+  });
+
+  it('segregates race and culture racials', () => {
+    const view = spy(), update = spy();
+    const wrapper = shallow(<Racials viewDescription={view} editCharacter={update}/>);
+    expect(wrapper.find(Ability)).to.have.length(0);
+    expect(wrapper.find('label')).to.have.length(0);
+    expect(wrapper.find(AbilityGroup)).to.have.length(0);
+    let list = [{
+      _id: 1,
+      name: 'lucky',
+      category: '',
+      group: '',
+      race: 'cat',
+      culture: 'kitten',
+      count: 9
+    }, {
+      _id: 2,
+      name: 'tail',
+      category: '',
+      group: '',
+      race: 'cat',
+      culture: '',
+      count: 0
+    }, {
+      _id: 3,
+      name: 'first',
+      category: 'Option',
+      group: '',
+      race: 'cat',
+      culture: 'kitten',
+      count: 0
+    }, {
+      _id: 4,
+      name: 'pounce',
+      category: 'Choice',
+      group: 'first',
+      race: 'cat',
+      culture: 'kitten',
+      count: 0
+    }, {
+      _id: 5,
+      name: 'purr',
+      category: 'Choice',
+      group: 'first',
+      race: 'cat',
+      culture: 'kitten',
+      count: 0
+    }, {
+      _id: 6,
+      name: 'second',
+      category: 'Option',
+      group: 'pounce',
+      race: 'cat',
+      culture: 'kitten',
+      count: 9
+    }, {
+      _id: 7,
+      name: 'tooth',
+      category: 'Choice',
+      group: 'second',
+      race: 'cat',
+      culture: 'kitten',
+      count: 0
+    }, {
+      _id: 8,
+      name: 'claw',
+      category: 'Choice',
+      group: 'second',
+      race: 'cat',
+      culture: 'kitten',
+      count: 0
+    }];
+    wrapper.setProps({racials: list});
+    expect(wrapper.find(Ability)).to.have.length(0);
+    expect(wrapper.find('label')).to.have.length(0);
+    expect(wrapper.find(AbilityGroup)).to.have.length(0);
+    wrapper.setProps({race: 'cat'});
+    expect(wrapper.find(Ability)).to.have.length(1);
+    expect(wrapper.find('label')).to.have.length(0);
+    expect(wrapper.find(AbilityGroup)).to.have.length(0);
+    wrapper.setProps({culture: 'kitten'});
+    expect(wrapper.find(Ability)).to.have.length(2);
+    expect(wrapper.find('label')).to.have.length(1);
+    expect(wrapper.find(AbilityGroup)).to.have.length(1);
+    list[3].count = 1;
+    wrapper.setProps({racials: list});
+    expect(wrapper.find('label')).to.have.length(2);
+    expect(wrapper.find(AbilityGroup)).to.have.length(2);
+  });
+
+  it('renders race and culture selects if the culture prop is Prodigy', () => {
+    const view = spy(), update = spy();
+    const wrapper = shallow(<Racials viewDescription={view} editCharacter={update}/>);
+    expect(wrapper.find(Field)).to.have.length(0);
+    let races = [{
+      name: 'cat',
+      prodigy: 0
+    }, {
+      name: 'dog',
+      prodigy: 0
+    }, {
+      name: 'monkey',
+      prodigy: 1
+    }, {
+      name: 'human',
+      prodigy: 1
+    }];
+    let cultures = [{
+      name: 'kitten',
+      prodigy: 0
+    }, {
+      name: 'puppy',
+      prodigy: 0
+    }, {
+      name: 'baby monkey',
+      race: 'monkey',
+      prodigy: 1
+    }, {
+      name: 'baby',
+      race: 'human',
+      prodigy: 0
+    }, {
+      name: 'child',
+      race: 'human',
+      prodigy: 1
+    }];
+    wrapper.setProps({
+      races: races,
+      cultures: cultures
+    });
+    expect(wrapper.find(Field)).to.have.length(0);
+    wrapper.setProps({
+      culture: 'Prodigy'
+    });
+    expect(wrapper.find(Field)).to.have.length(2);
+    expect(wrapper.find(Field).at(0).prop('options')).to.deep.equal(['monkey', 'human']);
+    expect(wrapper.find(Field).at(1).prop('options')).to.deep.equal(['baby monkey', 'child']);
   });
 });

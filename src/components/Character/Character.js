@@ -42,7 +42,11 @@ class Character extends React.Component {
       recoveries: 6,
       race: {
         name: '',
-        culture: ''
+        culture: '',
+        prodigy: {
+          race: '',
+          culture: ''
+        }
       },
       sourceMarks: [],
       skills: [] // { id, count, source } (source: 'race', 'culture', 'build', level number, 'code' )
@@ -204,6 +208,7 @@ class Character extends React.Component {
         .sort((a, b) => {
           return a.name > b.name ? 1 : -1;
         }),
+      racials: rules.filter(rule => rule.race != '' && rule.category != 'Race' && rule.category != 'Culture'),
       weapons: rules.filter(rule => rule.category == 'Weapon')
         .sort((a, b) => {
           return a.name == 'Student of War' ? -1
@@ -238,14 +243,6 @@ class Character extends React.Component {
         (rule.category == 'Pool' || rule.category == 'Pool Ability' ) &&
         !rule.race && !rule.culture
       ),
-      racials: rules.filter(rule => {
-        return rule.race == race.name
-          && rule.race != ''
-          && !rule.culture
-          && rule.category != 'Race'
-          && rule.category != 'Culture'
-      }),
-      culturals: rules.filter(rule => rule.culture == race.culture && rule.culture != ''),
       bodyMod: {
         extra: granted.reduce((total, rule) => {
           let count = rule.grants.split(', ')
@@ -340,8 +337,9 @@ class Character extends React.Component {
         break;
       case 'RACE':
       case 'CULTURE':
+      case 'PRODIGY':
         change = this.stateRaceChange(prevState, action);
-        nextState.character.race = change;
+        nextState.character.race = change.race;
         break;
       case 'SOURCE MARK':
         nextState.character.sourceMarks = action.data; break;
@@ -354,8 +352,6 @@ class Character extends React.Component {
         return prevState;
       }
       return nextState;
-    }, () => {
-      
     });
   }
 
@@ -399,26 +395,23 @@ class Character extends React.Component {
 
   stateRaceChange(prevState, action) {
     //@todo: race/culture change should affect build and skills
-    let edit = {};
+    let edit = Object.assign({}, prevState.character);
     switch(action.type) {
     case 'RACE':
-      edit.name = action.data;
-      if(prevState.character.race.name != action.data)
-        edit.culture = '';
-      else
-        edit.culture = prevState.character.race.culture.slice();
+      edit.race.name = action.data;
+      edit.race.culture = '';
       break;
     case 'CULTURE':
-      edit.culture = action.data;
+      edit.race.culture = action.data;
       if(action.data)
-        edit.name = prevState.rules.filter(rule => {
+        edit.race.name = prevState.rules.filter(rule => {
           return rule.category == 'Culture' && rule.name == action.data;
         })[0].race;
-      else
-        edit.name = prevState.character.race.name;
+      break;
+    case 'PRODIGY':
+      edit.race.prodigy = action.data;
       break;
     default:
-      edit = Object.assign({}, prevState.character.race);
     }
     return edit;
   }
@@ -431,20 +424,27 @@ class Character extends React.Component {
     let { total, spent, nonDomain } = prevState.character.build;
 
     let rule = prevState.rules.filter(rule => rule._id == id);
-    if(!rule.length || (rule[0].race && rule[0].race != prevState.character.race.name))
+    if(!rule.length)
+      return { build: prevState.character.build, skills: prevState.character.skills };
+    rule = rule[0];
+
+    let canLearn = !rule.race
+      || rule.race == prevState.character.race.name
+      || (rule.prodigy && rule.race == prevState.character.race.prodigy.race);
+    if(!canLearn)
       return { build: prevState.character.build, skills: prevState.character.skills };
 
-    let cost = source == 'build' ? rule[0].build : 0;
+    let cost = source == 'build' ? rule.build : 0;
 
     let skills = prevState.character.skills.slice();
     let index = skills.findIndex(skill => skill.id == id && skill.source == source);
 
     let choice = {
-      limit: rule[0].max,
+      limit: rule.max,
       known: 0
     };
-    if(rule[0].category == 'Choice') {
-      let option = prevState.rules.filter(r => r.name == rule[0].group && r.category == 'Option');
+    if(rule.category == 'Choice') {
+      let option = prevState.rules.filter(r => r.name == rule.group && r.category == 'Option');
       let optionIndex = 0;
       if(option.length > 1) {
         let parentSelection = option.map(o => prevState.rules.filter(r => r.name == o.group)[0])
@@ -458,12 +458,12 @@ class Character extends React.Component {
         .reduce((total, skill) => total + skill.count, 0);
     }
 
-    if(index == -1 && count <= rule[0].max && count + choice.known <= choice.limit)
+    if(index == -1 && (!rule.max || count <= rule.max) && (!choice.limit || count + choice.known <= choice.limit))
       return {
         build: {
           total: total,
           spent: spent + count * cost,
-          nonDomain: nonDomain + (rule[0].category == 'Domain' ? count * cost : 0)
+          nonDomain: nonDomain + (rule.category == 'Domain' ? count * cost : 0)
         },
         skills: skills.concat({
           id: id,
@@ -472,7 +472,7 @@ class Character extends React.Component {
         })
       };
 
-    if(rule[0].max != 0 && (count > rule[0].max || count + choice.known > choice.limit))
+    if(rule.max != 0 && (count > rule.max || count + choice.known > choice.limit))
       return { build: prevState.character.build, skills: prevState.character.skills };
 
     let diff = count - skills[index].count;
@@ -487,23 +487,13 @@ class Character extends React.Component {
       build: {
         total: total,
         spent: spent + diff * cost,
-        nonDomain: nonDomain + (rule[0].category == 'Domain' ? diff * cost : 0)
+        nonDomain: nonDomain + (rule.category == 'Domain' ? diff * cost : 0)
       },
       skills: skills
     };
   }
 
   render() {
-    const {
-      level,
-      body,
-      buffs,
-      inscriptions,
-      T1,
-      T2,
-      T3,
-      AA
-    } = this.levelValues();
     const {
       player,
       name,
@@ -515,16 +505,25 @@ class Character extends React.Component {
       skills
     } = this.state.character;
     const {
+      level,
+      body,
+      buffs,
+      inscriptions,
+      T1,
+      T2,
+      T3,
+      AA
+    } = this.levelValues();
+    const {
       races,
       cultures,
+      racials,
       weapons,
       aptitudes,
       crafts,
       domains,
       advancedArts,
       pools,
-      racials,
-      culturals,
       bodyMod,
       sourceMark,
       extraTags
@@ -624,20 +623,19 @@ class Character extends React.Component {
             name='culture'
             value={race.culture}
             type='select'
-            options={cultures.map(c => c.name)}
+            options={cultures.filter(c => !race.name || c.race == race.name).map(c => c.name)}
             editCharacter={this.editCharacter}
           />
         </Box>
-        <Box color label='Racial'>
+        <Box color={!!race.name}
+          label='Racial'>
           <Racials
-            type='race'
-            abilities={racials.filter(racial => racial.race == race.name)}
-            viewDescription={this.viewRule}
-            editCharacter={this.editCharacter}
-          />
-          <Racials
-            type='culture'
-            abilities={culturals.filter(cultural => cultural.culture == race.culture)}
+            race={race.name}
+            culture={race.culture}
+            prodigy={race.prodigy}
+            races={races}
+            cultures={cultures}
+            racials={racials}
             viewDescription={this.viewRule}
             editCharacter={this.editCharacter}
           />
@@ -645,7 +643,7 @@ class Character extends React.Component {
         <Box label='Crafting'>
           <Crafting />
         </Box>
-        <Box label='Craft Skills'>
+        <Box color label='Craft Skills'>
           <AbilityGroup
             abilities={crafts}
             viewDescription={this.viewRule}

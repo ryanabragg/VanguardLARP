@@ -11,6 +11,13 @@ const StyledRacials = styled(Racials)`
     display: block;
     margin: 5px 0 0 0;
   }
+
+  div.divider {
+    margin: 3px 0;
+    height: 1px;
+    width: 100%;
+    background-color: ${props => Color(props.theme.colors.secondary).grayscale().hex()};
+  }
 `;
 
 export default StyledRacials;
