@@ -13,7 +13,7 @@ class Box extends React.Component {
     delete rest.factor;
     delete rest.color;
     return (
-      <div {...rest}>
+      <div {...rest} data-sheet={this.props.label}>
         <label className='floating'>{this.props.label}</label>
         {this.props.children}
       </div>
