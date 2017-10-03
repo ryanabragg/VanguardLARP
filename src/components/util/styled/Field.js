@@ -5,6 +5,7 @@ import Field from '../Field';
 
 const StyledField = styled(Field)`
   display: inline-block;
+  width: 100%;
 
   input,
   textarea,
