@@ -5,6 +5,7 @@ import Box from './styled/Box';
 
 import Field from '../util/styled/Field';
 
+import Levels from './styled/Levels';
 import Stones from './styled/Stones';
 import SourceMarks from './styled/SourceMarks';
 import Crafting from './styled/Crafting';
@@ -76,6 +77,8 @@ class Character extends React.Component {
     this.parseRules = this.parseRules.bind(this);
 
     this.levelValues = this.levelValues.bind(this);
+
+    this.getFreeSkills = this.getFreeSkills.bind(this);
 
     this.encode = this.encode.bind(this);
     this.decode = this.decode.bind(this);
@@ -188,8 +191,9 @@ class Character extends React.Component {
       let skills = this.state.character.skills.filter(skill => skill.id == rule._id);
       if(!skills.length)
         return Object.assign({}, rule, { count: 0 }, display);
+      let total = skills.reduce((total, skill) => { return total + skill.count}, 0);
       let count = {
-        count: skills.reduce((total, skill) => { return total + skill.count}, 0)
+        count: !rule.max ? total : Math.min(rule.max, total)
       };
       return Object.assign({}, rule, count, display);
     });
@@ -303,6 +307,18 @@ class Character extends React.Component {
       T3: level >= 15 && this.state.character.build.nonDomain >= 125,
       AA: level >= 20
     };
+  }
+
+  getFreeSkills() {
+    const skills = this.state.character.skills.filter(skill => Number(skill.source) > 0);
+    return skills.map(skill => {
+      let rule = this.state.rules.filter(rule => rule._id == skill.id);
+      return {
+        id: skill.id,
+        level: skill.source,
+        name: rule.name
+      };
+    });
   }
 
   encode() {}
@@ -514,6 +530,7 @@ class Character extends React.Component {
       T3,
       AA
     } = this.levelValues();
+    const freeSkills = this.getFreeSkills();
     const {
       races,
       cultures,
@@ -577,6 +594,15 @@ class Character extends React.Component {
           <Field
             name='level'
             value={level}
+          />
+          <Levels
+            level={level}
+            domains={domains}
+            known={freeSkills}
+            T1={T1}
+            T2={T2}
+            T3={T3}
+            editCharacter={this.editCharacter}
           />
         </Box>
         <Box label='Body' factor={0.25}>

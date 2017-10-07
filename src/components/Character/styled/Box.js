@@ -4,6 +4,7 @@ import Color from 'color';
 import Box from '../Box';
 
 const Boxed = styled(Box)`
+  position: relative;
   display: inline-block;
   vertical-align: top;
   margin: 10px 5px 0 5px;
