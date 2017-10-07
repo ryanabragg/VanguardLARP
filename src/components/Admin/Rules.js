@@ -285,6 +285,10 @@ class Rules extends React.Component {
 
   handleFormSubmit() {
     let rule = Object.assign({}, this.state.selected);
+    rule.build = Number(rule.build);
+    rule.tags = Number(rule.tags);
+    rule.prodigy = Number(rule.prodigy);
+    rule.max = Number(rule.max);
     if(rule._id == 'new') {
       delete rule._id;
       this.createRule(rule);
