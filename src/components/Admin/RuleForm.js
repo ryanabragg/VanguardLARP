@@ -73,6 +73,12 @@ class RuleForm extends React.Component {
             value={this.props.tags}
             onChange={this.props.onChange}
           />
+          <FormField type='checkbox'
+            name='block'
+            label='Not Able to Purchase'
+            value={this.props.block}
+            onChange={this.props.onChange}
+          />
         </fieldset>
         <fieldset>
           <FormField type='text'
@@ -177,6 +183,7 @@ RuleForm.propTypes = {
   build: PropTypes.number,
   delivery: PropTypes.string,
   tags: PropTypes.number,
+  block: PropTypes.number,
   category: PropTypes.string,
   group: PropTypes.string,
   tier: PropTypes.string,

@@ -17,8 +17,9 @@ class Rules extends React.Component {
       build: '',
       delivery: '',
       tags: '',
-      category: '', // constant, weapon, aptitude, source mark, craft, combat pool, domain, advanced art, racial, hidden
-      group: '', // pool/domain name
+      block: '',
+      category: '',
+      group: '',
       tier: '',
       race: '',
       culture: '',
@@ -290,16 +291,18 @@ class Rules extends React.Component {
     let rule = Object.assign({}, this.state.selected);
     rule.build = Number(rule.build);
     rule.tags = Number(rule.tags);
+    rule.block = Number(rule.block);
     rule.prodigy = Number(rule.prodigy);
     rule.max = Number(rule.max);
+    
     if(rule._id == 'new') {
       delete rule._id;
       this.createRule(rule);
     }
-    else if(!this.state.list.filter(item => item._id == rule._id))
-      this.createRule(rule);
-    else
+    else if(this.state.list.filter(item => item._id == rule._id).length)
       this.updateRule(rule);
+    else
+      this.createRule(rule);
   }
 
   handleFormCancel() {
