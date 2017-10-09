@@ -269,7 +269,7 @@ class Character extends React.Component {
             .reduce((count, g) => count + (parseInt(g.split(': ')[1]) || 0), 0);
           return total + rule.count * count;
         }, 0),
-        mastery: Boolean(granted.reduce((check, rule) => check || (rule.grants.includes('Source Mastery') && rule.count), false))
+        mastery: Boolean(granted.reduce((check, rule) => check || (rule.grants.includes('Source Element Mastery') && rule.count), false))
       },
       extraTags: {
         chemix: granted.reduce((total, rule) => {
@@ -650,6 +650,7 @@ class Character extends React.Component {
         : -1;
       });
     let bodyTotal = (body + bodyMod.extra + bodyMod.perLevel * level) * (bodyMod.double ? 2 : 1);
+    console.log(sourceMark);
     return (
       <div data-character='sheet'>
         <Box label='Player'>
@@ -784,7 +785,7 @@ class Character extends React.Component {
             editCharacter={this.editCharacter}
           />
         </Box>
-        <Box color={sourceMark.limit}
+        <Box color={sourceMark.limit > 0}
           label='Source Mark Elements'
         >
           <SourceMarks
