@@ -50,7 +50,7 @@ class Character extends React.Component {
         }
       },
       sourceMarks: [],
-      skills: [] // { id, count, source } (source: 'race', 'culture', 'build', level number, 'code' )
+      skills: [] // { id, count, source } (source: 'skill', build', 'race', 'culture', level number, 'code' )
     };
 
     this.syncData = {
@@ -401,25 +401,117 @@ class Character extends React.Component {
   }
 
   stateRaceChange(prevState, action) {
-    //@todo: race/culture change should affect build and skills
     let nextState = Object.assign({}, prevState);
+
+    let change = {
+      old: {
+        prodigy: prevState.character.race.culture == 'Prodigy',
+        race: prevState.character.race.culture == 'Prodigy'
+        ? prevState.character.race.prodigy.race
+        : prevState.character.race.name,
+        culture: prevState.character.race.culture == 'Prodigy'
+        ? prevState.character.race.prodigy.culture
+        : prevState.character.race.culture
+      }
+    };
+
     switch(action.type) {
     case 'RACE':
       nextState.character.race.name = action.data;
       nextState.character.race.culture = '';
+      nextState.character.race.prodigy = {
+        race: '',
+        culture: ''
+      };
       break;
     case 'CULTURE':
-      nextState.character.race.culture = action.data;
       if(action.data)
         nextState.character.race.name = prevState.rules.filter(rule => {
           return rule.category == 'Culture' && rule.name == action.data;
         })[0].race;
+      nextState.character.race.culture = action.data;
+      nextState.character.race.prodigy = {
+        race: '',
+        culture: ''
+      };
       break;
     case 'PRODIGY':
       nextState.character.race.prodigy = action.data;
       break;
     default:
     }
+
+    change.new = {
+      prodigy: nextState.character.race.culture == 'Prodigy',
+      race: nextState.character.race.culture == 'Prodigy'
+      ? nextState.character.race.prodigy.race
+      : nextState.character.race.name,
+      culture: nextState.character.race.culture == 'Prodigy'
+      ? nextState.character.race.prodigy.culture
+      : nextState.character.race.culture
+    };
+
+    if(!change.old.prodigy && change.new.prodigy){
+      prevState.rules.filter(rule => {
+        return rule.culture == 'Prodigy' && rule.category == 'Cultural' && !rule.group;
+      }).forEach(rule => {
+        nextState.character.skills = nextState.character.skills.concat({
+          id: rule._id,
+          name: rule.name,
+          count: 1,
+          source: 'race'
+        });
+      });
+    }
+
+    if(change.old.prodigy && !change.new.prodigy){
+      prevState.rules.filter(rule => {
+        return rule.culture == 'Prodigy';
+      }).forEach(rule => {
+        nextState.character.skills = nextState.character.skills.filter(skill => skill.id != rule._id);
+      });
+    }
+
+    if(change.old.race != change.new.race) {
+      if(change.old.race)
+        prevState.rules.filter(rule => {
+          return rule.race == change.old.race && !rule.culture;
+        }).forEach(rule => {
+          nextState.character.skills = nextState.character.skills.filter(skill => skill.id != rule._id);
+        });
+      if(change.new.race)
+        prevState.rules.filter(rule => {
+          return rule.race == change.new.race && rule.category == 'Racial' && !rule.group;
+        }).forEach(rule => {
+          nextState.character.skills = nextState.character.skills.concat({
+            id: rule._id,
+            name: rule.name,
+            count: 1,
+            source: 'race'
+          });
+        });
+    }
+
+    if(change.old.culture != change.new.culture) {
+      if(change.old.culture)
+        prevState.rules.filter(rule => {
+          return rule.culture == change.old.culture;
+        }).forEach(rule => {
+          nextState.character.skills = nextState.character.skills.filter(skill => skill.id != rule._id);
+        });
+      if(change.new.culture)
+        prevState.rules.filter(rule => {
+          return rule.culture == change.new.culture && rule.category == 'Cultural' && !rule.group;
+        }).forEach(rule => {
+          nextState.character.skills = nextState.character.skills.concat({
+            id: rule._id,
+            name: rule.name,
+            count: 1,
+            source: 'culture'
+          });
+        });
+    }
+
     return nextState;
   }
 
@@ -466,12 +558,10 @@ class Character extends React.Component {
     if((rule.max != 0 && count > rule.max) || (choice.limit && count + choice.known > choice.limit))
       return prevState;
 
-    let granted = rule.grants.split(', ');
-    if(granted.length) {
-      for(var i = 0; i < granted.length; i++) {
-        
-      }
-    }
+    rule.grants.split(', ').forEach(grant => {
+      let granted = prevState.rules.filter(rule => rule.name == grant);
+      //nextState = this.stateSkillChange(nextState, {type: 'SKILL', data: {id: granted._id, count: , source: 'skill'}});
+    });
 
     let target = skills.findIndex(skill => skill.id == id && skill.source == source);
 
