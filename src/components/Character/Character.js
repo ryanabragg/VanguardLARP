@@ -50,7 +50,7 @@ class Character extends React.Component {
         }
       },
       sourceMarks: [],
-      skills: [] // { id, count, source } (source: 'skill', build', 'race', 'culture', level number, 'code' )
+      skills: [] // { id, count, source } (source: skill id, build', 'race', 'culture', level number, 'code' )
     };
 
     this.syncData = {
@@ -219,6 +219,8 @@ class Character extends React.Component {
           : b.name == 'Student of War' ? 1
           : a.name == 'Source Mark' ? -1
           : b.name == 'Source Mark' ? 1
+          : a.name == 'Natural Weapons' ? 1
+          : b.name == 'Natural Weapons' ? -1
           : a.name > b.name ? 1
           : -1;
         }),
@@ -247,49 +249,81 @@ class Character extends React.Component {
         (rule.category == 'Pool' || rule.category == 'Pool Ability' ) &&
         !rule.race && !rule.culture
       ),
-      bodyMod: {
-        extra: granted.reduce((total, rule) => {
-          let count = rule.grants.split(', ')
-            .filter(g => g.includes('Body:'))
-            .reduce((count, g) => count + (parseInt(g.split(': ')[1]) || 0), 0);
-          return total + rule.count * count;
-        }, 0),
-        perLevel: granted.reduce((total, rule) => {
-          let count = rule.grants.split(', ')
-            .filter(g => g.includes('Body Per Level:'))
-            .reduce((count, g) => count + (parseInt(g.split(': ')[1]) || 0), 0);
-          return total + rule.count * count;
-        }, 0),
-        double: Boolean(granted.reduce((check, rule) => check || (rule.grants.includes('Double Body') && rule.count), false))
-      },
       sourceMark: {
         limit: granted.reduce((total, rule) => {
           let count = rule.grants.split(', ')
-            .filter(g => g.includes('Source Mark:'))
-            .reduce((count, g) => count + (parseInt(g.split(': ')[1]) || 0), 0);
+            .filter(g => g.includes('UbOkRDlaLA6ME0ks'))
+            .reduce((count, g) => count + 1, 0);
           return total + rule.count * count;
         }, 0),
-        mastery: Boolean(granted.reduce((check, rule) => check || (rule.grants.includes('Source Element Mastery') && rule.count), false))
+        mastery: Boolean(granted.reduce((check, rule) => {
+          return check || (rule.grants.includes('NA3IIMeusA9Ye6OY') && rule.count);
+        }, false))
       },
-      extraTags: {
-        chemix: granted.reduce((total, rule) => {
-          let count = rule.grants.split(', ')
-            .filter(g => g.includes('Chemix Tag:'))
-            .reduce((count, g) => count + (parseInt(g.split(': ')[1]) || 0), 0);
-          return total + rule.count * count;
-        }, 0),
-        melee: granted.reduce((total, rule) => {
-          let count = rule.grants.split(', ')
-            .filter(g => g.includes('Melee Tag:'))
-            .reduce((count, g) => count + (parseInt(g.split(': ')[1]) || 0), 0);
-          return total + rule.count * count;
-        }, 0),
-        spell: granted.reduce((total, rule) => {
-          let count = rule.grants.split(', ')
-            .filter(g => g.includes('Spell Tag:'))
-            .reduce((count, g) => count + (parseInt(g.split(': ')[1]) || 0), 0);
-          return total + rule.count * count;
-        }, 0),
+      mod: {
+        armor: {
+          mods: Boolean(granted.reduce((check, rule) => {
+            return check || (rule.grants.includes('9YfyA7FdSo6p7XCk') && rule.count);
+          }, false)) ? 1 + Math.floor(level / 10) : 0
+        },
+        body: {
+          extra: granted.reduce((total, rule) => {
+            let count = rule.grants.split(', ')
+              .filter(g => g.includes('nkPWj8hTIFeLErq5'))
+              .reduce((count, g) => count + 1, 0);
+            return total + rule.count * count;
+          }, 0),
+          perLevel: granted.reduce((total, rule) => {
+            let count = rule.grants.split(', ')
+              .filter(g => g.includes('F2qqmM9PuvcEenXL'))
+              .reduce((count, g) => count + 1, 0);
+            return total + rule.count * count;
+          }, 0),
+          double: Boolean(granted.reduce((check, rule) => {
+            return check || (rule.grants.includes('gQM9ot97a2ROBS7N') && rule.count);
+          }, false))
+        },
+        buffs: {
+          extra: granted.reduce((total, rule) => {
+            let count = rule.grants.split(', ')
+              .filter(g => g.includes('WHbUBohb6UkRhY8j'))
+              .reduce((count, g) => count + 1, 0);
+            return total + rule.count * count;
+          }, 0)
+        },
+        inscriptions: {
+          extra: 0
+        },
+        lives: {
+          redToWhite: Boolean(granted.reduce((check, rule) => {
+            return check || (rule.grants.includes('2fZG2ArezTXPVMu3') && rule.count);
+          }, false))
+        },
+        recoveries: {
+          extra: Boolean(granted.reduce((check, rule) => {
+            return check || (rule.grants.includes('Jnpeh6RDLJ16Uzhp') && rule.count);
+          }, false)) ? 1 + Math.floor(level / 10) : 0
+        },
+        tags: {
+          chemix: granted.reduce((total, rule) => {
+            let count = rule.grants.split(', ')
+              .filter(g => g.includes('0LUhmr6Yh1XIonZ6'))
+              .reduce((count, g) => count + 1, 0);
+            return total + rule.count * count;
+          }, 0),
+          melee: granted.reduce((total, rule) => {
+            let count = rule.grants.split(', ')
+              .filter(g => g.includes('gmN4oir2gyCuSSWE'))
+              .reduce((count, g) => count + 1, 0);
+            return total + rule.count * count;
+          }, 0),
+          spell: granted.reduce((total, rule) => {
+            let count = rule.grants.split(', ')
+              .filter(g => g.includes('CfuKf7yOYW4bYNO6'))
+              .reduce((count, g) => count + 1, 0);
+            return total + rule.count * count;
+          }, 0),
+        }
       }
     };
   }
@@ -455,11 +489,13 @@ class Character extends React.Component {
       prevState.rules.filter(rule => {
         return rule.culture == 'Prodigy' && rule.category == 'Cultural' && !rule.group;
       }).forEach(rule => {
-        nextState.character.skills = nextState.character.skills.concat({
-          id: rule._id,
-          name: rule.name,
-          count: 1,
-          source: 'race'
+        nextState = this.stateSkillChange(nextState, {
+          type: 'SKILL',
+          data: {
+            id: rule._id,
+            count: 1,
+            source: 'culture'
+          }
         });
       });
     }
@@ -467,8 +503,15 @@ class Character extends React.Component {
     if(change.old.prodigy && !change.new.prodigy){
       prevState.rules.filter(rule => {
         return rule.culture == 'Prodigy';
-      }).forEach(rule => {
-        nextState.character.skills = nextState.character.skills.filter(skill => skill.id != rule._id);
+      }).forEach(rule => {console.log('remove prodigy', rule)
+        nextState = this.stateSkillChange(nextState, {
+          type: 'SKILL',
+          data: {
+            id: rule._id,
+            count: 0,
+            source: 'culture'
+          }
+        });
       });
     }
 
@@ -477,17 +520,26 @@ class Character extends React.Component {
         prevState.rules.filter(rule => {
           return rule.race == change.old.race && !rule.culture;
         }).forEach(rule => {
-          nextState.character.skills = nextState.character.skills.filter(skill => skill.id != rule._id);
+          nextState = this.stateSkillChange(nextState, {
+            type: 'SKILL',
+            data: {
+              id: rule._id,
+              count: 0,
+              source: 'race'
+            }
+          });
         });
       if(change.new.race)
         prevState.rules.filter(rule => {
           return rule.race == change.new.race && rule.category == 'Racial' && !rule.group;
         }).forEach(rule => {
-          nextState.character.skills = nextState.character.skills.concat({
-            id: rule._id,
-            name: rule.name,
-            count: 1,
-            source: 'race'
+          nextState = this.stateSkillChange(nextState, {
+            type: 'SKILL',
+            data: {
+              id: rule._id,
+              count: 1,
+              source: 'race'
+            }
           });
         });
     }
@@ -497,17 +549,26 @@ class Character extends React.Component {
         prevState.rules.filter(rule => {
           return rule.culture == change.old.culture;
         }).forEach(rule => {
-          nextState.character.skills = nextState.character.skills.filter(skill => skill.id != rule._id);
+          nextState = this.stateSkillChange(nextState, {
+            type: 'SKILL',
+            data: {
+              id: rule._id,
+              count: 0,
+              source: 'culture'
+            }
+          });
         });
       if(change.new.culture)
         prevState.rules.filter(rule => {
           return rule.culture == change.new.culture && rule.category == 'Cultural' && !rule.group;
         }).forEach(rule => {
-          nextState.character.skills = nextState.character.skills.concat({
-            id: rule._id,
-            name: rule.name,
-            count: 1,
-            source: 'culture'
+          nextState = this.stateSkillChange(nextState, {
+            type: 'SKILL',
+            data: {
+              id: rule._id,
+              count: 1,
+              source: 'culture'
+            }
           });
         });
     }
@@ -526,27 +587,27 @@ class Character extends React.Component {
     if(!rule.length)
       return prevState;
     rule = rule[0];
-
+/*
     let canLearn = !rule.race
       || rule.race == prevState.character.race.name
       || (rule.prodigy && rule.race == prevState.character.race.prodigy.race);
     if(!canLearn)
-      return prevState;
+      return prevState;*/
 
-    let build = Object.assign({}, prevState.character.build);
     let skills = prevState.character.skills.slice();
 
     let choice = {
       limit: rule.max,
       known: 0
     };
-    if(rule.category == 'Choice') {
+    if(count && rule.category == 'Choice') {
       let option = prevState.rules.filter(r => r.name == rule.group && r.category == 'Option');
       let optionIndex = 0;
       if(option.length > 1) {
         let parentSelection = option.map(o => prevState.rules.filter(r => r.name == o.group)[0])
-          .filter(o => skills.findIndex(skill => skill.id == o._id && skill.source == source && skill.count > 0) > -1)[0];
-        optionIndex = option.findIndex(o => o.group == parentSelection.name);
+          .filter(o => skills.findIndex(skill => skill.id == o._id && skill.source == source && skill.count > 0) > -1);
+        if(parentSelection.length)
+          optionIndex = option.findIndex(o => o.group == parentSelection[0].name);
       }
       let choices = prevState.rules.filter(r => r.group == option[optionIndex].name);
       choice.limit = option[optionIndex].max;
@@ -557,11 +618,6 @@ class Character extends React.Component {
 
     if((rule.max != 0 && count > rule.max) || (choice.limit && count + choice.known > choice.limit))
       return prevState;
-
-    rule.grants.split(', ').forEach(grant => {
-      let granted = prevState.rules.filter(rule => rule.name == grant);
-      //nextState = this.stateSkillChange(nextState, {type: 'SKILL', data: {id: granted._id, count: , source: 'skill'}});
-    });
 
     let target = skills.findIndex(skill => skill.id == id && skill.source == source);
 
@@ -596,6 +652,39 @@ class Character extends React.Component {
       nextState.character.build.spent += (count - skills[target].count) * rule.build;
       nextState.character.build.nonDomain += (rule.category != 'Domain' ? (count - skills[target].count) * rule.build : 0);
       nextState.character.skills[target].count = count;
+    }
+
+    if(rule.grants) {
+      let grants = rule.grants.split(', ');
+      if(count) {
+        grants.forEach(grant => {
+          let granted = prevState.rules.filter(rule => rule.name == grant);console.log(grants, granted, grants.filter(g => g = grant).length)
+          if(granted.length) {
+            nextState = this.stateSkillChange(nextState, {
+              type: 'SKILL',
+              data: {
+                id: granted[0]._id,
+                count: grants.filter(g => g = grant).length,
+                source: id
+              }
+            });
+          }
+        });
+      }
+      else {
+        grants.forEach(grant => {
+          let granted = prevState.rules.filter(rule => rule.name == grant);
+          if(granted.length)
+            nextState = this.stateSkillChange(nextState, {
+              type: 'SKILL',
+              data: {
+                id: granted[0]._id,
+                count: 0,
+                source: id
+              }
+            });
+        });
+      }
     }
 
     nextState.character.skills = nextState.character.skills.filter(skill => skill.count > 0);
@@ -635,9 +724,8 @@ class Character extends React.Component {
       domains,
       advancedArts,
       pools,
-      bodyMod,
       sourceMark,
-      extraTags
+      mod
     } = this.parseRules();
     const domainNames = domains.map(rule => rule.group)
       .filter((rule, index, self) => self.indexOf(rule) == index)
@@ -649,8 +737,6 @@ class Character extends React.Component {
         : a > b ? 1
         : -1;
       });
-    let bodyTotal = (body + bodyMod.extra + bodyMod.perLevel * level) * (bodyMod.double ? 2 : 1);
-    console.log(sourceMark);
     return (
       <div data-character='sheet'>
         <Box label='Player'>
@@ -703,19 +789,19 @@ class Character extends React.Component {
         <Box label='Body' factor={0.25}>
           <Field
             name='body'
-            value={bodyTotal}
+            value={(body + mod.body.extra + mod.body.perLevel * level) * (mod.body.double ? 2 : 1)}
           />
         </Box>
         <Box label='Buffs' factor={0.25}>
           <Field
             name='buffs'
-            value={buffs}
+            value={buffs + mod.buffs.extra}
           />
         </Box>
         <Box label='Tattoos' factor={0.25}>
           <Field
             name='inscriptions'
-            value={inscriptions}
+            value={inscriptions + mod.inscriptions.extra}
           />
         </Box>
         <Box color label='Ressurection Bag'>
@@ -727,7 +813,7 @@ class Character extends React.Component {
         </Box>
         <Box label='Recoveries'>
           <Stones
-            stones={recoveries}
+            stones={recoveries + mod.recoveries.extra}
           />
         </Box>
         <Box color label='Race' factor={0.5}>
@@ -797,7 +883,7 @@ class Character extends React.Component {
         </Box>
         <Box color label='Combat Pools'>
           <Pools
-            extraTags={extraTags}
+            extraTags={mod.tags}
             abilities={pools}
             viewDescription={this.viewRule}
             editCharacter={this.editCharacter}
