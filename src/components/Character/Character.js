@@ -587,6 +587,9 @@ class Character extends React.Component {
     if(!rule.length)
       return prevState;
     rule = rule[0];
+
+    if(rule.block && source == 'build')
+      return prevState;
 /*
     let canLearn = !rule.race
       || rule.race == prevState.character.race.name
@@ -621,6 +624,8 @@ class Character extends React.Component {
 
     let target = skills.findIndex(skill => skill.id == id && skill.source == source);
 
+    let free = -1 == ['build','race','culture'].indexOf(source) ? 0 : 1;
+
     if(typeof source == 'number') {
       target = skills.findIndex(skill => skill.source == source);
       if(target == -1)
@@ -639,8 +644,8 @@ class Character extends React.Component {
         };
     }
     else if(target == -1) {
-      nextState.character.build.spent += count * rule.build;
-      nextState.character.build.nonDomain += (rule.category == 'Domain' ? count * rule.build : 0);
+      nextState.character.build.spent += count * free * rule.build;
+      nextState.character.build.nonDomain += (rule.category == 'Domain' ? count * free * rule.build : 0);
       nextState.character.skills = skills.concat({
         id: id,
         name: rule.name,
@@ -649,42 +654,27 @@ class Character extends React.Component {
       });
     }
     else {
-      nextState.character.build.spent += (count - skills[target].count) * rule.build;
-      nextState.character.build.nonDomain += (rule.category != 'Domain' ? (count - skills[target].count) * rule.build : 0);
+      nextState.character.build.spent += (count - skills[target].count) * free * rule.build;
+      nextState.character.build.nonDomain += (rule.category != 'Domain' ? (count - skills[target].count) * free * rule.build : 0);
       nextState.character.skills[target].count = count;
     }
 
     if(rule.grants) {
-      let grants = rule.grants.split(', ');
-      if(count) {
-        grants.forEach(grant => {
-          let granted = prevState.rules.filter(rule => rule.name == grant);console.log(grants, granted, grants.filter(g => g = grant).length)
-          if(granted.length) {
-            nextState = this.stateSkillChange(nextState, {
-              type: 'SKILL',
-              data: {
-                id: granted[0]._id,
-                count: grants.filter(g => g = grant).length,
-                source: id
-              }
-            });
+      let grants = rule.grants.split(', ')
+        .filter((text, index, self) => self.indexOf(text) == index)
+        .map(text => {
+          return {
+            id: text,
+            count: count * rule.grants.split(', ').filter(g => g == text).length,
+            source: id
           }
         });
-      }
-      else {
-        grants.forEach(grant => {
-          let granted = prevState.rules.filter(rule => rule.name == grant);
-          if(granted.length)
-            nextState = this.stateSkillChange(nextState, {
-              type: 'SKILL',
-              data: {
-                id: granted[0]._id,
-                count: 0,
-                source: id
-              }
-            });
+      grants.forEach(grant => {
+        nextState = this.stateSkillChange(nextState, {
+          type: 'SKILL',
+          data: grant
         });
-      }
+      });
     }
 
     nextState.character.skills = nextState.character.skills.filter(skill => skill.count > 0);
