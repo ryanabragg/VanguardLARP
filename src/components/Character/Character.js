@@ -348,22 +348,15 @@ class Character extends React.Component {
         nextState.character.build.nonDomain = Number(action.data); break;
       case 'ENABLE LIFE':
       case 'DISABLE LIFE':
-        change = this.stateLivesChange(prevState, action);
-        nextState.character.lives = change;
-        break;
+        nextState = this.stateLivesChange(prevState, action); break;
       case 'RACE':
       case 'CULTURE':
       case 'PRODIGY':
-        change = this.stateRaceChange(prevState, action);
-        nextState.character.race = change.race;
-        break;
+        nextState = this.stateRaceChange(prevState, action); break;
       case 'SOURCE MARK':
         nextState.character.sourceMarks = action.data; break;
       case 'SKILL':
-        change = this.stateSkillChange(prevState, action);
-        nextState.character.build = change.build;
-        nextState.character.skills = change.skills;
-        break;
+        nextState = this.stateSkillChange(prevState, action); break;
       default:
         return prevState;
       }
@@ -372,12 +365,11 @@ class Character extends React.Component {
   }
 
   stateLivesChange(prevState, action) {
-    let color = action.data;
-    let edit = [];
+    let nextState = Object.assign({}, prevState);
     switch(action.type) {
     case 'ENABLE LIFE':
-      edit = prevState.character.lives.map(stone => {
-        if(stone.color != color ||
+      nextState.character.lives = prevState.character.lives.map(stone => {
+        if(stone.color != action.data ||
           stone.disabled == 0 ||
           stone.count == 0
         )
@@ -390,8 +382,8 @@ class Character extends React.Component {
       });
       break;
     case 'DISABLE LIFE':
-      edit = prevState.character.lives.map(stone => {
-        if(stone.color != color ||
+      nextState.character.lives = prevState.character.lives.map(stone => {
+        if(stone.color != action.data ||
           stone.disabled == stone.count ||
           stone.count == 0
         )
@@ -404,56 +396,53 @@ class Character extends React.Component {
       });
       break;
     default:
-      edit = prevState.character.lives.slice();
     }
-    return edit;
+    return nextState;
   }
 
   stateRaceChange(prevState, action) {
     //@todo: race/culture change should affect build and skills
-    let edit = Object.assign({}, prevState.character);
+    let nextState = Object.assign({}, prevState);
     switch(action.type) {
     case 'RACE':
-      edit.race.name = action.data;
-      edit.race.culture = '';
+      nextState.character.race.name = action.data;
+      nextState.character.race.culture = '';
       break;
     case 'CULTURE':
-      edit.race.culture = action.data;
+      nextState.character.race.culture = action.data;
       if(action.data)
-        edit.race.name = prevState.rules.filter(rule => {
+        nextState.character.race.name = prevState.rules.filter(rule => {
           return rule.category == 'Culture' && rule.name == action.data;
         })[0].race;
       break;
     case 'PRODIGY':
-      edit.race.prodigy = action.data;
+      nextState.character.race.prodigy = action.data;
       break;
     default:
     }
-    return edit;
+    return nextState;
   }
 
   stateSkillChange(prevState, action) {
+    let nextState = Object.assign({}, prevState);
+
     let { id, count, source } = action.data;
     if(!id || count < 0)
-      return { build: prevState.character.build, skills: prevState.character.skills };
-
-    let { total, spent, nonDomain } = prevState.character.build;
+      return prevState;
 
     let rule = prevState.rules.filter(rule => rule._id == id);
     if(!rule.length)
-      return { build: prevState.character.build, skills: prevState.character.skills };
+      return prevState;
     rule = rule[0];
 
     let canLearn = !rule.race
       || rule.race == prevState.character.race.name
       || (rule.prodigy && rule.race == prevState.character.race.prodigy.race);
     if(!canLearn)
-      return { build: prevState.character.build, skills: prevState.character.skills };
+      return prevState;
 
-    let cost = source == 'build' ? rule.build : 0;
-
+    let build = Object.assign({}, prevState.character.build);
     let skills = prevState.character.skills.slice();
-    let index = skills.findIndex(skill => skill.id == id && skill.source == source);
 
     let choice = {
       limit: rule.max,
@@ -474,39 +463,54 @@ class Character extends React.Component {
         .reduce((total, skill) => total + skill.count, 0);
     }
 
-    if(index == -1 && (!rule.max || count <= rule.max) && (!choice.limit || count + choice.known <= choice.limit))
-      return {
-        build: {
-          total: total,
-          spent: spent + count * cost,
-          nonDomain: nonDomain + (rule.category == 'Domain' ? count * cost : 0)
-        },
-        skills: skills.concat({
+    if((rule.max != 0 && count > rule.max) || (choice.limit && count + choice.known > choice.limit))
+      return prevState;
+
+    let granted = rule.grants.split(', ');
+    if(granted.length) {
+      for(var i = 0; i < granted.length; i++) {
+        
+      }
+    }
+
+    let target = skills.findIndex(skill => skill.id == id && skill.source == source);
+
+    if(typeof source == 'number') {
+      target = skills.findIndex(skill => skill.source == source);
+      if(target == -1)
+        nextState.character.skills = skills.concat({
           id: id,
+          name: rule.name,
           count: count,
           source: source
-        })
-      };
+        });
+      else
+        nextState.character.skills[target] = {
+          id: id,
+          name: rule.name,
+          count: count,
+          source: source
+        };
+    }
+    else if(target == -1) {
+      nextState.character.build.spent += count * rule.build;
+      nextState.character.build.nonDomain += (rule.category == 'Domain' ? count * rule.build : 0);
+      nextState.character.skills = skills.concat({
+        id: id,
+        name: rule.name,
+        count: count,
+        source: source
+      });
+    }
+    else {
+      nextState.character.build.spent += (count - skills[target].count) * rule.build;
+      nextState.character.build.nonDomain += (rule.category != 'Domain' ? (count - skills[target].count) * rule.build : 0);
+      nextState.character.skills[target].count = count;
+    }
 
-    if(rule.max != 0 && (count > rule.max || count + choice.known > choice.limit))
-      return { build: prevState.character.build, skills: prevState.character.skills };
+    nextState.character.skills = nextState.character.skills.filter(skill => skill.count > 0);
 
-    let diff = count - skills[index].count;
-
-    skills[index] = {
-      id: id,
-      count: count,
-      source: source
-    };
-
-    return {
-      build: {
-        total: total,
-        spent: spent + diff * cost,
-        nonDomain: nonDomain + (rule.category == 'Domain' ? diff * cost : 0)
-      },
-      skills: skills
-    };
+    return nextState;
   }
 
   render() {
