@@ -183,6 +183,9 @@ class Rules extends React.Component {
             .concat(this.syncData.modify)
             .concat(this.syncData.add);
           return nextState;
+        }, () => {
+          if(this.props.match.params.hasOwnProperty('id'))
+            this.selectRule(this.props.match.params.id);
         });
       }
     });

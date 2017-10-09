@@ -1,8 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 import FormField from './FormField';
+import IconLink from '../svg/icon/Link';
 
 class RuleForm extends React.Component {
   constructor(props) {
@@ -29,6 +31,15 @@ class RuleForm extends React.Component {
         name='rule'
         ref={form => {this.form = form;}}
       >
+        {this.props.id != 'new'
+        ? <div className='record-id'>
+            <span>{this.props.id}</span>
+            <Link to={`/admin/rules/${this.props.id}`}>
+              <IconLink color='inherit' />
+            </Link>
+          </div>
+        : null
+        }
         <fieldset>
           <FormField type='text'
             name='name'

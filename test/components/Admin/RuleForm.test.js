@@ -4,8 +4,11 @@ import { spy } from 'sinon';
 import { shallow } from 'enzyme';
 import { JSDOM } from 'jsdom';
 
+import { Link } from 'react-router-dom';
+
 import RuleForm from '../../../src/components/Admin/RuleForm';
 import FormField from '../../../src/components/Admin/FormField';
+import IconLink from '../../../src/components/svg/icon/Link';
 
 const window = (new JSDOM('<!doctype html><html><body></body></html>')).window;
 global.window = window;
@@ -23,7 +26,7 @@ function copyProps(src, target) {
 copyProps(window, global);
 
 describe('<RuleForm />', () => {
-  it('renders a form with seven fieldsets holding eighteen FormField components and three buttons', () => {
+  it('renders a form with fieldsets holding FormField components and buttons', () => {
     const onChange = spy(),
       onSubmit = spy(),
       onCancel = spy(),
@@ -32,10 +35,27 @@ describe('<RuleForm />', () => {
     expect(wrapper.find('form')).to.have.length(1);
     expect(wrapper.find('form').prop('id')).to.equal('42');
     expect(wrapper.find('form').prop('name')).to.equal('rule');
-    expect(wrapper.find('form').children()).to.have.length(10);
     expect(wrapper.find('fieldset')).to.have.length(7);
     expect(wrapper.find('button')).to.have.length(3);
     expect(wrapper.find(FormField)).to.have.length(18);
+  });
+
+  it('has a div containing the id prop and a Link icon if id is not "new"', () => {
+    const onChange = spy(),
+      onSubmit = spy(),
+      onCancel = spy(),
+      onDelete = spy();
+    const wrapper = shallow(<RuleForm id='42' onChange={onChange} onSubmit={onSubmit} onCancel={onCancel} onDelete={onDelete} />);
+    expect(wrapper.find('div')).to.have.length(1);
+    expect(wrapper.find('span')).to.have.length(1);
+    expect(wrapper.find('span').text()).to.equal('42');
+    expect(wrapper.find(Link)).to.have.length(1);
+    expect(wrapper.find(IconLink)).to.have.length(1);
+    wrapper.setProps({id: 'new'});
+    expect(wrapper.find('div')).to.have.length(0);
+    expect(wrapper.find('span')).to.have.length(0);
+    expect(wrapper.find(Link)).to.have.length(0);
+    expect(wrapper.find(IconLink)).to.have.length(0);
   });
 
   it('has a button for submit, cancel, and delete', () => {
@@ -59,7 +79,7 @@ describe('<RuleForm />', () => {
     expect(wrapper.find('button').at(2).text()).to.equal('Delete');
   });
 
-  it('does not include the delete button if id="new"', () => {
+  it('does not include the delete button if id is "new"', () => {
     const onChange = spy(),
       onSubmit = spy(),
       onCancel = spy(),

@@ -22,6 +22,27 @@ const StyledRuleList = styled(RuleList)`
   .placeholder {
     color: lightgrey;
   }
+  .record-id {
+    float: right;
+    position: relative;
+  }
+  .record-id span {
+    position: absolute;
+    right: 18px;
+    top: 0;
+    font-size: 0.6em;
+    line-height: 0.6em;
+    text-align: right;
+    color: ${props => props.theme.colors.primary};
+  }
+  .record-id svg {
+    position: absolute;
+    right: 0;
+    top: -6px;
+    width: 16px;
+    height: 16px;
+    fill: ${props => props.theme.colors.primary};
+  }
   form {
     padding: 1em;
     border-bottom: 1px solid ${props => props.theme.colors.primary};
