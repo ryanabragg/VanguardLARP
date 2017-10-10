@@ -28,8 +28,18 @@ class Levels extends React.Component {
 
   handleInputChange(e) {
     e.preventDefault();
+    let known = this.props.known.filter(k => k.level == e.target.name);
+    if(known.length)
+      this.props.editCharacter({
+        type: 'SKILL',
+        data: {
+          id: known[0].id,
+          count: 0,
+          source: Number(e.target.name)
+        }
+      });
     this.props.editCharacter({
-      type: 'LEVEL SKILL',
+      type: 'SKILL',
       data: {
         id: e.target.value,
         count: 1,

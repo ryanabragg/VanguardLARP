@@ -203,6 +203,8 @@ class Character extends React.Component {
     const rules = this.getRules();
     const granted = rules.filter(rule => rule.grants);
     const { race } = this.state.character;
+    const level = Math.floor((this.state.character.build.spent - 25) / 10);
+
     return { // @todo: change sort to be part of data entry
       races: rules.filter(rule => rule.category == 'Race')
         .sort((a, b) => {
@@ -344,7 +346,7 @@ class Character extends React.Component {
   }
 
   getFreeSkills() {
-    const skills = this.state.character.skills.filter(skill => Number(skill.source) > 0);
+    const skills = this.state.character.skills.filter(skill => typeof skill.source == 'number');
     return skills.map(skill => {
       let rule = this.state.rules.filter(rule => rule._id == skill.id);
       return {
@@ -503,7 +505,7 @@ class Character extends React.Component {
     if(change.old.prodigy && !change.new.prodigy){
       prevState.rules.filter(rule => {
         return rule.culture == 'Prodigy';
-      }).forEach(rule => {console.log('remove prodigy', rule)
+      }).forEach(rule => {
         nextState = this.stateSkillChange(nextState, {
           type: 'SKILL',
           data: {
@@ -666,7 +668,7 @@ class Character extends React.Component {
           return {
             id: text,
             count: count * rule.grants.split(', ').filter(g => g == text).length,
-            source: id
+            source: `${source}: ${id}`
           }
         });
       grants.forEach(grant => {

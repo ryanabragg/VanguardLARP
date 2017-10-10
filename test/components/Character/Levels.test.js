@@ -287,6 +287,20 @@ describe('<Levels />', () => {
     };
     wrapper.setProps(props);
     wrapper.find('.level').at(2).find('select').simulate('change', {target: {name: '9', value: '20'}, preventDefault: () => {}});
-    expect(edit.firstCall.args[0]).to.deep.equal({type: 'LEVEL SKILL', data: { id: '20', count: 1, source: 9 }});
+    expect(edit.firstCall.args[0]).to.deep.equal({type: 'SKILL', data: { id: '20', count: 1, source: 9 }});
+    known = [{
+      id: '42',
+      level: 6,
+      name: 'test'
+    }, {
+      id: '20',
+      level: 9,
+      name: 'angels'
+    }];
+    wrapper.setProps({known: known});
+    edit.reset();
+    wrapper.find('.level').at(2).find('select').simulate('change', {target: {name: '9', value: '10'}, preventDefault: () => {}});
+    expect(edit.firstCall.args[0]).to.deep.equal({type: 'SKILL', data: { id: '20', count: 0, source: 9 }});
+    expect(edit.secondCall.args[0]).to.deep.equal({type: 'SKILL', data: { id: '10', count: 1, source: 9 }});
   });
 });
