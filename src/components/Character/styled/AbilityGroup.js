@@ -7,6 +7,33 @@ const StyledAbilityGroup = styled(AbilityGroup)`
   display: inline-block;
   width: 100%;
 
+  div.tier {
+    display: block;
+  }
+
+  label.tier {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    font-size: 0.8em;
+    text-align: center;
+  }
+  label.tier::before,
+  label.tier::after {
+    content: "";
+    position: absolute;
+    top: 35%;
+    width: 20%;
+    height: 1px;
+    background: ${props => props.theme.colors.secondary};
+  }
+  label.tier::before {
+    left: 20%;
+  }
+  label.tier::after {
+    right: 20%;
+  }
+
   div[data-character="ability"] {
     position: relative;
     padding: 0;

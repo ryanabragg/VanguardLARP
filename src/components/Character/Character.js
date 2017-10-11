@@ -12,8 +12,6 @@ import Crafting from './styled/Crafting';
 import AbilityGroup from './styled/AbilityGroup';
 import Racials from './styled/Racials';
 import Pools from './styled/Pools';
-import Domain from './styled/Domain';
-import AdvancedArts from './styled/AdvancedArts';
 
 // import the notifications component to access static methods (don't import styled version)
 import NotificationList from '../util/NotificationList';
@@ -889,8 +887,7 @@ class Character extends React.Component {
         {domainNames.map(domain => {
           return (
             <Box color label={domain} key={domain}>
-              <Domain
-                name={domain}
+              <AbilityGroup
                 abilities={domains.filter(rule => rule.group == domain)}
                 viewDescription={this.viewRule}
                 editCharacter={this.editCharacter}
@@ -899,7 +896,7 @@ class Character extends React.Component {
           );
         })}
         <Box color label='Advanced Arts'>
-          <AdvancedArts
+          <AbilityGroup
             abilities={advancedArts}
             viewDescription={this.viewRule}
             editCharacter={this.editCharacter}
