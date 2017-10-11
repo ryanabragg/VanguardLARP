@@ -7,7 +7,6 @@ const StyledField = styled(Field)`
   display: inline-block;
   width: 100%;
 
-  width: 100%;
   height: 25px;
   line-height: 25px;
   border: none;
