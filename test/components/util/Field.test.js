@@ -63,9 +63,23 @@ describe('<Field />', () => {
   it('executes the onChange prop when the value is changed', () => {
     const edit = spy();
     const wrapper = shallow(<Field name='test' onChange={edit}/>);
-    wrapper.find('input').simulate('change', {target: {name: 'try', value: 'blah'}, preventDefault: () => {}});
+    wrapper.find('input').simulate('change', {target: {name: 'test', value: 'blah'}, preventDefault: () => {}});
     expect(edit.callCount).to.equal(1);
-    expect(edit.firstCall.args[0]).to.deep.equal({type: 'TRY', data: 'blah'});
+    expect(edit.firstCall.args[0]).to.deep.equal({type: 'TEST', data: 'blah'});
+    wrapper.setProps({
+      type: 'text',
+      value: 0
+    });
+    wrapper.find('input').simulate('change', {target: {name: 'try', value: '4'}, preventDefault: () => {}});
+    expect(edit.callCount).to.equal(2);
+    expect(edit.secondCall.args[0]).to.deep.equal({type: 'TRY', data: '4'});
+    wrapper.setProps({
+      type: 'number',
+      value: 4
+    });
+    wrapper.find('input').simulate('change', {target: {name: 'try', value: '2'}, preventDefault: () => {}});
+    expect(edit.callCount).to.equal(3);
+    expect(edit.thirdCall.args[0]).to.deep.equal({type: 'TRY', data: 2});
   });
 
   it('renders a select instead of an input if type is select', () => {

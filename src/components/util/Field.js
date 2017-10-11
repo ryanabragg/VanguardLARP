@@ -12,12 +12,25 @@ class Field extends React.Component {
   }
 
   handleInputChange(e) {
+    if(typeof this.props.onChange != 'function')
+      return;
+
     e.preventDefault();
-    if(typeof this.props.onChange == 'function')
-      this.props.onChange({
-        type: e.target.name.toUpperCase(),
-        data: e.target.value
-      });
+
+    let payload = {
+      type: e.target.name.toUpperCase(),
+      data: undefined
+    };
+
+    switch(this.props.type) {
+    case 'number':
+      payload.data = Number(e.target.value);
+      break;
+    default:
+      payload.data = e.target.value;
+    }
+
+    this.props.onChange(payload);
   }
 
   renderInput() {
