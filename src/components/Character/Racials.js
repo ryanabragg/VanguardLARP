@@ -95,7 +95,7 @@ class Racials extends React.Component {
               options={this.props.races.filter(r => r.prodigy).map(r => {
                   return { value: r.name, label: r.name };
                 })}
-              editCharacter={this.handleProdigyRacial}
+              onChange={this.handleProdigyRacial}
             />
             <Field
               name='culture'
@@ -107,7 +107,7 @@ class Racials extends React.Component {
                 }).map(c => {
                   return { value: c.name, label: c.name };
                 })}
-              editCharacter={this.handleProdigyRacial}
+              onChange={this.handleProdigyRacial}
             />
             <div className='divider' />
           </div>
@@ -116,7 +116,7 @@ class Racials extends React.Component {
         {this.renderAbilities(this.props.racials.filter(r => {
           return r.race == race && !r.culture && (this.props.culture != 'Prodigy' || r.prodigy)
         }), 'race')}
-        {culture ? <div className='divider' /> : null}
+        {race ? <div className='divider' /> : null}
         {this.renderAbilities(this.props.racials.filter(r => {
           return r.culture && (r.culture == culture || (this.props.culture == 'Prodigy' && (r.culture == 'Prodigy' || r.prodigy)))
         }), 'culture')}
