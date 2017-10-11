@@ -203,7 +203,7 @@ class Character extends React.Component {
     const rules = this.getRules();
     const granted = rules.filter(rule => rule.grants);
     const { race } = this.state.character;
-    const level = Math.floor((this.state.character.build.spent - 25) / 10);
+    const level = Math.max(0, Math.floor((this.state.character.build.spent - 25) / 10));
 
     return { // @todo: change sort to be part of data entry
       races: rules.filter(rule => rule.category == 'Race')
@@ -332,7 +332,7 @@ class Character extends React.Component {
 
   levelValues() {
     const build = this.state.character.build.spent;
-    const level = Math.floor((build - 25) / 10);
+    const level = Math.max(0, Math.floor((build - 25) / 10));
     return {
       level: level,
       body: 10 + 5 * level,
