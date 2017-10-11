@@ -813,7 +813,9 @@ class Character extends React.Component {
             name='race'
             value={race.name}
             type='select'
-            options={races.map(r => r.name)}
+            options={races.map(r => {
+                return { value: r.name, label: r.name };
+              })}
             onChange={this.editCharacter}
           />
         </Box>
@@ -822,7 +824,10 @@ class Character extends React.Component {
             name='culture'
             value={race.culture}
             type='select'
-            options={cultures.filter(c => !race.name || c.race == race.name).map(c => c.name)}
+            options={cultures.filter(c => !race.name || c.race == race.name)
+              .map(c => {
+                return { value: c.name, label: c.name };
+              })}
             onChange={this.editCharacter}
           />
         </Box>

@@ -95,19 +95,15 @@ describe('<Field />', () => {
     expect(wrapper.find('option').prop('value')).to.equal('');
     expect(wrapper.find('option').text()).to.equal('');
     wrapper.setProps({
-      options: ['one', 'two']
-    });
-    expect(wrapper.find('option')).to.have.length(3);
-    expect(wrapper.find('option').at(0).text()).to.equal('');
-    expect(wrapper.find('option').at(1).text()).to.equal('one');
-    expect(wrapper.find('option').at(2).text()).to.equal('two');
-    wrapper.setProps({
-      placeholder: 'test',
-      options: ['one', 'two', 'one', 'one', 'two']
+      options: [{value: 42, label: 'one'}, {value: 'test', label: 2}]
     });
     expect(wrapper.find('option')).to.have.length(3);
     expect(wrapper.find('option').at(0).prop('value')).to.equal('');
-    expect(wrapper.find('option').at(0).text()).to.equal('test');
+    expect(wrapper.find('option').at(0).text()).to.equal('');
+    expect(wrapper.find('option').at(1).prop('value')).to.equal(42);
+    expect(wrapper.find('option').at(1).text()).to.equal('one');
+    expect(wrapper.find('option').at(2).prop('value')).to.equal('test');
+    expect(wrapper.find('option').at(2).text()).to.equal('2');
   });
 
   it('renders a checkbox instead of an input if type is checkbox');

@@ -92,7 +92,9 @@ class Racials extends React.Component {
               placeholder='Race'
               value={this.props.prodigy.race}
               type='select'
-              options={this.props.races.filter(r => r.prodigy).map(r => r.name)}
+              options={this.props.races.filter(r => r.prodigy).map(r => {
+                  return { value: r.name, label: r.name };
+                })}
               editCharacter={this.handleProdigyRacial}
             />
             <Field
@@ -101,8 +103,10 @@ class Racials extends React.Component {
               value={this.props.prodigy.culture}
               type='select'
               options={this.props.cultures.filter(c => {
-                return c.prodigy && (!this.props.prodigy.race || c.race == this.props.prodigy.race)
-              }).map(c => c.name)}
+                  return c.prodigy && (!this.props.prodigy.race || c.race == this.props.prodigy.race)
+                }).map(c => {
+                  return { value: c.name, label: c.name };
+                })}
               editCharacter={this.handleProdigyRacial}
             />
             <div className='divider' />
@@ -112,7 +116,7 @@ class Racials extends React.Component {
         {this.renderAbilities(this.props.racials.filter(r => {
           return r.race == race && !r.culture && (this.props.culture != 'Prodigy' || r.prodigy)
         }), 'race')}
-        <div className='divider' />
+        {culture ? <div className='divider' /> : null}
         {this.renderAbilities(this.props.racials.filter(r => {
           return r.culture && (r.culture == culture || (this.props.culture == 'Prodigy' && (r.culture == 'Prodigy' || r.prodigy)))
         }), 'culture')}

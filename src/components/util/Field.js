@@ -47,8 +47,6 @@ class Field extends React.Component {
   }
 
   renderSelect() {
-    const options = this.props.options
-      .filter((rule, index, self) => self.indexOf(rule) == index);
     return (
       <select
         name={this.props.name}
@@ -56,8 +54,14 @@ class Field extends React.Component {
         onChange={this.handleInputChange}
         readOnly={typeof this.props.onChange != 'function'}
       >
-        <option default value={''}>{this.props.placeholder || ''}</option>
-        {options.map(option => <option key={option} value={option}>{option}</option>)}
+        <option default value=''>
+          {this.props.placeholder || ''}
+        </option>
+        {this.props.options.map(option => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>)
+        )}
       </select>
     );
   }
@@ -100,7 +104,18 @@ Field.propTypes = {
   name: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
   value: PropTypes.any,
-  options: PropTypes.array,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number
+      ]),
+      label: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number
+      ])
+    })
+  ),
   onChange: PropTypes.func,
   label: PropTypes.string,
   labelPosition: PropTypes.number

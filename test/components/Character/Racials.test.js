@@ -245,7 +245,13 @@ describe('<Racials />', () => {
       culture: 'Prodigy'
     });
     expect(wrapper.find(Field)).to.have.length(2);
-    expect(wrapper.find(Field).at(0).prop('options')).to.deep.equal(['monkey', 'human']);
-    expect(wrapper.find(Field).at(1).prop('options')).to.deep.equal(['baby monkey', 'child']);
+    expect(wrapper.find(Field).at(0).prop('options')).to.deep.equal([
+      {value: 'monkey', label: 'monkey'},
+      {value: 'human', label: 'human'}
+    ]);
+    expect(wrapper.find(Field).at(1).prop('options')).to.deep.equal([
+      {value: 'baby monkey', label: 'baby monkey'},
+      {value: 'child', label: 'child'}
+    ]);
   });
 });
