@@ -741,14 +741,14 @@ class Character extends React.Component {
           <Field
             name='name'
             value={name}
-            editCharacter={this.editCharacter}
+            onChange={this.editCharacter}
           />
         </Box>
         <Box color label='Player Build' factor={1/3}>
           <Field
             name='player build'
             value={player.build}
-            editCharacter={this.editCharacter}
+            onChange={this.editCharacter}
           />
         </Box>
         <Box label='Build Total' factor={1/3}>
@@ -814,7 +814,7 @@ class Character extends React.Component {
             value={race.name}
             type='select'
             options={races.map(r => r.name)}
-            editCharacter={this.editCharacter}
+            onChange={this.editCharacter}
           />
         </Box>
         <Box color label='Culture' factor={0.5}>
@@ -823,7 +823,7 @@ class Character extends React.Component {
             value={race.culture}
             type='select'
             options={cultures.filter(c => !race.name || c.race == race.name).map(c => c.name)}
-            editCharacter={this.editCharacter}
+            onChange={this.editCharacter}
           />
         </Box>
         <Box color={!!race.name}

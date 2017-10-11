@@ -38,7 +38,7 @@ describe('<Field />', () => {
     expect(wrapper.find('input').prop('placeholder')).to.equal('4');
     expect(wrapper.find('input').prop('readOnly')).to.equal(true);
     wrapper.setProps({
-      editCharacter: edit
+      onChange: edit
     });
     expect(wrapper.find('input').prop('readOnly')).to.equal(false);
   });
@@ -60,9 +60,9 @@ describe('<Field />', () => {
     expect(wrapper.find('div').childAt(1).type()).to.equal('input');
   });
 
-  it('executes the editCharacter prop when the value is changed', () => {
+  it('executes the onChange prop when the value is changed', () => {
     const edit = spy();
-    const wrapper = shallow(<Field name='test' editCharacter={edit}/>);
+    const wrapper = shallow(<Field name='test' onChange={edit}/>);
     wrapper.find('input').simulate('change', {target: {name: 'try', value: 'blah'}, preventDefault: () => {}});
     expect(edit.callCount).to.equal(1);
     expect(edit.firstCall.args[0]).to.deep.equal({type: 'TRY', data: 'blah'});

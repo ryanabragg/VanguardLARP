@@ -13,8 +13,8 @@ class Field extends React.Component {
 
   handleInputChange(e) {
     e.preventDefault();
-    if(typeof this.props.editCharacter == 'function')
-      this.props.editCharacter({
+    if(typeof this.props.onChange == 'function')
+      this.props.onChange({
         type: e.target.name.toUpperCase(),
         data: e.target.value
       });
@@ -28,7 +28,7 @@ class Field extends React.Component {
         placeholder={this.props.placeholder}
         value={this.props.value}
         onChange={this.handleInputChange}
-        readOnly={typeof this.props.editCharacter != 'function'}
+        readOnly={typeof this.props.onChange != 'function'}
       />
     );
   }
@@ -41,7 +41,7 @@ class Field extends React.Component {
         name={this.props.name}
         value={this.props.value}
         onChange={this.handleInputChange}
-        readOnly={typeof this.props.editCharacter != 'function'}
+        readOnly={typeof this.props.onChange != 'function'}
       >
         <option default value={''}>{this.props.placeholder || ''}</option>
         {options.map(option => <option key={option} value={option}>{option}</option>)}
@@ -58,7 +58,7 @@ class Field extends React.Component {
     delete rest.placeholder;
     delete rest.value;
     delete rest.options;
-    delete rest.editCharacter;
+    delete rest.onChange;
     delete rest.label;
     delete rest.labelPosition;
     return (
@@ -88,7 +88,7 @@ Field.propTypes = {
   placeholder: PropTypes.string,
   value: PropTypes.any,
   options: PropTypes.array,
-  editCharacter: PropTypes.func,
+  onChange: PropTypes.func,
   label: PropTypes.string,
   labelPosition: PropTypes.number
 };
