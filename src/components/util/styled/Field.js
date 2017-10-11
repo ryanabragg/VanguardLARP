@@ -7,22 +7,17 @@ const StyledField = styled(Field)`
   display: inline-block;
   width: 100%;
 
-  input,
-  textarea,
-  select {
-    width: 100%;
-    height: 25px;
-    line-height: 25px;
-    border: none;
-    outline: none;
+  width: 100%;
+  height: 25px;
+  line-height: 25px;
+  border: none;
+  outline: none;
+
+  :focus {
   }
-  input:focus,
-  textarea:focus,
-  select:focus {
-  }
-  textarea{
-    resize:none;
-  }
+
+  //textarea
+  resize:none;
 `;
 
 export default StyledField;

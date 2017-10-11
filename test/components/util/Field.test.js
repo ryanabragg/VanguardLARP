@@ -43,23 +43,6 @@ describe('<Field />', () => {
     expect(wrapper.find('input').prop('readOnly')).to.equal(false);
   });
 
-  it('renders a label for the input', () => {
-    const wrapper = shallow(<Field name='test' />);
-    expect(wrapper.find('label')).to.have.length(0);
-    wrapper.setProps({
-      label: 'blah'
-    });
-    expect(wrapper.find('label')).to.have.length(1);
-    expect(wrapper.find('label').text()).to.equal('blah');
-    expect(wrapper.find('div').childAt(0).type()).to.equal('input');
-    expect(wrapper.find('div').childAt(1).type()).to.equal('label');
-    wrapper.setProps({
-      labelPosition: -1
-    });
-    expect(wrapper.find('div').childAt(0).type()).to.equal('label');
-    expect(wrapper.find('div').childAt(1).type()).to.equal('input');
-  });
-
   it('executes the onChange prop when the value is changed', () => {
     const edit = spy();
     const wrapper = shallow(<Field name='test' onChange={edit}/>);
