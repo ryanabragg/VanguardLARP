@@ -35,21 +35,29 @@ const StyledDomain = styled(Domain)`
   }
 
   div[data-character="ability"] {
+    position: relative;
     padding: 0;
+    height: 1.2em;
     margin: 0 5px 2px 5px;
   }
-  span {
+
+  div[data-character="ability"] > div {
     display: inline-block;
   }
-  span:hover {
-    cursor: pointer;
+
+  label {
+    display: inline-block;
+    font-size: 15px;
   }
-  input, select {
+
+  input,
+  select,
+  textarea {
     margin: 0 5px 0 0;
+    border: 1px solid ${props => props.theme.colors.primary};
   }
   input {
     width: 20px;
-    border: 1px solid ${props => props.theme.colors.primary};
     text-align: center;
   }
   input[type="number"] {

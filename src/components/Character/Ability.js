@@ -1,12 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import Field from '../util/Field';
+
 class Ability extends React.Component {
   constructor(props) {
     super(props);
 
-    this.handleView = this.handleView.bind(this);
+    this.tiers = [
+      {value: 1, label: 'Apprentice' },
+      {value: 2, label: 'Journeyman' },
+      {value: 3, label: 'Craftsman' },
+      {value: 4, label: 'Master' },
+      {value: 5, label: 'Grandmaster' },
+    ];
+
     this.handleInputChange = this.handleInputChange.bind(this);
+
+    this.handleView = this.handleView.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.increment = this.increment.bind(this);
+    this.decrement = this.decrement.bind(this);
   }
 
   handleInputChange(e) {
@@ -26,29 +40,43 @@ class Ability extends React.Component {
     this.props.viewDescription(this.props.id);
   }
 
+  onChange(payload) {
+    this.props.editCharacter({
+      type: 'SKILL',
+      data: {
+        id: this.props.id,
+        count: Number(payload.data),
+        source: this.props.source
+      }
+    });
+  }
+
+  increment() {
+    this.onChange({ data: this.props.count + 1 });
+  }
+
+  decrement() {
+    this.onChange({ data: this.props.count + 1 });
+  }
+
   render() {
-    let input = undefined;
-    if(this.props.display === 'none')
-      input = null;
-    else if(this.props.display === 'checkbox')
-      input = <input type='checkbox' name='count' onChange={this.handleInputChange} value={this.props.count} checked={this.props.count} />;
-    else if(this.props.display === 'tiers') {
-      input = (
-        <select name='count' onChange={this.handleInputChange} value={this.props.count}>
-          <option value={0}></option>
-          <option value={1}>Apprentice</option>
-          <option value={2}>Journeyman</option>
-          <option value={3}>Craftsman</option>
-          <option value={4}>Master</option>
-          <option value={5}>Grandmaster</option>
-        </select>
-      );
-    }
-    else
-      input = <input type='number' name='count' onChange={this.handleInputChange} value={this.props.count} />;
     return (
       <div data-character='ability'>
-        {input}
+        {this.props.display == 'none'
+        ? null
+        : this.props.display == 'checkbox'
+        ? <input type='checkbox' name='count' onChange={this.handleInputChange} value={this.props.count} checked={this.props.count} />
+        : this.props.display == 'tiers'
+        ? <Field type='select' name='count'
+            value={this.props.count}
+            onChange={this.onChange}
+            options={this.tiers}
+          />
+        : <div><Field type='number' name='count'
+            value={this.props.count}
+            onChange={this.onChange}
+          /></div>
+        }
         <label onClick={this.handleView}>{this.props.name}</label>
       </div>
     );
