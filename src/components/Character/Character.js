@@ -191,7 +191,7 @@ class Character extends React.Component {
         return Object.assign({}, rule, { count: 0 }, display);
       let total = skills.reduce((total, skill) => { return total + skill.count}, 0);
       let count = {
-        count: !rule.max ? total : Math.min(rule.max, total)
+        count: !Number(rule.max) ? total : Math.min(rule.max, total)
       };
       return Object.assign({}, rule, count, display);
     });
@@ -600,7 +600,7 @@ class Character extends React.Component {
     let skills = prevState.character.skills.slice();
 
     let choice = {
-      limit: rule.max,
+      limit: Number(rule.max),
       known: 0
     };
     if(count && rule.category == 'Choice') {
@@ -613,10 +613,10 @@ class Character extends React.Component {
           optionIndex = option.findIndex(o => o.group == parentSelection[0].name);
       }
       let choices = prevState.rules.filter(r => r.group == option[optionIndex].name);
-      choice.limit = option[optionIndex].max;
-      choice.known = choices.map(r => skills[skills.findIndex(s => s.id == r._id)])
+      choice.limit = Number(option[optionIndex].max);
+      choice.known = Number(choices.map(r => skills[skills.findIndex(s => s.id == r._id)])
         .filter(skill => skill != undefined && skill.id != id)
-        .reduce((total, skill) => total + skill.count, 0);
+        .reduce((total, skill) => total + skill.count, 0));
     }
 
     if((rule.max != 0 && count > rule.max) || (choice.limit && count + choice.known > choice.limit))
