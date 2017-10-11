@@ -65,7 +65,10 @@ class Ability extends React.Component {
         {this.props.display == 'none'
         ? null
         : this.props.display == 'checkbox'
-        ? <input type='checkbox' name='count' onChange={this.handleInputChange} value={this.props.count} checked={this.props.count} />
+        ? <Field type='checkbox' name='count'
+            value={this.props.count}
+            onChange={this.onChange}
+          />
         : this.props.display == 'tiers'
         ? <Field type='select' name='count'
             value={this.props.count}

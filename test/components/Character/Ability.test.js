@@ -39,10 +39,9 @@ describe('<Ability />', () => {
   it('renders an checkbox input if the display prop is checkbox', () => {
     const view = spy(), update = spy();
     const wrapper = shallow(<Ability id={42} name='test' display='checkbox' viewDescription={view} editCharacter={update}/>);
-    expect(wrapper.find('div')).to.have.length(1);
-    expect(wrapper.find('div').childAt(0).type()).to.equal('input');
-    expect(wrapper.find('div').childAt(0).prop('type')).to.equal('checkbox');
-    expect(wrapper.find('div').childAt(1).type()).to.equal('label');
+    expect(wrapper.find(Field)).to.have.length(1);
+    expect(wrapper.find('label')).to.have.length(1);
+    expect(wrapper.find(Field).prop('type')).to.equal('checkbox');
   });
 
   it('renders a select with options instead of an input if the display prop is tiers', () => {

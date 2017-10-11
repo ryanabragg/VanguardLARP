@@ -89,5 +89,16 @@ describe('<Field />', () => {
     expect(wrapper.find('option').at(2).text()).to.equal('2');
   });
 
-  it('renders a checkbox instead of an input if type is checkbox');
+  it('renders a checkbox instead of an normal input if type is checkbox', () => {
+    const edit = spy();
+    const wrapper = shallow(<Field name='test' onChange={edit}/>);
+    expect(wrapper.find({type: 'checkbox'})).to.have.length(0);
+    wrapper.setProps({
+      type: 'checkbox'
+    });
+    expect(wrapper.find({type: 'checkbox'})).to.have.length(1);
+    wrapper.find('input').simulate('change', {target: {name: 'try', checked: true}, preventDefault: () => {}});
+    expect(edit.callCount).to.equal(1);
+    expect(edit.firstCall.args[0]).to.deep.equal({type: 'TRY', data: 1});
+  });
 });

@@ -23,6 +23,9 @@ class Field extends React.Component {
     case 'number':
       payload.data = Number(e.target.value);
       break;
+    case 'checkbox':
+      payload.data = Number(e.target.checked);
+      break;
     default:
       payload.data = e.target.value;
     }
@@ -59,7 +62,16 @@ class Field extends React.Component {
       );
 
     if(this.props.type == 'checkbox')
-      return null;
+      return (
+        <input {...rest}
+          type='checkbox'
+          name={this.props.name}
+          onChange={this.handleInputChange}
+          value={this.props.value}
+          checked={this.props.value}
+          readOnly={typeof this.props.onChange != 'function'}
+        />
+      );
 
     return (
       <input {...rest}
