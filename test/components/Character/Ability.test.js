@@ -65,32 +65,29 @@ describe('<Ability />', () => {
     const wrapper = mount(<Ability id={42} name='test' viewDescription={view} editCharacter={update}/>);
     wrapper.find('label').simulate('click');
     expect(view.calledOnce).to.equal(true);
-  });
-
-  it('calls the viewDescription prop with the correct args', () => {
-    const view = spy(), update = spy();
-    const wrapper = mount(<Ability id={42} name='test' viewDescription={view} editCharacter={update}/>);
-    wrapper.find('label').simulate('click');
-    expect(view.calledWith(42)).to.equal(true);
+    expect(view.getCall(0).args[0]).to.equal(42);
   });
 
   it('calls the editCharacter prop when the count is changed', () => {
     const view = spy(), update = spy();
     const wrapper = mount(<Ability id={42} name='test' viewDescription={view} editCharacter={update}/>);
-    wrapper.find('input').simulate('change', {target: {name: 'count', value: 1}});
+    wrapper.find({className: 'button'}).at(0).simulate('click');
     expect(update.callCount).to.equal(1);
-    wrapper.setProps({display: 'tiers'});
-    wrapper.find('select').simulate('change', {target: {name: 'count', value: 2}});
+    expect(update.getCall(0).args[0]).to.deep.equal({type: 'SKILL INCREMENT', data: { id: 42, source: 'build' }});
+    wrapper.find({className: 'button'}).at(1).simulate('click');
     expect(update.callCount).to.equal(2);
-  });
-
-  it('calls the editCharacter prop with the correct args', () => {
-    const view = spy(), update = spy();
-    const wrapper = mount(<Ability id={42} name='test' viewDescription={view} editCharacter={update}/>);
-    wrapper.find('input').simulate('change', {target: {name: 'count', value: 1}});
-    expect(update.firstCall.args[0]).to.deep.equal({type: 'SKILL', data: { id: 42, count: 1, source: 'build' }});
-    wrapper.setProps({display: 'tiers', count: 3, source: 'race'});
-    wrapper.find('select').simulate('change', {target: {name: 'count', value: 2}});
-    expect(update.secondCall.args[0]).to.deep.equal({type: 'SKILL', data: { id: 42, count: 2, source: 'race'}});
+    expect(update.getCall(1).args[0]).to.deep.equal({type: 'SKILL DECREMENT', data: { id: 42, source: 'build' }});
+    wrapper.setProps({display: 'checkbox', source: 'other'});
+    wrapper.find('input').simulate('change', {target: {name: 'count', checked: true, stopPropagation: () => {}}});
+    expect(update.callCount).to.equal(3);
+    expect(update.getCall(2).args[0]).to.deep.equal({type: 'SKILL', data: { id: 42, count: 1, source: 'other' }});
+    wrapper.find('input').simulate('change', {target: {name: 'count', checked: false, stopPropagation: () => {}}});
+    expect(update.callCount).to.equal(4);
+    expect(update.getCall(3).args[0]).to.deep.equal({type: 'SKILL', data: { id: 42, count: 0, source: 'other' }});
+    wrapper.setProps({display: ''}); // invariant violation if switching from checkbox to tiers?
+    wrapper.setProps({display: 'tiers', count: 3, source: ''});
+    wrapper.find('select').simulate('change', {target: {name: 'count', value: 2, stopPropagation: () => {}}});
+    expect(update.callCount).to.equal(5);
+    expect(update.getCall(4).args[0]).to.deep.equal({type: 'SKILL', data: { id: 42, count: 2, source: ''}});
   });
 });

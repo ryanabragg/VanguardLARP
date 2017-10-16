@@ -4,7 +4,8 @@ import Color from 'color';
 import AbilityGroup from '../AbilityGroup';
 
 const StyledAbilityGroup = styled(AbilityGroup)`
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
   width: 100%;
 
   div.tier {
@@ -34,27 +35,52 @@ const StyledAbilityGroup = styled(AbilityGroup)`
     right: 20%;
   }
 
-  div[data-character="ability"] {
-    position: relative;
-    padding: 0;
-    height: 1.2em;
-    margin: 0 5px 2px 5px;
+  .button:hover {
+    cursor: pointer;
+    z-index: 1;
+    border-radius: 25px;
+    box-shadow: 4px 8px 16px 0px rgba(0,0,0,0.2);
   }
 
-  div[data-character="ability"] > div {
-    display: inline-block;
+  .ability {
+    display: flex;
+    margin: 0 0 3px 0;
+  }
+
+  .ability-input {
+    display: flex;
+    height: 30px;
+    margin: 0 5px 0 0;
+  }
+  .ability-input svg {
+    height: 24px;
+    width: 24px;
+    margin: 3px;
+    padding: 0;
+    fill: ${props => props.theme.colors.asside};
+  }
+  .ability-input > input {
+    height: 30px;
+    width: 40px;
+    margin: 0;
+    padding: 0;
+    line-height: 30px;
+  }
+  .ability-input > input[type="checkbox"] {
+    margin-left: 60px;
   }
 
   label {
-    display: inline-block;
-    font-size: 15px;
+    font-size: 18px;
+    line-height: 30px;
   }
 
   input,
   select,
   textarea {
-    margin: 0 5px 0 0;
-    border: 1px solid ${props => props.theme.colors.primary};
+    border: none;
+    font-size: 15px;
+    line-height: 20px;
   }
   input {
     width: 20px;

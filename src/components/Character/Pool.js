@@ -20,7 +20,7 @@ class Pool extends React.Component {
     delete rest.editCharacter;
     const tags = this.props.tags ? ' (' + this.props.tags * this.props.count + ' tags)' : '';
     return (
-      <div {...rest} data-character='pool'>
+      <div {...rest} className='pool'>
         <Ability
           id={this.props.id}
           name={this.props.name + tags}
@@ -29,7 +29,7 @@ class Pool extends React.Component {
           viewDescription={this.props.viewDescription}
           editCharacter={this.props.editCharacter}
         />
-        <div data-character='pool-abilities'>
+        <div className='pool-abilities'>
           {this.props.abilities.map(ability => {
             return (
               <Ability

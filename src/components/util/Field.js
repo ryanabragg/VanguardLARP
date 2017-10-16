@@ -12,7 +12,7 @@ class Field extends React.Component {
     if(typeof this.props.onChange != 'function')
       return;
 
-    e.preventDefault();
+    e.stopPropagation();
 
     let payload = {
       type: e.target.name.toUpperCase(),
@@ -68,7 +68,7 @@ class Field extends React.Component {
           name={this.props.name}
           onChange={this.handleInputChange}
           value={this.props.value}
-          checked={this.props.value}
+          checked={!this.props.value ? false : true}
           readOnly={typeof this.props.onChange != 'function'}
         />
       );

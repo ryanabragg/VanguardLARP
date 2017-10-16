@@ -25,7 +25,7 @@ describe('<Field />', () => {
 
   it('renders an input', () => {
     const edit = spy();
-    const wrapper = shallow(<Field name='test' value='try'/>);
+    const wrapper = shallow(<Field name='test' value='try' />);
     expect(wrapper.find('input')).to.have.length(1);
     expect(wrapper.find('input').prop('type')).to.equal('text');
     expect(wrapper.find('input').prop('name')).to.equal('test');
@@ -45,28 +45,29 @@ describe('<Field />', () => {
 
   it('executes the onChange prop when the value is changed', () => {
     const edit = spy();
-    const wrapper = shallow(<Field name='test' onChange={edit}/>);
-    wrapper.find('input').simulate('change', {target: {name: 'test', value: 'blah'}, preventDefault: () => {}});
+    const wrapper = shallow(<Field name='test' onChange={edit} />);
+    wrapper.find('input').simulate('change', {target: {name: 'test', value: 'blah'}, stopPropagation: () => {}});
     expect(edit.callCount).to.equal(1);
     expect(edit.firstCall.args[0]).to.deep.equal({type: 'TEST', data: 'blah'});
     wrapper.setProps({
       type: 'text',
       value: 0
     });
-    wrapper.find('input').simulate('change', {target: {name: 'try', value: '4'}, preventDefault: () => {}});
+    wrapper.find('input').simulate('change', {target: {name: 'try', value: '4'}, stopPropagation: () => {}});
     expect(edit.callCount).to.equal(2);
     expect(edit.secondCall.args[0]).to.deep.equal({type: 'TRY', data: '4'});
     wrapper.setProps({
       type: 'number',
       value: 4
     });
-    wrapper.find('input').simulate('change', {target: {name: 'try', value: '2'}, preventDefault: () => {}});
+    wrapper.find('input').simulate('change', {target: {name: 'try', value: '2'}, stopPropagation: () => {}});
     expect(edit.callCount).to.equal(3);
     expect(edit.thirdCall.args[0]).to.deep.equal({type: 'TRY', data: 2});
   });
 
   it('renders a select instead of an input if type is select', () => {
-    const wrapper = shallow(<Field name='test' />);
+    const edit = spy();
+    const wrapper = shallow(<Field name='test' onChange={edit} />);
     expect(wrapper.find('input')).to.have.length(1);
     expect(wrapper.find('select')).to.have.length(0);
     wrapper.setProps({
@@ -87,18 +88,24 @@ describe('<Field />', () => {
     expect(wrapper.find('option').at(1).text()).to.equal('one');
     expect(wrapper.find('option').at(2).prop('value')).to.equal('test');
     expect(wrapper.find('option').at(2).text()).to.equal('2');
+    wrapper.find('select').simulate('change', {target: {name: 'try', value: 42}, stopPropagation: () => {}});
+    expect(edit.callCount).to.equal(1);
+    expect(edit.firstCall.args[0]).to.deep.equal({type: 'TRY', data: 42});
   });
 
   it('renders a checkbox instead of an normal input if type is checkbox', () => {
     const edit = spy();
-    const wrapper = shallow(<Field name='test' onChange={edit}/>);
+    const wrapper = shallow(<Field name='test' onChange={edit} />);
     expect(wrapper.find({type: 'checkbox'})).to.have.length(0);
     wrapper.setProps({
       type: 'checkbox'
     });
     expect(wrapper.find({type: 'checkbox'})).to.have.length(1);
-    wrapper.find('input').simulate('change', {target: {name: 'try', checked: true}, preventDefault: () => {}});
+    wrapper.find('input').simulate('change', {target: {name: 'try', checked: true}, stopPropagation: () => {}});
     expect(edit.callCount).to.equal(1);
     expect(edit.firstCall.args[0]).to.deep.equal({type: 'TRY', data: 1});
+    wrapper.find('input').simulate('change', {target: {name: 'try', checked: false}, stopPropagation: () => {}});
+    expect(edit.callCount).to.equal(2);
+    expect(edit.secondCall.args[0]).to.deep.equal({type: 'TRY', data: 0});
   });
 });

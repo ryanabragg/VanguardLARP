@@ -7,13 +7,13 @@ const StyledPools = styled(Pools)`
   display: inline-block;
   width: 100%;
 
-  div[data-character="pool-abilities"] {
+  .pool-abilities {
     display: block;
     width: 100%;
     padding: 0;
     margin: 5px 0 10px 0;
   }
-  div[data-character="pool-abilities"] > div {
+  .pool-abilities div {
     display: inline-block;
     width: 80px;
     padding: 0;
@@ -21,22 +21,37 @@ const StyledPools = styled(Pools)`
     font-size: 11px;
   }
 
-  div[data-character="ability"] {
-    position: relative;
-    padding: 0;
-    height: 1.2em;
-    margin: 0 5px 2px 5px;
+  .button:hover {
+    cursor: pointer;
   }
 
-  div[data-character="ability"] > div {
-    display: inline-block;
+  .ability {
+    display: flex;
+    height: 20px;
+  }
+
+  .ability-input {
+    display: flex;
+    margin: 0 5px 0 0;
+    //border: 1px solid ${props => props.theme.colors.primary};
+  }
+  .ability-input > input,
+  .ability-input > div {
+    height: 20px;
+    width: 20px;
+    margin: 0;
+    padding: 0;
+  }
+  .ability-input > input[type="checkbox"] {
+    margin-left: 40px;
   }
 
   input,
   select,
   textarea {
-    margin: 0 5px 0 0;
-    border: 1px solid ${props => props.theme.colors.primary};
+    border: none;
+    font-size: 15px;
+    line-height: 20px;
   }
   input {
     width: 20px;

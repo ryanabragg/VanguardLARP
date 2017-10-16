@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Field from '../util/Field';
+import Add from '../svg/icon/Add';
+import Remove from '../svg/icon/Remove';
 
 class Ability extends React.Component {
   constructor(props) {
@@ -15,24 +17,10 @@ class Ability extends React.Component {
       {value: 5, label: 'Grandmaster' },
     ];
 
-    this.handleInputChange = this.handleInputChange.bind(this);
-
     this.handleView = this.handleView.bind(this);
     this.onChange = this.onChange.bind(this);
     this.increment = this.increment.bind(this);
     this.decrement = this.decrement.bind(this);
-  }
-
-  handleInputChange(e) {
-    e.stopPropagation();
-    this.props.editCharacter({
-      type: 'SKILL',
-      data: {
-        id: this.props.id,
-        count: Number(e.target.type === 'checkbox' ? e.target.checked : e.target.value),
-        source: this.props.source
-      }
-    });
   }
 
   handleView(e) {
@@ -52,33 +40,56 @@ class Ability extends React.Component {
   }
 
   increment() {
-    this.onChange({ data: this.props.count + 1 });
+    this.props.editCharacter({
+      type: 'SKILL INCREMENT',
+      data: {
+        id: this.props.id,
+        source: this.props.source
+      }
+    });
   }
 
   decrement() {
-    this.onChange({ data: this.props.count + 1 });
+    this.props.editCharacter({
+      type: 'SKILL DECREMENT',
+      data: {
+        id: this.props.id,
+        source: this.props.source
+      }
+    });
   }
 
   render() {
     return (
-      <div data-character='ability'>
+      <div className='ability'>
         {this.props.display == 'none'
         ? null
         : this.props.display == 'checkbox'
-        ? <Field type='checkbox' name='count'
-            value={this.props.count}
-            onChange={this.onChange}
-          />
+        ? <div className='ability-input'>
+            <Field type='checkbox' name='count'
+              value={this.props.count}
+              onChange={this.onChange}
+            />
+          </div>
         : this.props.display == 'tiers'
-        ? <Field type='select' name='count'
-            value={this.props.count}
-            onChange={this.onChange}
-            options={this.tiers}
-          />
-        : <div><Field type='number' name='count'
-            value={this.props.count}
-            onChange={this.onChange}
-          /></div>
+        ? <div className='ability-input'>
+            <Field type='select' name='count'
+              value={this.props.count}
+              onChange={this.onChange}
+              options={this.tiers}
+            />
+          </div>
+        : <div className='ability-input'>
+            <div className='button' onClick={this.increment}>
+              <Add color='inherit' />
+            </div>
+            <div className='button' onClick={this.decrement}>
+              <Remove color='inherit' />
+            </div>
+            <Field type='number' name='count'
+              value={this.props.count}
+            />
+          </div>
         }
         <label onClick={this.handleView}>{this.props.name}</label>
       </div>

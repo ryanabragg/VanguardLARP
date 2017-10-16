@@ -389,6 +389,32 @@ class Character extends React.Component {
         nextState = this.stateRaceChange(prevState, action); break;
       case 'SOURCE MARK':
         nextState.character.sourceMarks = action.data; break;
+      case 'SKILL INCREMENT':
+        let increment = this.state.character.skills.filter(skill => {
+          return skill.id == action.data.id && skill.source == action.data.source;
+        });
+        nextState = this.stateSkillChange(prevState, {
+          type: 'SKILL',
+          data: {
+            id: action.data.id,
+            count: increment.length ? increment[0].count + 1 : 1,
+            source: action.data.source
+          }
+        });
+        break;
+      case 'SKILL DECREMENT':
+        let decrement = this.state.character.skills.filter(skill => {
+          return skill.id == action.data.id && skill.source == action.data.source;
+        });
+        nextState = this.stateSkillChange(prevState, {
+          type: 'SKILL',
+          data: {
+            id: action.data.id,
+            count: decrement.length ? decrement[0].count - 1 : 0,
+            source: action.data.source
+          }
+        });
+        break;
       case 'SKILL':
         nextState = this.stateSkillChange(prevState, action); break;
       default:

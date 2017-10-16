@@ -32,7 +32,8 @@ describe('<Pool />', () => {
     const wrapper = shallow(<Pool id='ID' name='test' abilities={list} viewDescription={view} editCharacter={update}/>);
     expect(wrapper.find('div')).to.have.length(2);
     expect(wrapper.find(Ability)).to.have.length(1 + list.length);
-    expect(wrapper.find('div').at(1).prop('data-character')).to.equal('pool-abilities');
+    expect(wrapper.find('div').at(0).prop('className')).to.equal('pool');
+    expect(wrapper.find('div').at(1).prop('className')).to.equal('pool-abilities');
     expect(wrapper.find('div').at(1).find(Ability)).to.have.length(list.length);
     list = list.concat([{
       _id: 7,
