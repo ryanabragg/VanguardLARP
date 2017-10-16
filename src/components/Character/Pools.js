@@ -20,6 +20,16 @@ class Pools extends React.Component {
     return (
       <div {...rest}>
         {pools.map(pool => {
+          let extra = 0;
+          if(this.props.extraTags != undefined)
+            switch(pool.name) {
+            case 'Chemix Pool':
+              extra = this.props.extraTags.chemix; break;
+            case 'Melee Pool':
+              extra = this.props.extraTags.melee; break;
+            case 'Spell Pool':
+              extra = this.props.extraTags.spell; break;
+            }
           return (
             <Pool
               key={pool._id}
@@ -27,7 +37,7 @@ class Pools extends React.Component {
               name={pool.name}
               count={pool.count}
               source={this.props.source}
-              tags={Number(pool.tags)}
+              tags={Number(pool.tags) + extra}
               abilities={abilities.filter(rule => rule.group == pool.name)}
               viewDescription={this.props.viewDescription}
               editCharacter={this.props.editCharacter}
@@ -50,7 +60,11 @@ Pool.defaultProps = {
 
 Pool.propTypes = {
   source: PropTypes.string,
-  extraTags: PropTypes.object,
+  extraTags: PropTypes.shape({
+    chemix: PropTypes.number,
+    melee: PropTypes.number,
+    spell: PropTypes.number
+  }),
   abilities: PropTypes.array.isRequired,
   viewDescription: PropTypes.func.isRequired,
   editCharacter: PropTypes.func.isRequired

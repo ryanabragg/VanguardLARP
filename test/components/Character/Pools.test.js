@@ -39,10 +39,10 @@ describe('<Pools />', () => {
       display: 'checkbox',
       count: 11,
       category: 'Pool Ability',
-      group: 'aim'
+      group: 'Chemix Pool'
     }, {
       _id: 'target',
-      name: 'aim',
+      name: 'Chemix Pool',
       count: 3,
       category: 'Pool'
     }, {
@@ -61,19 +61,21 @@ describe('<Pools />', () => {
     const list = [{
       _id: 42,
       name: 'test',
-      category: 'Pool'
+      category: 'Pool',
+      tags: 2
     }, {
       _id: 7,
       name: 'lucky',
       display: 'checkbox',
       count: 11,
       category: 'Pool Ability',
-      group: 'aim'
+      group: 'Chemix Pool'
     }, {
       _id: 'target',
-      name: 'aim',
+      name: 'Chemix Pool',
       count: 3,
-      category: 'Pool'
+      category: 'Pool',
+      tags: 4
     }, {
       _id: 0,
       name: 'choice',
@@ -87,14 +89,16 @@ describe('<Pools />', () => {
     expect(wrapper.find(Pool).at(0).prop('name')).to.equal('test');
     expect(wrapper.find(Pool).at(0).prop('count')).to.equal(undefined);
     expect(wrapper.find(Pool).at(0).prop('source')).to.equal('build');
+    expect(wrapper.find(Pool).at(0).prop('tags')).to.equal(2);
     expect(wrapper.find(Pool).at(0).prop('abilities')).to.deep.equal([]);
     expect(wrapper.find(Pool).at(0).prop('viewDescription')).to.equal(view);
     expect(wrapper.find(Pool).at(0).prop('editCharacter')).to.equal(update);
     expect(wrapper.find(Pool).at(1).prop('id')).to.equal('target');
-    expect(wrapper.find(Pool).at(1).prop('name')).to.equal('aim');
+    expect(wrapper.find(Pool).at(1).prop('name')).to.equal('Chemix Pool');
     expect(wrapper.find(Pool).at(1).prop('count')).to.equal(3);
     expect(wrapper.find(Pool).at(1).prop('source')).to.equal('build');
-    expect(wrapper.find(Pool).at(1).prop('abilities')).to.deep.equal(list.filter(rule => rule.group == 'aim'));
+    expect(wrapper.find(Pool).at(1).prop('tags')).to.equal(4);
+    expect(wrapper.find(Pool).at(1).prop('abilities')).to.deep.equal(list.filter(rule => rule.group == 'Chemix Pool'));
     expect(wrapper.find(Pool).at(1).prop('viewDescription')).to.equal(view);
     expect(wrapper.find(Pool).at(1).prop('editCharacter')).to.equal(update);
     wrapper.setProps({
@@ -102,5 +106,10 @@ describe('<Pools />', () => {
     });
     expect(wrapper.find(Pool).at(0).prop('source')).to.equal('testing');
     expect(wrapper.find(Pool).at(1).prop('source')).to.equal('testing');
+    wrapper.setProps({
+      extraTags: {chemix: 1, melee: 0, spell: 0}
+    });
+    expect(wrapper.find(Pool).at(0).prop('tags')).to.equal(2);
+    expect(wrapper.find(Pool).at(1).prop('tags')).to.equal(5);
   });
 });
