@@ -603,6 +603,7 @@ class Character extends React.Component {
   }
 
   stateSkillChange(prevState, action) {
+    //@todo: add 'cascade remove' field to rules (Option removed from skills removed its choices, etc.)
     let nextState = Object.assign({}, prevState);
 
     let { id, count, source } = action.data;
@@ -616,12 +617,9 @@ class Character extends React.Component {
 
     if(rule.block && source == 'build')
       return prevState;
-/*
-    let canLearn = !rule.race
-      || rule.race == prevState.character.race.name
-      || (rule.prodigy && rule.race == prevState.character.race.prodigy.race);
-    if(!canLearn)
-      return prevState;*/
+
+    if(rule.category != 'Choice' && rule.race == prevState.character.race.name)
+      return prevState;
 
     let skills = prevState.character.skills.slice();
 
@@ -638,7 +636,7 @@ class Character extends React.Component {
         if(parentSelection.length)
           optionIndex = option.findIndex(o => o.group == parentSelection[0].name);
       }
-      let choices = prevState.rules.filter(r => r.group == option[optionIndex].name);
+      let choices = prevState.rules.filter(r => r.category == 'Choice' && r.group == option[optionIndex].name);
       choice.limit = Number(option[optionIndex].max);
       choice.known = Number(choices.map(r => skills[skills.findIndex(s => s.id == r._id)])
         .filter(skill => skill != undefined && skill.id != id)
