@@ -617,9 +617,9 @@ class Character extends React.Component {
 
     if(rule.block && source == 'build')
       return prevState;
-
-    if(rule.category != 'Choice' && rule.race == prevState.character.race.name)
-      return prevState;
+/* disabled for now, needs better logic to still allow race change to update skills
+    if(rule.race && rule.category != 'Choice' && rule.race == prevState.character.race.name)
+      return prevState;*/
 
     let skills = prevState.character.skills.slice();
 
