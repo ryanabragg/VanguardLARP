@@ -87,7 +87,7 @@ describe('<Pools />', () => {
     expect(wrapper.find(Pool)).to.have.length(2);
     expect(wrapper.find(Pool).at(0).prop('id')).to.equal(42);
     expect(wrapper.find(Pool).at(0).prop('name')).to.equal('test');
-    expect(wrapper.find(Pool).at(0).prop('count')).to.equal(undefined);
+    expect(wrapper.find(Pool).at(0).prop('count')).to.equal(0);
     expect(wrapper.find(Pool).at(0).prop('source')).to.equal('build');
     expect(wrapper.find(Pool).at(0).prop('tags')).to.equal(2);
     expect(wrapper.find(Pool).at(0).prop('abilities')).to.deep.equal([]);

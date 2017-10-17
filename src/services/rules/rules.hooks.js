@@ -4,9 +4,9 @@ const { restrictToRoles } = require('feathers-authentication-hooks');
 const restrict = [
   authenticate('jwt'),
   restrictToRoles({
-      roles: ['rules', 'admin'],
-      fieldName: 'permissions',
-      idField: '_id'
+    roles: ['rules', 'admin'],
+    fieldName: 'permissions',
+    idField: '_id'
   })
 ];
 

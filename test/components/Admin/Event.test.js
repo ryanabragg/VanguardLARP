@@ -4,8 +4,6 @@ import { spy } from 'sinon';
 import { shallow } from 'enzyme';
 import { JSDOM } from 'jsdom';
 
-import api from '../../../src/util/api';
-
 import Event from '../../../src/components/Admin/Event';
 import Field from '../../../src/components/Admin/Field';
 

@@ -24,7 +24,7 @@ const FormField = (props) => (
 
 FormField.defaultProps = {
   type: 'text'
-}
+};
 
 FormField.propTypes = {
   name: PropTypes.string.isRequired,

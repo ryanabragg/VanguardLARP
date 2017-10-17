@@ -60,7 +60,7 @@ describe('<SourceMarks />', () => {
     wrapper.setProps({
       mastery: true,
       limit: 1
-    })
+    });
     wrapper.find('input').simulate('change', {target: {name: '', value: 'test'}});
     expect(wrapper.state().custom).to.equal('test');
   });

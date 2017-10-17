@@ -1,7 +1,6 @@
 import React from 'react';
 import { expect } from 'chai';
-import { spy } from 'sinon';
-import { mount, shallow } from 'enzyme';
+import { shallow } from 'enzyme';
 import { JSDOM } from 'jsdom';
 
 import Box from '../../../src/components/Character/Box';

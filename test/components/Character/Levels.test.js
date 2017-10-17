@@ -1,7 +1,7 @@
 import React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { mount, shallow } from 'enzyme';
+import { shallow } from 'enzyme';
 import { JSDOM } from 'jsdom';
 
 import Levels from '../../../src/components/Character/Levels';
@@ -38,7 +38,7 @@ describe('<Levels />', () => {
     expect(wrapper.find('.icon').find('.dropdown')).to.have.length(1);
   });
 
-  it(`shows a label with a warning for non-qualification based on props`, () => {
+  it('shows a label with a warning for non-qualification based on props', () => {
     const edit = spy();
     const wrapper = shallow(<Levels editCharacter={edit} />);
     expect(wrapper.find('.T1')).to.have.length(1);
@@ -175,7 +175,7 @@ describe('<Levels />', () => {
     expect(wrapper.find('.level')).to.have.length(0);
     expect(wrapper.find('option')).to.have.length(0);
     wrapper.setProps({level: 3});
-    expect(wrapper.find('.level')).to.have.length(1)
+    expect(wrapper.find('.level')).to.have.length(1);
     wrapper.find('.level').forEach((node, i) => {
       expect(node.find('option')).to.have.length(4);
       expect(node.find('option').at(0).text()).to.equal('');

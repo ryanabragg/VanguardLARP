@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 
 import IconExpandMore from '../svg/IconExpandMore';
 import IconExpandLess from '../svg/IconExpandLess';
-import IconMoreVertical from '../svg/IconMoreVertical';
 
 import Navigation from './styled/Navigation';
 
@@ -130,12 +129,16 @@ class Menu extends React.Component {
 
 Menu.defaultProps = {
   user: {}
-}
+};
 
+/* location and history props added by Route
+ */
 Menu.propTypes = {
+  location: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
   api: PropTypes.object.isRequired,
   user: PropTypes.object,
   setUser: PropTypes.func.isRequired
-}
+};
 
 export default Menu;

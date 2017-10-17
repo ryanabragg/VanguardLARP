@@ -49,16 +49,17 @@ class Pools extends React.Component {
   }
 }
 
-Pool.defaultProps = {
+Pools.defaultProps = {
   source: 'build',
   extraTags: {
     chemix: 0,
     melee: 0,
     spell: 0
-  }
+  },
+  abilities: []
 };
 
-Pool.propTypes = {
+Pools.propTypes = {
   source: PropTypes.string,
   extraTags: PropTypes.shape({
     chemix: PropTypes.number,

@@ -74,6 +74,7 @@ Modal.defaultProps = {
 };
 
 Modal.propTypes = {
+  children: PropTypes.any,
   close: PropTypes.func.isRequired,
   visible: PropTypes.bool,
   closeOnClickOutside: PropTypes.bool,

@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import Color from 'color';
 
 const Section = styled.section`
   max-width: ${props => props.theme.breakpoints.xs}px;

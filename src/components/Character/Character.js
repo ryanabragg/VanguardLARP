@@ -189,7 +189,7 @@ class Character extends React.Component {
       let skills = this.state.character.skills.filter(skill => skill.id == rule._id);
       if(!skills.length)
         return Object.assign({}, rule, { count: 0 }, display);
-      let total = skills.reduce((total, skill) => { return total + skill.count}, 0);
+      let total = skills.reduce((total, skill) => { return total + skill.count; }, 0);
       let count = {
         count: !Number(rule.max) ? total : Math.min(rule.max, total)
       };
@@ -200,7 +200,6 @@ class Character extends React.Component {
   parseRules() {
     const rules = this.getRules();
     const granted = rules.filter(rule => rule.grants);
-    const { race } = this.state.character;
     const level = Math.max(0, Math.floor((this.state.character.build.spent - 25) / 10));
 
     return { // @todo: change sort to be part of data entry
@@ -256,15 +255,15 @@ class Character extends React.Component {
             .reduce((count, g) => count + 1, 0);
           return total + rule.count * count;
         }, 0),
-        mastery: Boolean(granted.reduce((check, rule) => {
+        mastery: granted.reduce((check, rule) => {
           return check || (rule.grants.includes('NA3IIMeusA9Ye6OY') && rule.count);
-        }, false))
+        }, false)
       },
       mod: {
         armor: {
-          mods: Boolean(granted.reduce((check, rule) => {
+          mods: granted.reduce((check, rule) => {
             return check || (rule.grants.includes('9YfyA7FdSo6p7XCk') && rule.count);
-          }, false)) ? 1 + Math.floor(level / 10) : 0
+          }, false) ? 1 + Math.floor(level / 10) : 0
         },
         body: {
           extra: granted.reduce((total, rule) => {
@@ -279,9 +278,9 @@ class Character extends React.Component {
               .reduce((count, g) => count + 1, 0);
             return total + rule.count * count;
           }, 0),
-          double: Boolean(granted.reduce((check, rule) => {
+          double: granted.reduce((check, rule) => {
             return check || (rule.grants.includes('gQM9ot97a2ROBS7N') && rule.count);
-          }, false))
+          }, false)
         },
         buffs: {
           extra: granted.reduce((total, rule) => {
@@ -295,14 +294,14 @@ class Character extends React.Component {
           extra: 0
         },
         lives: {
-          redToWhite: Boolean(granted.reduce((check, rule) => {
+          redToWhite: granted.reduce((check, rule) => {
             return check || (rule.grants.includes('2fZG2ArezTXPVMu3') && rule.count);
-          }, false))
+          }, false)
         },
         recoveries: {
-          extra: Boolean(granted.reduce((check, rule) => {
+          extra: granted.reduce((check, rule) => {
             return check || (rule.grants.includes('Jnpeh6RDLJ16Uzhp') && rule.count);
-          }, false)) ? 1 + Math.floor(level / 10) : 0
+          }, false) ? 1 + Math.floor(level / 10) : 0
         },
         tags: {
           chemix: granted.reduce((total, rule) => {
@@ -366,7 +365,7 @@ class Character extends React.Component {
   editCharacter(action) {
     this.setState((prevState, props) => {
       let nextState = Object.assign({}, prevState);
-      let change = {};
+      let current = [];
       switch(action.type) {
       case 'PLAYER NAME':
         nextState.character.player.name = action.data; break;
@@ -390,27 +389,27 @@ class Character extends React.Component {
       case 'SOURCE MARK':
         nextState.character.sourceMarks = action.data; break;
       case 'SKILL INCREMENT':
-        let increment = this.state.character.skills.filter(skill => {
+        current = this.state.character.skills.filter(skill => {
           return skill.id == action.data.id && skill.source == action.data.source;
         });
         nextState = this.stateSkillChange(prevState, {
           type: 'SKILL',
           data: {
             id: action.data.id,
-            count: increment.length ? increment[0].count + 1 : 1,
+            count: current.length ? current[0].count + 1 : 1,
             source: action.data.source
           }
         });
         break;
       case 'SKILL DECREMENT':
-        let decrement = this.state.character.skills.filter(skill => {
+        current = this.state.character.skills.filter(skill => {
           return skill.id == action.data.id && skill.source == action.data.source;
         });
         nextState = this.stateSkillChange(prevState, {
           type: 'SKILL',
           data: {
             id: action.data.id,
-            count: decrement.length ? decrement[0].count - 1 : 0,
+            count: current.length ? current[0].count - 1 : 0,
             source: action.data.source
           }
         });
@@ -691,7 +690,7 @@ class Character extends React.Component {
             id: text,
             count: count * rule.grants.split(', ').filter(g => g == text).length,
             source: `${source}: ${id}`
-          }
+          };
         });
       grants.forEach(grant => {
         nextState = this.stateSkillChange(nextState, {
@@ -714,8 +713,7 @@ class Character extends React.Component {
       lives,
       race,
       recoveries,
-      sourceMarks,
-      skills
+      sourceMarks
     } = this.state.character;
     const {
       level,
@@ -836,8 +834,8 @@ class Character extends React.Component {
             value={race.name}
             type='select'
             options={races.map(r => {
-                return { value: r.name, label: r.name };
-              })}
+              return { value: r.name, label: r.name };
+            })}
             onChange={this.editCharacter}
           />
         </Box>

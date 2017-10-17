@@ -236,7 +236,7 @@ class Rules extends React.Component {
             title: 'Updated',
             message: updated.category + ': ' + updated.name,
             action: 'UNDO',
-            actionFunction: (param) => {this.updateRule(param); this.selectRule(updated._id)},
+            actionFunction: (param) => {this.updateRule(param); this.selectRule(updated._id);},
             actionParam: preUpdate
           });
         }
@@ -366,7 +366,10 @@ class Rules extends React.Component {
   }
 }
 
+/* match prop added by Route
+ */
 Rules.propTypes = {
+  match: PropTypes.object.isRequired,
   api: PropTypes.object.isRequired
 };
 

@@ -67,13 +67,13 @@ class RuleList extends React.Component {
         ))}
       </article>
     );
-  };
+  }
 }
 
 RuleList.defaultProps = {
   list: [],
   scrollToForm: false
-}
+};
 
 RuleList.propTypes = {
   list: PropTypes.array.isRequired,

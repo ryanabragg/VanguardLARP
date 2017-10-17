@@ -49,13 +49,13 @@ class EventList extends React.Component {
         ))}
       </article>
     );
-  };
+  }
 }
 
 EventList.defaultProps = {
   list: [],
   scrollToForm: false
-}
+};
 
 EventList.propTypes = {
   list: PropTypes.array.isRequired,

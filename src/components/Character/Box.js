@@ -24,6 +24,7 @@ class Box extends React.Component {
 //Box.defaultProps = {};
 
 Box.propTypes = {
+  children: PropTypes.any,
   label: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number

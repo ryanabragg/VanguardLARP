@@ -74,13 +74,13 @@ class Levels extends React.Component {
         else if(a.group == b.group)
           return a.tier > b.tier ? 1 : -1;
         else if(a.group == 'Generic')
-          return -1
+          return -1;
         else if(b.group == 'Generic')
-          return 1
+          return 1;
         else if(a.group == 'Burn')
-          return 1
+          return 1;
         else if(b.group == 'Burn')
-          return -1
+          return -1;
         else
           return a.group > b.group ? 1 : -1;
       });
@@ -91,7 +91,7 @@ class Levels extends React.Component {
           id: '',
           level: (index + 1) * interval,
           name: ''
-        }
+        };
         let known = this.props.known.filter(skill => skill.level == data.level);
         if(known.length)
           data = known[0];

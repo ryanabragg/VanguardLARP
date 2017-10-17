@@ -1,7 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-import AbilityGroup from './AbilityGroup';
 import Stone from './Stone';
 
 const Crafting = (props) => {
@@ -57,10 +55,6 @@ const Crafting = (props) => {
       </div>
     </div>
   );
-}
-
-//Crafting.defaultProps = {};
-
-//Crafting.propTypes = {};
+};
 
 export default Crafting;

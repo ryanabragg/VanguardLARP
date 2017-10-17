@@ -1,9 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import AbilityGroup from './AbilityGroup';
-import Stone from './Stone';
-
 class SourceMarks extends React.Component {
   constructor(props) {
     super(props);
