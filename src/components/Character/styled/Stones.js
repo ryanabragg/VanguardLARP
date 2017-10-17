@@ -6,7 +6,7 @@ import Stones from '../Stones';
 const StyledStones = styled(Stones)`
   display: inline-block;
   width: 100%;
-  min-height: 25px;
+  min-height: 30px;
 
   div {
     display: inline-block;
@@ -17,8 +17,8 @@ const StyledStones = styled(Stones)`
     margin: 0 1px 0 0;
     padding: 0;
     text-align: center;
-    font-size: 0.8em;
-    line-height: 19px;
+    font-size: 16px;
+    line-height: 20px;
   }
   ${props => typeof props.stoneClick == 'function' ? 'div:hover { cursor: pointer; }' : ''}
   div.black {

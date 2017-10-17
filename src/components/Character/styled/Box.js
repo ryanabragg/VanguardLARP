@@ -6,8 +6,6 @@ import Box from '../Box';
 const Boxed = styled(Box)`
   position: relative;
   display: inline-block;
-  vertical-align: top;
-  margin: 10px 5px 0 5px;
   width: ${props => {
     let width = props.width || 'xs';
     let factor = props.factor || 1;
@@ -27,6 +25,7 @@ const Boxed = styled(Box)`
     }
     return (width * factor) - 10; // left and right margin pixels
   }}px;
+  margin: 10px 5px 0 5px;
   padding: 9px 9px 3px 9px;
   border: 1px solid ${props => Color(props.theme.colors.secondary).grayscale().hex()};
   border-top: 3px solid ${props => {
@@ -38,9 +37,11 @@ const Boxed = styled(Box)`
     return color.hex();
   }};
   border-radius: 3px;
+  vertical-align: top;
+
   label.floating {
     float: left;
-    margin-top: -16px;
+    margin-top: -18px;
     background: ${props => Color(props.theme.colors.background).grayscale().hex()};
     padding: 2px;
     color: ${props => {
@@ -49,7 +50,7 @@ const Boxed = styled(Box)`
       let alpha = background.light() ? props.theme.alphaDarkText.primary : props.theme.alphaLightText.primary;
       return base.mix(background, alpha).hex();
     }};
-    font-size: 0.7em;
+    font-size: 13px;
     line-height: 1em;
     overflow: hidden;
     font-family: Arial, Helvetica, sans-serif;

@@ -9,25 +9,26 @@ const StyledCrafting = styled(Crafting)`
 
   span {
     display: block;
-    height: 21px;
+    height: 20px;
     margin: 0 5px 0 0;
   }
   div {
-    font-size: 0.8em;
     display: inline-block;
+    font-size: 14px;
+    line-height: 20px;
     vertical-align: top;
   }
   div.stone {
     display: inline-block;
-    width: 20px;
-    height: 20px;
+    width: 14px;
+    height: 14px;
     border: 1px solid #000000;
     border-radius: 50%;
-    margin: 0 1px 0 0;
+    margin: 3px 2px 3px 0;
     padding: 0;
     text-align: center;
-    font-size: 0.8em;
-    line-height: 19px;
+    font-size: 12px;
+    line-height: 14px;
   }
   div.black {
     color: white;

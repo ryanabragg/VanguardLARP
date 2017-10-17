@@ -6,7 +6,7 @@ import SourceMarks from '../SourceMarks';
 const StyledSourceMarks = styled(SourceMarks)`
   display: inline-block;
   width: 100%;
-  min-height: 25px;
+  min-height: 30px;
 
   div {
     display: block;

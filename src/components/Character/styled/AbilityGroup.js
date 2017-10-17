@@ -7,10 +7,7 @@ const StyledAbilityGroup = styled(AbilityGroup)`
   display: flex;
   flex-direction: column;
   width: 100%;
-
-  div.tier {
-    display: block;
-  }
+  min-height: 30px;
 
   label.tier {
     display: inline-block;
@@ -35,11 +32,17 @@ const StyledAbilityGroup = styled(AbilityGroup)`
     right: 20%;
   }
 
+  .button {
+    transition-duration: 0.2s;
+    border-radius: 50%;
+  }
+
   .button:hover {
     cursor: pointer;
-    z-index: 1;
-    border-radius: 25px;
-    box-shadow: 4px 8px 16px 0px rgba(0,0,0,0.2);
+    background: ${props => props.theme.colors.asside};
+  }
+  .button:hover svg {
+    fill: white;
   }
 
   .ability {
@@ -67,7 +70,9 @@ const StyledAbilityGroup = styled(AbilityGroup)`
     line-height: 30px;
   }
   .ability-input > input[type="checkbox"] {
-    margin-left: 60px;
+    height: 20px;
+    width: 20px;
+    margin: 5px 10px 5px 70px;
   }
 
   label {
@@ -81,6 +86,7 @@ const StyledAbilityGroup = styled(AbilityGroup)`
     border: none;
     font-size: 15px;
     line-height: 20px;
+    background: none;
   }
   input {
     width: 20px;

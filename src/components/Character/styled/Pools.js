@@ -15,35 +15,58 @@ const StyledPools = styled(Pools)`
   }
   .pool-abilities div {
     display: inline-block;
-    width: 80px;
+    width: 130px;
     padding: 0;
     margin: 0 0 0 10px;
     font-size: 11px;
   }
 
+  .button {
+    transition-duration: 0.2s;
+    border-radius: 50%;
+  }
+
   .button:hover {
     cursor: pointer;
+    background: ${props => props.theme.colors.asside};
+  }
+  .button:hover svg {
+    fill: white;
   }
 
   .ability {
     display: flex;
-    height: 20px;
+    margin: 0 0 3px 0;
   }
 
   .ability-input {
     display: flex;
+    height: 30px;
     margin: 0 5px 0 0;
-    //border: 1px solid ${props => props.theme.colors.primary};
   }
-  .ability-input > input,
-  .ability-input > div {
-    height: 20px;
-    width: 20px;
+  .ability-input svg {
+    height: 24px;
+    width: 24px;
+    margin: 3px;
+    padding: 0;
+    fill: ${props => props.theme.colors.asside};
+  }
+  .ability-input > input {
+    height: 30px;
+    width: 40px;
     margin: 0;
     padding: 0;
+    line-height: 30px;
   }
   .ability-input > input[type="checkbox"] {
-    margin-left: 40px;
+    height: 20px;
+    width: 20px;
+    margin: 5px 10px 5px 70px;
+  }
+
+  label {
+    font-size: 18px;
+    line-height: 30px;
   }
 
   input,
@@ -52,6 +75,7 @@ const StyledPools = styled(Pools)`
     border: none;
     font-size: 15px;
     line-height: 20px;
+    background: none;
   }
   input {
     width: 20px;

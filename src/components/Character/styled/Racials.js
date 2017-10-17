@@ -4,8 +4,10 @@ import Color from 'color';
 import Racials from '../Racials';
 
 const StyledRacials = styled(Racials)`
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
   width: 100%;
+  min-height: 30px;
 
   label.option {
     display: block;
@@ -19,11 +21,17 @@ const StyledRacials = styled(Racials)`
     background-color: ${props => Color(props.theme.colors.secondary).grayscale().hex()};
   }
 
+  .button {
+    transition-duration: 0.2s;
+    border-radius: 50%;
+  }
+
   .button:hover {
     cursor: pointer;
-    z-index: 1;
-    border-radius: 25px;
-    box-shadow: 4px 8px 16px 0px rgba(0,0,0,0.2);
+    background: ${props => props.theme.colors.asside};
+  }
+  .button:hover svg {
+    fill: white;
   }
 
   .ability {
@@ -51,7 +59,9 @@ const StyledRacials = styled(Racials)`
     line-height: 30px;
   }
   .ability-input > input[type="checkbox"] {
-    margin-left: 60px;
+    height: 20px;
+    width: 20px;
+    margin: 5px 10px 5px 70px;
   }
 
   label {
@@ -65,6 +75,7 @@ const StyledRacials = styled(Racials)`
     border: none;
     font-size: 15px;
     line-height: 20px;
+    background: none;
   }
   input {
     width: 20px;
