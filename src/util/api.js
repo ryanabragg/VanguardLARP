@@ -48,4 +48,14 @@ api.login = async (credentials) => {
   }
 };
 
+api.serviceData = async (service) => {
+  let page = await api.service(service).find({query:{$skip: 0, $limit: 1000}});
+  let records = [].concat(page.data);
+  while(page.skip <= page.total) {
+    page = await api.service(service).find({query:{$skip: page.skip + page.limit, $limit: page.limit}});
+    records = records.concat(page.data);
+  }
+  return records;
+}
+
 export default api;

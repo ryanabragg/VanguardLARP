@@ -18,18 +18,7 @@ class Events extends React.Component {
       area: '',
     };
 
-    this.syncData = {
-      interval: 500, // ms
-      paginate: 50,
-      total: 0,
-      progress: [],
-      add: [],
-      modify: [],
-      remove:[]
-    };
-
     this.state = {
-      list: [],
       search: {
         modified: '',
         name: '',
@@ -38,8 +27,8 @@ class Events extends React.Component {
       selected: Object.assign({}, this.emptyEvent)
     };
 
-    this.startSync = this.startSync.bind(this);
-    this.sync = this.sync.bind(this);
+    this.eventObserver = this.eventObserver.bind(this);
+    this.reloadService = this.reloadService.bind(this);
 
     this.createEvent = this.createEvent.bind(this);
     this.selectEvent = this.selectEvent.bind(this);
@@ -55,198 +44,120 @@ class Events extends React.Component {
   }
 
   componentDidMount () {
-    this.props.api.service('events').on('created', event => {
-      this.setState((prevState, props) => {
-        let nextState = Object.assign({}, prevState);
-        if(this.syncInProgress)
-          this.syncData.add = this.syncData.add.concat(event);
-        else
-          nextState.list = prevState.list.concat(event);
-        return nextState;
-      });
-    });
-
-    this.props.api.service('events').on('patched', event => {
-      let notification = undefined;
-      this.setState((prevState, props) => {
-        let nextState = Object.assign({}, prevState);
-        if(event._id === prevState.selected._id && event._id != this.update) {
-          this.update = undefined;
-          notification = {
-            timeout: 0,
-            type: 'warning',
-            title: 'Updated',
-            message: 'The event you are viewing has been modified. Clicking Submit without applying changes will override them.',
-            action: 'APPLY CHANGES',
-            actionFunction: (param) => this.selectEvent(param),
-            actionParam: event._id
-          };
-        }
-        if(this.syncInProgress)
-          this.syncData.modify = this.syncData.modify.concat(event);
-        else
-          nextState.list[prevState.list.map(item => item._id).indexOf(event._id)] = Object.assign({}, event);
-        return nextState;
-      }, () => {
-        if(notification)
-          NotificationList.notify(notification);
-      });
-    });
-
-    this.props.api.service('events').on('removed', event => {
-      let notification = undefined;
-      this.setState((prevState, props) => {
-        let nextState = Object.assign({}, prevState);
-        if(event._id === prevState.selected._id && event._id != this.delete) {
-          this.delete = undefined;
-          notification = {
-            timeout: 0,
-            type: 'alert',
-            title: 'Deleted',
-            message: 'The event you are viewing has been deleted. Clicking Submit will recreate it.'
-          };
-        }
-        if(this.syncInProgress)
-          this.syncData.remove = this.syncData.remove.concat(event);
-        else
-          nextState.list = prevState.list.filter(listed => event._id != listed._id);
-        return nextState;
-      }, () => {
-        if(notification)
-          NotificationList.notify(notification);
-      });
-    });
-
-    this.startSync();
+    this.unsubscribe = this.props.subscribeService('events', this.eventObserver);
+    this.props.loadService('events');
   }
 
   componentWillUnmount () {
-    this.props.api.service('events').removeListener('created');
-    this.props.api.service('events').removeListener('patched');
-    this.props.api.service('events').removeListener('removed');
+    this.unsubscribe();
   }
 
-  startSync() {
-    this.syncData = {
-      interval: 500, // ms
-      paginate: 50,
-      total: 0,
-      progress: [],
-      add: [],
-      modify: [],
-      remove:[]
-    };
-    this.syncInProgress = setInterval(this.sync, this.syncData.interval);
-  }
-
-  sync() {
-    this.props.api.service('events').find({
-      query:{
-        $sort:{
-          date: 1
-        },
-        $limit: this.syncData.paginate,
-        $skip: this.syncData.progress.length
+  eventObserver(payload) {
+    let notification = undefined;
+    switch(payload.type) {
+    case 'created':
+      break;
+    case 'updated':
+      if(payload.data._id == this.state.selected._id && payload.data._id != this.update) {
+        this.update = undefined;
+        notification = {
+          timeout: 0,
+          type: 'warning',
+          title: 'Updated',
+          message: 'The event you are viewing has been modified. Clicking Submit without applying changes will override them.',
+          action: 'APPLY CHANGES',
+          actionFunction: (param) => this.selectEvent(param),
+          actionParam: payload.data._id
+        };
       }
-    }).then(page => {
-      this.syncData.total = page.total;
-      this.syncData.progress = this.syncData.progress.concat(page.data);
-      if(this.syncData.total == this.syncData.progress.length + this.syncData.add.length - this.syncData.remove.length) {
-        clearInterval(this.syncInProgress);
-        this.syncInProgress = 0;
-        let modifyIDs = this.syncData.modify.map(event => event._id);
-        let removeIDs = this.syncData.remove.map(event => event._id);
-        this.setState((prevState, props) => {
-          let nextState = Object.assign({}, prevState);
-          nextState.list = this.syncData.progress
-            .filter(event => removeIDs.indexOf(event._id) === -1)
-            .filter(event => modifyIDs.indexOf(event._id) === -1)
-            .concat(this.syncData.modify)
-            .concat(this.syncData.add);
-          return nextState;
+      break;
+    case 'removed':
+      if(payload.data._id == this.state.selected._id && payload.data._id != this.delete) {
+        this.delete = undefined;
+        notification = {
+          timeout: 0,
+          type: 'alert',
+          title: 'Deleted',
+          message: 'The event you are viewing has been deleted. Clicking Submit will recreate it.'
+        };
+      }
+      break;
+    }
+    if(notification)
+      NotificationList.notify(notification);
+  }
+
+  reloadService() {
+    this.props.loadService('events', true);
+  }
+
+  createEvent(event) {
+    this.props.create('events', event, (error, created) => {
+      if(error)
+        NotificationList.alert(error.name, 'Create Error');
+      else {
+        NotificationList.notify({
+          type: 'success',
+          title: 'Created',
+          message: created.date + ': ' + created.location,
+          action: 'UNDO',
+          actionFunction: (param) => this.deleteEvent(param),
+          actionParam: event._id
         });
       }
     });
   }
 
-  createEvent(event) {
-    this.props.api.service('events').create(
-      event,
-      (error, created) => {
-        if(error)
-          NotificationList.alert(error.name, 'Create Error');
-        else {
-          //nextState.selected = Object.assign({}, this.emptyEvent);
-          NotificationList.notify({
-            type: 'success',
-            title: 'Created',
-            message: created.category + ': ' + created.name,
-            action: 'UNDO',
-            actionFunction: (param) => this.deleteEvent(param),
-            actionParam: event._id
-          });
-        }
-      }
-    );
-  }
-
   selectEvent(id) {
     this.setState((prevState, props) => {
       let nextState = Object.assign({}, prevState);
-      nextState.selected = Object.assign({}, prevState.list.filter(event => event._id == id)[0]);
+      nextState.selected = Object.assign({}, this.props.events.filter(event => event._id == id)[0]);
       return nextState;
     });
   }
 
   updateEvent(event) {
-    const preUpdate = Object.assign({}, this.state.list.filter(item => item._id == event._id)[0]);
-    this.props.api.service('events').patch(
-      event._id,
-      event,
-      (error, updated) => {
-        if(error)
-          NotificationList.alert(error.name, 'Update Error');
-        else {
-          this.update = updated._id;
-          NotificationList.notify({
-            type: 'success',
-            title: 'Updated',
-            message: updated.category + ': ' + updated.name,
-            action: 'UNDO',
-            actionFunction: (param) => {this.updateEvent(param); this.selectEvent(updated._id);},
-            actionParam: preUpdate
-          });
-        }
+    const preUpdate = Object.assign({}, this.props.events.filter(item => item._id == event._id)[0]);
+    this.props.update('events', event, (error, updated) => {
+      if(error)
+        NotificationList.alert(error.name, 'Update Error');
+      else {
+        this.update = updated._id;
+        NotificationList.notify({
+          type: 'success',
+          title: 'Updated',
+          message: updated.date + ': ' + updated.location,
+          action: 'UNDO',
+          actionFunction: (param) => {this.updateEvent(param); this.selectEvent(updated._id);},
+          actionParam: preUpdate
+        });
       }
-    );
+    });
   }
 
   deleteEvent(id) {
     if(!id)
       return;
-    this.props.api.service('events').remove(
-      id,
-      (error, deleted) => {
-        if(error)
-          NotificationList.alert(error.name, 'Delete Error');
-        else {
-          this.setState((prevState, props) => {
-            let nextState = Object.assign({}, prevState);
-            nextState.selected = Object.assign({}, this.emptyEvent);
-            return nextState;
-          });
-          this.delete = deleted._id;
-          NotificationList.notify({
-            type: 'success',
-            title: 'Deleted',
-            message: deleted.category + ': ' + deleted.name,
-            action: 'UNDO',
-            actionFunction: (param) => this.createEvent(param),
-            actionParam: deleted
-          });
-        }
+    this.props.remove('events', id, (error, deleted) => {
+      if(error)
+        NotificationList.alert(error.name, 'Delete Error');
+      else {
+        this.setState((prevState, props) => {
+          let nextState = Object.assign({}, prevState);
+          nextState.selected = Object.assign({}, this.emptyEvent);
+          return nextState;
+        });
+        this.delete = deleted._id;
+        NotificationList.notify({
+          type: 'success',
+          title: 'Deleted',
+          message: deleted.date + ': ' + deleted.location,
+          action: 'UNDO',
+          actionFunction: (param) => this.createEvent(param),
+          actionParam: deleted
+        });
       }
-    );
+    });
   }
 
   handleListClick (e) {
@@ -270,7 +181,7 @@ class Events extends React.Component {
       delete event._id;
       this.createEvent(event);
     }
-    else if(!this.state.list.filter(item => item._id == event._id))
+    else if(!this.props.events.filter(item => item._id == event._id))
       this.createEvent(event);
     else
       this.updateEvent(event);
@@ -302,9 +213,14 @@ class Events extends React.Component {
       <div>
         <main>
           <div data-rules='manage'>
-            <button type='button' value='refresh' onClick={this.startSync}>Refresh</button>
-            <button type='button' value='new' onClick={this.handleFormNew}>Add Event</button>
-            <div data-events='@todo search events'></div>
+            <button type='button' value='reload' onClick={this.reloadService}>
+              Reload
+            </button>
+            <button type='button' value='new' onClick={this.handleFormNew}>
+              Add Event
+            </button>
+            <div data-events='@todo search events'>
+            </div>
           </div>
           {this.state.selected._id != 'new'
           ? null
@@ -318,10 +234,12 @@ class Events extends React.Component {
               onDelete={this.handleFormDelete}
             />
           }
-          {this.state.list.length == 0
+          {this.props.events.length == 0
           ? <Spinner />
           : <EventList
-              list={this.state.list}
+              list={this.props.events.sort((a, b) => {
+                return a.date > b.date ? 1 : -1;
+              })}
               selected={this.state.selected}
               onClick={this.handleListClick}
               onChange={this.handleFormInputChange}
@@ -337,8 +255,18 @@ class Events extends React.Component {
   }
 }
 
+Events.defaultProps = {
+  events: []
+};
+
 Events.propTypes = {
-  api: PropTypes.object.isRequired
+  events: PropTypes.array,
+  subscribeService: PropTypes.func.isRequired,
+  loadService: PropTypes.func.isRequired,
+  create: PropTypes.func.isRequired,
+  update: PropTypes.func.isRequired,
+  patch: PropTypes.func.isRequired,
+  remove: PropTypes.func.isRequired,
 };
 
 export default Events;

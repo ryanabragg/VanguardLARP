@@ -11,28 +11,10 @@ import Homepage from './styled/Home';
 class Home extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      events: []
-    };
   }
 
   componentDidMount() {
-    let startDate = (new Date()).toJSON().slice(0, 10); // get the 'YYYY-MM-DD' from the JSON date string
-    this.props.api.service('events').find({
-      query: {
-        date: {
-          $gte: startDate
-        },
-        $sort: {
-          date: 1
-        },
-        $limit: 12,
-        $skip: 0
-      }
-    }).then(events => {
-      this.setState({events: events.data});
-    });
+    this.props.loadService('events');
   }
 
   render() {
@@ -137,7 +119,11 @@ class Home extends React.Component {
             <h1 className='title'>Schedule</h1>
             <p>The camp reservations are done yearly.</p>
             <ol className='events'>
-              {this.state.events.map(event => {
+              {this.props.events.filter(event => {
+                return event.date >= (new Date()).toJSON().slice(0, 10); // get the 'YYYY-MM-DD' from the JSON date string
+              }).sort((a, b) => {
+                return a.date > b.date ? 1 : -1;
+              }).map(event => {
                 return (
                   <li key={event._id}>
                     {event.date}
@@ -181,8 +167,13 @@ class Home extends React.Component {
   }
 }
 
+Home.defaultProps = {
+  events: []
+};
+
 Home.propTypes = {
-  api: PropTypes.object.isRequired
+  events: PropTypes.array,
+  loadService: PropTypes.func.isRequired
 };
 
 export default Home;
