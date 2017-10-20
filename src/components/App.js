@@ -104,6 +104,7 @@ export default class App extends React.Component {
         });
       });
       api.service(service).on('updated', record => {
+        const previous = Object.assign({}, this.state.rules.filter(rule => rule._id == record._id)[0]);
         this.setState((prevState, props) => {
           let nextState = Object.assign({}, prevState);
           let index = prevState[service].map(item => item._id).indexOf(record._id);
@@ -111,7 +112,7 @@ export default class App extends React.Component {
           return nextState;
         }, () => {
           this.observers.filter(observer => observer.service == service)
-            .forEach(observer => observer.func({type: 'updated', data: record}));
+            .forEach(observer => observer.func({type: 'updated', data: record, previous: previous}));
         });
       });
       api.service(service).on('removed', record => {
@@ -152,11 +153,17 @@ export default class App extends React.Component {
               events={this.state.events}
               loadService={this.loadService} />;
           }} />
-          <Route path='/admin' render={props => <AdminMenu {...props} api={api} user={this.state.user} setUser={this.setUser} />} />
+          <Route path='/admin' render={props => {
+            return <AdminMenu {...props}
+              api={api}
+              user={this.state.user}
+              setUser={this.setUser} />;
+          }} />
           <Switch>
             <Route exact path='/admin' component={AdminDashboard} />
             <Route exact path='/admin/events' render={props => {
               return <AdminEvents {...props}
+                user={this.state.user}
                 events={this.state.events}
                 subscribeService={this.subscribeService}
                 loadService={this.loadService}
@@ -167,6 +174,7 @@ export default class App extends React.Component {
             }} />
             <Route path='/admin/events/:id' render={props => {
               return <AdminEvents {...props}
+                user={this.state.user}
                 events={this.state.events}
                 subscribeService={this.subscribeService}
                 loadService={this.loadService}
@@ -177,6 +185,7 @@ export default class App extends React.Component {
             }} />
             <Route exact path='/admin/rules' render={props => {
               return <AdminRules {...props}
+                user={this.state.user}
                 rules={this.state.rules}
                 subscribeService={this.subscribeService}
                 loadService={this.loadService}
@@ -187,6 +196,7 @@ export default class App extends React.Component {
             }} />
             <Route path='/admin/rules/:id' render={props => {
               return <AdminRules {...props}
+                user={this.state.user}
                 rules={this.state.rules}
                 subscribeService={this.subscribeService}
                 loadService={this.loadService}
@@ -201,6 +211,7 @@ export default class App extends React.Component {
           <Switch>
             <Route exact path='/character' render={props => {
               return <Character {...props}
+                user={this.state.user}
                 rules={this.state.rules}
                 subscribeService={this.subscribeService}
                 loadService={this.loadService}
@@ -211,6 +222,7 @@ export default class App extends React.Component {
             }} />
             <Route path='/character/:id' render={props => {
               return <Character {...props}
+                user={this.state.user}
                 rules={this.state.rules}
                 subscribeService={this.subscribeService}
                 loadService={this.loadService}
