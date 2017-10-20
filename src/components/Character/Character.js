@@ -837,10 +837,12 @@ class Character extends React.Component {
 }
 
 Character.defaultProps = {
+  user: {},
   rules: []
 };
 
 Character.propTypes = {
+  user: PropTypes.object,
   rules: PropTypes.array,
   subscribeService: PropTypes.func.isRequired,
   loadService: PropTypes.func.isRequired,
