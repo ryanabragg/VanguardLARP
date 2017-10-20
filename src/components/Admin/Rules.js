@@ -34,18 +34,7 @@ class Rules extends React.Component {
       grants: '' // adding this to a character will add each value as well
     };
 
-    this.syncData = {
-      interval: 500, // ms
-      paginate: 50,
-      total: 0,
-      progress: [],
-      add: [],
-      modify: [],
-      remove:[]
-    };
-
     this.state = {
-      list: [],
       search: {
         modified: '',
         name: '',
@@ -54,8 +43,8 @@ class Rules extends React.Component {
       selected: Object.assign({}, this.emptyRule)
     };
 
-    this.startSync = this.startSync.bind(this);
-    this.sync = this.sync.bind(this);
+    this.ruleObserver = this.ruleObserver.bind(this);
+    this.reloadService = this.reloadService.bind(this);
 
     this.createRule = this.createRule.bind(this);
     this.selectRule = this.selectRule.bind(this);
@@ -71,205 +60,122 @@ class Rules extends React.Component {
   }
 
   componentDidMount() {
-    this.props.api.service('rules').on('created', rule => {
-      this.setState((prevState, props) => {
-        let nextState = Object.assign({}, prevState);
-        if(this.syncInProgress)
-          this.syncData.add = this.syncData.add.concat(rule);
-        else
-          nextState.list = prevState.list.concat(rule);
-        return nextState;
-      });
-    });
-
-    this.props.api.service('rules').on('patched', rule => {
-      let notification = undefined;
-      this.setState((prevState, props) => {
-        let nextState = Object.assign({}, prevState);
-        if(rule._id === prevState.selected._id && rule._id != this.update) {
-          this.update = undefined;
-          notification = {
-            timeout: 0,
-            type: 'warning',
-            title: 'Updated',
-            message: 'The rule you are viewing has been modified. Clicking Submit without applying changes will override them.',
-            action: 'APPLY CHANGES',
-            actionFunction: (param) => this.selectRule(param),
-            actionParam: rule._id
-          };
-        }
-        if(this.syncInProgress)
-          this.syncData.modify = this.syncData.modify.concat(rule);
-        else
-          nextState.list[prevState.list.map(item => item._id).indexOf(rule._id)] = Object.assign({}, rule);
-        return nextState;
-      }, () => {
-        if(notification)
-          NotificationList.notify(notification);
-      });
-    });
-
-    this.props.api.service('rules').on('removed', rule => {
-      let notification = undefined;
-      this.setState((prevState, props) => {
-        let nextState = Object.assign({}, prevState);
-        if(rule._id === prevState.selected._id && rule._id != this.delete) {
-          this.delete = undefined;
-          notification = {
-            timeout: 0,
-            type: 'alert',
-            title: 'Deleted',
-            message: 'The rule you are viewing has been deleted. Clicking Submit will recreate it.'
-          };
-        }
-        if(this.syncInProgress)
-          this.syncData.remove = this.syncData.remove.concat(rule);
-        else
-          nextState.list = prevState.list.filter(listed => rule._id != listed._id);
-        return nextState;
-      }, () => {
-        if(notification)
-          NotificationList.notify(notification);
-      });
-    });
-
-    this.startSync();
+    this.unsubscribe = this.props.subscribeService('rules', this.ruleObserver);
+    this.props.loadService('rules');
+    if(this.props.match.params.hasOwnProperty('id'))
+      this.selectRule(this.props.match.params.id);
   }
 
   componentWillUnmount () {
-    this.props.api.service('rules').removeListener('created');
-    this.props.api.service('rules').removeListener('patched');
-    this.props.api.service('rules').removeListener('removed');
+    this.unsubscribe();
   }
 
-  startSync() {
-    this.syncData = {
-      interval: 500, // ms
-      paginate: 50,
-      total: 0,
-      progress: [],
-      add: [],
-      modify: [],
-      remove:[]
-    };
-    this.syncInProgress = setInterval(this.sync, this.syncData.interval);
-  }
-
-  sync() {
-    this.props.api.service('rules').find({
-      query:{
-        $sort:{
-          race: 1,
-          culture: 1,
-          category: 1,
-          group: 1,
-          name: 1
-        },
-        $limit: this.syncData.paginate,
-        $skip: this.syncData.progress.length
+  ruleObserver(payload) {
+    let notification = undefined;
+    switch(payload.type) {
+    case 'created':
+      break;
+    case 'updated':
+      if(payload.data._id == this.state.selected._id && payload.data._id != this.update) {
+        this.update = undefined;
+        notification = {
+          timeout: 0,
+          type: 'warning',
+          title: 'Updated',
+          message: 'The rule you are viewing has been modified. Clicking Submit without applying changes will override them.',
+          action: 'APPLY CHANGES',
+          actionFunction: (param) => this.selectRule(param),
+          actionParam: rule._id
+        };
       }
-    }).then(page => {
-      this.syncData.total = page.total;
-      this.syncData.progress = this.syncData.progress.concat(page.data);
-      if(this.syncData.total == this.syncData.progress.length + this.syncData.add.length - this.syncData.remove.length) {
-        clearInterval(this.syncInProgress);
-        this.syncInProgress = 0;
-        let modifyIDs = this.syncData.modify.map(rule => rule._id);
-        let removeIDs = this.syncData.remove.map(rule => rule._id);
-        this.setState((prevState, props) => {
-          let nextState = Object.assign({}, prevState);
-          nextState.list = this.syncData.progress
-            .filter(rule => removeIDs.indexOf(rule._id) === -1)
-            .filter(rule => modifyIDs.indexOf(rule._id) === -1)
-            .concat(this.syncData.modify)
-            .concat(this.syncData.add);
-          return nextState;
-        }, () => {
-          if(this.props.match.params.hasOwnProperty('id'))
-            this.selectRule(this.props.match.params.id);
+      break;
+    case 'removed':
+      if(payload.data._id == this.state.selected._id && payload.data._id != this.delete) {
+        this.delete = undefined;
+        notification = {
+          timeout: 0,
+          type: 'alert',
+          title: 'Deleted',
+          message: 'The rule you are viewing has been deleted. Clicking Submit will recreate it.'
+        };
+      }
+      break;
+    }
+    if(notification)
+      NotificationList.notify(notification);
+  }
+
+  reloadService() {
+    this.props.loadService('rules', true);
+  }
+
+  createRule(rule) {
+    this.props.create('rules', rule, (error, created) => {
+      if(error)
+        NotificationList.alert(error.name, 'Create Error');
+      else {
+        NotificationList.notify({
+          type: 'success',
+          title: 'Created',
+          message: created.category + ': ' + created.name,
+          action: 'UNDO',
+          actionFunction: (param) => this.deleteRule(param),
+          actionParam: rule._id
         });
       }
     });
   }
 
-  createRule(rule) {
-    this.props.api.service('rules').create(
-      rule,
-      (error, created) => {
-        if(error)
-          NotificationList.alert(error.name, 'Create Error');
-        else {
-          //nextState.selected = Object.assign({}, this.emptyRule);
-          NotificationList.notify({
-            type: 'success',
-            title: 'Created',
-            message: created.category + ': ' + created.name,
-            action: 'UNDO',
-            actionFunction: (param) => this.deleteRule(param),
-            actionParam: rule._id
-          });
-        }
-      }
-    );
-  }
-
   selectRule(id) {
     this.setState((prevState, props) => {
       let nextState = Object.assign({}, prevState);
-      nextState.selected = Object.assign({}, prevState.list.filter(rule => rule._id == id)[0]);
+      nextState.selected = Object.assign({}, this.props.rules.filter(rule => rule._id == id)[0]);
       return nextState;
     });
   }
 
   updateRule(rule) {
-    const preUpdate = Object.assign({}, this.state.list.filter(item => item._id == rule._id)[0]);
-    this.props.api.service('rules').patch(
-      rule._id,
-      rule,
-      (error, updated) => {
-        if(error)
-          NotificationList.alert(error.name, 'Update Error');
-        else {
-          this.update = updated._id;
-          NotificationList.notify({
-            type: 'success',
-            title: 'Updated',
-            message: updated.category + ': ' + updated.name,
-            action: 'UNDO',
-            actionFunction: (param) => {this.updateRule(param); this.selectRule(updated._id);},
-            actionParam: preUpdate
-          });
-        }
+    const preUpdate = Object.assign({}, this.props.rules.filter(item => item._id == rule._id)[0]);
+    this.props.update('rules', rule, (error, updated) => {
+      if(error)
+        NotificationList.alert(error.name, 'Update Error');
+      else {
+        this.update = updated._id;
+        NotificationList.notify({
+          type: 'success',
+          title: 'Updated',
+          message: updated.category + ': ' + updated.name,
+          action: 'UNDO',
+          actionFunction: (param) => {this.updateRule(param); this.selectRule(updated._id);},
+          actionParam: preUpdate
+        });
       }
-    );
+    });
   }
 
   deleteRule(id) {
     if(!id)
       return;
-    this.props.api.service('rules').remove(
-      id,
-      (error, deleted) => {
-        if(error)
-          NotificationList.alert(error.name, 'Delete Error');
-        else {
-          this.setState((prevState, props) => {
-            let nextState = Object.assign({}, prevState);
-            nextState.selected = Object.assign({}, this.emptyRule);
-            return nextState;
-          });
-          this.delete = deleted._id;
-          NotificationList.notify({
-            type: 'success',
-            title: 'Deleted',
-            message: deleted.category + ': ' + deleted.name,
-            action: 'UNDO',
-            actionFunction: (param) => this.createRule(param),
-            actionParam: deleted
-          });
-        }
+    this.props.remove('rules', id, (error, deleted) => {
+      if(error)
+        NotificationList.alert(error.name, 'Delete Error');
+      else {
+        this.setState((prevState, props) => {
+          let nextState = Object.assign({}, prevState);
+          nextState.selected = Object.assign({}, this.emptyRule);
+          return nextState;
+        });
+        this.delete = deleted._id;
+        NotificationList.notify({
+          type: 'success',
+          title: 'Deleted',
+          message: deleted.category + ': ' + deleted.name,
+          action: 'UNDO',
+          actionFunction: (param) => this.createRule(param),
+          actionParam: deleted
+        });
       }
-    );
+    });
   }
 
   handleListClick (e) {
@@ -299,10 +205,10 @@ class Rules extends React.Component {
       delete rule._id;
       this.createRule(rule);
     }
-    else if(this.state.list.filter(item => item._id == rule._id).length)
-      this.updateRule(rule);
-    else
+    else if(!this.props.rules.filter(item => item._id == rule._id).length)
       this.createRule(rule);
+    else
+      this.updateRule(rule);
   }
 
   handleFormCancel() {
@@ -331,8 +237,12 @@ class Rules extends React.Component {
       <div>
         <main>
           <div data-rules='manage'>
-            <button type='button' value='refresh' onClick={this.startSync}>Refresh</button>
-            <button type='button' value='new' onClick={this.handleFormNew}>Add Rule</button>
+            <button type='button' value='refresh' onClick={this.reloadService}>
+              Reload
+            </button>
+            <button type='button' value='new' onClick={this.handleFormNew}>
+              Add Rule
+            </button>
             <div data-rules='@todo search rules'></div>
           </div>
           {this.state.selected._id != 'new'
@@ -347,10 +257,24 @@ class Rules extends React.Component {
               onDelete={this.handleFormDelete}
             />
           }
-          {this.state.list.length == 0
+          {this.props.rules.length == 0
           ? <Spinner />
           : <RuleList
-              list={this.state.list}
+              list={this.props.rules.sort((a, b) => {
+                return a.race > b.race ? 1
+                  : b.race > a.race ? -1
+                  : a.culture > b.culture ? 1
+                  : b.culture > a.culture ? -1
+                  : a.category > b.category ? 1
+                  : b.category > a.category ? -1
+                  : a.group > b.group ? 1
+                  : b.group > a.group ? -1
+                  : a.tier > b.tier ? 1
+                  : b.tier > a.tier ? -1
+                  : a.name > b.name ? 1
+                  : b.name > a.name ? -1
+                  : 0;
+              })}
               selected={this.state.selected}
               onClick={this.handleListClick}
               onChange={this.handleFormInputChange}
@@ -366,11 +290,21 @@ class Rules extends React.Component {
   }
 }
 
+Rules.defaultProps = {
+  rules: []
+};
+
 /* match prop added by Route
  */
 Rules.propTypes = {
-  match: PropTypes.object.isRequired,
-  api: PropTypes.object.isRequired
+  rules: PropTypes.array,
+  subscribeService: PropTypes.func.isRequired,
+  loadService: PropTypes.func.isRequired,
+  create: PropTypes.func.isRequired,
+  update: PropTypes.func.isRequired,
+  patch: PropTypes.func.isRequired,
+  remove: PropTypes.func.isRequired,
+  match: PropTypes.object.isRequired
 };
 
 export default Rules;

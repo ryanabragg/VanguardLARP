@@ -175,14 +175,50 @@ export default class App extends React.Component {
                 patch={this.recordPatch}
                 remove={this.recordDelete} />;
             }} />
-            <Route exact path='/admin/rules' render={props => <AdminRules {...props} api={api} />} />
-            <Route path='/admin/rules/:id' render={props => <AdminRules {...props} api={api} />} />
+            <Route exact path='/admin/rules' render={props => {
+              return <AdminRules {...props}
+                rules={this.state.rules}
+                subscribeService={this.subscribeService}
+                loadService={this.loadService}
+                create={this.recordCreate}
+                update={this.recordUpdate}
+                patch={this.recordPatch}
+                remove={this.recordDelete} />;
+            }} />
+            <Route path='/admin/rules/:id' render={props => {
+              return <AdminRules {...props}
+                rules={this.state.rules}
+                subscribeService={this.subscribeService}
+                loadService={this.loadService}
+                create={this.recordCreate}
+                update={this.recordUpdate}
+                patch={this.recordPatch}
+                remove={this.recordDelete} />;
+            }} />
             <Route exact path='/admin/characters' component={PageNotFound} />
             <Route path='/admin/characters/:id' component={PageNotFound} />
           </Switch>
           <Switch>
-            <Route exact path='/character' render={props => <Character {...props} api={api} />} />
-            <Route path='/character/:id' render={props => <Character {...props} api={api} />} />
+            <Route exact path='/character' render={props => {
+              return <Character {...props}
+                rules={this.state.rules}
+                subscribeService={this.subscribeService}
+                loadService={this.loadService}
+                create={this.recordCreate}
+                update={this.recordUpdate}
+                patch={this.recordPatch}
+                remove={this.recordDelete} />;
+            }} />
+            <Route path='/character/:id' render={props => {
+              return <Character {...props}
+                rules={this.state.rules}
+                subscribeService={this.subscribeService}
+                loadService={this.loadService}
+                create={this.recordCreate}
+                update={this.recordUpdate}
+                patch={this.recordPatch}
+                remove={this.recordDelete} />;
+            }} />
           </Switch>
           <Route path='/login' render={props => <Login {...props} api={api} user={this.state.user} setUser={this.setUser} />} />
           <Route path='/register' render={props => <Login {...props} api={api} user={this.state.user} setUser={this.setUser} />} />

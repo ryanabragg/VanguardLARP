@@ -51,23 +51,11 @@ class Character extends React.Component {
       skills: [] // { id, count, source } (source: skill id, build', 'race', 'culture', level number, 'code' )
     };
 
-    this.syncData = {
-      interval: 500, // ms
-      paginate: 50,
-      total: 0,
-      progress: [],
-      add: [],
-      modify: [],
-      remove:[]
-    };
-
     this.state = {
-      rules: [],
       character: this.newCharacter
     };
 
-    this.startSync = this.startSync.bind(this);
-    this.sync = this.sync.bind(this);
+    this.reloadRules = this.reloadRules.bind(this);
 
     this.viewRule = this.viewRule.bind(this);
 
@@ -89,100 +77,19 @@ class Character extends React.Component {
   }
 
   componentDidMount () {
+    this.props.loadService('rules');
     // load user authentication
     // load character
-
-    this.props.api.service('rules').on('created', rule => {
-      this.setState((prevState, props) => {
-        let nextState = Object.assign({}, prevState);
-        if(this.syncInProgress)
-          this.syncData.add = this.syncData.add.concat(rule);
-        else
-          nextState.rules = prevState.rules.concat(rule);
-        return nextState;
-      });
-    });
-
-    this.props.api.service('rules').on('patched', rule => {
-      this.setState((prevState, props) => {
-        let nextState = Object.assign({}, prevState);
-        if(this.syncInProgress)
-          this.syncData.modify = this.syncData.modify.concat(rule);
-        else
-          nextState.rules[prevState.rules.map(item => item._id).indexOf(rule._id)] = Object.assign({}, rule);
-        return nextState;
-      });
-    });
-
-    this.props.api.service('rules').on('removed', rule => {
-      this.setState((prevState, props) => {
-        let nextState = Object.assign({}, prevState);
-        if(this.syncInProgress)
-          this.syncData.remove = this.syncData.remove.concat(rule);
-        else
-          nextState.rules = prevState.rules.filter(listed => rule._id != listed._id);
-        return nextState;
-      });
-    });
-
-    this.startSync();
   }
 
-  componentWillUnmount () {
-    this.props.api.service('rules').removeListener('created');
-    this.props.api.service('rules').removeListener('patched');
-    this.props.api.service('rules').removeListener('removed');
-  }
-
-  startSync() {
-    this.syncData = {
-      interval: 500, // ms
-      paginate: 50,
-      total: 0,
-      progress: [],
-      add: [],
-      modify: [],
-      remove:[]
-    };
-    this.syncInProgress = setInterval(this.sync, this.syncData.interval);
-  }
-
-  sync() {
-    this.props.api.service('rules').find({
-      query:{
-        $sort:{
-          category: 1,
-          group: 1,
-          name: 1
-        },
-        $limit: this.syncData.paginate,
-        $skip: this.syncData.progress.length
-      }
-    }).then(page => {
-      this.syncData.total = page.total;
-      this.syncData.progress = this.syncData.progress.concat(page.data);
-      if(this.syncData.total == this.syncData.progress.length + this.syncData.add.length - this.syncData.remove.length) {
-        clearInterval(this.syncInProgress);
-        this.syncInProgress = 0;
-        let modifyIDs = this.syncData.modify.map(rule => rule._id);
-        let removeIDs = this.syncData.remove.map(rule => rule._id);
-        this.setState((prevState, props) => {
-          let nextState = Object.assign({}, prevState);
-          nextState.rules = this.syncData.progress
-            .filter(rule => removeIDs.indexOf(rule._id) === -1)
-            .filter(rule => modifyIDs.indexOf(rule._id) === -1)
-            .concat(this.syncData.modify)
-            .concat(this.syncData.add);
-          return nextState;
-        });
-      }
-    });
+  reloadRules() {
+    this.props.loadService('rules', true);
   }
 
   viewRule(id) {}
 
   getRules() {
-    return this.state.rules.map(rule => {
+    return this.props.rules.map(rule => {
       let display = {
         display: rule.max == 1 ? 'checkbox' : rule.category == 'Craft' ? 'tiers' : ''
       };
@@ -345,7 +252,7 @@ class Character extends React.Component {
   getFreeSkills() {
     const skills = this.state.character.skills.filter(skill => typeof skill.source == 'number');
     return skills.map(skill => {
-      let rule = this.state.rules.filter(rule => rule._id == skill.id);
+      let rule = this.props.rules.filter(rule => rule._id == skill.id);
       return {
         id: skill.id,
         level: skill.source,
@@ -485,7 +392,7 @@ class Character extends React.Component {
       break;
     case 'CULTURE':
       if(action.data)
-        nextState.character.race.name = prevState.rules.filter(rule => {
+        nextState.character.race.name = this.props.rules.filter(rule => {
           return rule.category == 'Culture' && rule.name == action.data;
         })[0].race;
       nextState.character.race.culture = action.data;
@@ -511,7 +418,7 @@ class Character extends React.Component {
     };
 
     if(!change.old.prodigy && change.new.prodigy){
-      prevState.rules.filter(rule => {
+      this.props.rules.filter(rule => {
         return rule.culture == 'Prodigy' && rule.category == 'Cultural' && !rule.group;
       }).forEach(rule => {
         nextState = this.stateSkillChange(nextState, {
@@ -526,7 +433,7 @@ class Character extends React.Component {
     }
 
     if(change.old.prodigy && !change.new.prodigy){
-      prevState.rules.filter(rule => {
+      this.props.rules.filter(rule => {
         return rule.culture == 'Prodigy';
       }).forEach(rule => {
         nextState = this.stateSkillChange(nextState, {
@@ -542,7 +449,7 @@ class Character extends React.Component {
 
     if(change.old.race != change.new.race) {
       if(change.old.race)
-        prevState.rules.filter(rule => {
+        this.props.rules.filter(rule => {
           return rule.race == change.old.race && !rule.culture;
         }).forEach(rule => {
           nextState = this.stateSkillChange(nextState, {
@@ -555,7 +462,7 @@ class Character extends React.Component {
           });
         });
       if(change.new.race)
-        prevState.rules.filter(rule => {
+        this.props.rules.filter(rule => {
           return rule.race == change.new.race && rule.category == 'Racial' && !rule.group;
         }).forEach(rule => {
           nextState = this.stateSkillChange(nextState, {
@@ -571,7 +478,7 @@ class Character extends React.Component {
 
     if(change.old.culture != change.new.culture) {
       if(change.old.culture)
-        prevState.rules.filter(rule => {
+        this.props.rules.filter(rule => {
           return rule.culture == change.old.culture;
         }).forEach(rule => {
           nextState = this.stateSkillChange(nextState, {
@@ -584,7 +491,7 @@ class Character extends React.Component {
           });
         });
       if(change.new.culture)
-        prevState.rules.filter(rule => {
+        this.props.rules.filter(rule => {
           return rule.culture == change.new.culture && rule.category == 'Cultural' && !rule.group;
         }).forEach(rule => {
           nextState = this.stateSkillChange(nextState, {
@@ -609,7 +516,7 @@ class Character extends React.Component {
     if(!id || count < 0)
       return prevState;
 
-    let rule = prevState.rules.filter(rule => rule._id == id);
+    let rule = this.props.rules.filter(rule => rule._id == id);
     if(!rule.length)
       return prevState;
     rule = rule[0];
@@ -627,15 +534,15 @@ class Character extends React.Component {
       known: 0
     };
     if(count && rule.category == 'Choice') {
-      let option = prevState.rules.filter(r => r.name == rule.group && r.category == 'Option');
+      let option = this.props.rules.filter(r => r.name == rule.group && r.category == 'Option');
       let optionIndex = 0;
       if(option.length > 1) {
-        let parentSelection = option.map(o => prevState.rules.filter(r => r.name == o.group)[0])
+        let parentSelection = option.map(o => this.props.rules.filter(r => r.name == o.group)[0])
           .filter(o => skills.findIndex(skill => skill.id == o._id && skill.source == source && skill.count > 0) > -1);
         if(parentSelection.length)
           optionIndex = option.findIndex(o => o.group == parentSelection[0].name);
       }
-      let choices = prevState.rules.filter(r => r.category == 'Choice' && r.group == option[optionIndex].name);
+      let choices = this.props.rules.filter(r => r.category == 'Choice' && r.group == option[optionIndex].name);
       choice.limit = Number(option[optionIndex].max);
       choice.known = Number(choices.map(r => skills[skills.findIndex(s => s.id == r._id)])
         .filter(skill => skill != undefined && skill.id != id)
@@ -929,8 +836,19 @@ class Character extends React.Component {
   }
 }
 
+Character.defaultProps = {
+  rules: []
+};
+
 Character.propTypes = {
-  api: PropTypes.object.isRequired
+  rules: PropTypes.array,
+  subscribeService: PropTypes.func.isRequired,
+  loadService: PropTypes.func.isRequired,
+  create: PropTypes.func.isRequired,
+  update: PropTypes.func.isRequired,
+  patch: PropTypes.func.isRequired,
+  remove: PropTypes.func.isRequired,
+  match: PropTypes.object.isRequired
 };
 
 export default Character;
