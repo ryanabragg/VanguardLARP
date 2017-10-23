@@ -4,14 +4,14 @@ import Ajv from 'ajv';
 import app from '../../src/server';
 
 import metaschema from '../metaschema.json';
-import schema from '../../src/services/rules/rules.schema.json';
+import schema from '../../src/services/characters/characters.schema.json';
 
 const ajv = new Ajv({ allErrors: true });
 const validate = ajv.compile(metaschema);
 
-describe('\'rules\' service', () => {
+describe('\'characters\' service', () => {
   it('registered the service', () => {
-    const service = app.service('rules');
+    const service = app.service('characters');
 
     expect(service).to.exist;
   });

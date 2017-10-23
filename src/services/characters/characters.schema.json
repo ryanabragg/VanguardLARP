@@ -1,0 +1,168 @@
+{
+  "title": "Character",
+  "description": "Character information",
+  "type": "object",
+  "properties": {
+    "_id": {
+      "description": "default NEDB id field",
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9]+$"
+    },
+    "_createdBy": {
+      "description": "creation user id",
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9]+$"
+    },
+    "_createdOn": {
+      "description": "creation timestamp",
+      "type": "string",
+      "format": "date-time"
+    },
+    "_modifiedBy": {
+      "description": "modification user id",
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9]+$"
+    },
+    "_modifiedOn": {
+      "description": "modification timestamp",
+      "type": "string",
+      "format": "date-time"
+    },
+    "shared": {
+      "type": "boolean"
+    },
+    "player": {
+      "description": "user data",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9]+$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "build": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "build": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 35
+        },
+        "spent": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "nonDomain": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "lives": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "properties": {
+          "color": {
+            "type": "string",
+            "enum": [
+              "blue",
+              "black",
+              "red",
+              "white"
+            ]
+          },
+          "count": {
+            "type": "integer"
+          },
+          "disabled": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "color",
+          "count",
+          "disabled"
+        ]
+      }
+    },
+    "recoveries": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "race": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "culture": {
+          "type": "string"
+        },
+        "prodigy": {
+          "type": "object",
+          "properties": {
+            "race": {
+              "type": "string"
+            },
+            "culture": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "sourceMarks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "source": {
+            "oneOf": [
+              { "type": "string" },
+              { "type": "integer" }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "player",
+    "name",
+    "build",
+    "lives",
+    "recoveries",
+    "race",
+    "sourceMarks",
+    "skills"
+  ]
+}

@@ -22,7 +22,9 @@ class Character extends React.Component {
 
     this.newCharacter = {
       _id: '',
+      shared: false,
       player: {
+        id: '',
         name: 'Anonymous',
         build: 0
       },
