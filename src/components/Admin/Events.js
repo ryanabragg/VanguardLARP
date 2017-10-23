@@ -56,30 +56,62 @@ class Events extends React.Component {
     let notification = undefined;
     switch(payload.type) {
     case 'created':
-      break;
-    case 'updated':
-      if(payload.data._id == this.state.selected._id && payload.data._id != this.update) {
-        this.update = undefined;
+      if(payload.data._createdBy == this.props.user._id)
         notification = {
-          timeout: 0,
+          type: 'success',
+          title: 'Created',
+          message: payload.data.date + ': ' + payload.data.location,
+          action: 'UNDO',
+          actionFunction: (param) => this.deleteEvent(param),
+          actionParam: payload.data._id
+        };
+      break;
+    case 'updated':console.log(payload)
+      if(payload.data._id == this.state.selected._id && payload.data._modifiedBy != this.props.user._id)
+        notification = {
+          timeoutDuration: 0,
           type: 'warning',
           title: 'Updated',
-          message: 'The event you are viewing has been modified. Clicking Submit without applying changes will override them.',
-          action: 'APPLY CHANGES',
+          message: 'The event you are viewing has been modified. Apply changes to view the new values.',
+          action: 'APPLY',
           actionFunction: (param) => this.selectEvent(param),
           actionParam: payload.data._id
         };
-      }
+      else if(payload.data._id == this.state.selected._id)
+        notification = {
+          type: 'success',
+          title: 'Updated',
+          message: payload.data.date + ': ' + payload.data.location,
+          action: 'UNDO',
+          actionFunction: (param) => {this.updateEvent(param); this.selectEvent(payload.data._id);},
+          actionParam: payload.previous
+        };
       break;
     case 'removed':
-      if(payload.data._id == this.state.selected._id && payload.data._id != this.delete) {
-        this.delete = undefined;
+      if(payload.data._id == this.state.selected._id && payload.data._modifiedBy != this.props.user._id)
         notification = {
-          timeout: 0,
+          timeoutDuration: 0,
           type: 'alert',
           title: 'Deleted',
-          message: 'The event you are viewing has been deleted. Clicking Submit will recreate it.'
+          message: 'The event you were viewing has been deleted.',
+          action: 'UNDO',
+          actionFunction: (param) => this.createEvent(param),
+          actionParam: payload.data
         };
+      else if(payload.data._id == this.state.selected._id) {
+        notification = {
+          type: 'success',
+          title: 'Deleted',
+          message: payload.data.date + ': ' + payload.data.location,
+          action: 'UNDO',
+          actionFunction: (param) => this.createEvent(param),
+          actionParam: payload.data
+        };
+        this.setState((prevState, props) => {
+          let nextState = Object.assign({}, prevState);
+          nextState.selected = Object.assign({}, this.emptyEvent);
+          return nextState;
+        });
       }
       break;
     }
@@ -92,19 +124,9 @@ class Events extends React.Component {
   }
 
   createEvent(event) {
-    this.props.create('events', event, (error, created) => {
+    this.props.create('events', event, (error, record) => {
       if(error)
-        NotificationList.alert(error.name, 'Create Error');
-      else {
-        NotificationList.notify({
-          type: 'success',
-          title: 'Created',
-          message: created.date + ': ' + created.location,
-          action: 'UNDO',
-          actionFunction: (param) => this.deleteEvent(param),
-          actionParam: event._id
-        });
-      }
+        NotificationList.alert(error.name, 'Failed to create event.');
     });
   }
 
@@ -117,46 +139,18 @@ class Events extends React.Component {
   }
 
   updateEvent(event) {
-    const preUpdate = Object.assign({}, this.props.events.filter(item => item._id == event._id)[0]);
-    this.props.update('events', event, (error, updated) => {
+    this.props.update('events', event, (error, record) => {
       if(error)
-        NotificationList.alert(error.name, 'Update Error');
-      else {
-        this.update = updated._id;
-        NotificationList.notify({
-          type: 'success',
-          title: 'Updated',
-          message: updated.date + ': ' + updated.location,
-          action: 'UNDO',
-          actionFunction: (param) => {this.updateEvent(param); this.selectEvent(updated._id);},
-          actionParam: preUpdate
-        });
-      }
+        NotificationList.alert(error.name, 'Failed to update event.');
     });
   }
 
   deleteEvent(id) {
     if(!id)
       return;
-    this.props.remove('events', id, (error, deleted) => {
+    this.props.remove('events', id, (error, record) => {
       if(error)
-        NotificationList.alert(error.name, 'Delete Error');
-      else {
-        this.setState((prevState, props) => {
-          let nextState = Object.assign({}, prevState);
-          nextState.selected = Object.assign({}, this.emptyEvent);
-          return nextState;
-        });
-        this.delete = deleted._id;
-        NotificationList.notify({
-          type: 'success',
-          title: 'Deleted',
-          message: deleted.date + ': ' + deleted.location,
-          action: 'UNDO',
-          actionFunction: (param) => this.createEvent(param),
-          actionParam: deleted
-        });
-      }
+        NotificationList.alert(error.name, 'Failed to delete event.');
     });
   }
 
@@ -256,10 +250,12 @@ class Events extends React.Component {
 }
 
 Events.defaultProps = {
+  user: {},
   events: []
 };
 
 Events.propTypes = {
+  user: PropTypes.object,
   events: PropTypes.array,
   subscribeService: PropTypes.func.isRequired,
   loadService: PropTypes.func.isRequired,

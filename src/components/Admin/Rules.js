@@ -74,30 +74,62 @@ class Rules extends React.Component {
     let notification = undefined;
     switch(payload.type) {
     case 'created':
+      if(payload.data._createdBy == this.props.user._id)
+        notification = {
+          type: 'success',
+          title: 'Created',
+          message: payload.data.category + ': ' + payload.data.name,
+          action: 'UNDO',
+          actionFunction: (param) => this.deleteRule(param),
+          actionParam: payload.data._id
+        };
       break;
     case 'updated':
-      if(payload.data._id == this.state.selected._id && payload.data._id != this.update) {
-        this.update = undefined;
+      if(payload.data._id == this.state.selected._id && payload.data._modifiedBy != this.props.user._id)
         notification = {
-          timeout: 0,
+          timeoutDuration: 0,
           type: 'warning',
           title: 'Updated',
-          message: 'The rule you are viewing has been modified. Clicking Submit without applying changes will override them.',
-          action: 'APPLY CHANGES',
+          message: 'The rule you are viewing has been modified. Apply changes to view the new values.',
+          action: 'APPLY',
           actionFunction: (param) => this.selectRule(param),
-          actionParam: rule._id
+          actionParam: payload.data._id
         };
-      }
+      else if(payload.data._id == this.state.selected._id)
+        notification = {
+          type: 'success',
+          title: 'Updated',
+          message: payload.data.category + ': ' + payload.data.name,
+          action: 'UNDO',
+          actionFunction: (param) => {this.updateRule(param); this.selectRule(payload.data._id);},
+          actionParam: payload.previous
+        };
       break;
     case 'removed':
-      if(payload.data._id == this.state.selected._id && payload.data._id != this.delete) {
-        this.delete = undefined;
+      if(payload.data._id == this.state.selected._id && payload.data._modifiedBy != this.props.user._id)
         notification = {
-          timeout: 0,
+          timeoutDuration: 0,
           type: 'alert',
           title: 'Deleted',
-          message: 'The rule you are viewing has been deleted. Clicking Submit will recreate it.'
+          message: 'The rule you were viewing has been deleted.',
+          action: 'UNDO',
+          actionFunction: (param) => this.createRule(param),
+          actionParam: payload.data
         };
+      else if(payload.data._id == this.state.selected._id) {
+        notification = {
+          type: 'success',
+          title: 'Deleted',
+          message: payload.data.category + ': ' + payload.data.name,
+          action: 'UNDO',
+          actionFunction: (param) => this.createRule(param),
+          actionParam: payload.data
+        };
+        this.setState((prevState, props) => {
+          let nextState = Object.assign({}, prevState);
+          nextState.selected = Object.assign({}, this.emptyRule);
+          return nextState;
+        });
       }
       break;
     }
@@ -110,19 +142,9 @@ class Rules extends React.Component {
   }
 
   createRule(rule) {
-    this.props.create('rules', rule, (error, created) => {
+    this.props.create('rules', rule, (error, record) => {
       if(error)
-        NotificationList.alert(error.name, 'Create Error');
-      else {
-        NotificationList.notify({
-          type: 'success',
-          title: 'Created',
-          message: created.category + ': ' + created.name,
-          action: 'UNDO',
-          actionFunction: (param) => this.deleteRule(param),
-          actionParam: rule._id
-        });
-      }
+        NotificationList.alert(error.name, 'Failed to create rule.');
     });
   }
 
@@ -135,46 +157,18 @@ class Rules extends React.Component {
   }
 
   updateRule(rule) {
-    const preUpdate = Object.assign({}, this.props.rules.filter(item => item._id == rule._id)[0]);
-    this.props.update('rules', rule, (error, updated) => {
+    this.props.update('rules', rule, (error, record) => {
       if(error)
-        NotificationList.alert(error.name, 'Update Error');
-      else {
-        this.update = updated._id;
-        NotificationList.notify({
-          type: 'success',
-          title: 'Updated',
-          message: updated.category + ': ' + updated.name,
-          action: 'UNDO',
-          actionFunction: (param) => {this.updateRule(param); this.selectRule(updated._id);},
-          actionParam: preUpdate
-        });
-      }
+        NotificationList.alert(error.name, 'Failed to update rule.');
     });
   }
 
   deleteRule(id) {
     if(!id)
       return;
-    this.props.remove('rules', id, (error, deleted) => {
+    this.props.remove('rules', id, (error, record) => {
       if(error)
-        NotificationList.alert(error.name, 'Delete Error');
-      else {
-        this.setState((prevState, props) => {
-          let nextState = Object.assign({}, prevState);
-          nextState.selected = Object.assign({}, this.emptyRule);
-          return nextState;
-        });
-        this.delete = deleted._id;
-        NotificationList.notify({
-          type: 'success',
-          title: 'Deleted',
-          message: deleted.category + ': ' + deleted.name,
-          action: 'UNDO',
-          actionFunction: (param) => this.createRule(param),
-          actionParam: deleted
-        });
-      }
+        NotificationList.alert(error.name, 'Failed to delete rule.');
     });
   }
 
@@ -291,12 +285,14 @@ class Rules extends React.Component {
 }
 
 Rules.defaultProps = {
+  user: {},
   rules: []
 };
 
 /* match prop added by Route
  */
 Rules.propTypes = {
+  user: PropTypes.object,
   rules: PropTypes.array,
   subscribeService: PropTypes.func.isRequired,
   loadService: PropTypes.func.isRequired,
