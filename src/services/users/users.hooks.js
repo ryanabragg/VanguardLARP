@@ -1,7 +1,10 @@
+const { when, discard, validateSchema } = require('feathers-hooks-common');
 const { authenticate } = require('feathers-authentication').hooks;
-const commonHooks = require('feathers-hooks-common');
 const { restrictToRoles } = require('feathers-authentication-hooks');
 const { hashPassword } = require('feathers-authentication-local').hooks;
+const Ajv = require('ajv');
+
+const schema = require('./users.schema.json');
 
 const restrict = [
   authenticate('jwt'),
@@ -19,18 +22,18 @@ module.exports = {
     all: [],
     find: [ authenticate('jwt') ],
     get: [ ...restrict ],
-    create: [ hashPassword() ],
-    update: [ ...restrict, hashPassword() ],
-    patch: [ ...restrict, hashPassword() ],
+    create: [ hashPassword(), validateSchema(schema, Ajv, { coerceTypes: true }) ],
+    update: [ ...restrict, hashPassword(), validateSchema(schema, Ajv, { coerceTypes: true }) ],
+    patch: [ ...restrict, hashPassword(), validateSchema(schema, Ajv, { coerceTypes: true }) ],
     remove: [ ...restrict ]
   },
 
   after: {
     all: [
-      commonHooks.when(
+      when(
         hook => hook.params.provider,
-        commonHooks.discard('password'),
-        commonHooks.discard('permissions')
+        discard('password'),
+        discard('permissions')
       )
     ],
     find: [],

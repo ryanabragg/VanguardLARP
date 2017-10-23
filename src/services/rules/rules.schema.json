@@ -1,0 +1,102 @@
+{
+  "title": "Rule",
+  "description": "Rule information",
+  "type": "object",
+  "properties": {
+    "_id": {
+      "description": "default NEDB id field",
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9]+$"
+    },
+    "_createdBy": {
+      "description": "creation user id",
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9]+$"
+    },
+    "_createdOn": {
+      "description": "creation timestamp",
+      "type": "string",
+      "format": "date-time"
+    },
+    "_modifiedBy": {
+      "description": "modification user id",
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9]+$"
+    },
+    "_modifiedOn": {
+      "description": "modification timestamp",
+      "type": "string",
+      "format": "date-time"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "build": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "max": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "delivery": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "disable": {
+      "type": "boolean"
+    },
+    "category": {
+      "type": "string",
+      "minLength": 1
+    },
+    "group": {
+      "type": "string"
+    },
+    "tier": {
+      "type": "string"
+    },
+    "race": {
+      "type": "string"
+    },
+    "culture": {
+      "type": "string"
+    },
+    "prodigy": {
+      "type": "boolean"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1
+    },
+    "requires": {
+      "type": "string"
+    },
+    "requiresAny": {
+      "type": "string"
+    },
+    "conflicts": {
+      "type": "string"
+    },
+    "extraUses": {
+      "type": "string"
+    },
+    "replaces": {
+      "type": "string"
+    },
+    "grants": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "build",
+    "max",
+    "category",
+    "description"
+  ]
+}

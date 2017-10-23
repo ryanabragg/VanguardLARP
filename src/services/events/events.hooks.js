@@ -1,6 +1,9 @@
-const { setNow } = require('feathers-hooks-common');
+const { setNow, validateSchema } = require('feathers-hooks-common');
 const { authenticate } = require('feathers-authentication').hooks;
 const { associateCurrentUser, restrictToRoles } = require('feathers-authentication-hooks');
+const Ajv = require('ajv');
+
+const schema = require('./events.schema.json');
 
 const restrict = [
   authenticate('jwt'),
@@ -27,9 +30,9 @@ module.exports = {
     all: [],
     find: [],
     get: [],
-    create: [ ...restrict, ...createInfo ],
-    update: [ ...restrict, ...updateInfo ],
-    patch: [ ...restrict, ...updateInfo ],
+    create: [ ...restrict, ...createInfo, validateSchema(schema, Ajv, { coerceTypes: true }) ],
+    update: [ ...restrict, ...updateInfo, validateSchema(schema, Ajv, { coerceTypes: true }) ],
+    patch: [ ...restrict, ...updateInfo, validateSchema(schema, Ajv, { coerceTypes: true }) ],
     remove: [ ...restrict ]
   },
 

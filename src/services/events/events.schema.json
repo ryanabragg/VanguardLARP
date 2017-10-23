@@ -1,0 +1,49 @@
+{
+  "title": "Event",
+  "description": "Event schedule information",
+  "type": "object",
+  "properties": {
+    "_id": {
+      "description": "default NEDB id field",
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9]+$"
+    },
+    "_createdBy": {
+      "description": "creation user id",
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9]+$"
+    },
+    "_createdOn": {
+      "description": "creation timestamp",
+      "type": "string",
+      "format": "date-time"
+    },
+    "_modifiedBy": {
+      "description": "modification user id",
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9]+$"
+    },
+    "_modifiedOn": {
+      "description": "modification timestamp",
+      "type": "string",
+      "format": "date-time"
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "location": {
+      "description": "name of the location for the event",
+      "type": "string",
+      "minLength": 1
+    },
+    "area": {
+      "description": "area of the location, specific camp, etc.",
+      "type": "string"
+    }
+  },
+  "required": [
+    "date",
+    "location"
+  ]
+}

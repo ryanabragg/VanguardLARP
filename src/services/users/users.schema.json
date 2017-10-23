@@ -1,0 +1,36 @@
+{
+  "title": "User",
+  "description": "User information",
+  "type": "object",
+  "properties": {
+    "_id": {
+      "description": "default NEDB id field",
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9]+$"
+    },
+    "email": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+    },
+    "password": {
+      "description": "hashed string",
+      "type": "string"
+    },
+    "permissions": {
+      "type": "array",
+      "additionalItems": {
+        "type": "string",
+        "enum": [
+          "admin",
+          "plot",
+          "rules",
+          "logistics"
+        ]
+      }
+    }
+  },
+  "required": [
+    "email",
+    "password"
+  ]
+}

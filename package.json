@@ -30,6 +30,7 @@
     "archive": "tar -czvf ../vanguardlarp.tar.gz ."
   },
   "dependencies": {
+    "ajv": "^5.2.3",
     "babel-cli": "^6.24.1",
     "babel-core": "^6.24.1",
     "babel-polyfill": "^6.23.0",
