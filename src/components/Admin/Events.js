@@ -66,7 +66,7 @@ class Events extends React.Component {
           actionParam: payload.data._id
         };
       break;
-    case 'updated':console.log(payload)
+    case 'updated':
       if(payload.data._id == this.state.selected._id && payload.data._modifiedBy != this.props.user._id)
         notification = {
           timeoutDuration: 0,
