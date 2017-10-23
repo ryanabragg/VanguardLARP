@@ -238,8 +238,20 @@ export default class App extends React.Component {
                 remove={this.recordDelete} />;
             }} />
           </Switch>
-          <Route path='/login' render={props => <Login {...props} api={api} user={this.state.user} setUser={this.setUser} />} />
-          <Route path='/register' render={props => <Login {...props} api={api} user={this.state.user} setUser={this.setUser} />} />
+          <Route path='/login' render={props => {
+            return <Login {...props}
+              register={api.register}
+              login={api.login}
+              user={this.state.user}
+              setUser={this.setUser} />;
+          }} />
+          <Route path='/register' render={props => {
+            return <Login {...props}
+              register={api.register}
+              login={api.login}
+              user={this.state.user}
+              setUser={this.setUser} />;
+          }} />
           <NotificationList />
         </div>
       </ThemeProvider>

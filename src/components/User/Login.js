@@ -39,12 +39,12 @@ class Login extends React.Component {
 
   async loginLocal(credentials, register = false) {
     if(register)
-      await this.props.api.register(credentials);
-    const user = await this.props.api.login(credentials);
+      await this.props.register(credentials);
+    const user = await this.props.login(credentials);
     this.props.setUser(user);
     this.setState({password: ''});
     if(register && user != {})
-      this.props.history.push('/account');
+      this.props.history.push(`/account/${user._id}`);
     else if(user != {})
       this.props.history.goBack();
   }
@@ -121,26 +121,46 @@ class Login extends React.Component {
         <span className='logo'>
           <Logo alt='logo' />
         </span>
-        <button type='button' value='facebook' onClick={this.handleFormLoginFacebook}>Sign in with Facebook</button>
+        <button type='button' value='facebook'
+          onClick={this.handleFormLoginFacebook}
+        >
+          Sign in with Facebook
+        </button>
         <span className='divider'>
           or
         </span>
-        <label>Email</label>
+        <label>
+          Email
+        </label>
         <input type='text'
           name='email'
           value={this.state.email}
           onChange={this.handleFormInputChange}
         />
-        <label>Password</label>
+        <label>
+          Password
+        </label>
         <input type='password'
           name='password'
           value={this.state.password}
           onChange={this.handleFormInputChange}
           onKeyPress={this.handleFormKeyPress}
         />
-        <button type='button' value="submit" onClick={this.handleFormLoginLocal}>Sign In</button>
-        <span className='option-left' onClick={this.handleViewPasswordRecovery}>Forgot your password?</span>
-        <span className='option-right' onClick={this.handleViewRegister}>Sign Up</span>
+        <button type='button' value="submit"
+          onClick={this.handleFormLoginLocal}
+        >
+          Sign In
+        </button>
+        <span className='option-left'
+          onClick={this.handleViewPasswordRecovery}
+        >
+          Forgot your password?
+        </span>
+        <span className='option-right'
+          onClick={this.handleViewRegister}
+        >
+          Sign Up
+        </span>
       </form>
     );
   }
@@ -151,7 +171,11 @@ class Login extends React.Component {
         <span className='logo'>
           <Logo alt='logo' />
         </span>
-        <button type='button' value='facebook' onClick={this.handleFormRegisterFacebook}>Sign up with Facebook</button>
+        <button type='button' value='facebook'
+          onClick={this.handleFormRegisterFacebook}
+        >
+          Sign up with Facebook
+        </button>
         <span className='divider'>
           or
         </span>
@@ -168,8 +192,16 @@ class Login extends React.Component {
           onChange={this.handleFormInputChange}
           onKeyPress={this.handleFormKeyPress}
         />
-        <button type='button' value="submit" onClick={this.handleFormRegisterLocal}>Sign Up</button>
-        <span className='option-right' onClick={this.handleViewLogin}>Sign In</span>
+        <button type='button' value="submit"
+          onClick={this.handleFormRegisterLocal}
+        >
+          Sign Up
+        </button>
+        <span className='option-right'
+          onClick={this.handleViewLogin}
+        >
+          Sign In
+        </span>
       </form>
     );
   }
@@ -187,8 +219,16 @@ class Login extends React.Component {
           onChange={this.handleFormInputChange}
           onKeyPress={this.handleFormKeyPress}
         />
-        <button type='button' value="submit" onClick={this.handleFormPasswordRecovery}>Reset Password</button>
-        <span className='option-left' onClick={this.handleViewLogin}>Sign In</span>
+        <button type='button' value='submit'
+          onClick={this.handleFormPasswordRecovery}
+        >
+          Reset Password
+        </button>
+        <span className='option-left'
+          onClick={this.handleViewLogin}
+        >
+          Sign In
+        </span>
       </form>
     );
   }
@@ -220,7 +260,10 @@ Login.defaultProps = {
 };
 
 Login.propTypes = {
-  api: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
+  register: PropTypes.func.isRequired,
+  login: PropTypes.func.isRequired,
   user: PropTypes.object,
   setUser: PropTypes.func.isRequired
 };
