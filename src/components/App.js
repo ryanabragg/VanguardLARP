@@ -59,6 +59,12 @@ export default class App extends React.Component {
     this.recordDelete = this.recordDelete.bind(this);
   }
 
+  componentDidMount() {
+    api.getUser().then((user) => {
+      this.setState({user: user});
+    });
+  }
+
   componentWillUnmount() {
     this.listeners.forEach(service => {
       api.service(service).removeListener('created');

@@ -36,17 +36,27 @@ api.register = async (credentials) => {
 }
 
 api.login = async (credentials) => {
-  const auth = credentials ?
+  let auth = credentials ?
     Object.assign({strategy: 'local'}, credentials) : {};
   try {
-    const result = await api.authenticate(auth);
-    const payload = await api.passport.verifyJWT(result.accessToken);
-    const user = await api.service('users').get(payload.userId);
-    return user;
+    let result = await api.authenticate(auth);
+    let payload = await api.passport.verifyJWT(result.accessToken);
+    return await api.service('users').get(payload.userId);
   } catch (err) {
     return {};
   }
 };
+
+api.getUser = async () => {
+  try {
+    let jwt = await api.passport.getJWT();
+    let result = await api.authenticate({strategy: 'jwt', accessToken: jwt});
+    let payload = await api.passport.verifyJWT(result.accessToken);
+    return await api.service('users').get(payload.userId);
+  } catch (err) {
+    return {};
+  }
+}
 
 api.serviceData = async (service) => {
   let page = await api.service(service).find({query:{$skip: 0, $limit: 1000}});
