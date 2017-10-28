@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import Color from 'color';
+
+import { colorOnBackground } from '../../../util/css-helpers';
 
 import NotificationList from '../NotificationList';
 
@@ -19,66 +20,31 @@ const StyledNotificationList = styled(NotificationList)`
   }
   div.primary {
     background-color: ${props => props.theme.colors.primary};
-    color: ${props => {
-      let background = Color(props.theme.colors.primary);
-      let base = Color(background.dark() ? 'white' : 'black');
-      let alpha = background.light() ? props.theme.alphaDarkText.primary : props.theme.alphaLightText.primary;
-      return base.mix(background, alpha).hex();
-    }};
+    color: ${props => colorOnBackground(props.theme.colors.primary, props.theme.alphaLightText.primary, props.theme.alphaDarkText.primary)};
   }
   div.info {
     background-color: ${props => props.theme.colors.secondary};
-    color: ${props => {
-      let background = Color(props.theme.colors.secondary);
-      let base = Color(background.dark() ? 'white' : 'black');
-      let alpha = background.light() ? props.theme.alphaDarkText.primary : props.theme.alphaLightText.primary;
-      return base.mix(background, alpha).hex();
-    }};
+    color: ${props => colorOnBackground(props.theme.colors.secondary, props.theme.alphaLightText.primary, props.theme.alphaDarkText.primary)};
   }
   div.accent {
     background-color: ${props => props.theme.colors.accent};
-    color: ${props => {
-      let background = Color(props.theme.colors.accent);
-      let base = Color(background.dark() ? 'white' : 'black');
-      let alpha = background.light() ? props.theme.alphaDarkText.primary : props.theme.alphaLightText.primary;
-      return base.mix(background, alpha).hex();
-    }};
+    color: ${props => colorOnBackground(props.theme.colors.accent, props.theme.alphaLightText.primary, props.theme.alphaDarkText.primary)};
   }
   div.asside {
     background-color: ${props => props.theme.colors.asside};
-    color: ${props => {
-      let background = Color(props.theme.colors.asside);
-      let base = Color(background.dark() ? 'white' : 'black');
-      let alpha = background.light() ? props.theme.alphaDarkText.primary : props.theme.alphaLightText.primary;
-      return base.mix(background, alpha).hex();
-    }};
+    color: ${props => colorOnBackground(props.theme.colors.asside, props.theme.alphaLightText.primary, props.theme.alphaDarkText.primary)};
   }
   div.success {
     background-color: ${props => props.theme.colors.success};
-    color: ${props => {
-      let background = Color(props.theme.colors.success);
-      let base = Color(background.dark() ? 'white' : 'black');
-      let alpha = background.light() ? props.theme.alphaDarkText.primary : props.theme.alphaLightText.primary;
-      return base.mix(background, alpha).hex();
-    }};
+    color: ${props => colorOnBackground(props.theme.colors.success, props.theme.alphaLightText.primary, props.theme.alphaDarkText.primary)};
   }
   div.warning {
     background-color: ${props => props.theme.colors.warning};
-    color: ${props => {
-      let background = Color(props.theme.colors.warning);
-      let base = Color(background.dark() ? 'white' : 'black');
-      let alpha = background.light() ? props.theme.alphaDarkText.primary : props.theme.alphaLightText.primary;
-      return base.mix(background, alpha).hex();
-    }};
+    color: ${props => colorOnBackground(props.theme.colors.warning, props.theme.alphaLightText.primary, props.theme.alphaDarkText.primary)};
   }
   div.alert {
     background-color: ${props => props.theme.colors.alert};
-    color: ${props => {
-      let background = Color(props.theme.colors.alert);
-      let base = Color(background.dark() ? 'white' : 'black');
-      let alpha = background.light() ? props.theme.alphaDarkText.primary : props.theme.alphaLightText.primary;
-      return base.mix(background, alpha).hex();
-    }};
+    color: ${props => colorOnBackground(props.theme.colors.alert, props.theme.alphaLightText.primary, props.theme.alphaDarkText.primary)};
   }
   span.title {
     margin-right: 0.5em;

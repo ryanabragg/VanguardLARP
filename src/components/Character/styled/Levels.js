@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import Color from 'color';
 
+import { colorOnBackground } from '../../../util/css-helpers';
+
 import Levels from '../Levels';
 
 const StyledLevels = styled(Levels)`
@@ -22,12 +24,7 @@ const StyledLevels = styled(Levels)`
 
   .icon:hover {
     cursor: pointer;
-    background: ${props => {
-      let background = Color(props.theme.colors.primary).grayscale();
-      let base = Color(background.dark() ? 'white' : 'black');
-      let alpha = background.light() ? props.theme.alphaDarkText.primary : props.theme.alphaLightText.primary;
-      return base.mix(background, alpha).hex();
-    }};
+    background: ${props => colorOnBackground(Color(props.theme.colors.primary).grayscale().hex(), props.theme.alphaLightText.primary, props.theme.alphaDarkText.primary)};
   }
 
   .icon:hover > .dropdown,
@@ -50,12 +47,7 @@ const StyledLevels = styled(Levels)`
     margin: 5px;
     width: ${props => props.theme.breakpoints.xs - 10}px;
     padding: 5px 10px;
-    color: ${props => {
-      let background = Color(props.theme.colors.background).grayscale();
-      let base = Color(background.dark() ? 'white' : 'black');
-      let alpha = background.light() ? props.theme.alphaDarkText.primary : props.theme.alphaLightText.primary;
-      return base.mix(background, alpha).hex();
-    }};
+    color: ${props => colorOnBackground(Color(props.theme.colors.background).grayscale().hex(), props.theme.alphaLightText.primary, props.theme.alphaDarkText.primary)};
   }
   div.level > label {
     display: inline-block;
@@ -74,15 +66,8 @@ const StyledLevels = styled(Levels)`
     width: ${props => props.theme.breakpoints.xs - 10}px;
     padding: 5px 10px;
     background-color: ${props => props.theme.colors.warning};
-    color: ${props => {
-      let background = Color(props.theme.colors.background).grayscale();
-      let base = Color(background.dark() ? 'white' : 'black');
-      let alpha = background.light() ? props.theme.alphaDarkText.primary : props.theme.alphaLightText.primary;
-      return base.mix(background, alpha).hex();
-    }};
-    border: 1px solid ${props => {
-      return Color(props.theme.colors.warning).mix(Color('black'), 0.5).hex();
-    }};
+    color: ${props => colorOnBackground(Color(props.theme.colors.background).grayscale().hex(), props.theme.alphaLightText.primary, props.theme.alphaDarkText.primary)};
+    border: 1px solid ${props => Color(props.theme.colors.warning).mix(Color('black'), 0.5).hex()};
     border-radius: 10px;
   }
 `;

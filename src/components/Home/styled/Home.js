@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import Color from 'color';
 
+import { colorOnBackground } from '../../../util/css-helpers';
+
 const Home = styled.div`
   header {
     position: relative;
@@ -94,12 +96,7 @@ const Home = styled.div`
     padding-right: 2em;
     max-width: ${props => props.theme.breakpoints.l}px;
     background-color: ${props => props.theme.colors.background};
-    color: ${props => {
-      let background = Color(props.theme.colors.background);
-      let base = Color(background.dark() ? 'white' : 'black');
-      let alpha = background.light() ? props.theme.alphaDarkText.primary : props.theme.alphaLightText.primary;
-      return base.mix(background, alpha).hex();
-    }};
+    color: ${props => colorOnBackground(props.theme.colors.background, props.theme.alphaLightText.primary, props.theme.alphaDarkText.primary)};
     font-family: ${props => props.theme.font.standard};
     line-height: 1.2;
     font-size: 18px;

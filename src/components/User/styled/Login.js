@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import Color from 'color';
 
+import { colorOnBackground } from '../../../util/css-helpers';
+
 import Login from '../Login';
 
 const StyledLogin = styled(Login)`
@@ -12,12 +14,7 @@ const StyledLogin = styled(Login)`
   padding: 10px;
   max-width: 500px;
   background-color: ${props => props.theme.colors.background};
-  color: ${props => {
-    let background = Color(props.theme.colors.background);
-    let base = Color(background.dark() ? 'white' : 'black');
-    let alpha = background.light() ? props.theme.alphaDarkText.primary : props.theme.alphaLightText.primary;
-    return base.mix(background, alpha).hex();
-  }};
+  color: ${props => colorOnBackground(props.theme.colors.background, props.theme.alphaLightText.primary, props.theme.alphaDarkText.primary)};
   font-family: ${props => props.theme.font.standard};
   text-decoration: none;
   font-variant: none;
@@ -44,12 +41,7 @@ const StyledLogin = styled(Login)`
     font-size: 18px;
     line-height: 30px;
     background-color: ${props => props.theme.colors.background};
-    color: ${props => {
-      let background = Color(props.theme.colors.background);
-      let base = Color(background.dark() ? 'white' : 'black');
-      let alpha = background.light() ? props.theme.alphaDarkText.primary : props.theme.alphaLightText.primary;
-      return base.mix(background, alpha).hex();
-    }};
+    color: ${props => colorOnBackground(props.theme.colors.background, props.theme.alphaLightText.primary, props.theme.alphaDarkText.primary)};
   }
 
   button:hover {
@@ -70,12 +62,7 @@ const StyledLogin = styled(Login)`
     text-align: center;
     white-space: nowrap;
     line-height: 20px;
-    color: ${props => {
-      let background = Color(props.theme.colors.background);
-      let base = Color(background.dark() ? 'white' : 'black');
-      let alpha = background.light() ? props.theme.alphaDarkText.primary : props.theme.alphaLightText.primary;
-      return base.mix(background, alpha).hex();
-    }};
+    color: ${props => colorOnBackground(props.theme.colors.background, props.theme.alphaLightText.primary, props.theme.alphaDarkText.primary)};
   }
   .divider::before,
   .divider::after {
@@ -84,12 +71,7 @@ const StyledLogin = styled(Login)`
     top: 50%;
     width: 50%;
     height: 1px;
-    background: ${props => {
-      let background = Color(props.theme.colors.background);
-      let base = Color(background.dark() ? 'white' : 'black');
-      let alpha = background.light() ? props.theme.alphaDarkText.primary : props.theme.alphaLightText.primary;
-      return base.mix(background, alpha).hex();
-    }};
+    background: ${props => colorOnBackground(props.theme.colors.background, props.theme.alphaLightText.primary, props.theme.alphaDarkText.primary)};
   }
   .divider::before {
     left: -5%;

@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import Color from 'color';
 
+import { colorOnBackground } from '../../../util/css-helpers';
+
 const Navigation = styled.nav`
   display: block;
   width: 100%;
@@ -8,12 +10,7 @@ const Navigation = styled.nav`
   font-variant: small-caps;
   font-size: 1.5em;
   font-family: ${props => props.theme.font.trebuchet};
-  color: ${props => {
-    let background = Color(props.theme.colors.primary).grayscale();
-    let base = Color(background.dark() ? 'white' : 'black');
-    let alpha = background.light() ? props.theme.alphaDarkText.primary : props.theme.alphaLightText.primary;
-    return base.mix(background, alpha).hex();
-  }};
+  color: ${props => colorOnBackground(Color(props.theme.colors.primary).grayscale().hex(), props.theme.alphaLightText.primary, props.theme.alphaDarkText.primary)};
   background: ${props => Color(props.theme.colors.primary).grayscale().hex()};
 
   a {
@@ -31,12 +28,7 @@ const Navigation = styled.nav`
   }
 
   svg {
-    fill: ${props => {
-      let background = Color(props.theme.colors.primary).grayscale();
-      let base = Color(background.dark() ? 'white' : 'black');
-      let alpha = background.light() ? props.theme.alphaDarkText.primary : props.theme.alphaLightText.primary;
-      return base.mix(background, alpha).hex();
-    }};
+    fill: ${props => colorOnBackground(Color(props.theme.colors.primary).grayscale().hex(), props.theme.alphaLightText.primary, props.theme.alphaDarkText.primary)};
     height: 20px;
     width: 20px;
   }
@@ -76,12 +68,7 @@ const Navigation = styled.nav`
     position: absolute;
     overflow: auto;
     min-width: 120px;
-    color: ${props => {
-      let background = Color(props.theme.colors.primary).grayscale();
-      let base = Color(background.dark() ? 'white' : 'black');
-      let alpha = background.light() ? props.theme.alphaDarkText.primary : props.theme.alphaLightText.primary;
-      return base.mix(background, alpha).hex();
-    }};
+    color: ${props => colorOnBackground(Color(props.theme.colors.primary).grayscale().hex(), props.theme.alphaLightText.primary, props.theme.alphaDarkText.primary)};
     background: ${props => Color(props.theme.colors.primary).grayscale().hex()};
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   }

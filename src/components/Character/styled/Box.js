@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import Color from 'color';
 
+import { colorOnBackground } from '../../../util/css-helpers';
+
 import Box from '../Box';
 
 const Boxed = styled(Box)`
@@ -29,12 +31,11 @@ const Boxed = styled(Box)`
   padding: 9px 9px 3px 9px;
   border: 1px solid ${props => Color(props.theme.colors.secondary).grayscale().hex()};
   border-top: 3px solid ${props => {
-    let color = props.color == true
-    ? Color(props.theme.colors.secondary)
-    : !props.color
-    ? Color(props.theme.colors.secondary).grayscale()
-    : Color(props.color);
-    return color.hex();
+    if(props.color == true)
+      return props.theme.colors.secondary;
+    if(!props.color)
+      return Color(props.theme.colors.secondary).grayscale().hex();
+    return props.color;
   }};
   border-radius: 3px;
   vertical-align: top;
@@ -44,12 +45,7 @@ const Boxed = styled(Box)`
     margin-top: -18px;
     background: ${props => Color(props.theme.colors.background).grayscale().hex()};
     padding: 2px;
-    color: ${props => {
-      let background = Color(props.theme.colors.background).grayscale();
-      let base = Color(background.dark() ? 'white' : 'black');
-      let alpha = background.light() ? props.theme.alphaDarkText.primary : props.theme.alphaLightText.primary;
-      return base.mix(background, alpha).hex();
-    }};
+    color: ${props => colorOnBackground(Color(props.theme.colors.background).grayscale().hex(), props.theme.alphaLightText.primary, props.theme.alphaDarkText.primary)};
     font-size: 13px;
     line-height: 1em;
     overflow: hidden;

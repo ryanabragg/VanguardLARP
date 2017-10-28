@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import Color from 'color';
+
+import { colorOnBackground } from '../../../util/css-helpers';
 
 const Form = styled.form`
   label {
@@ -46,12 +47,7 @@ const Form = styled.form`
   }
   button {
     background-color: ${props => props.theme.colors.secondary};
-    color: ${props => {
-      let background = Color(props.theme.colors.secondary);
-      let base = Color(background.dark() ? 'white' : 'black');
-      let alpha = background.light() ? props.theme.alphaDarkText.primary : props.theme.alphaLightText.primary;
-      return base.mix(background, alpha).hex();
-    }};
+    color: ${props => colorOnBackground(props.theme.colors.secondary, props.theme.alphaLightText.primary, props.theme.alphaDarkText.primary)};
     font-size: 1.3em;
     padding: 14px 20px;
     margin: 1em 1em 0.5em 0;
@@ -63,23 +59,13 @@ const Form = styled.form`
   }
   button[value='submit'] {
     background-color: ${props => props.theme.colors.primary};
-    color: ${props => {
-      let background = Color(props.theme.colors.primary);
-      let base = Color(background.dark() ? 'white' : 'black');
-      let alpha = background.light() ? props.theme.alphaDarkText.primary : props.theme.alphaLightText.primary;
-      return base.mix(background, alpha).hex();
-    }};
+    color: ${props => colorOnBackground(props.theme.colors.primary, props.theme.alphaLightText.primary, props.theme.alphaDarkText.primary)};
     //margin: 1em 0 1em 0;
     //width: 100%;
   }
   button[value='delete'] {
     background-color: ${props => props.theme.colors.alert};
-    color: ${props => {
-      let background = Color(props.theme.colors.alert);
-      let base = Color(background.dark() ? 'white' : 'black');
-      let alpha = background.light() ? props.theme.alphaDarkText.primary : props.theme.alphaLightText.primary;
-      return base.mix(background, alpha).hex();
-    }};
+    color: ${props => colorOnBackground(props.theme.colors.alert, props.theme.alphaLightText.primary, props.theme.alphaDarkText.primary)};
   }
 `;
 
