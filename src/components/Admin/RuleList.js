@@ -21,50 +21,52 @@ class RuleList extends React.Component {
     delete rest.scrollToForm;
     return (
       <article {...rest}>
-        {this.props.list.length == 0
-        ? null
-        : this.props.list.map(rule => (
-          this.props.selected &&
-          rule._id == this.props.selected._id
-          ? <RuleForm
-              key={this.props.selected._id}
-              id={this.props.selected._id}
-              name={this.props.selected.name}
-              build={Number(this.props.selected.build)}
-              delivery={this.props.selected.delivery}
-              tags={Number(this.props.selected.tags)}
-              block={Number(this.props.selected.block)}
-              category={this.props.selected.category}
-              group={this.props.selected.group}
-              tier={this.props.selected.tier}
-              race={this.props.selected.race}
-              culture={this.props.selected.culture}
-              prodigy={Number(this.props.selected.prodigy)}
-              description={this.props.selected.description}
-              max={Number(this.props.selected.max)}
-              extraUses={this.props.selected.extraUses}
-              requires={this.props.selected.requires}
-              requeresAny={this.props.selected.requeresAny}
-              conflicts={this.props.selected.conflicts}
-              replaces={this.props.selected.replaces}
-              grants={this.props.selected.grants}
-              onChange={this.props.onChange}
-              onSubmit={this.props.onSubmit}
-              onCancel={this.props.onCancel}
-              onDelete={this.props.onDelete}
-              scrollToForm={this.props.scrollToForm}
-            />
-          : <Rule
-              key={rule._id}
-              id={rule._id}
-              name={rule.name}
-              category={rule.category}
-              group={rule.group + (rule.tier ? ' (' + rule.tier + ')' : '')}
-              race={rule.race}
-              culture={rule.culture}
-              onClick={this.props.onClick}
-            />
-        ))}
+        {this.props.list.length == 0 ? null :
+          this.props.list.map(rule => {
+            if(this.props.selected &&
+              rule._id == this.props.selected._id)
+              return (
+                <RuleForm
+                  key={this.props.selected._id}
+                  id={this.props.selected._id}
+                  name={this.props.selected.name}
+                  build={Number(this.props.selected.build)}
+                  delivery={this.props.selected.delivery}
+                  tags={Number(this.props.selected.tags)}
+                  block={Number(this.props.selected.block)}
+                  category={this.props.selected.category}
+                  group={this.props.selected.group}
+                  tier={this.props.selected.tier}
+                  race={this.props.selected.race}
+                  culture={this.props.selected.culture}
+                  prodigy={Number(this.props.selected.prodigy)}
+                  description={this.props.selected.description}
+                  max={Number(this.props.selected.max)}
+                  extraUses={this.props.selected.extraUses}
+                  requires={this.props.selected.requires}
+                  requeresAny={this.props.selected.requeresAny}
+                  conflicts={this.props.selected.conflicts}
+                  replaces={this.props.selected.replaces}
+                  grants={this.props.selected.grants}
+                  onChange={this.props.onChange}
+                  onSubmit={this.props.onSubmit}
+                  onCancel={this.props.onCancel}
+                  onDelete={this.props.onDelete}
+                  scrollToForm={this.props.scrollToForm}
+                />);
+            return (
+              <Rule
+                key={rule._id}
+                id={rule._id}
+                name={rule.name}
+                category={rule.category}
+                group={rule.group + (rule.tier ? ' (' + rule.tier + ')' : '')}
+                race={rule.race}
+                culture={rule.culture}
+                onClick={this.props.onClick}
+              />);
+          })
+        }
       </article>
     );
   }

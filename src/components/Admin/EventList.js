@@ -21,32 +21,34 @@ class EventList extends React.Component {
     delete rest.scrollToForm;
     return (
       <article {...rest}>
-        {this.props.list.length == 0
-        ? null
-        : this.props.list.map(event => (
-          this.props.selected &&
-          event._id == this.props.selected._id
-          ? <EventForm
-              key={this.props.selected._id}
-              id={this.props.selected._id}
-              date={this.props.selected.date}
-              location={this.props.selected.location}
-              area={this.props.selected.area}
-              onChange={this.props.onChange}
-              onSubmit={this.props.onSubmit}
-              onCancel={this.props.onCancel}
-              onDelete={this.props.onDelete}
-              scrollToForm={this.props.scrollToForm}
-            />
-          : <Event
-              key={event._id}
-              id={event._id}
-              date={event.date}
-              location={event.location}
-              area={event.area}
-              onClick={this.props.onClick}
-            />
-        ))}
+        {this.props.list.length == 0 ? null :
+          this.props.list.map(event => {
+            if(this.props.selected &&
+              event._id == this.props.selected._id)
+              return (
+                <EventForm
+                  key={this.props.selected._id}
+                  id={this.props.selected._id}
+                  date={this.props.selected.date}
+                  location={this.props.selected.location}
+                  area={this.props.selected.area}
+                  onChange={this.props.onChange}
+                  onSubmit={this.props.onSubmit}
+                  onCancel={this.props.onCancel}
+                  onDelete={this.props.onDelete}
+                  scrollToForm={this.props.scrollToForm}
+                />);
+            return (
+              <Event
+                key={event._id}
+                id={event._id}
+                date={event.date}
+                location={event.location}
+                area={event.area}
+                onClick={this.props.onClick}
+              />);
+          })
+        }
       </article>
     );
   }

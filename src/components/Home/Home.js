@@ -22,7 +22,7 @@ class Home extends React.Component {
       <Homepage>
         <header>
           <div className='header-image'>
-          <Logo />
+            <Logo />
           </div>
         </header>
         <main className='content-container'>

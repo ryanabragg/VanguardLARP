@@ -124,31 +124,32 @@ class Character extends React.Component {
       weapons: rules.filter(rule => rule.category == 'Weapon')
         .sort((a, b) => {
           return a.name == 'Student of War' ? -1
-          : b.name == 'Student of War' ? 1
-          : a.name == 'Source Mark' ? -1
-          : b.name == 'Source Mark' ? 1
-          : a.name == 'Natural Weapons' ? 1
-          : b.name == 'Natural Weapons' ? -1
-          : a.name > b.name ? 1
-          : -1;
+            : b.name == 'Student of War' ? 1
+            : a.name == 'Source Mark' ? -1
+            : b.name == 'Source Mark' ? 1
+            : a.name == 'Natural Weapons' ? 1
+            : b.name == 'Natural Weapons' ? -1
+            : a.name > b.name ? 1
+            : -1;
         }),
       aptitudes: rules.filter(rule => rule.category == 'Aptitude')
         .sort((a, b) => {
           return a.name == 'Student of War' ? -1
-          : b.name == 'Student of War' ? 1
-          : a.name == 'Source Mark' ? -1
-          : b.name == 'Source Mark' ? 1
-          : a.name == 'Armor' ? 1
-          : b.name == 'Armor' ? -1
-          : a.name > b.name ? 1
-          : -1;
+            : b.name == 'Student of War' ? 1
+            : a.name == 'Source Mark' ? -1
+            : b.name == 'Source Mark' ? 1
+            : a.name == 'Armor' ? 1
+            : b.name == 'Armor' ? -1
+            : a.name > b.name ? 1
+            : -1;
         }),
       crafts: rules.filter(rule => rule.category == 'Craft')
         .sort((a, b) => {
-          return a.name == 'Jack of All Trades' ? -1
-          : b.name == 'Jack of All Trades' ? 1
-          : a.name > b.name ? 1
-          : -1;
+          if(a.name == 'Jack of All Trades')
+            return -1;
+          if(b.name == 'Jack of All Trades')
+            return 1;
+          return a.name < b.name ? -1 : 1;
         }),
       domains: rules.filter(rule => rule.category == 'Domain'),
       advancedArts: rules.filter(rule => rule.category == 'Advanced Art')
@@ -375,11 +376,11 @@ class Character extends React.Component {
       old: {
         prodigy: prevState.character.race.culture == 'Prodigy',
         race: prevState.character.race.culture == 'Prodigy'
-        ? prevState.character.race.prodigy.race
-        : prevState.character.race.name,
+          ? prevState.character.race.prodigy.race
+          : prevState.character.race.name,
         culture: prevState.character.race.culture == 'Prodigy'
-        ? prevState.character.race.prodigy.culture
-        : prevState.character.race.culture
+          ? prevState.character.race.prodigy.culture
+          : prevState.character.race.culture
       }
     };
 
@@ -412,11 +413,11 @@ class Character extends React.Component {
     change.new = {
       prodigy: nextState.character.race.culture == 'Prodigy',
       race: nextState.character.race.culture == 'Prodigy'
-      ? nextState.character.race.prodigy.race
-      : nextState.character.race.name,
+        ? nextState.character.race.prodigy.race
+        : nextState.character.race.name,
       culture: nextState.character.race.culture == 'Prodigy'
-      ? nextState.character.race.prodigy.culture
-      : nextState.character.race.culture
+        ? nextState.character.race.prodigy.culture
+        : nextState.character.race.culture
     };
 
     if(!change.old.prodigy && change.new.prodigy){
@@ -525,7 +526,7 @@ class Character extends React.Component {
 
     if(rule.block && source == 'build')
       return prevState;
-/* disabled for now, needs better logic to still allow race change to update skills
+    /* disabled for now, needs better logic to still allow race change to update skills
     if(rule.race && rule.category != 'Choice' && rule.race == prevState.character.race.name)
       return prevState;*/
 
@@ -652,11 +653,11 @@ class Character extends React.Component {
       .filter((rule, index, self) => self.indexOf(rule) == index)
       .sort((a, b) => {
         return a == 'Generic' ? -1
-        : b == 'Generic' ? 1
-        : a == 'Burn' ? 1
-        : b == 'Burn' ? -1
-        : a > b ? 1
-        : -1;
+          : b == 'Generic' ? 1
+          : a == 'Burn' ? 1
+          : b == 'Burn' ? -1
+          : a > b ? 1
+          : -1;
       });
     return (
       <div data-character='sheet'>

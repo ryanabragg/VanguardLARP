@@ -227,6 +227,43 @@ class Rules extends React.Component {
   }
 
   render() {
+    const stringSorter = (a, b) => {
+      return a > b ? 1 : a < b ? -1 : 0;
+    };
+
+    const list = (
+      <RuleList
+        list={this.props.rules.sort((a, b) => {
+          const race = stringSorter(a.race, b.race);
+          const culture = stringSorter(a.culture, b.culture);
+          const category = stringSorter(a.category, b.category);
+          const group = stringSorter(a.group, b.group);
+          const tier = stringSorter(a.tier, b.tier);
+          const name = stringSorter(a.name, b.name);
+          return race || culture || category || group || tier || name || 0;
+        })}
+        selected={this.state.selected}
+        onClick={this.handleListClick}
+        onChange={this.handleFormInputChange}
+        onSubmit={this.handleFormSubmit}
+        onCancel={this.handleFormCancel}
+        onDelete={this.handleFormDelete}
+        scrollToForm={true}
+      />
+    );
+
+    const selected = (
+      <RuleList
+        list={[this.state.selected]}
+        selected={this.state.selected}
+        onClick={this.handleListClick}
+        onChange={this.handleFormInputChange}
+        onSubmit={this.handleFormSubmit}
+        onCancel={this.handleFormCancel}
+        onDelete={this.handleFormDelete}
+      />
+    );
+
     return (
       <div>
         <main>
@@ -239,45 +276,8 @@ class Rules extends React.Component {
             </button>
             <div data-rules='@todo search rules'></div>
           </div>
-          {this.state.selected._id != 'new'
-          ? null
-          : <RuleList
-              list={[this.state.selected]}
-              selected={this.state.selected}
-              onClick={this.handleListClick}
-              onChange={this.handleFormInputChange}
-              onSubmit={this.handleFormSubmit}
-              onCancel={this.handleFormCancel}
-              onDelete={this.handleFormDelete}
-            />
-          }
-          {this.props.rules.length == 0
-          ? <Spinner />
-          : <RuleList
-              list={this.props.rules.sort((a, b) => {
-                return a.race > b.race ? 1
-                  : b.race > a.race ? -1
-                  : a.culture > b.culture ? 1
-                  : b.culture > a.culture ? -1
-                  : a.category > b.category ? 1
-                  : b.category > a.category ? -1
-                  : a.group > b.group ? 1
-                  : b.group > a.group ? -1
-                  : a.tier > b.tier ? 1
-                  : b.tier > a.tier ? -1
-                  : a.name > b.name ? 1
-                  : b.name > a.name ? -1
-                  : 0;
-              })}
-              selected={this.state.selected}
-              onClick={this.handleListClick}
-              onChange={this.handleFormInputChange}
-              onSubmit={this.handleFormSubmit}
-              onCancel={this.handleFormCancel}
-              onDelete={this.handleFormDelete}
-              scrollToForm={true}
-            />
-          }
+          {this.state.selected._id != 'new' ? null : selected}
+          {this.props.rules.length == 0 ? <Spinner /> : list}
         </main>
       </div>
     );

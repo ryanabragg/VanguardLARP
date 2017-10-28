@@ -14,35 +14,37 @@ class AbilityGroup extends React.Component {
     delete rest.abilities;
     delete rest.viewDescription;
     delete rest.editCharacter;
-    const tiers =
-      this.props.abilities
-      .map(ability => ability.tier)
+    const tiers = this.props.abilities.map(ability => ability.tier)
       .filter((tier, index, self) => index == self.indexOf(tier) && tier != '')
       .sort((a, b) => a - b);
+    if(tiers.length)
+      return (
+        <div {...rest}>
+          {tiers.map(tier => {
+            return (
+              <div className='tier' key={tier}>
+                <label className='tier'>{tier}</label>
+                {this.props.abilities.filter(ability => tier === ability.tier).map(ability => {
+                  return (
+                    <Ability
+                      key={ability._id}
+                      id={ability._id}
+                      name={ability.name}
+                      display={ability.display}
+                      count={ability.count}
+                      viewDescription={this.props.viewDescription}
+                      editCharacter={this.props.editCharacter}
+                    />
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
+      );
     return (
       <div {...rest}>
-        {tiers.length
-        ? tiers.map(tier => {
-          return (
-            <div className='tier' key={tier}>
-              <label className='tier'>{tier}</label>
-              {this.props.abilities.filter(ability => tier === ability.tier).map(ability => {
-                return (
-                  <Ability
-                    key={ability._id}
-                    id={ability._id}
-                    name={ability.name}
-                    display={ability.display}
-                    count={ability.count}
-                    viewDescription={this.props.viewDescription}
-                    editCharacter={this.props.editCharacter}
-                  />
-                );
-              })}
-            </div>
-          );
-        })
-        : this.props.abilities.map(ability => {
+        {this.props.abilities.map(ability => {
           return (
             <Ability
               key={ability._id}
@@ -55,8 +57,7 @@ class AbilityGroup extends React.Component {
               editCharacter={this.props.editCharacter}
             />
           );
-        })
-        }
+        })}
       </div>
     );
   }

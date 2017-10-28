@@ -52,7 +52,7 @@ class Racials extends React.Component {
             />
           );
         })}
-        {availableOptions.length ? <div className='divider' /> : null}
+        {!availableOptions.length ? null : <div className='divider' />}
         {availableOptions.map(ability => {
           return (
             <div key={ability._id}>
@@ -85,8 +85,8 @@ class Racials extends React.Component {
     const culture = this.props.culture == 'Prodigy' ? this.props.prodigy.culture : this.props.culture;
     return (
       <div {...rest}>
-        {this.props.culture == 'Prodigy'
-        ? <div>
+        {this.props.culture != 'Prodigy' ? null :
+          <div>
             <Field
               name='race'
               placeholder='Race'
@@ -111,12 +111,11 @@ class Racials extends React.Component {
             />
             <div className='divider' />
           </div>
-        : null
         }
         {this.renderAbilities(this.props.racials.filter(r => {
           return r.race == race && !r.culture && (this.props.culture != 'Prodigy' || r.prodigy);
         }), 'race')}
-        {race ? <div className='divider' /> : null}
+        {!race ? null : <div className='divider' />}
         {this.renderAbilities(this.props.racials.filter(r => {
           return r.culture && (r.culture == culture || (this.props.culture == 'Prodigy' && (r.culture == 'Prodigy' || r.prodigy)));
         }), 'culture')}

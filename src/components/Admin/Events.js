@@ -203,6 +203,33 @@ class Events extends React.Component {
   }
 
   render() {
+    const list = (
+      <EventList
+        list={this.props.events.sort((a, b) => {
+          return a.date > b.date ? 1 : -1;
+        })}
+        selected={this.state.selected}
+        onClick={this.handleListClick}
+        onChange={this.handleFormInputChange}
+        onSubmit={this.handleFormSubmit}
+        onCancel={this.handleFormCancel}
+        onDelete={this.handleFormDelete}
+        scrollToForm={true}
+      />
+    );
+
+    const selected = (
+      <EventList
+        list={[this.state.selected]}
+        selected={this.state.selected}
+        onClick={this.handleListClick}
+        onChange={this.handleFormInputChange}
+        onSubmit={this.handleFormSubmit}
+        onCancel={this.handleFormCancel}
+        onDelete={this.handleFormDelete}
+      />
+    );
+
     return (
       <div>
         <main>
@@ -216,33 +243,8 @@ class Events extends React.Component {
             <div data-events='@todo search events'>
             </div>
           </div>
-          {this.state.selected._id != 'new'
-          ? null
-          : <EventList
-              list={[this.state.selected]}
-              selected={this.state.selected}
-              onClick={this.handleListClick}
-              onChange={this.handleFormInputChange}
-              onSubmit={this.handleFormSubmit}
-              onCancel={this.handleFormCancel}
-              onDelete={this.handleFormDelete}
-            />
-          }
-          {this.props.events.length == 0
-          ? <Spinner />
-          : <EventList
-              list={this.props.events.sort((a, b) => {
-                return a.date > b.date ? 1 : -1;
-              })}
-              selected={this.state.selected}
-              onClick={this.handleListClick}
-              onChange={this.handleFormInputChange}
-              onSubmit={this.handleFormSubmit}
-              onCancel={this.handleFormCancel}
-              onDelete={this.handleFormDelete}
-              scrollToForm={true}
-            />
-          }
+          {this.state.selected._id != 'new' ? null : selected}
+          {this.props.events.length == 0 ? <Spinner /> : list}
         </main>
       </div>
     );

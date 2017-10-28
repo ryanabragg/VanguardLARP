@@ -60,37 +60,50 @@ class Ability extends React.Component {
   }
 
   render() {
+    let input = undefined;
+    switch(this.props.display){
+    case 'none':
+      input = null;
+      break;
+    case 'tiers':
+      input = (
+        <div className='ability-input'>
+          <Field type='select' name='count'
+            value={this.props.count}
+            onChange={this.onChange}
+            options={this.tiers}
+          />
+        </div>
+      );
+      break;
+    case 'checkbox':
+      input = (
+        <div className='ability-input'>
+          <Field type='checkbox' name='count'
+            value={this.props.count}
+            onChange={this.onChange}
+          />
+        </div>
+      );
+      break;
+    default:
+      input = (
+        <div className='ability-input'>
+          <div className='button' onClick={this.increment}>
+            <Add color='inherit' />
+          </div>
+          <div className='button' onClick={this.decrement}>
+            <Remove color='inherit' />
+          </div>
+          <Field type='number' name='count'
+            value={this.props.count}
+          />
+        </div>
+      );
+    }
     return (
       <div className='ability'>
-        {this.props.display == 'none'
-        ? null
-        : this.props.display == 'checkbox'
-        ? <div className='ability-input'>
-            <Field type='checkbox' name='count'
-              value={this.props.count}
-              onChange={this.onChange}
-            />
-          </div>
-        : this.props.display == 'tiers'
-        ? <div className='ability-input'>
-            <Field type='select' name='count'
-              value={this.props.count}
-              onChange={this.onChange}
-              options={this.tiers}
-            />
-          </div>
-        : <div className='ability-input'>
-            <div className='button' onClick={this.increment}>
-              <Add color='inherit' />
-            </div>
-            <div className='button' onClick={this.decrement}>
-              <Remove color='inherit' />
-            </div>
-            <Field type='number' name='count'
-              value={this.props.count}
-            />
-          </div>
-        }
+        {input}
         <label onClick={this.handleView}>{this.props.name}</label>
       </div>
     );

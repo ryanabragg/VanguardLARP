@@ -77,11 +77,10 @@ class Login extends React.Component {
 
   handleFormLoginLocal(e) {
     e.preventDefault();
-    const credentials = this.state.email && this.state.password
-    ? { email: this.state.email,
+    const credentials = !this.state.email || !this.state.password ? null :
+      { email: this.state.email,
         password: this.state.password
-      }
-    : null;
+      };
     this.loginLocal(credentials);
   }
 
@@ -242,14 +241,21 @@ class Login extends React.Component {
     delete rest.api;
     delete rest.user;
     delete rest.setUser;
+
+    let form = null;
+    switch(this.state.view) {
+    case 'register':
+      form = this.renderRegister();
+      break;
+    case 'password-recovery':
+      form = this.renderPasswordRecovery();
+      break;
+    default:
+      form = this.renderLogin();
+    }
     return (
       <div {...rest}>
-        {this.state.view == 'password-recovery'
-        ? this.renderPasswordRecovery()
-        : this.state.view == 'register'
-        ? this.renderRegister()
-        : this.renderLogin()
-        }
+        {form}
       </div>
     );
   }

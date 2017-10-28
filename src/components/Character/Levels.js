@@ -98,6 +98,21 @@ class Levels extends React.Component {
         data.tier = data.level == interval ? '1' : data.level == 2 * interval ? '2' : '3';
         return data;
       });
+
+    let warnings = [null, null, null];
+    if(level < interval)
+      warnings[0] = <label className='T1'>{`Level ${interval} needed for tier one.`}</label>;
+    else if(!T1)
+      warnings[0] = <label className='T1'>Insufficient non-domain build for tier one.</label>;
+    if(level < interval * 2)
+      warnings[1] = <label className='T2'>{`Level ${interval * 2} needed for tier two.`}</label>;
+    else if(!T2)
+      warnings[1] = <label className='T2'>Insufficient non-domain build for tier two.</label>;
+    if(level < interval * 3)
+      warnings[2] = <label className='T3'>{`Level ${interval * 3} needed for tier three.`}</label>;
+    else if(!T3)
+      warnings[2] = <label className='T3'>Insufficient non-domain build for tier three.</label>;
+
     return (
       <div {...rest}>
         <div className='icon' onClick={this.handleIconClick}>
@@ -125,24 +140,9 @@ class Levels extends React.Component {
                 </div>
               );
             })}
-            {level < interval
-            ? <label className='T1'>{`Level ${interval} needed for tier one.`}</label>
-            : !T1
-            ? <label className='T1'>Insufficient non-domain build for tier one.</label>
-            : null
-            }
-            {level < interval * 2
-            ? <label className='T2'>{`Level ${interval * 2} needed for tier two.`}</label>
-            : !T2
-            ? <label className='T2'>Insufficient non-domain build for tier two.</label>
-            : null
-            }
-            {level < interval * 3
-            ? <label className='T3'>{`Level ${interval * 3} needed for tier three.`}</label>
-            : !T3
-            ? <label className='T3'>Insufficient non-domain build for tier three.</label>
-            : null
-            }
+            {warnings[0]}
+            {warnings[1]}
+            {warnings[2]}
           </div>
         </div>
       </div>

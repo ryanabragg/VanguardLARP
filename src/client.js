@@ -22,9 +22,9 @@ HotLoader.propTypes = {
 
 window.onload = () => {
   ReactDOM.render(
-      <HotLoader>
-        <App/>
-      </HotLoader>,
+    <HotLoader>
+      <App/>
+    </HotLoader>,
     document.getElementById('react-app')
   );
 };

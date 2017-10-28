@@ -72,21 +72,46 @@ class Menu extends React.Component {
   }
 
   render() {
+    const iconCollapsing = this.state.isMenuHidden
+      ? <IconExpandMore color='inherit' />
+      : <IconExpandLess color='inherit' />;
+
+    const menuUser = (
+      <div className='menu-item menu-right'>
+        Account
+        <div className='menu-dropdown dropdown-right'>
+          <div className='menu-item'
+            onClick={this.account}
+          >
+            {this.props.user.name || 'Profile'}
+          </div>
+          <div className='menu-item'
+            onClick={this.logout}
+          >
+            Sign Out
+          </div>
+        </div>
+      </div>
+    );
+
+    const menuLogin = (
+      <div className='menu-item menu-right'>
+        <Link to='/login'>Sign In</Link>
+      </div>
+    );
+
     return (
       <div>
         <Navigation>
           <img src='../logo.svg'/>
           <div className='menu-item menu-collapsing menu-right' onClick={this.toggleCollapsedMenu}>
-            {this.state.isMenuHidden
-            ? <IconExpandMore color='inherit' />
-            : <IconExpandLess color='inherit' />
-            }
+            {iconCollapsing}
           </div>
-          {this.state.isMenuHidden
-          ? (<div className='menu-item menu-collapsing' onClick={this.toggleCollapsedMenu}>
+          {!this.state.isMenuHidden ? null :
+            (<div className='menu-item menu-collapsing' onClick={this.toggleCollapsedMenu}>
               {(this.props.location.pathname.charAt(7).toUpperCase() + this.props.location.pathname.slice(8)) || 'Dashboard'}
             </div>)
-          : null}
+          }
           {this.links.map((link, index) => {
             let dashboard = link === '/admin';
             let name = dashboard ? 'dashboard' : link.slice(7);
@@ -101,26 +126,7 @@ class Menu extends React.Component {
               </div>
             );
           })}
-          {this.props.user._id
-          ? <div className='menu-item menu-right'>
-              Account
-              <div className='menu-dropdown dropdown-right'>
-                <div className='menu-item'
-                  onClick={this.account}
-                >
-                  {this.props.user.name || 'Profile'}
-                </div>
-                <div className='menu-item'
-                  onClick={this.logout}
-                >
-                  Sign Out
-                </div>
-              </div>
-            </div>
-          : <div className='menu-item menu-right'>
-              <Link to='/login'>Sign In</Link>
-            </div>
-          }
+          {this.props.user._id ? menuUser : menuLogin}
         </Navigation>
       </div>
     );

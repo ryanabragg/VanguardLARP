@@ -51,7 +51,7 @@ class EventForm extends React.Component {
         </fieldset>
         <button type='button' value="submit" onClick={this.props.onSubmit}>Submit</button>
         <button type='button' value="cancel" onClick={this.props.onCancel}>Cancel</button>
-        {this.props.id != 'new' ? <button type='button' value="delete" onClick={this.props.onDelete}>Delete</button> : null}
+        {this.props.id == 'new' ? null : <button type='button' value="delete" onClick={this.props.onDelete}>Delete</button>}
       </form>
     );
   }

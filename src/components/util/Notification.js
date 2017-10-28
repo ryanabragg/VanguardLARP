@@ -55,20 +55,20 @@ class Notification extends React.Component {
   render(){
     return (
       <div className={this.props.type}>
-        {this.props.title
-        ? <span className='title'>{this.props.title}</span>
-        : null}
+        {!this.props.title ? null :
+          <span className='title'>{this.props.title}</span>
+        }
         {this.props.message}
-        {this.props.action && this.props.actionFunction
-        ? <span className='action' onClick={this.action}>{this.props.action}</span>
-        : null}
-        {this.props.showDismiss || this.props.timeoutDuration <= 0
-        ? <span className='dismiss' onClick={this.dismiss}>
-            {this.props.showDismiss === true
-            ? 'DISMISS'
-            : this.props.showDismiss || 'DISMISS'}
+        {!this.props.action || !this.props.actionFunction ? null :
+          <span className='action' onClick={this.action}>{this.props.action}</span>
+        }
+        {!this.props.showDismiss && this.props.timeoutDuration > 0 ? null :
+          <span className='dismiss' onClick={this.dismiss}>
+            {this.props.showDismiss === true ?
+              'DISMISS'
+              : this.props.showDismiss || 'DISMISS'}
           </span>
-        : null}
+        }
       </div>
     );
   }

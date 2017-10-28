@@ -31,14 +31,13 @@ class RuleForm extends React.Component {
         name='rule'
         ref={form => {this.form = form;}}
       >
-        {this.props.id != 'new'
-        ? <div className='record-id'>
+        {this.props.id == 'new' ? null :
+          <div className='record-id'>
             <span>{this.props.id}</span>
             <Link to={`/admin/rules/${this.props.id}`}>
               <IconLink color='inherit' />
             </Link>
           </div>
-        : null
         }
         <fieldset>
           <FormField type='text'
@@ -171,7 +170,7 @@ class RuleForm extends React.Component {
         </fieldset>
         <button type='button' value="submit" onClick={this.props.onSubmit}>{this.props.id != 'new' ? 'Update' : 'Create'}</button>
         <button type='button' value="cancel" onClick={this.props.onCancel}>Cancel</button>
-        {this.props.id != 'new' ? <button type='button' value="delete" onClick={this.props.onDelete}>Delete</button> : null}
+        {this.props.id == 'new' ? null : <button type='button' value="delete" onClick={this.props.onDelete}>Delete</button>}
       </form>
     );
   }
