@@ -272,7 +272,9 @@ class Character extends React.Component {
 
   loadCharacter() {}
 
-  editCharacter(action) {
+  editCharacter(payload) {
+    let action = payload;
+    action.type = payload.type.toUpperCase();
     this.setState((prevState, props) => {
       let nextState = Object.assign({}, prevState);
       let current = [];

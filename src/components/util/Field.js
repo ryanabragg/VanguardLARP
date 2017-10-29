@@ -15,7 +15,7 @@ class Field extends React.Component {
     e.stopPropagation();
 
     let payload = {
-      type: e.target.name.toUpperCase(),
+      type: e.target.name,
       data: undefined
     };
 
@@ -42,6 +42,19 @@ class Field extends React.Component {
     delete rest.options;
     delete rest.onChange;
 
+    if(this.props.type == 'textarea')
+      return (
+        <textarea {...rest}
+          rows={this.props.rows}
+          cols={this.props.cols}
+          name={this.props.name}
+          placeholder={this.props.placeholder}
+          value={this.props.value || ''}
+          onChange={this.handleInputChange}
+          readOnly={typeof this.props.onChange != 'function'}
+        />
+      );
+
     if(this.props.type == 'select')
       return (
         <select {...rest}
@@ -56,8 +69,8 @@ class Field extends React.Component {
           {this.props.options.map(option => (
             <option key={option.value} value={option.value}>
               {option.label}
-            </option>)
-          )}
+            </option>
+          ))}
         </select>
       );
 
@@ -88,7 +101,10 @@ class Field extends React.Component {
 
 Field.defaultProps = {
   type: 'text',
-  options: []
+  value: '',
+  options: [],
+  rows: 5,
+  cols: 5
 };
 
 Field.propTypes = {
@@ -108,6 +124,8 @@ Field.propTypes = {
       ])
     })
   ),
+  rows: PropTypes.number,
+  cols: PropTypes.number,
   onChange: PropTypes.func
 };
 
