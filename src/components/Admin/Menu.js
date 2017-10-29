@@ -103,7 +103,7 @@ class Menu extends React.Component {
     return (
       <div>
         <Navigation>
-          <img src='../logo.svg'/>
+          <img src='../../logo.svg'/>
           <div className='menu-item menu-collapsing menu-right' onClick={this.toggleCollapsedMenu}>
             {iconCollapsing}
           </div>
