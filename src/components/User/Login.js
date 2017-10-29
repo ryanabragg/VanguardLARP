@@ -235,10 +235,9 @@ class Login extends React.Component {
   render() {
     const rest = Object.assign({}, this.props);
     delete rest.match;
-    delete rest.location;
     delete rest.history;
-    delete rest.staticContext;
-    delete rest.api;
+    delete rest.register;
+    delete rest.login;
     delete rest.user;
     delete rest.setUser;
 
