@@ -50,7 +50,7 @@ class Character extends React.Component {
         }
       },
       sourceMarks: [],
-      skills: [] // { id, count, source } (source: skill id, build', 'race', 'culture', level number, 'code' )
+      skills: []
     };
 
     this.state = {
@@ -80,7 +80,6 @@ class Character extends React.Component {
 
   componentDidMount () {
     this.props.loadService('rules');
-    // load user authentication
     // load character
   }
 
@@ -121,28 +120,8 @@ class Character extends React.Component {
           return a.name > b.name ? 1 : -1;
         }),
       racials: rules.filter(rule => rule.race != '' && rule.category != 'Race' && rule.category != 'Culture'),
-      weapons: rules.filter(rule => rule.category == 'Weapon')
-        .sort((a, b) => {
-          return a.name == 'Student of War' ? -1
-            : b.name == 'Student of War' ? 1
-            : a.name == 'Source Mark' ? -1
-            : b.name == 'Source Mark' ? 1
-            : a.name == 'Natural Weapons' ? 1
-            : b.name == 'Natural Weapons' ? -1
-            : a.name > b.name ? 1
-            : -1;
-        }),
-      aptitudes: rules.filter(rule => rule.category == 'Aptitude')
-        .sort((a, b) => {
-          return a.name == 'Student of War' ? -1
-            : b.name == 'Student of War' ? 1
-            : a.name == 'Source Mark' ? -1
-            : b.name == 'Source Mark' ? 1
-            : a.name == 'Armor' ? 1
-            : b.name == 'Armor' ? -1
-            : a.name > b.name ? 1
-            : -1;
-        }),
+      constants: rules.filter(r => r.category == 'Constant')
+        .sort((a, b) => a.name < b.name ? -1 : 1),
       crafts: rules.filter(rule => rule.category == 'Craft')
         .sort((a, b) => {
           if(a.name == 'Jack of All Trades')
@@ -642,8 +621,7 @@ class Character extends React.Component {
       races,
       cultures,
       racials,
-      weapons,
-      aptitudes,
+      constants,
       crafts,
       domains,
       advancedArts,
@@ -786,16 +764,9 @@ class Character extends React.Component {
             editCharacter={this.editCharacter}
           />
         </Box>
-        <Box color label='Weapon Skills'>
+        <Box color label='Constatnt Skills'>
           <AbilityGroup
-            abilities={weapons}
-            viewDescription={this.viewRule}
-            editCharacter={this.editCharacter}
-          />
-        </Box>
-        <Box color label='Aptitudes'>
-          <AbilityGroup
-            abilities={aptitudes}
+            abilities={constants}
             viewDescription={this.viewRule}
             editCharacter={this.editCharacter}
           />
