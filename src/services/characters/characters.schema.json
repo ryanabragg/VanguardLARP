@@ -100,10 +100,6 @@
         ]
       }
     },
-    "recoveries": {
-      "type": "integer",
-      "minimum": 0
-    },
     "race": {
       "type": "object",
       "properties": {

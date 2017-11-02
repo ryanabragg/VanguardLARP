@@ -40,7 +40,6 @@ class Character extends React.Component {
         { color: 'red', count: 2, disabled: 0 },
         { color: 'white', count: 9, disabled: 0 }
       ],
-      recoveries: 6,
       race: {
         name: '',
         culture: '',
@@ -64,10 +63,6 @@ class Character extends React.Component {
     this.getRules = this.getRules.bind(this);
     this.parseRules = this.parseRules.bind(this);
 
-    this.levelValues = this.levelValues.bind(this);
-
-    this.getFreeSkills = this.getFreeSkills.bind(this);
-
     this.encode = this.encode.bind(this);
     this.decode = this.decode.bind(this);
     this.saveCharacter = this.saveCharacter.bind(this);
@@ -90,157 +85,213 @@ class Character extends React.Component {
   viewRule(id) {}
 
   getRules() {
-    return this.props.rules.map(rule => {
-      let display = {
-        display: rule.max == 1 ? 'checkbox' : rule.category == 'Craft' ? 'tiers' : ''
-      };
-      let skills = this.state.character.skills.filter(skill => skill.id == rule._id);
-      if(!skills.length)
-        return Object.assign({}, rule, { count: 0 }, display);
-      let total = skills.reduce((total, skill) => { return total + skill.count; }, 0);
-      let count = {
-        count: !Number(rule.max) ? total : Math.min(rule.max, total)
-      };
-      return Object.assign({}, rule, count, display);
-    });
+    return this.props.rules.map(m => {
+      let rule = Object.assign({}, m);/*
+      if(rule.max)
+        rule.max += this.props.rules.filter(r => (
+          r.increaseMax.split(', ').includes(m._id)
+        )).map(r => (
+          this.state.character.skills.filter(s => s.id == r._id)
+            .reduce((t, s) => t + s.count, 0)
+        )).reduce((t, r) => t + r, 0);
+      if(ruleextrause)
+        rule.max += this.props.rules.filter(r => (
+          r.increaseMax.split(', ').includes(m._id)
+        )).map(r => (
+          this.state.character.skills.filter(s => s.id == r._id)
+            .reduce((t, s) => t + s.count, 0)
+        )).reduce((t, r) => t + r, 0);*/
+
+      let count = this.state.character.skills.filter(s => s.id == rule._id)
+        .reduce((t, s) => t + s.count, 0);
+      count = !Number(rule.max) ? count : Math.min(rule.max, count);
+
+      let display = '';
+      if(rule.category == 'Craft' && rule.max == 5)
+        display = 'tiers';
+      else if (rule.max == 1)
+        display = 'checkbox';
+
+      return Object.assign({}, rule, {count: count}, {display: display});
+    }).sort((a, b) => a.name > b.name ? 1 : -1);
   }
 
   parseRules() {
-    const rules = this.getRules();
-    const granted = rules.filter(rule => rule.grants);
     const level = Math.max(0, Math.floor((this.state.character.build.spent - 25) / 10));
+    const interval = 5;
 
-    return { // @todo: change sort to be part of data entry
-      races: rules.filter(rule => rule.category == 'Race')
-        .sort((a, b) => {
-          return a.name > b.name ? 1 : -1;
-        }),
-      cultures: rules.filter(rule => rule.category == 'Culture')
-        .sort((a, b) => {
-          return a.name > b.name ? 1 : -1;
-        }),
-      racials: rules.filter(rule => rule.race != '' && rule.category != 'Race' && rule.category != 'Culture'),
-      constants: rules.filter(r => r.category == 'Constant')
-        .sort((a, b) => a.name < b.name ? -1 : 1),
-      crafts: rules.filter(rule => rule.category == 'Craft')
+    const rules = this.getRules();
+
+    const granted = rules.filter(rule => rule.grants);
+    /*return {
+      body: 10 + 5 * level,
+      buffs: 3 + Math.floor(level / 5),
+      inscriptions: 1 + Math.floor(level / 5),
+    };*/
+
+    return {
+      interval: interval,
+      level: level,
+      canLearn: {
+        T1: level >= interval,
+        T2: level >= 2 * interval && this.state.character.build.nonDomain >= 100,
+        T3: level >= 3 * interval && this.state.character.build.nonDomain >= 125,
+        AA: level >= 4 * interval
+      },
+      races: rules.filter(r => r.category == 'Race'),
+      cultures: rules.filter(r => r.category == 'Culture'),
+      racials: rules.filter(r => (
+        r.race != '' && r.category != 'Race' && r.category != 'Culture'
+      )),
+      languages: rules.filter(r => r.category == 'Language'),
+      constants: rules.filter(r => r.category == 'Constant'),
+      crafts: rules.filter(r => r.category == 'Craft')
         .sort((a, b) => {
           if(a.name == 'Jack of All Trades')
             return -1;
           if(b.name == 'Jack of All Trades')
             return 1;
+          if(a.name == 'Frugal Craftsman')
+            return -1;
+          if(b.name == 'Frugal Craftsman')
+            return 1;
           return a.name < b.name ? -1 : 1;
         }),
-      domains: rules.filter(rule => rule.category == 'Domain'),
-      advancedArts: rules.filter(rule => rule.category == 'Advanced Art')
-        .sort((a, b) => a.name > b.name ? 1 : -1),
-      pools: rules.filter(rule =>
-        (rule.category == 'Pool' || rule.category == 'Pool Ability' ) &&
-        !rule.race && !rule.culture
-      ),
+      domains: rules.filter(r => r.category == 'Domain'),
+      advancedArts: rules.filter(rule => rule.category == 'Advanced Art'),
+      pools: rules.filter(r => (
+        r.category == 'Pool' || r.category == 'Pool Ability'
+      )),
       sourceMark: {
-        limit: granted.reduce((total, rule) => {
-          let count = rule.grants.split(', ')
-            .filter(g => g.includes('UbOkRDlaLA6ME0ks'))
-            .reduce((count, g) => count + 1, 0);
-          return total + rule.count * count;
-        }, 0),
-        mastery: granted.reduce((check, rule) => {
-          return check || (rule.grants.includes('NA3IIMeusA9Ye6OY') && rule.count);
-        }, false)
+        limit: this.state.character.skills
+          .filter(s => s.id == 'A5J1m0CmywjGazW1')
+          .reduce((t, s) => t + s.count, 0),
+        mastery: this.state.character.skills
+          .filter(s => s.id == 'BmrhniaHJ3oTeiwz')
+          .reduce((t, s) => t + s.count, 0) > 0,
+        granted: [
+          {name: 'Earth', id: 'JLMbeGHguMCqImBS'},
+          {name: 'Crystal', id: 'C3ktPo3FyEaRlvAQ'},
+          {name: 'Fire', id: 'gh65YHVkXIn1j93I'},
+          {name: 'Plasma', id: 'cdvGE8XqEH1HU6iT'},
+          {name: 'Water', id: 'jWZx5ESHT99bCBeO'},
+          {name: 'Ice', id: 'z5WLF6exadRZhj93'},
+          {name: 'Wind', id: '4wYP6LaqKgsD3mBl'},
+          {name: 'Lightning', id: '7RygGGqp8cX5RQGd'},
+          {name: 'Light', id: 'aNX4DbOu1SCCTEGf'},
+          {name: 'Dark', id: 'slcqZqmjXWiik7di'},
+          {name: 'Holy', id: 'IYVuPgPwN7JV25Rf'},
+          {name: 'Infernal', id: 'Nlsy0Fg8KiG12pjg'},
+          {name: 'Magic', id: 'QpBlKVlUTxY2EaOL'}
+        ].map(e => {
+          return {
+            name: e.name,
+            count: this.state.character.skills
+              .filter(s => s.id == e.id)
+              .reduce((t, s) => t + s.count, 0)
+          };
+        }).filter(e => e.count > 0).map(e => e.name)
       },
-      mod: {
-        armor: {
-          mods: granted.reduce((check, rule) => {
-            return check || (rule.grants.includes('9YfyA7FdSo6p7XCk') && rule.count);
-          }, false) ? 1 + Math.floor(level / 10) : 0
-        },
-        body: {
-          extra: granted.reduce((total, rule) => {
-            let count = rule.grants.split(', ')
-              .filter(g => g.includes('nkPWj8hTIFeLErq5'))
-              .reduce((count, g) => count + 1, 0);
-            return total + rule.count * count;
-          }, 0),
-          perLevel: granted.reduce((total, rule) => {
-            let count = rule.grants.split(', ')
-              .filter(g => g.includes('F2qqmM9PuvcEenXL'))
-              .reduce((count, g) => count + 1, 0);
-            return total + rule.count * count;
-          }, 0),
-          double: granted.reduce((check, rule) => {
-            return check || (rule.grants.includes('gQM9ot97a2ROBS7N') && rule.count);
-          }, false)
-        },
-        buffs: {
-          extra: granted.reduce((total, rule) => {
-            let count = rule.grants.split(', ')
-              .filter(g => g.includes('WHbUBohb6UkRhY8j'))
-              .reduce((count, g) => count + 1, 0);
-            return total + rule.count * count;
-          }, 0)
-        },
-        inscriptions: {
-          extra: 0
-        },
-        lives: {
-          redToWhite: granted.reduce((check, rule) => {
-            return check || (rule.grants.includes('2fZG2ArezTXPVMu3') && rule.count);
-          }, false)
-        },
-        recoveries: {
-          extra: granted.reduce((check, rule) => {
-            return check || (rule.grants.includes('Jnpeh6RDLJ16Uzhp') && rule.count);
-          }, false) ? 1 + Math.floor(level / 10) : 0
-        },
-        tags: {
-          chemix: granted.reduce((total, rule) => {
-            let count = rule.grants.split(', ')
-              .filter(g => g.includes('0LUhmr6Yh1XIonZ6'))
-              .reduce((count, g) => count + 1, 0);
-            return total + rule.count * count;
-          }, 0),
-          melee: granted.reduce((total, rule) => {
-            let count = rule.grants.split(', ')
-              .filter(g => g.includes('gmN4oir2gyCuSSWE'))
-              .reduce((count, g) => count + 1, 0);
-            return total + rule.count * count;
-          }, 0),
-          spell: granted.reduce((total, rule) => {
-            let count = rule.grants.split(', ')
-              .filter(g => g.includes('CfuKf7yOYW4bYNO6'))
-              .reduce((count, g) => count + 1, 0);
-            return total + rule.count * count;
-          }, 0),
+      recoveries: {
+        base: 6,
+        extra: this.state.character.skills
+          .filter(s => s.id == 'YK1e3EA72tIu37uK') // extra
+          .reduce((t, s) => t + s.count, 0)
+        + this.state.character.skills
+          .filter(s => s.id == 'RzEFIfjy1KtLorVk') // extra per 10 levels
+          .reduce((t, s) => t + s.count, 0) * Math.floor(level / 10),
+      },
+      body: {
+        base: 10 + 5 * level,
+        extra: this.state.character.skills
+          .filter(s => s.id == 'DwCTFLBVfnZRl2y6') // extra
+          .reduce((t, s) => t + s.count, 0),
+        perLevel: this.state.character.skills
+          .filter(s => s.id == 'nTgJJHGcKLHnJfy7') // extra per level
+          .reduce((t, s) => t + s.count, 0),
+        double: this.state.character.skills
+          .filter(s => s.id == 'gQM9ot97a2ROBS7N') // double
+          .reduce((t, s) => t + s.count, 0) > 0,
+        static: {
+          extra: this.state.character.skills
+            .filter(s => s.id == 'D5ZLPXyomskpvvRm') // extra
+            .reduce((t, s) => t + s.count, 0),
+          perLevel: this.state.character.skills
+            .filter(s => s.id == 'nKkpDCrU1m9S19Jf') // extra per level
+            .reduce((t, s) => t + s.count, 0)
         }
-      }
+      },
+      buffs: {
+        base: 3 + Math.floor(level / 10),
+        extra: this.state.character.skills
+          .filter(s => s.id == '05RHlXMcrs7Sa3pM') // extra
+          .reduce((t, s) => t + s.count, 0),
+      },
+      inscriptions: {
+        base: 1 + Math.floor(level / 5),
+        extra: this.state.character.skills
+          .filter(s => s.id == 'ZbJdBt91GzSQTCnL') // extra
+          .reduce((t, s) => t + s.count, 0)
+      },
+      armor: {
+        AP: {
+          passive: 0,
+          cap: 0,
+          remaining: 0
+        },
+        DR: {
+          passive: 0,
+          cap: 0,
+          remaining: 0
+        },
+        mods: {
+          base: 8,
+          extra: this.state.character.skills
+            .filter(s => s.id == 'YK1e3EA72tIu37uK') // extra
+            .reduce((t, s) => t + s.count, 0)
+          + this.state.character.skills
+            .filter(s => s.id == 'cg70AS8V1xf7k3Cf') // extra per 10 levels
+            .reduce((t, s) => t + s.count, 0) * (1 + Math.floor(level / 10))
+        }
+      },
+      damage: {
+        melee: this.state.character.skills
+          .filter(s => s.id == 'qB6SPd8ygEKXoZY6')
+          .reduce((t, s) => t + s.count, 0),
+        ranged: this.state.character.skills
+          .filter(s => s.id == 'qB6SPd8ygEKXoZY6')
+          .reduce((t, s) => t + s.count, 0),
+        sourceMark: this.state.character.skills
+          .filter(s => s.id == 'qB6SPd8ygEKXoZY6')
+          .reduce((t, s) => t + s.count, 0),
+        rearAttackBonus: this.state.character.skills
+          .filter(s => s.id == 'qB6SPd8ygEKXoZY6')
+          .reduce((t, s) => t + s.count, 0)
+      },
+      healing: this.state.character.skills
+        .filter(s => s.id == 'qB6SPd8ygEKXoZY6')
+        .reduce((t, s) => t + s.count, 0),
+      poolTags: {
+        chemix: this.state.character.skills
+          .filter(s => s.id == 'wWqLrPr3MOqGKltI') // extra tag per pool
+          .reduce((t, s) => t + s.count, 0),
+        melee: this.state.character.skills
+          .filter(s => s.id == 'qB6SPd8ygEKXoZY6') // extra tag per pool
+          .reduce((t, s) => t + s.count, 0),
+        spell: this.state.character.skills
+          .filter(s => s.id == '7wWLZATFKgGO5h9N') // extra tag per pool
+          .reduce((t, s) => t + s.count, 0)
+      },
+      freeSkills: this.state.character.skills
+        .filter(s => typeof s.source == 'number')
+        .map(s => {
+          return {
+            id: s.id,
+            level: s.source,
+            name: this.props.rules.filter(r => r._id == s.id)[0].name
+          };
+        })
     };
-  }
-
-  levelValues() {
-    const build = this.state.character.build.spent;
-    const level = Math.max(0, Math.floor((build - 25) / 10));
-    return {
-      level: level,
-      body: 10 + 5 * level,
-      buffs: 3 + Math.floor(level / 5),
-      inscriptions: 1 + Math.floor(level / 5),
-      T1: level >= 5,
-      T2: level >= 10 && this.state.character.build.nonDomain >= 100,
-      T3: level >= 15 && this.state.character.build.nonDomain >= 125,
-      AA: level >= 20
-    };
-  }
-
-  getFreeSkills() {
-    const skills = this.state.character.skills.filter(skill => typeof skill.source == 'number');
-    return skills.map(skill => {
-      let rule = this.props.rules.filter(rule => rule._id == skill.id);
-      return {
-        id: skill.id,
-        level: skill.source,
-        name: rule.name
-      };
-    });
   }
 
   encode() {}
@@ -591,6 +642,30 @@ class Character extends React.Component {
       });
     }
 
+    if(rule._id == 'MQxu5lE0qQvJdZCQ') { // red stones are white
+      let blues = prevState.character.lives.filtter(l => l.color == 'blue')[0];
+      let blacks = prevState.character.lives.filtter(l => l.color == 'black')[0];
+      let reds = prevState.character.lives.filtter(l => l.color == 'red')[0];
+      let whites = prevState.character.lives.filtter(l => l.color == 'white')[0];
+      nextState.character.lives = [{
+        color: 'blue',
+        count: blues.count,
+        disabled: blues.disabled
+      }, {
+        color: 'black',
+        count: blacks.count,
+        disabled: blacks.disabled
+      }, {
+        color: 'red',
+        count: reds.count + !count ? 2 : -2,
+        disabled: 0
+      }, {
+        color: 'white',
+        count: whites.count + !count ? -2 : 2,
+        disabled: whites.disabled
+      }];
+    }
+
     nextState.character.skills = nextState.character.skills.filter(skill => skill.count > 0);
 
     return nextState;
@@ -603,41 +678,40 @@ class Character extends React.Component {
       build,
       lives,
       race,
-      recoveries,
       sourceMarks
     } = this.state.character;
     const {
+      interval,
       level,
-      body,
-      buffs,
-      inscriptions,
-      T1,
-      T2,
-      T3,
-      AA
-    } = this.levelValues();
-    const freeSkills = this.getFreeSkills();
-    const {
+      canLearn,
       races,
       cultures,
       racials,
+      languages,
       constants,
       crafts,
       domains,
       advancedArts,
       pools,
       sourceMark,
-      mod
+      recoveries,
+      body,
+      buffs,
+      inscriptions,
+      armor,
+      damage,
+      healing,
+      poolTags,
+      freeSkills
     } = this.parseRules();
     const domainNames = domains.map(rule => rule.group)
       .filter((rule, index, self) => self.indexOf(rule) == index)
       .sort((a, b) => {
-        return a == 'Generic' ? -1
-          : b == 'Generic' ? 1
-          : a == 'Burn' ? 1
-          : b == 'Burn' ? -1
-          : a > b ? 1
-          : -1;
+        if(a == 'Burn')
+          return 1;
+        if(b == 'Burn')
+          return -1;
+        return a > b ? 1 : -1;
       });
     return (
       <div data-character='sheet'>
@@ -682,28 +756,28 @@ class Character extends React.Component {
             level={level}
             domains={domains}
             known={freeSkills}
-            T1={T1}
-            T2={T2}
-            T3={T3}
+            T1={canLearn.T1}
+            T2={canLearn.T2}
+            T3={canLearn.T3}
             editCharacter={this.editCharacter}
           />
         </Box>
         <Box label='Body' factor={0.25}>
           <Field
             name='body'
-            value={(body + mod.body.extra + mod.body.perLevel * level) * (mod.body.double ? 2 : 1)}
+            value={(body.base + body.extra + body.perLevel * level) * (body.double ? 2 : 1)}
           />
         </Box>
         <Box label='Buffs' factor={0.25}>
           <Field
             name='buffs'
-            value={buffs + mod.buffs.extra}
+            value={buffs.base + buffs.extra}
           />
         </Box>
         <Box label='Tattoos' factor={0.25}>
           <Field
             name='inscriptions'
-            value={inscriptions + mod.inscriptions.extra}
+            value={inscriptions.base + inscriptions.extra}
           />
         </Box>
         <Box color label='Ressurection Bag'>
@@ -715,7 +789,7 @@ class Character extends React.Component {
         </Box>
         <Box label='Recoveries'>
           <Stones
-            stones={recoveries + mod.recoveries.extra}
+            stones={recoveries.base + recoveries.extra}
           />
         </Box>
         <Box color label='Race' factor={0.5}>
@@ -750,6 +824,7 @@ class Character extends React.Component {
             races={races}
             cultures={cultures}
             racials={racials}
+            languages={languages}
             viewDescription={this.viewRule}
             editCharacter={this.editCharacter}
           />
@@ -764,7 +839,7 @@ class Character extends React.Component {
             editCharacter={this.editCharacter}
           />
         </Box>
-        <Box color label='Constatnt Skills'>
+        <Box color label='Constant Skills'>
           <AbilityGroup
             abilities={constants}
             viewDescription={this.viewRule}
@@ -777,13 +852,14 @@ class Character extends React.Component {
           <SourceMarks
             limit={sourceMark.limit}
             mastery={sourceMark.mastery}
+            granted={sourceMark.granted}
             known={sourceMarks}
             editCharacter={this.editCharacter}
           />
         </Box>
         <Box color label='Combat Pools'>
           <Pools
-            extraTags={mod.tags}
+            extraTags={poolTags}
             abilities={pools}
             viewDescription={this.viewRule}
             editCharacter={this.editCharacter}
