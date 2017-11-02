@@ -73,15 +73,9 @@ describe('<Character />', () => {
 
     it('contains a styled racial skills component');
 
-    it('contains a styled weapon skills component', () => {
+    it('contains a styled constant skills component', () => {
       const wrapper = shallow(<Character api={api} />);
-      expect(wrapper.find(Box).find({label: 'Weapon Skills'}).find(AbilityGroup)).to.have.length(1);
-      //@todo: check props
-    });
-
-    it('contains a styled aptitude skills component', () => {
-      const wrapper = shallow(<Character api={api} />);
-      expect(wrapper.find(Box).find({label: 'Aptitudes'}).find(AbilityGroup)).to.have.length(1);
+      expect(wrapper.find(Box).find({label: 'Constant Skills'}).find(AbilityGroup)).to.have.length(1);
       //@todo: check props
     });
 
