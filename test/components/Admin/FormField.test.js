@@ -5,6 +5,7 @@ import { shallow } from 'enzyme';
 import { JSDOM } from 'jsdom';
 
 import FormField from '../../../src/components/Admin/FormField';
+import Field from '../../../src/components/util/Field';
 
 const window = (new JSDOM('<!doctype html><html><body></body></html>')).window;
 global.window = window;
@@ -38,17 +39,18 @@ describe('<FormField />', () => {
     expect(wrapper.find('label').text()).to.equal('lebal');
   });
 
-  it('renders an input, or textarea if the type prop is textarea', () => {
+  it('renders a Field component', () => {
     const onChange = spy();
     const wrapper = shallow(<FormField name='test' value='testing' onChange={onChange} />);
-    expect(wrapper.find('div').find('input')).to.have.length(1);
-    expect(wrapper.find('input').prop('type')).to.equal('text');
+    expect(wrapper.find('div').find(Field)).to.have.length(1);
+    expect(wrapper.find(Field).prop('type')).to.equal('text');
     wrapper.setProps({type: 'number'});
-    expect(wrapper.find('input').prop('type')).to.equal('number');
-    wrapper.setProps({type: 'textarea'});
-    expect(wrapper.find('div').find('textarea')).to.have.length(1);
-    expect(wrapper.find('textarea').prop('name')).to.equal('test');
-    expect(wrapper.find('textarea').prop('value')).to.equal('testing');
-    expect(wrapper.find('textarea').prop('onChange')).to.equal(onChange);
+    expect(wrapper.find(Field).prop('type')).to.equal('number');
+    wrapper.setProps({type: 'select', options: ['one', 'two']});
+    expect(wrapper.find(Field).prop('type')).to.equal('select');
+    expect(wrapper.find(Field).prop('name')).to.equal('test');
+    expect(wrapper.find(Field).prop('value')).to.equal('testing');
+    expect(wrapper.find(Field).prop('options')).to.deep.equal(['one', 'two']);
+    expect(wrapper.find(Field).prop('onChange')).to.equal(onChange);
   });
 });

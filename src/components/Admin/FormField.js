@@ -1,22 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import Field from '../util/Field';
+
 const FormField = (props) => (
   <div className='form-field'>
     {!props.label ? null : <label>{props.label}</label>}
-    {props.type == 'textarea'
-    ? <textarea rows={props.rows} cols={props.cols}
-        name={props.name}
-        onChange={props.onChange}
-        value={props.value}
-      />
-    : <input type={props.type}
-        name={props.name}
-        onChange={props.onChange}
-        value={props.value}
-        checked={props.value}
-      />
-    }
+    <Field type={props.type}
+      rows={10} cols={50}
+      name={props.name}
+      value={props.value}
+      options={props.options}
+      onChange={props.onChange}
+    />
   </div>
 );
 
@@ -27,13 +23,13 @@ FormField.defaultProps = {
 FormField.propTypes = {
   name: PropTypes.string.isRequired,
   type: PropTypes.string,
-  rows: PropTypes.number,
-  cols: PropTypes.number,
   label: PropTypes.string,
   value: PropTypes.oneOfType([
     PropTypes.string,
-    PropTypes.number
+    PropTypes.number,
+    PropTypes.bool
   ]),
+  options: PropTypes.array,
   onChange: PropTypes.func.isRequired
 };
 

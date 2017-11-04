@@ -156,30 +156,40 @@ describe('<RuleList />', () => {
     wrapper.setProps({
       list: [{
         _id: '42',
-        name: 'test',
-        build: 42,
-        delivery: 'touch',
-        category: 'case',
-        group: 'testing',
-        tier: 'trial',
-        race: 'mocha',
-        culture: 'expect',
-        description: 'blah',
-        max: 0,
-        extraUses: 'iteration',
-        requires: 'modules',
-        requeresAny: 'code',
-        conflicts: 'bugs',
-        replaces: 'unwritten',
-        grants: 'reliability'
+        name: 'Dog',
+        build: 5,
+        max: 1,
+        category: 'pet',
+        group: 'cat',
+        tier: '3',
+        level: 7,
+        effect: 'entertainment',
+        race: 'feline',
+        culture: 'hunter',
+        delivery: 'pounce',
+        verbal: 'meow',
+        uses: 9,
+        usesPerAptitude: 0,
+        usesType: 'per Event',
+        description: 'lazy',
+        requires: 'food',
+        requeresAny: 'attention',
+        conflicts: 'laser pointer',
+        removes: 'master',
+        grants: 'purring',
+        grantsUseOf: '',
+        increaseMax: 'litter',
+        disable: 1,
+        prodigy: false,
+        hidden: true
       }]
     });
     expect(wrapper.find(Rule).prop('id')).to.equal('42');
-    expect(wrapper.find(Rule).prop('name')).to.equal('test');
-    expect(wrapper.find(Rule).prop('category')).to.equal('case');
-    expect(wrapper.find(Rule).prop('group')).to.equal('testing (trial)');
-    expect(wrapper.find(Rule).prop('race')).to.equal('mocha');
-    expect(wrapper.find(Rule).prop('culture')).to.equal('expect');
+    expect(wrapper.find(Rule).prop('name')).to.equal('Dog');
+    expect(wrapper.find(Rule).prop('category')).to.equal('pet');
+    expect(wrapper.find(Rule).prop('group')).to.equal('cat (3)');
+    expect(wrapper.find(Rule).prop('race')).to.equal('feline');
+    expect(wrapper.find(Rule).prop('culture')).to.equal('hunter');
     expect(wrapper.find(Rule).prop('onClick')).to.equal(onClick);
   });
 
@@ -203,61 +213,91 @@ describe('<RuleList />', () => {
     wrapper.setProps({
       list: [{
         _id: '42',
-        name: 'these are not used',
-        build: NaN,
-        delivery: 'these are not used',
-        category: 'these are not used',
-        group: 'these are not used',
-        tier: 'these are not used',
-        race: 'these are not used',
-        culture: 'these are not used',
-        description: 'these are not used',
-        max: NaN,
-        extraUses: 'these are not used',
-        requires: 'these are not used',
-        requeresAny: 'these are not used',
-        conflicts: 'these are not used',
-        replaces: 'these are not used',
-        grants: 'these are not used'
+        name: 'Dog',
+        build: 5,
+        max: 1,
+        category: 'pet',
+        group: 'cat',
+        tier: '3',
+        level: 7,
+        effect: 'entertainment',
+        race: 'feline',
+        culture: 'hunter',
+        delivery: 'pounce',
+        verbal: 'meow',
+        uses: 9,
+        usesPerAptitude: 0,
+        usesType: 'per Event',
+        description: 'lazy',
+        requires: 'food',
+        requeresAny: 'attention',
+        conflicts: 'laser pointer',
+        removes: 'master',
+        grants: 'purring',
+        grantsUseOf: '',
+        increaseMax: 'litter',
+        disable: 1,
+        prodigy: false,
+        hidden: true
       }],
       selected: {
         _id: '42',
-        name: 'test',
-        build: 42,
-        delivery: 'touch',
-        category: 'case',
-        group: 'testing',
-        tier: 'trial',
-        race: 'mocha',
-        culture: 'expect',
-        description: 'blah',
-        max: 0,
-        extraUses: 'iteration',
-        requires: 'modules',
-        requeresAny: 'code',
-        conflicts: 'bugs',
-        replaces: 'unwritten',
-        grants: 'reliability'
+        name: 'Dog',
+        build: 5,
+        max: 1,
+        category: 'pet',
+        group: 'cat',
+        tier: '3',
+        level: 7,
+        effect: 'entertainment',
+        race: 'feline',
+        culture: 'hunter',
+        delivery: 'pounce',
+        verbal: 'meow',
+        uses: 9,
+        usesPerAptitude: 0,
+        usesType: 'per Event',
+        description: 'lazy',
+        requires: 'food',
+        requeresAny: 'attention',
+        conflicts: 'laser pointer',
+        removes: 'master',
+        grants: 'purring',
+        grantsUseOf: '',
+        increaseMax: 'litter',
+        disable: 1,
+        prodigy: false,
+        hidden: true
       },
       scrollToForm: true
     });
     expect(wrapper.find(RuleForm).prop('id')).to.equal('42');
-    expect(wrapper.find(RuleForm).prop('name')).to.equal('test');
-    expect(wrapper.find(RuleForm).prop('build')).to.equal(42);
-    expect(wrapper.find(RuleForm).prop('delivery')).to.equal('touch');
-    expect(wrapper.find(RuleForm).prop('category')).to.equal('case');
-    expect(wrapper.find(RuleForm).prop('group')).to.equal('testing');
-    expect(wrapper.find(RuleForm).prop('tier')).to.equal('trial');
-    expect(wrapper.find(RuleForm).prop('race')).to.equal('mocha');
-    expect(wrapper.find(RuleForm).prop('culture')).to.equal('expect');
-    expect(wrapper.find(RuleForm).prop('description')).to.equal('blah');
-    expect(wrapper.find(RuleForm).prop('max')).to.equal(0);
-    expect(wrapper.find(RuleForm).prop('extraUses')).to.equal('iteration');
-    expect(wrapper.find(RuleForm).prop('requires')).to.equal('modules');
-    expect(wrapper.find(RuleForm).prop('requeresAny')).to.equal('code');
-    expect(wrapper.find(RuleForm).prop('conflicts')).to.equal('bugs');
-    expect(wrapper.find(RuleForm).prop('replaces')).to.equal('unwritten');
-    expect(wrapper.find(RuleForm).prop('grants')).to.equal('reliability');
+    expect(wrapper.find(RuleForm).prop('name')).to.equal('Dog');
+    expect(wrapper.find(RuleForm).prop('build')).to.equal(5);
+    expect(wrapper.find(RuleForm).prop('max')).to.equal(1);
+    expect(wrapper.find(RuleForm).prop('category')).to.equal('pet');
+    expect(wrapper.find(RuleForm).prop('group')).to.equal('cat');
+    expect(wrapper.find(RuleForm).prop('tier')).to.equal('3');
+    expect(wrapper.find(RuleForm).prop('level')).to.equal(7);
+    expect(wrapper.find(RuleForm).prop('effect')).to.equal('entertainment');
+    expect(wrapper.find(RuleForm).prop('race')).to.equal('feline');
+    expect(wrapper.find(RuleForm).prop('culture')).to.equal('hunter');
+    expect(wrapper.find(RuleForm).prop('delivery')).to.equal('pounce');
+    expect(wrapper.find(RuleForm).prop('verbal')).to.equal('meow');
+    expect(wrapper.find(RuleForm).prop('uses')).to.equal(9);
+    expect(wrapper.find(RuleForm).prop('usesPerAptitude')).to.equal(0);
+    expect(wrapper.find(RuleForm).prop('usesType')).to.equal('per Event');
+    expect(wrapper.find(RuleForm).prop('description')).to.equal('lazy');
+    expect(wrapper.find(RuleForm).prop('requires')).to.equal('food');
+    expect(wrapper.find(RuleForm).prop('requeresAny')).to.equal('attention');
+    expect(wrapper.find(RuleForm).prop('conflicts')).to.equal('laser pointer');
+    expect(wrapper.find(RuleForm).prop('removes')).to.equal('master');
+    expect(wrapper.find(RuleForm).prop('grants')).to.equal('purring');
+    expect(wrapper.find(RuleForm).prop('grantsUseOf')).to.equal('');
+    expect(wrapper.find(RuleForm).prop('increaseMax')).to.equal('litter');
+    expect(wrapper.find(RuleForm).prop('disable')).to.equal(1);
+    expect(wrapper.find(RuleForm).prop('prodigy')).to.equal(false);
+    expect(wrapper.find(RuleForm).prop('hidden')).to.equal(true);
     expect(wrapper.find(RuleForm).prop('onChange')).to.equal(onChange);
     expect(wrapper.find(RuleForm).prop('onSubmit')).to.equal(onSubmit);
     expect(wrapper.find(RuleForm).prop('onCancel')).to.equal(onCancel);

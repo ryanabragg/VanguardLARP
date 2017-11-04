@@ -59,8 +59,10 @@ const StyledRuleList = styled(RuleList)`
   label {
     display: block;
   }
-  input {
+  input,
+  select {
     width: 100%;
+    padding: 1px;
   }
   input[type="checkbox"] {
     width: 30px;

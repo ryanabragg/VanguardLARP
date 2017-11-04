@@ -14,24 +14,31 @@ class Rules extends React.Component {
     this.emptyRule = {
       _id: '',
       name: '',
-      build: '',
-      delivery: '',
-      tags: '',
-      block: '',
+      build: 0,
+      max: 0,
       category: '',
       group: '',
       tier: '',
+      level: 0,
+      effect: '',
       race: '',
       culture: '',
-      prodigy: '',
+      delivery: '',
+      verbal: '',
+      uses: 0,
+      usesPerAptitude: 0,
+      usesType: '',
       description: '',
-      max: '', // @todo the complex components for editing the props after this
-      extraUses: '', // extra uses based on +((count of key) / value) where key can be _id, category, or group (for pools, will add to tags)
-      requires: '', // list of value purchases of key needed to add to a character where key can be _id, category, group, or type
-      requeresAny: '', // like requires, but allows for adding to a character if any key-value pair matches
-      conflicts: '', // can't add to character if any value matches
-      replaces: '', // adding this to a character will remove the listed values, and increment count for each removed
-      grants: '' // adding this to a character will add each value as well
+      requires: '',
+      requeresAny: '',
+      conflicts: '',
+      removes: '',
+      grants: '',
+      grantsUseOf: '',
+      increaseMax: '',
+      disable: false,
+      prodigy: true,
+      hidden: false
     };
 
     this.state = {
@@ -144,7 +151,7 @@ class Rules extends React.Component {
   createRule(rule) {
     this.props.create('rules', rule, (error, record) => {
       if(error)
-        NotificationList.alert(error.name, 'Failed to create rule.');
+        NotificationList.alert(error.errors[0], 'Failed to create rule.');
     });
   }
 
@@ -159,7 +166,7 @@ class Rules extends React.Component {
   updateRule(rule) {
     this.props.update('rules', rule, (error, record) => {
       if(error)
-        NotificationList.alert(error.name, 'Failed to update rule.');
+        NotificationList.alert(error.errors[0], 'Failed to update rule.');
     });
   }
 
@@ -168,7 +175,7 @@ class Rules extends React.Component {
       return;
     this.props.remove('rules', id, (error, record) => {
       if(error)
-        NotificationList.alert(error.name, 'Failed to delete rule.');
+        NotificationList.alert(error.errors[0], 'Failed to delete rule.');
     });
   }
 
@@ -177,23 +184,16 @@ class Rules extends React.Component {
     this.selectRule(e.target.id);
   }
 
-  handleFormInputChange(e) {
-    e.stopPropagation();
-    let target = e.target; // e not available during callback
+  handleFormInputChange(payload) {
     this.setState((prevState, props) => {
       let nextState = Object.assign({}, prevState);
-      nextState.selected[target.name] = target.type === 'checkbox' ? target.checked : target.value;
+      nextState.selected[payload.type] = payload.data;
       return nextState;
     });
   }
 
   handleFormSubmit() {
     let rule = Object.assign({}, this.state.selected);
-    rule.build = Number(rule.build);
-    rule.tags = Number(rule.tags);
-    rule.block = Number(rule.block);
-    rule.prodigy = Number(rule.prodigy);
-    rule.max = Number(rule.max);
     
     if(rule._id == 'new') {
       delete rule._id;

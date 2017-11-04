@@ -40,25 +40,48 @@
       "type": "integer",
       "minimum": 0
     },
-    "delivery": {
-      "type": "string"
-    },
-    "tags": {
-      "type": "integer",
-      "minimum": 0
-    },
-    "disable": {
-      "type": "boolean"
-    },
     "category": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "enum": [
+        "Utility",
+        "Constant",
+        "Craft",
+        "Language",
+        "Pool",
+        "Pool Ability",
+        "Domain",
+        "Advanced Art",
+        "Race",
+        "Option",
+        "Choice"
+      ]
     },
     "group": {
       "type": "string"
     },
     "tier": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "",
+        "1",
+        "2",
+        "3"
+      ]
+    },
+    "effect": {
+      "type": "string",
+      "enum": [
+        "",
+        "Passive",
+        "Buff",
+        "Mind Affecting",
+        "Shield"
+      ]
+    },
+    "level": {
+      "type": "integer",
+      "minimum": 0
     },
     "race": {
       "type": "string"
@@ -66,8 +89,38 @@
     "culture": {
       "type": "string"
     },
-    "prodigy": {
-      "type": "boolean"
+    "delivery": {
+      "type": "string",
+      "enum": [
+        "",
+        "Verbal",
+        "Gesture",
+        "Touch",
+        "Packet",
+        "Packet / Verbal",
+        "Ranged",
+        "Melee"
+      ]
+    },
+    "verbal": {
+      "type": "string"
+    },
+    "uses": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "usesPerAptitude": {
+      "type": "number",
+      "minimum": 0
+    },
+    "usesType": {
+      "type": "string",
+      "enum": [
+        "",
+        "per Short Recovery",
+        "per Long Recovery",
+        "per Event"
+      ]
     },
     "description": {
       "type": "string",
@@ -82,14 +135,27 @@
     "conflicts": {
       "type": "string"
     },
-    "extraUses": {
-      "type": "string"
-    },
-    "replaces": {
+    "removes": {
       "type": "string"
     },
     "grants": {
       "type": "string"
+    },
+    "grantsUseOf": {
+      "type": "string"
+    },
+    "increaseMax": {
+      "type": "string"
+    },
+    "disable": {
+      "description": "do not allow direct selection (only granted by other rules)",
+      "type": "boolean"
+    },
+    "prodigy": {
+      "type": "boolean"
+    },
+    "hidden": {
+      "type": "boolean"
     }
   },
   "required": [

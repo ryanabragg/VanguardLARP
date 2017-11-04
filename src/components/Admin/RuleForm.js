@@ -10,6 +10,48 @@ class RuleForm extends React.Component {
   constructor(props) {
     super(props);
 
+    this.categories = [
+      'Utility',
+      'Constant',
+      'Craft',
+      'Language',
+      'Pool',
+      'Pool Ability',
+      'Domain',
+      'Advanced Art',
+      'Option',
+      'Choice'
+    ].map(v => {return {value: v, label: v};});
+
+    this.tiers = [
+      '1',
+      '2',
+      '3'
+    ].map(v => {return {value: v, label: v};});
+
+    this.effects = [
+      'Passive',
+      'Buff',
+      'Mind Affecting',
+      'Shield'
+    ].map(v => {return {value: v, label: v};});
+
+    this.deliveries = [
+      'Verbal',
+      'Gesture',
+      'Touch',
+      'Packet',
+      'Packet / Verbal',
+      'Ranged',
+      'Melee'
+    ].map(v => {return {value: v, label: v};});
+
+    this.usesTypes = [
+      'per Short Recovery',
+      'per Long Recovery',
+      'per Event'
+    ].map(v => {return {value: v, label: v};});
+
     this.scrollToForm = this.scrollToForm.bind(this);
   }
 
@@ -60,30 +102,11 @@ class RuleForm extends React.Component {
           />
         </fieldset>
         <fieldset>
-          <FormField type='text'
-            name='delivery'
-            label='Delivery'
-            value={this.props.delivery}
-            onChange={this.props.onChange}
-          />
-          <FormField type='number'
-            name='tags'
-            label='Tags'
-            value={this.props.tags}
-            onChange={this.props.onChange}
-          />
-          <FormField type='checkbox'
-            name='block'
-            label='Not Able to Purchase'
-            value={this.props.block}
-            onChange={this.props.onChange}
-          />
-        </fieldset>
-        <fieldset>
-          <FormField type='text'
+          <FormField type='select'
             name='category'
             label='Category'
             value={this.props.category}
+            options={this.categories}
             onChange={this.props.onChange}
           />
           <FormField type='text'
@@ -92,10 +115,32 @@ class RuleForm extends React.Component {
             value={this.props.group}
             onChange={this.props.onChange}
           />
-          <FormField type='text'
+          <FormField type='select'
             name='tier'
-            label='Tier'
+            label='Domain Tier'
             value={this.props.tier}
+            options={this.tiers}
+            onChange={this.props.onChange}
+          />
+        </fieldset>
+        <fieldset>
+          <FormField type='select'
+            name='effect'
+            label='Effect Type'
+            value={this.props.effect}
+            options={this.effects}
+            onChange={this.props.onChange}
+          />
+          <FormField type='checkbox'
+            name='disable'
+            label='Not Able to Purchase'
+            value={this.props.disable}
+            onChange={this.props.onChange}
+          />
+          <FormField type='checkbox'
+            name='hidden'
+            label='Hidden'
+            value={this.props.hidden}
             onChange={this.props.onChange}
           />
         </fieldset>
@@ -119,9 +164,64 @@ class RuleForm extends React.Component {
             onChange={this.props.onChange}
           />
         </fieldset>
+        <fieldset>
+          <FormField type='select'
+            name='delivery'
+            label='Delivery'
+            value={this.props.delivery}
+            options={this.deliveries}
+            onChange={this.props.onChange}
+          />
+          <FormField type='text'
+            name='verbal'
+            label='Verbal'
+            value={this.props.verbal}
+            onChange={this.props.onChange}
+          />
+        </fieldset>
+        <fieldset>
+          <FormField type='number'
+            name='uses'
+            label='Uses'
+            value={this.props.uses}
+            onChange={this.props.onChange}
+          />
+          <FormField type='number'
+            name='usesPerAptitude'
+            label='Uses Per X Aptitudes'
+            value={this.props.usesPerAptitude}
+            onChange={this.props.onChange}
+          />
+          <FormField type='select'
+            name='usesType'
+            label='Uses By'
+            value={this.props.usesType}
+            options={this.usesTypes}
+            onChange={this.props.onChange}
+          />
+        </fieldset>
+        <fieldset>
+          <FormField type='number'
+            name='level'
+            label='Minimum Level'
+            value={this.props.level}
+            onChange={this.props.onChange}
+          />
+          <FormField type='text'
+            name='increaseMax'
+            label='Extra Purchase Of'
+            value={this.props.increaseMax}
+            onChange={this.props.onChange}
+          />
+          <FormField type='text'
+            name='grantsUseOf'
+            label='Grants Use Of'
+            value={this.props.grantsUseOf}
+            onChange={this.props.onChange}
+          />
+        </fieldset>
         <fieldset className='description'>
           <FormField type='textarea'
-            rows={10} cols={50}
             name='description'
             label='Description'
             value={this.props.description}
@@ -150,15 +250,9 @@ class RuleForm extends React.Component {
         </fieldset>
         <fieldset>
           <FormField type='text'
-            name='extraUses'
-            label='Extra Uses From'
-            value={this.props.extraUses}
-            onChange={this.props.onChange}
-          />
-          <FormField type='text'
-            name='replaces'
-            label='Replaces'
-            value={this.props.replaces}
+            name='removes'
+            label='Removes and Refunds'
+            value={this.props.removes}
             onChange={this.props.onChange}
           />
           <FormField type='text'
@@ -168,35 +262,63 @@ class RuleForm extends React.Component {
             onChange={this.props.onChange}
           />
         </fieldset>
-        <button type='button' value="submit" onClick={this.props.onSubmit}>{this.props.id != 'new' ? 'Update' : 'Create'}</button>
-        <button type='button' value="cancel" onClick={this.props.onCancel}>Cancel</button>
-        {this.props.id == 'new' ? null : <button type='button' value="delete" onClick={this.props.onDelete}>Delete</button>}
+        <button type='button' value='submit' onClick={this.props.onSubmit}>{this.props.id != 'new' ? 'Update' : 'Create'}</button>
+        <button type='button' value='cancel' onClick={this.props.onCancel}>Cancel</button>
+        {this.props.id == 'new' ? null : <button type='button' value='delete' onClick={this.props.onDelete}>Delete</button>}
       </form>
     );
   }
 }
 
+RuleForm.defaultProps = {
+  build: 0,
+  max: 1,
+  level: 0,
+  delivery: 'Packet',
+  uses: 0,
+  disable: false,
+  prodigy: true,
+  hidden: false,
+  scrollToForm: false
+};
+
 RuleForm.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string,
   build: PropTypes.number,
-  delivery: PropTypes.string,
-  tags: PropTypes.number,
-  block: PropTypes.number,
+  max: PropTypes.number,
   category: PropTypes.string,
   group: PropTypes.string,
   tier: PropTypes.string,
+  level: PropTypes.number,
+  effect: PropTypes.string,
   race: PropTypes.string,
   culture: PropTypes.string,
-  prodigy: PropTypes.number,
+  delivery: PropTypes.string,
+  verbal: PropTypes.string,
+  uses: PropTypes.number,
+  usesPerAptitude: PropTypes.number,
+  usesType: PropTypes.string,
   description: PropTypes.string,
-  max: PropTypes.number,
-  extraUses: PropTypes.string,
   requires: PropTypes.string,
   requeresAny: PropTypes.string,
   conflicts: PropTypes.string,
-  replaces: PropTypes.string,
+  removes: PropTypes.string,
   grants: PropTypes.string,
+  grantsUseOf: PropTypes.string,
+  increaseMax: PropTypes.string,
+  disable: PropTypes.oneOfType([
+    PropTypes.bool,
+    PropTypes.number
+  ]),
+  prodigy: PropTypes.oneOfType([
+    PropTypes.bool,
+    PropTypes.number
+  ]),
+  hidden: PropTypes.oneOfType([
+    PropTypes.bool,
+    PropTypes.number
+  ]),
   onChange: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
