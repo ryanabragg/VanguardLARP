@@ -64,12 +64,13 @@ class AbilityGroup extends React.Component {
 }
 
 AbilityGroup.defaultProps = {
-  source: 'build'
+  source: 'build',
+  abilities: []
 };
 
 AbilityGroup.propTypes = {
   source: PropTypes.string,
-  abilities: PropTypes.array.isRequired,
+  abilities: PropTypes.array,
   viewDescription: PropTypes.func.isRequired,
   editCharacter: PropTypes.func.isRequired
 };
