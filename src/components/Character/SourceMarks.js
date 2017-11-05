@@ -15,14 +15,12 @@ class SourceMarks extends React.Component {
   }
 
   handleInputChange(e) {
-    e.preventDefault();
-    this.setState({
-      custom: e.target.value
-    });
+    e.stopPropagation();
+    this.setState({custom: e.target.value});
   }
 
   handleSelect(e) {
-    e.preventDefault();
+    e.stopPropagation();
     let data = this.props.known.slice();
     while(this.props.limit > data.length)
       data.push('');
@@ -56,30 +54,33 @@ class SourceMarks extends React.Component {
     delete rest.limit;
     delete rest.mastery;
     delete rest.known;
+    delete rest.granted;
     delete rest.editCharacter;
-    const allElements = this.props.elements.map(element => element.mark);
-    const basicElements = this.props.elements.filter(element => element.basic).map(element => element.mark);
-    const custom = this.props.known.filter(mark => allElements.indexOf(mark) == -1);
-    const available = (this.props.mastery ? allElements : basicElements).concat(custom);
-    let display = this.props.known.map(mark => {return {element: mark, source: 'known'};});
+
+    const all = this.props.elements.map(e => e.mark);
+    const basic = this.props.elements.filter(e => e.basic).map(e => e.mark);
+    const custom = this.props.known.filter(k => all.indexOf(k) == -1);
+
+    let options = (this.props.mastery ? all : basic).concat(custom);
+
+    let display = this.props.known.slice();
     while(this.props.limit > display.length)
-      display.push({element: '', source: 'known'});
-    if(this.props.mastery)
-      display = basicElements.map(mark => {
-        return {
-          element: mark,
-          source: this.props.known.indexOf(mark) == -1 ? 'mastery' : 'known'
-        };
-      }).concat(display.filter(mark => basicElements.indexOf(mark.element) == -1));
+      display.push('');
+
     return (
       <div {...rest}>
         <ul>
-          {display.map((mark, index) => (
-            <li key={mark.element || index} className={mark.source}>
-              <select name={mark.element} onChange={this.handleSelect} value={mark.element}>
+          {this.props.granted.map((mark, index) => (
+            <li key={mark || index} className='granted'>
+              <label>{mark}</label>
+            </li>
+          ))}
+          {display.map((d, index) => (
+            <li key={d || index} className='known'>
+              <select name={d} onChange={this.handleSelect} value={d}>
                 <option value=''></option>;
-                {available.map((element, i) => {
-                  return <option key={element} value={element}>{element}</option>;
+                {(index == 0 ? basic : options).map((o, i) => {
+                  return <option key={o} value={o}>{o}</option>;
                 })}
               </select>
             </li>
@@ -87,7 +88,7 @@ class SourceMarks extends React.Component {
         </ul>
         {this.props.mastery && this.props.limit > this.props.known.length && (
           <div className='customize'>
-            <label>Custom Element</label>
+            <label>Custom Element:</label>
             <input onChange={this.handleInputChange} value={this.state.custom} />
             <button onClick={this.handleAddCustom}>Add</button>
           </div>
@@ -124,17 +125,12 @@ SourceMarks.defaultProps = {
     mark: 'Lightning'
   }, {
     basic: false,
-    mark: 'Light'
-  }, {
-    basic: false,
-    mark: 'Darkness'
-  }, {
-    basic: false,
-    mark: 'Magic'
+    mark: 'Acid'
   }],
   limit: 0,
   mastery: false,
-  known: []
+  known: [],
+  granted: []
 };
 
 SourceMarks.propTypes = {
@@ -142,6 +138,7 @@ SourceMarks.propTypes = {
   limit: PropTypes.number,
   mastery: PropTypes.bool,
   known: PropTypes.array,
+  granted: PropTypes.array,
   editCharacter: PropTypes.func.isRequired
 };
 

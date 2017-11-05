@@ -8,25 +8,35 @@ const StyledSourceMarks = styled(SourceMarks)`
   width: 100%;
   min-height: 30px;
 
-  div {
-    display: block;
-    width: 100%;
-  }
   ul {
     display: block;
     list-style-type: none;
     padding: 0;
     margin: 0;
+    width: 100%;
   }
   li {
     display: inline-block;
-    margin: 5px 3px 0 0;
+    margin: 5px 10px 0 0;
   }
-  .mastery select {
-    color: ${props => Color(props.theme.colors.secondary).grayscale().hex()};
+
+  select {
+    display: block;
+    width: 100%;
   }
+
+  label {
+
+  }
+
+  div.customize {
+    display: block;
+    margin: 10px 0;
+  }
+
   input {
-    margin: 0 3px 0 3px;
+    margin: 0 5px;
+    padding: 0 3p;
     width: 100px;
   }
 `;

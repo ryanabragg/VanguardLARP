@@ -95,26 +95,51 @@ describe('<SourceMarks />', () => {
     });
   });
 
+  it('renders a list item for each string of the granted prop array', () => {
+    const edit = spy();
+    const wrapper = shallow(<SourceMarks editCharacter={edit} />);
+    expect(wrapper.find('li.granted')).to.have.length(0);
+    wrapper.setProps({
+      granted: [
+        'test1'
+      ]
+    });
+    expect(wrapper.find('li.granted')).to.have.length(1);
+    wrapper.setProps({
+      granted: [
+        'test1',
+        'test2'
+      ]
+    });
+    expect(wrapper.find('li.granted')).to.have.length(2);
+    expect(wrapper.find('li.granted').at(0).childAt(0).type()).to.equal('label');
+    expect(wrapper.find('li.granted').at(0).text()).to.equal('test1');
+    expect(wrapper.find('li.granted').at(1).childAt(0).type()).to.equal('label');
+    expect(wrapper.find('li.granted').at(1).text()).to.equal('test2');
+  });
+
   it('renders a list item for each string of the known prop array', () => {
     const edit = spy();
     const wrapper = shallow(<SourceMarks editCharacter={edit} />);
-    expect(wrapper.find('li')).to.have.length(0);
+    expect(wrapper.find('li.known')).to.have.length(0);
     wrapper.setProps({
       known: [
         'test1'
       ]
     });
-    expect(wrapper.find('li')).to.have.length(1);
+    expect(wrapper.find('li.known')).to.have.length(1);
     wrapper.setProps({
       known: [
         'test1',
         'test2'
       ]
     });
-    expect(wrapper.find('li')).to.have.length(2);
+    expect(wrapper.find('li.known')).to.have.length(2);
+    expect(wrapper.find('li.known').at(0).childAt(0).type()).to.equal('select');
+    expect(wrapper.find('li.known').at(1).childAt(0).type()).to.equal('select');
   });
 
-  it('renders a select input for each rendered list item', () => {
+  it('renders a select input for each rendered known list item', () => {
     const edit = spy();
     const wrapper = shallow(<SourceMarks editCharacter={edit} />);
     expect(wrapper.find('select')).to.have.length(0);
@@ -159,115 +184,155 @@ describe('<SourceMarks />', () => {
     expect(wrapper.find('select')).to.have.length(4);
   });
 
-  it('renders additional selects for basic elements when mastery is true', () => {
+  it('renders the proper options for each select', () => {
     const edit = spy();
     const wrapper = shallow(<SourceMarks editCharacter={edit} />);
-    expect(wrapper.find('select')).to.have.length(0);
-    wrapper.setProps({
-      limit: 2,
-      mastery: true
-    });
-    expect(wrapper.find('select')).to.have.length(6);
-    wrapper.setProps({
-      known: ['Wind']
-    });
-    expect(wrapper.find('select')).to.have.length(5);
-    wrapper.setProps({
-      known: ['Fire', 'Test']
-    });
-    expect(wrapper.find('select')).to.have.length(5);
-    wrapper.setProps({
-      known: ['Test']
-    });
-    expect(wrapper.find('select')).to.have.length(6);
-  });
 
-  it('renders an option per object in the elements prop, a blank, and any custom known values, for each select', () => {
-    const edit = spy();
-    const wrapper = shallow(<SourceMarks editCharacter={edit} />);
-    wrapper.setProps({
-      known: [
-        'test1'
-      ]
+    wrapper.setProps({limit: 2});
+
+    expect(wrapper.find('select').at(0).find('option')).to.have.length(1 + SourceMarks.defaultProps.elements.filter(e => e.basic).length);
+    wrapper.find('select').at(0).find('option').forEach((node, index) => {
+      if(index == 0){
+        expect(node.prop('value')).to.equal('');
+        expect(node.text()).to.equal('');
+      } else {
+        expect(node.prop('value')).to.equal(SourceMarks.defaultProps.elements.filter(e => e.basic)[index-1].mark);
+        expect(node.text()).to.equal(SourceMarks.defaultProps.elements.filter(e => e.basic)[index-1].mark);
+      }
     });
-    expect(wrapper.find('select').at(0).find('option')).to.have.length(6);
-    expect(wrapper.find('select').at(0).find('option').at(0).prop('value')).to.equal('');
-    expect(wrapper.find('select').at(0).find('option').at(0).text()).to.equal('');
-    expect(wrapper.find('select').at(0).find('option').at(1).prop('value')).to.equal('Earth');
-    expect(wrapper.find('select').at(0).find('option').at(1).text()).to.equal('Earth');
-    expect(wrapper.find('select').at(0).find('option').at(2).prop('value')).to.equal('Fire');
-    expect(wrapper.find('select').at(0).find('option').at(2).text()).to.equal('Fire');
-    expect(wrapper.find('select').at(0).find('option').at(3).prop('value')).to.equal('Water');
-    expect(wrapper.find('select').at(0).find('option').at(3).text()).to.equal('Water');
-    expect(wrapper.find('select').at(0).find('option').at(4).prop('value')).to.equal('Wind');
-    expect(wrapper.find('select').at(0).find('option').at(4).text()).to.equal('Wind');
-    expect(wrapper.find('select').at(0).find('option').at(5).prop('value')).to.equal('test1');
-    expect(wrapper.find('select').at(0).find('option').at(5).text()).to.equal('test1');
-    wrapper.setProps({
-      mastery: true
+
+    expect(wrapper.find('select').at(1).find('option')).to.have.length(1 + SourceMarks.defaultProps.elements.filter(e => e.basic).length);
+    wrapper.find('select').at(1).find('option').forEach((node, index) => {
+      if(index == 0){
+        expect(node.prop('value')).to.equal('');
+        expect(node.text()).to.equal('');
+      } else {
+        expect(node.prop('value')).to.equal(SourceMarks.defaultProps.elements.filter(e => e.basic)[index-1].mark);
+        expect(node.text()).to.equal(SourceMarks.defaultProps.elements.filter(e => e.basic)[index-1].mark);
+      }
     });
-    expect(wrapper.find('select').at(0).find('option')).to.have.length(13);
-    expect(wrapper.find('select').at(0).find('option').at(0).prop('value')).to.equal('');
-    expect(wrapper.find('select').at(0).find('option').at(0).text()).to.equal('');
-    expect(wrapper.find('select').at(0).find('option').at(1).prop('value')).to.equal('Earth');
-    expect(wrapper.find('select').at(0).find('option').at(1).text()).to.equal('Earth');
-    expect(wrapper.find('select').at(0).find('option').at(2).prop('value')).to.equal('Fire');
-    expect(wrapper.find('select').at(0).find('option').at(2).text()).to.equal('Fire');
-    expect(wrapper.find('select').at(0).find('option').at(3).prop('value')).to.equal('Water');
-    expect(wrapper.find('select').at(0).find('option').at(3).text()).to.equal('Water');
-    expect(wrapper.find('select').at(0).find('option').at(4).prop('value')).to.equal('Wind');
-    expect(wrapper.find('select').at(0).find('option').at(4).text()).to.equal('Wind');
-    expect(wrapper.find('select').at(0).find('option').at(5).prop('value')).to.equal('Crystal');
-    expect(wrapper.find('select').at(0).find('option').at(5).text()).to.equal('Crystal');
-    expect(wrapper.find('select').at(0).find('option').at(6).prop('value')).to.equal('Plasma');
-    expect(wrapper.find('select').at(0).find('option').at(6).text()).to.equal('Plasma');
-    expect(wrapper.find('select').at(0).find('option').at(7).prop('value')).to.equal('Ice');
-    expect(wrapper.find('select').at(0).find('option').at(7).text()).to.equal('Ice');
-    expect(wrapper.find('select').at(0).find('option').at(8).prop('value')).to.equal('Lightning');
-    expect(wrapper.find('select').at(0).find('option').at(8).text()).to.equal('Lightning');
-    expect(wrapper.find('select').at(0).find('option').at(9).prop('value')).to.equal('Light');
-    expect(wrapper.find('select').at(0).find('option').at(9).text()).to.equal('Light');
-    expect(wrapper.find('select').at(0).find('option').at(10).prop('value')).to.equal('Darkness');
-    expect(wrapper.find('select').at(0).find('option').at(10).text()).to.equal('Darkness');
-    expect(wrapper.find('select').at(0).find('option').at(11).prop('value')).to.equal('Magic');
-    expect(wrapper.find('select').at(0).find('option').at(11).text()).to.equal('Magic');
-    expect(wrapper.find('select').at(0).find('option').at(12).prop('value')).to.equal('test1');
-    expect(wrapper.find('select').at(0).find('option').at(12).text()).to.equal('test1');
+
+    let known = ['custom'];
+
     wrapper.setProps({
-      elements: [{
-        basic: true,
-        mark: 'trial1'
-      }, {
-        basic: true,
-        mark: 'trial2'
-      }, {
-        basic: false,
-        mark: 'trial3'
-      }]
+      limit: 3,
+      mastery: true,
+      known: known
     });
-    expect(wrapper.find('select').at(0).find('option')).to.have.length(5);
-    expect(wrapper.find('select').at(0).find('option').at(0).prop('value')).to.equal('');
-    expect(wrapper.find('select').at(0).find('option').at(0).text()).to.equal('');
-    expect(wrapper.find('select').at(0).find('option').at(1).prop('value')).to.equal('trial1');
-    expect(wrapper.find('select').at(0).find('option').at(1).text()).to.equal('trial1');
-    expect(wrapper.find('select').at(0).find('option').at(2).prop('value')).to.equal('trial2');
-    expect(wrapper.find('select').at(0).find('option').at(2).text()).to.equal('trial2');
-    expect(wrapper.find('select').at(0).find('option').at(3).prop('value')).to.equal('trial3');
-    expect(wrapper.find('select').at(0).find('option').at(3).text()).to.equal('trial3');
-    expect(wrapper.find('select').at(0).find('option').at(4).prop('value')).to.equal('test1');
-    expect(wrapper.find('select').at(0).find('option').at(4).text()).to.equal('test1');
-    wrapper.setProps({
-      mastery: false
+
+    expect(wrapper.find('select').at(0).find('option')).to.have.length(1 + SourceMarks.defaultProps.elements.filter(e => e.basic).length);
+    wrapper.find('select').at(0).find('option').forEach((node, index) => {
+      if(index == 0){
+        expect(node.prop('value')).to.equal('');
+        expect(node.text()).to.equal('');
+      } else {
+        expect(node.prop('value')).to.equal(SourceMarks.defaultProps.elements.filter(e => e.basic)[index-1].mark);
+        expect(node.text()).to.equal(SourceMarks.defaultProps.elements.filter(e => e.basic)[index-1].mark);
+      }
     });
-    expect(wrapper.find('select').at(0).find('option')).to.have.length(4);
-    expect(wrapper.find('select').at(0).find('option').at(0).prop('value')).to.equal('');
-    expect(wrapper.find('select').at(0).find('option').at(0).text()).to.equal('');
-    expect(wrapper.find('select').at(0).find('option').at(1).prop('value')).to.equal('trial1');
-    expect(wrapper.find('select').at(0).find('option').at(1).text()).to.equal('trial1');
-    expect(wrapper.find('select').at(0).find('option').at(2).prop('value')).to.equal('trial2');
-    expect(wrapper.find('select').at(0).find('option').at(2).text()).to.equal('trial2');
-    expect(wrapper.find('select').at(0).find('option').at(3).prop('value')).to.equal('test1');
-    expect(wrapper.find('select').at(0).find('option').at(3).text()).to.equal('test1');
+
+    expect(wrapper.find('select').at(1).find('option')).to.have.length(1 + SourceMarks.defaultProps.elements.length + known.length);
+    wrapper.find('select').at(1).find('option').forEach((node, index) => {
+      if(index == 0){
+        expect(node.prop('value')).to.equal('');
+        expect(node.text()).to.equal('');
+      } else {
+        expect(node.prop('value')).to.equal(SourceMarks.defaultProps.elements.concat(known.map(k => ({mark: k})))[index-1].mark);
+        expect(node.text()).to.equal(SourceMarks.defaultProps.elements.concat(known.map(k => ({mark: k})))[index-1].mark);
+      }
+    });
+
+    expect(wrapper.find('select').at(2).find('option')).to.have.length(1 + SourceMarks.defaultProps.elements.length + known.length);
+    wrapper.find('select').at(2).find('option').forEach((node, index) => {
+      if(index == 0){
+        expect(node.prop('value')).to.equal('');
+        expect(node.text()).to.equal('');
+      } else {
+        expect(node.prop('value')).to.equal(SourceMarks.defaultProps.elements.concat(known.map(k => ({mark: k})))[index-1].mark);
+        expect(node.text()).to.equal(SourceMarks.defaultProps.elements.concat(known.map(k => ({mark: k})))[index-1].mark);
+      }
+    });
+
+    let elements = [{
+      basic: true,
+      mark: 'trial1'
+    }, {
+      basic: true,
+      mark: 'trial2'
+    }, {
+      basic: false,
+      mark: 'trial3'
+    }];
+
+    wrapper.setProps({elements: elements});
+
+    expect(wrapper.find('select').at(0).find('option')).to.have.length(1 + elements.filter(e => e.basic).length);
+    wrapper.find('select').at(0).find('option').forEach((node, index) => {
+      if(index == 0){
+        expect(node.prop('value')).to.equal('');
+        expect(node.text()).to.equal('');
+      } else {
+        expect(node.prop('value')).to.equal(elements.filter(e => e.basic)[index-1].mark);
+        expect(node.text()).to.equal(elements.filter(e => e.basic)[index-1].mark);
+      }
+    });
+
+    expect(wrapper.find('select').at(1).find('option')).to.have.length(1 + elements.length + known.length);
+    wrapper.find('select').at(1).find('option').forEach((node, index) => {
+      if(index == 0){
+        expect(node.prop('value')).to.equal('');
+        expect(node.text()).to.equal('');
+      } else {
+        expect(node.prop('value')).to.equal(elements.concat(known.map(k => ({mark: k})))[index-1].mark);
+        expect(node.text()).to.equal(elements.concat(known.map(k => ({mark: k})))[index-1].mark);
+      }
+    });
+
+    expect(wrapper.find('select').at(2).find('option')).to.have.length(1 + elements.length + known.length);
+    wrapper.find('select').at(2).find('option').forEach((node, index) => {
+      if(index == 0){
+        expect(node.prop('value')).to.equal('');
+        expect(node.text()).to.equal('');
+      } else {
+        expect(node.prop('value')).to.equal(elements.concat(known.map(k => ({mark: k})))[index-1].mark);
+        expect(node.text()).to.equal(elements.concat(known.map(k => ({mark: k})))[index-1].mark);
+      }
+    });
+
+    wrapper.setProps({mastery: false});
+
+    expect(wrapper.find('select').at(0).find('option')).to.have.length(1 + elements.filter(e => e.basic).length);
+    wrapper.find('select').at(0).find('option').forEach((node, index) => {
+      if(index == 0){
+        expect(node.prop('value')).to.equal('');
+        expect(node.text()).to.equal('');
+      } else {
+        expect(node.prop('value')).to.equal(elements.filter(e => e.basic)[index-1].mark);
+        expect(node.text()).to.equal(elements.filter(e => e.basic)[index-1].mark);
+      }
+    });
+
+    expect(wrapper.find('select').at(1).find('option')).to.have.length(1 + elements.length);
+    wrapper.find('select').at(1).find('option').forEach((node, index) => {
+      if(index == 0){
+        expect(node.prop('value')).to.equal('');
+        expect(node.text()).to.equal('');
+      } else {console.log(index, elements.filter(e => e.basic)[index-1])
+        expect(node.prop('value')).to.equal(elements.filter(e => e.basic).concat(known.map(k => ({mark: k})))[index-1].mark);
+        expect(node.text()).to.equal(elements.filter(e => e.basic).concat(known.map(k => ({mark: k})))[index-1].mark);
+      }
+    });
+
+    expect(wrapper.find('select').at(2).find('option')).to.have.length(1 + elements.length);
+    wrapper.find('select').at(2).find('option').forEach((node, index) => {
+      if(index == 0){
+        expect(node.prop('value')).to.equal('');
+        expect(node.text()).to.equal('');
+      } else {
+        expect(node.prop('value')).to.equal(elements.filter(e => e.basic).concat(known.map(k => ({mark: k})))[index-1].mark);
+        expect(node.text()).to.equal(elements.filter(e => e.basic).concat(known.map(k => ({mark: k})))[index-1].mark);
+      }
+    });
   });
 
   it('calls the editCharacter prop with the correct args when a selected value is changed', () => {
