@@ -5,23 +5,23 @@ import PropTypes from 'prop-types';
 import IconExpandMore from '../svg/IconExpandMore';
 import IconExpandLess from '../svg/IconExpandLess';
 
-import Navigation from './styled/Navigation';
+import Nav from './styled/Nav';
 
 import routes from '../../routes';
 
-class Menu extends React.Component {
+class Navigation extends React.Component {
   constructor (props) {
     super(props);
 
     this.links = routes.filter(route => route.slice(0, 6) === '/admin' && route.slice(route.length - 4, route.length) != '/:id');
 
     this.resetState = {
-      isMenuHidden: true
+      isNavigationHidden: true
     };
 
     this.state = Object.assign({}, this.resetState);
 
-    this.toggleCollapsedMenu = this.toggleCollapsedMenu.bind(this);
+    this.toggleCollapsedNavigation = this.toggleCollapsedNavigation.bind(this);
     this.account = this.account.bind(this);
     this.logout = this.logout.bind(this);
   }
@@ -51,10 +51,10 @@ class Menu extends React.Component {
     //this.props.api.removeListener('reauthentication-error');
   }
 
-  toggleCollapsedMenu(){
+  toggleCollapsedNavigation(){
     this.setState((prevState, props) => {
       let nextState = Object.assign({}, prevState);
-      nextState.isMenuHidden = !prevState.isMenuHidden;
+      nextState.isNavigationHidden = !prevState.isNavigationHidden;
       return nextState;
     });
   }
@@ -72,7 +72,7 @@ class Menu extends React.Component {
   }
 
   render() {
-    const iconCollapsing = this.state.isMenuHidden
+    const iconCollapsing = this.state.isNavigationHidden
       ? <IconExpandMore color='inherit' />
       : <IconExpandLess color='inherit' />;
 
@@ -101,45 +101,43 @@ class Menu extends React.Component {
     );
 
     return (
-      <div>
-        <Navigation>
-          <img src='../../logo.svg'/>
-          <div className='menu-item menu-collapsing menu-right' onClick={this.toggleCollapsedMenu}>
-            {iconCollapsing}
-          </div>
-          {!this.state.isMenuHidden ? null :
-            (<div className='menu-item menu-collapsing' onClick={this.toggleCollapsedMenu}>
-              {(this.props.location.pathname.charAt(7).toUpperCase() + this.props.location.pathname.slice(8)) || 'Dashboard'}
-            </div>)
-          }
-          {this.links.map((link, index) => {
-            let dashboard = link === '/admin';
-            let name = dashboard ? 'dashboard' : link.slice(7);
-            return (
-              <div className={'menu-item' + (this.state.isMenuHidden ? '' : ' menu-display')} key={index}>
-                <NavLink to={link}
-                  exact={dashboard}
-                  activeClassName='nav-active'
-                >
-                  {name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()}
-                </NavLink>
-              </div>
-            );
-          })}
-          {this.props.user._id ? menuUser : menuLogin}
-        </Navigation>
-      </div>
+      <Nav>
+        <img src='../../logo.svg'/>
+        <div className='menu-item menu-collapsing menu-right' onClick={this.toggleCollapsedNavigation}>
+          {iconCollapsing}
+        </div>
+        {!this.state.isNavigationHidden ? null :
+          (<div className='menu-item menu-collapsing' onClick={this.toggleCollapsedNavigation}>
+            {(this.props.location.pathname.charAt(7).toUpperCase() + this.props.location.pathname.slice(8)) || 'Dashboard'}
+          </div>)
+        }
+        {this.links.map((link, index) => {
+          let dashboard = link === '/admin';
+          let name = dashboard ? 'dashboard' : link.slice(7);
+          return (
+            <div className={'menu-item' + (this.state.isNavigationHidden ? '' : ' menu-display')} key={index}>
+              <NavLink to={link}
+                exact={dashboard}
+                activeClassName='nav-active'
+              >
+                {name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()}
+              </NavLink>
+            </div>
+          );
+        })}
+        {this.props.user._id ? menuUser : menuLogin}
+      </Nav>
     );
   }
 }
 
-Menu.defaultProps = {
+Navigation.defaultProps = {
   user: {}
 };
 
 /* location and history props added by Route
  */
-Menu.propTypes = {
+Navigation.propTypes = {
   location: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
   api: PropTypes.object.isRequired,
@@ -147,4 +145,4 @@ Menu.propTypes = {
   setUser: PropTypes.func.isRequired
 };
 
-export default Menu;
+export default Navigation;

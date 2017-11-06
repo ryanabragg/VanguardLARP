@@ -8,7 +8,7 @@ import Login from './User/styled/Login';
 
 import Home from './Home/Home';
 
-import AdminMenu from './Admin/Menu';
+import AdminNavigation from './Admin/Navigation';
 import AdminDashboard from './Admin/Dashboard';
 import AdminEvents from './Admin/Events';
 import AdminRules from './Admin/Rules';
@@ -160,7 +160,7 @@ export default class App extends React.Component {
               loadService={this.loadService} />;
           }} />
           <Route path='/admin' render={props => {
-            return <AdminMenu {...props}
+            return <AdminNavigation {...props}
               api={api}
               user={this.state.user}
               setUser={this.setUser} />;
