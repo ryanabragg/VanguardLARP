@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
-import FormField from './FormField';
+import Field from '../util/Field';
 
 class EventForm extends React.Component {
   constructor(props) {
@@ -30,24 +30,30 @@ class EventForm extends React.Component {
         ref={form => {this.form = form;}}
       >
         <fieldset>
-          <FormField type='text'
-            name='date'
-            label='Date'
-            value={this.props.date}
-            onChange={this.props.onChange}
-          />
-          <FormField type='text'
-            name='location'
-            label='Location'
-            value={this.props.location}
-            onChange={this.props.onChange}
-          />
-          <FormField type='text'
-            name='area'
-            label='Area'
-            value={this.props.area}
-            onChange={this.props.onChange}
-          />
+          <div>
+            <label>Date</label>
+            <Field type='text'
+              name='date'
+              value={this.props.date}
+              onChange={this.props.onChange}
+            />
+          </div>
+          <div>
+            <label>Location</label>
+            <Field type='text'
+              name='location'
+              value={this.props.location}
+              onChange={this.props.onChange}
+            />
+          </div>
+          <div>
+            <label>Area</label>
+            <Field type='text'
+              name='area'
+              value={this.props.area}
+              onChange={this.props.onChange}
+            />
+          </div>
         </fieldset>
         <button type='button' value="submit" onClick={this.props.onSubmit}>Submit</button>
         <button type='button' value="cancel" onClick={this.props.onCancel}>Cancel</button>

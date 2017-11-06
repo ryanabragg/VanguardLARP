@@ -5,7 +5,7 @@ import { shallow } from 'enzyme';
 import { JSDOM } from 'jsdom';
 
 import EventForm from '../../../src/components/Admin/EventForm';
-import FormField from '../../../src/components/Admin/FormField';
+import Field from '../../../src/components/util/Field';
 
 const window = (new JSDOM('<!doctype html><html><body></body></html>')).window;
 global.window = window;
@@ -23,7 +23,7 @@ function copyProps(src, target) {
 copyProps(window, global);
 
 describe('<EventForm />', () => {
-  it('renders a form with one fieldsets holding three FormField components and three buttons', () => {
+  it('renders a form with one fieldset holding three Field components and three buttons', () => {
     const onChange = spy(),
       onSubmit = spy(),
       onCancel = spy(),
@@ -35,7 +35,8 @@ describe('<EventForm />', () => {
     expect(wrapper.find('form').children()).to.have.length(4);
     expect(wrapper.find('fieldset')).to.have.length(1);
     expect(wrapper.find('button')).to.have.length(3);
-    expect(wrapper.find(FormField)).to.have.length(3);
+    expect(wrapper.find('label')).to.have.length(3);
+    expect(wrapper.find(Field)).to.have.length(3);
   });
 
   it('has a button for submit, cancel, and delete', () => {
@@ -80,7 +81,7 @@ describe('<EventForm />', () => {
     expect(wrapper.find('button').at(1).text()).to.equal('Cancel');
   });
 
-  it('renders the FormField components with the propper props', () => {
+  it('renders the Field components with the propper props', () => {
     const onChange = spy(),
       onSubmit = spy(),
       onCancel = spy(),
@@ -93,23 +94,23 @@ describe('<EventForm />', () => {
       area: 'Future'
     });
 
-    expect(wrapper.find(FormField).at(0).prop('type')).to.equal('text');
-    expect(wrapper.find(FormField).at(0).prop('name')).to.equal('date');
-    expect(wrapper.find(FormField).at(0).prop('label')).to.equal('Date');
-    expect(wrapper.find(FormField).at(0).prop('value')).to.equal('1985-10-26');
-    expect(wrapper.find(FormField).at(0).prop('onChange')).to.equal(onChange);
+    expect(wrapper.find('label').at(0).text()).to.equal('Date');
+    expect(wrapper.find(Field).at(0).prop('type')).to.equal('text');
+    expect(wrapper.find(Field).at(0).prop('name')).to.equal('date');
+    expect(wrapper.find(Field).at(0).prop('value')).to.equal('1985-10-26');
+    expect(wrapper.find(Field).at(0).prop('onChange')).to.equal(onChange);
 
-    expect(wrapper.find(FormField).at(1).prop('type')).to.equal('text');
-    expect(wrapper.find(FormField).at(1).prop('name')).to.equal('location');
-    expect(wrapper.find(FormField).at(1).prop('label')).to.equal('Location');
-    expect(wrapper.find(FormField).at(1).prop('value')).to.equal('Back');
-    expect(wrapper.find(FormField).at(1).prop('onChange')).to.equal(onChange);
+    expect(wrapper.find('label').at(1).text()).to.equal('Location');
+    expect(wrapper.find(Field).at(1).prop('type')).to.equal('text');
+    expect(wrapper.find(Field).at(1).prop('name')).to.equal('location');
+    expect(wrapper.find(Field).at(1).prop('value')).to.equal('Back');
+    expect(wrapper.find(Field).at(1).prop('onChange')).to.equal(onChange);
 
-    expect(wrapper.find(FormField).at(2).prop('type')).to.equal('text');
-    expect(wrapper.find(FormField).at(2).prop('name')).to.equal('area');
-    expect(wrapper.find(FormField).at(2).prop('label')).to.equal('Area');
-    expect(wrapper.find(FormField).at(2).prop('value')).to.equal('Future');
-    expect(wrapper.find(FormField).at(2).prop('onChange')).to.equal(onChange);
+    expect(wrapper.find('label').at(2).text()).to.equal('Area');
+    expect(wrapper.find(Field).at(2).prop('type')).to.equal('text');
+    expect(wrapper.find(Field).at(2).prop('name')).to.equal('area');
+    expect(wrapper.find(Field).at(2).prop('value')).to.equal('Future');
+    expect(wrapper.find(Field).at(2).prop('onChange')).to.equal(onChange);
   });
 
   it('grabs the ref to the DOM form after mounting');

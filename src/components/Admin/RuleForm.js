@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-import FormField from './FormField';
+import Field from '../util/Field';
 import IconLink from '../svg/icon/Link';
 
 class RuleForm extends React.Component {
@@ -82,185 +82,238 @@ class RuleForm extends React.Component {
           </div>
         }
         <fieldset>
-          <FormField type='text'
-            name='name'
-            label='Name'
-            value={this.props.name}
-            onChange={this.props.onChange}
-          />
-          <FormField type='number'
-            name='build'
-            label='Build'
-            value={this.props.build}
-            onChange={this.props.onChange}
-          />
-          <FormField type='number'
+          <div>
+            <label>Name</label>
+            <Field type='text'
+              name='name'
+              value={this.props.name}
+              onChange={this.props.onChange}
+            />
+          </div>
+          <div>
+            <label>Build</label>
+            <Field type='number'
+              name='build'
+              value={this.props.build}
+              onChange={this.props.onChange}
+            />
+          </div>
+          <div>
+            <label>Max</label>
+          <Field type='number'
             name='max'
-            label='Max'
             value={this.props.max}
             onChange={this.props.onChange}
           />
+          </div>
         </fieldset>
         <fieldset>
-          <FormField type='select'
-            name='category'
-            label='Category'
-            value={this.props.category}
-            options={this.categories}
-            onChange={this.props.onChange}
-          />
-          <FormField type='text'
-            name='group'
-            label='Group'
-            value={this.props.group}
-            onChange={this.props.onChange}
-          />
-          <FormField type='select'
-            name='tier'
-            label='Domain Tier'
-            value={this.props.tier}
-            options={this.tiers}
-            onChange={this.props.onChange}
-          />
+          <div>
+            <label>Category</label>
+            <Field type='select'
+              name='category'
+              value={this.props.category}
+              options={this.categories}
+              onChange={this.props.onChange}
+            />
+          </div>
+          <div>
+            <label>Group</label>
+            <Field type='text'
+              name='group'
+              value={this.props.group}
+              onChange={this.props.onChange}
+            />
+          </div>
+          <div>
+            <label>Domain Tier</label>
+            <Field type='select'
+              name='tier'
+              value={this.props.tier}
+              options={this.tiers}
+              onChange={this.props.onChange}
+            />
+          </div>
         </fieldset>
         <fieldset>
-          <FormField type='select'
-            name='effect'
-            label='Effect Type'
-            value={this.props.effect}
-            options={this.effects}
-            onChange={this.props.onChange}
-          />
-          <FormField type='checkbox'
-            name='disable'
-            label='Not Able to Purchase'
-            value={this.props.disable}
-            onChange={this.props.onChange}
-          />
-          <FormField type='checkbox'
-            name='hidden'
-            label='Hidden'
-            value={this.props.hidden}
-            onChange={this.props.onChange}
-          />
+          <div>
+            <label>Effect Type</label>
+            <Field type='select'
+              name='effect'
+              value={this.props.effect}
+              options={this.effects}
+              onChange={this.props.onChange}
+            />
+          </div>
+          <div>
+            <label>Not Able to Purchase</label>
+            <Field type='checkbox'
+              name='disable'
+              value={this.props.disable}
+              onChange={this.props.onChange}
+            />
+          </div>
+          <div>
+            <label>Hidden</label>
+            <Field type='checkbox'
+              name='hidden'
+              value={this.props.hidden}
+              onChange={this.props.onChange}
+            />
+          </div>
         </fieldset>
         <fieldset>
-          <FormField type='text'
-            name='race'
-            label='Race'
-            value={this.props.race}
-            onChange={this.props.onChange}
-          />
-          <FormField type='text'
-            name='culture'
-            label='Culture'
-            value={this.props.culture}
-            onChange={this.props.onChange}
-          />
-          <FormField type='checkbox'
-            name='prodigy'
-            label='Prodigy'
-            value={this.props.prodigy}
-            onChange={this.props.onChange}
-          />
+          <div>
+            <label>Race</label>
+            <Field type='text'
+              name='race'
+              value={this.props.race}
+              onChange={this.props.onChange}
+            />
+          </div>
+          <div>
+            <label>Culture</label>
+            <Field type='text'
+              name='culture'
+              value={this.props.culture}
+              onChange={this.props.onChange}
+            />
+          </div>
+          <div>
+            <label>Prodigy</label>
+            <Field type='checkbox'
+              name='prodigy'
+              value={this.props.prodigy}
+              onChange={this.props.onChange}
+            />
+          </div>
         </fieldset>
         <fieldset>
-          <FormField type='select'
-            name='delivery'
-            label='Delivery'
-            value={this.props.delivery}
-            options={this.deliveries}
-            onChange={this.props.onChange}
-          />
-          <FormField type='text'
-            name='verbal'
-            label='Verbal'
-            value={this.props.verbal}
-            onChange={this.props.onChange}
-          />
+          <div>
+            <label>Delivery</label>
+            <Field type='select'
+              name='delivery'
+              value={this.props.delivery}
+              options={this.deliveries}
+              onChange={this.props.onChange}
+            />
+          </div>
+          <div>
+            <label>Verbal</label>
+            <Field type='text'
+              name='verbal'
+              value={this.props.verbal}
+              onChange={this.props.onChange}
+            />
+          </div>
         </fieldset>
         <fieldset>
-          <FormField type='number'
-            name='uses'
-            label='Uses'
-            value={this.props.uses}
-            onChange={this.props.onChange}
-          />
-          <FormField type='number'
-            name='usesPerAptitude'
-            label='Uses Per X Aptitudes'
-            value={this.props.usesPerAptitude}
-            onChange={this.props.onChange}
-          />
-          <FormField type='select'
-            name='usesType'
-            label='Uses By'
-            value={this.props.usesType}
-            options={this.usesTypes}
-            onChange={this.props.onChange}
-          />
+          <div>
+            <label>Uses</label>
+            <Field type='number'
+              name='uses'
+              value={this.props.uses}
+              onChange={this.props.onChange}
+            />
+          </div>
+          <div>
+            <label>Uses Per X Aptitudes</label>
+            <Field type='number'
+              name='usesPerAptitude'
+              value={this.props.usesPerAptitude}
+              onChange={this.props.onChange}
+            />
+          </div>
+          <div>
+            <label>Uses By</label>
+            <Field type='select'
+              name='usesType'
+              value={this.props.usesType}
+              options={this.usesTypes}
+              onChange={this.props.onChange}
+            />
+          </div>
         </fieldset>
         <fieldset>
-          <FormField type='number'
-            name='level'
-            label='Minimum Level'
-            value={this.props.level}
-            onChange={this.props.onChange}
-          />
-          <FormField type='text'
-            name='increaseMax'
-            label='Extra Purchase Of'
-            value={this.props.increaseMax}
-            onChange={this.props.onChange}
-          />
-          <FormField type='text'
-            name='grantsUseOf'
-            label='Grants Use Of'
-            value={this.props.grantsUseOf}
-            onChange={this.props.onChange}
-          />
+          <div>
+            <label>Minimum Level</label>
+            <Field type='number'
+              name='level'
+              value={this.props.level}
+              onChange={this.props.onChange}
+            />
+          </div>
+          <div>
+            <label>Extra Purchase Of</label>
+            <Field type='text'
+              name='increaseMax'
+              value={this.props.increaseMax}
+              onChange={this.props.onChange}
+            />
+          </div>
+          <div>
+            <label>Grants Use Of</label>
+            <Field type='text'
+              name='grantsUseOf'
+              value={this.props.grantsUseOf}
+              onChange={this.props.onChange}
+            />
+          </div>
         </fieldset>
         <fieldset className='description'>
-          <FormField type='textarea'
-            name='description'
-            label='Description'
-            value={this.props.description}
-            onChange={this.props.onChange}
-          />
+          <div>
+            <label>Description</label>
+            <Field type='textarea'
+              rows={10} cols={50}
+              name='description'
+              value={this.props.description}
+              onChange={this.props.onChange}
+            />
+          </div>
         </fieldset>
         <fieldset>
-          <FormField type='text'
-            name='requires'
-            label='Requires'
-            value={this.props.requires}
-            onChange={this.props.onChange}
-          />
-          <FormField type='text'
-            name='requeresAny'
-            label='Requires Any Of'
-            value={this.props.requeresAny}
-            onChange={this.props.onChange}
-          />
-          <FormField type='text'
-            name='conflicts'
-            label='Conflicts With'
-            value={this.props.conflicts}
-            onChange={this.props.onChange}
-          />
+          <div>
+            <label>Requires</label>
+            <Field type='text'
+              name='requires'
+              value={this.props.requires}
+              onChange={this.props.onChange}
+            />
+          </div>
+          <div>
+            <label>Requires Any Of</label>
+            <Field type='text'
+              name='requeresAny'
+              value={this.props.requeresAny}
+              onChange={this.props.onChange}
+            />
+          </div>
+          <div>
+            <label>Conflicts With</label>
+            <Field type='text'
+              name='conflicts'
+              value={this.props.conflicts}
+              onChange={this.props.onChange}
+            />
+          </div>
         </fieldset>
         <fieldset>
-          <FormField type='text'
-            name='removes'
-            label='Removes and Refunds'
-            value={this.props.removes}
-            onChange={this.props.onChange}
-          />
-          <FormField type='text'
-            name='grants'
-            label='Grants'
-            value={this.props.grants}
-            onChange={this.props.onChange}
-          />
+          <div>
+            <label>Removes and Refunds</label>
+            <Field type='text'
+              name='removes'
+              value={this.props.removes}
+              onChange={this.props.onChange}
+            />
+          </div>
+          <div>
+            <label>Grants</label>
+            <Field type='text'
+              name='grants'
+              value={this.props.grants}
+              onChange={this.props.onChange}
+            />
+          </div>
         </fieldset>
         <button type='button' value='submit' onClick={this.props.onSubmit}>{this.props.id != 'new' ? 'Update' : 'Create'}</button>
         <button type='button' value='cancel' onClick={this.props.onCancel}>Cancel</button>
