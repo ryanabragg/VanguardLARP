@@ -5,6 +5,9 @@ import RuleList from '../RuleList';
 const StyledRuleList = styled(RuleList)`
   display: block;
   width: 100%;
+  & > div:first-child {
+    border-top: 1px solid ${props => props.theme.colors.primary};
+  }
   & > div {
     border-bottom: 1px solid ${props => props.theme.colors.primary};
   }
