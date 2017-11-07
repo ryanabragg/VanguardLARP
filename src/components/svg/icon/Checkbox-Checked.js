@@ -1,28 +1,28 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Add = (props) => {
+const CheckedboxChecked = (props) => {
   const color = props.color == 'inherit' ? undefined : props.color;
-  const aria = props.title ? 'svg-add-title' : '' +
+  const aria = props.title ? 'svg-checkedbox-checked-title' : '' +
     props.title && props.description ? ' ' : '' +
-    props.description ? 'svg-add-desc' : '';
+    props.description ? 'svg-checkedbox-checked-desc' : '';
   return (
     <svg width={props.width} height={props.height} viewBox='0 0 24 24'
       xmlns='http://www.w3.org/2000/svg' role='img'
       aria-labelledby={aria}
     >
       {!props.title ? null :
-        <title id='svg-add-title'>{props.title}</title>
+        <title id='svg-checkedbox-checked-title'>{props.title}</title>
       }
       {!props.description ? null :
-        <desc id='svg-add-desc'>{props.description}</desc>
+        <desc id='svg-checkedbox-checked-desc'>{props.description}</desc>
       }
-      <path fill={color} d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+      <path fill={color} d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
     </svg>
   );
 };
 
-Add.defaultProps = {
+CheckedboxChecked.defaultProps = {
   color: 'inherit',
   width: undefined,
   height: undefined,
@@ -30,7 +30,7 @@ Add.defaultProps = {
   description: ''
 };
 
-Add.propTypes = {
+CheckedboxChecked.propTypes = {
   color: PropTypes.string,
   width: PropTypes.string,
   height: PropTypes.string,
@@ -38,4 +38,4 @@ Add.propTypes = {
   description: PropTypes.string
 };
 
-export default Add;
+export default CheckedboxChecked;
