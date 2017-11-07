@@ -8,7 +8,7 @@ import Login from './User/styled/Login';
 
 import Home from './Home/Home';
 
-import AdminNavigation from './Admin/Navigation';
+import AdminNavigation from './Admin/styled/Navigation';
 import AdminDashboard from './Admin/Dashboard';
 import AdminEvents from './Admin/Events';
 import AdminRules from './Admin/Rules';
