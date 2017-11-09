@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import Spinner from '../styled/Spinner';
 import EventList from './styled/EventList';
+import RecordMenu from './styled/RecordMenu';
 
 // import the notifications component to access static methods (don't import styled version)
 import NotificationList from '../util/NotificationList';
@@ -233,16 +234,13 @@ class Events extends React.Component {
     return (
       <div>
         <main>
-          <div data-rules='manage'>
-            <button type='button' value='reload' onClick={this.reloadService}>
-              Reload
-            </button>
-            <button type='button' value='new' onClick={this.handleFormNew}>
-              Add Event
-            </button>
-            <div data-events='@todo search events'>
-            </div>
-          </div>
+          <RecordMenu direction='vertical'
+            reload={this.reloadService}
+            new={this.handleFormNew}
+            submit={this.state.selected._id ? this.handleFormSubmit : undefined}
+            cancel={this.state.selected._id ? this.handleFormCancel : undefined}
+            delete={this.state.selected._id ? this.handleFormDelete : undefined}
+          />
           {this.state.selected._id != 'new' ? null : selected}
           {this.props.events.length == 0 ? <Spinner /> : list}
         </main>

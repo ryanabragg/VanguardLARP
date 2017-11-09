@@ -19,8 +19,10 @@ class EventForm extends React.Component {
     if(!this.form)
       return;
     var element = ReactDOM.findDOMNode(this.form);
-    if(element)
+    if(element){
       element.scrollIntoView();
+      window.scrollBy(0, -55);
+    }
   }
 
   render() {

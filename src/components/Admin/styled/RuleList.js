@@ -5,10 +5,18 @@ import RuleList from '../RuleList';
 const StyledRuleList = styled(RuleList)`
   display: block;
   width: 100%;
-  & > div:first-child {
+  margin: 0;
+  @media (min-width: ${props => props.theme.breakpoints.m}px) {
+    width: 80%;
+    margin: auto;
+  }
+
+  & > :first-child {
     border-top: 1px solid ${props => props.theme.colors.primary};
   }
-  & > div {
+  & > * {
+    border-left: 1px solid ${props => props.theme.colors.primary};
+    border-right: 1px solid ${props => props.theme.colors.primary};
     border-bottom: 1px solid ${props => props.theme.colors.primary};
   }
   div > div {
@@ -47,7 +55,6 @@ const StyledRuleList = styled(RuleList)`
   }
   form {
     padding: 1em;
-    border-bottom: 1px solid ${props => props.theme.colors.primary};
   }
   fieldset {
     display: block;

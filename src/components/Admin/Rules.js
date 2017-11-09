@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import Spinner from '../styled/Spinner';
 import RuleList from './styled/RuleList';
+import RecordMenu from './styled/RecordMenu';
 
 // import the notifications component to access static methods (don't import styled version)
 import NotificationList from '../util/NotificationList';
@@ -267,15 +268,13 @@ class Rules extends React.Component {
     return (
       <div>
         <main>
-          <div data-rules='manage'>
-            <button type='button' value='refresh' onClick={this.reloadService}>
-              Reload
-            </button>
-            <button type='button' value='new' onClick={this.handleFormNew}>
-              Add Rule
-            </button>
-            <div data-rules='@todo search rules'></div>
-          </div>
+          <RecordMenu direction='vertical'
+            reload={this.reloadService}
+            new={this.handleFormNew}
+            submit={this.state.selected._id ? this.handleFormSubmit : undefined}
+            cancel={this.state.selected._id ? this.handleFormCancel : undefined}
+            delete={this.state.selected._id ? this.handleFormDelete : undefined}
+          />
           {this.state.selected._id != 'new' ? null : selected}
           {this.props.rules.length == 0 ? <Spinner /> : list}
         </main>
