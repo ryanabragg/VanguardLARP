@@ -5,10 +5,10 @@ import EventList from '../EventList';
 const StyledEventList = styled(EventList)`
   display: block;
   width: 100%;
-  margin: 0;
+  margin: 0 0 16px 0;
   @media (min-width: ${props => props.theme.breakpoints.m}px) {
     width: 80%;
-    margin: auto;
+    margin: 0 auto 16px auto;
   }
 
   & > :first-child {
