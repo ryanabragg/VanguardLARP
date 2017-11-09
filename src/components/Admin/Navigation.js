@@ -24,7 +24,7 @@ class Navigation extends React.Component {
       show: true
     };
 
-    this.threshold = -60;
+    this.threshold = -55;
     this.scrollPrev = 0;
     this.scrollNext = 0;
 
@@ -37,18 +37,31 @@ class Navigation extends React.Component {
 
   componentDidMount() {
     this.scrollPrev = this.nav.getBoundingClientRect().top;
-    this.events.forEach((e) => {
-      window.addEventListener(e, this.handlePosition, true);
-    });
+    if(this.props.hideOnScroll)
+      this.events.forEach((e) => {
+        window.addEventListener(e, this.handlePosition, true);
+      });
+  }
+
+  componentWillReceiveProps(prevProps, nextProps) {
+    if(!prevProps.hideOnScroll && nextProps.hideOnScroll)
+      this.events.forEach((e) => {
+        window.addEventListener(e, this.handlePosition, true);
+      });
+    else if(prevProps.hideOnScroll && !nextProps.hideOnScroll)
+      this.events.forEach((e) => {
+        window.removeEventListener(e, this.handlePosition, false);
+      });
   }
 
   componentWillUnmount() {
     if(this.timeout)
       clearTimeout(this.timeout);
     this.timeout = undefined;
-    this.events.forEach((e) => {
-      window.removeEventListener(e, this.handlePosition, false);
-    });
+    if(this.props.hideOnScroll)
+      this.events.forEach((e) => {
+        window.removeEventListener(e, this.handlePosition, false);
+      });
   }
 
   account() {
@@ -93,6 +106,7 @@ class Navigation extends React.Component {
     delete rest.api;
     delete rest.user;
     delete rest.setUser;
+    delete rest.hideOnScroll;
 
     let account = null;
     if(this.props.user._id)
@@ -139,7 +153,8 @@ class Navigation extends React.Component {
 }
 
 Navigation.defaultProps = {
-  user: {}
+  user: {},
+  hideOnScroll: false
 };
 
 /* location and history props added by Route
@@ -149,7 +164,8 @@ Navigation.propTypes = {
   history: PropTypes.object.isRequired,
   api: PropTypes.object.isRequired,
   user: PropTypes.object,
-  setUser: PropTypes.func.isRequired
+  setUser: PropTypes.func.isRequired,
+  hideOnScroll: PropTypes.bool
 };
 
 export default Navigation;
