@@ -62,7 +62,7 @@ describe('<Pools />', () => {
       _id: 42,
       name: 'test',
       category: 'Pool',
-      tags: 2
+      uses: 2
     }, {
       _id: 7,
       name: 'lucky',
@@ -75,7 +75,7 @@ describe('<Pools />', () => {
       name: 'Chemix Pool',
       count: 3,
       category: 'Pool',
-      tags: 4
+      uses: 4
     }, {
       _id: 0,
       name: 'choice',

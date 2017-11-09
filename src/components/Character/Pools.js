@@ -37,7 +37,7 @@ class Pools extends React.Component {
               name={pool.name}
               count={pool.count}
               source={this.props.source}
-              tags={Number(pool.tags) + extra}
+              tags={Number(pool.uses) + extra}
               abilities={abilities.filter(rule => rule.group == pool.name)}
               viewDescription={this.props.viewDescription}
               editCharacter={this.props.editCharacter}
