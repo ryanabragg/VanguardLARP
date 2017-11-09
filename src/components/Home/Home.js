@@ -79,7 +79,7 @@ class Home extends React.Component {
               </a>
             </div>
             <div className='title-icon'>
-              <a target='_new' href='character-sheet.pdf'>
+              <a target='_new' href='/character'>
                 <div className='icon'>
                   <IconCharacter />
                 </div>

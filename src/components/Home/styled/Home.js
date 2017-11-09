@@ -53,7 +53,8 @@ const Home = styled.div`
       transform: translate(0, 25%);
     }
   }
-  div.title-icon:hover .icon-label {
+  div.title-icon a:hover .icon-label,
+  div.title-icon a:focus .icon-label {
     @media (min-width: ${props => props.theme.breakpoints.m + 1}px) {
       display: block;
     }
