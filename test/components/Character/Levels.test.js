@@ -24,20 +24,6 @@ function copyProps(src, target) {
 copyProps(window, global);
 
 describe('<Levels />', () => {
-
-  it('has a div containing the icon', () => {
-    const edit = spy();
-    const wrapper = shallow(<Levels editCharacter={edit} />);
-    expect(wrapper.find('.icon')).to.have.length(1);
-    expect(wrapper.find('.icon').find(IconMoreVertical)).to.have.length(1);
-  });
-
-  it('has a div containing the dropdown menu', () => {
-    const edit = spy();
-    const wrapper = shallow(<Levels editCharacter={edit} />);
-    expect(wrapper.find('.icon').find('.dropdown')).to.have.length(1);
-  });
-
   it('shows a label with a warning for non-qualification based on props', () => {
     const edit = spy();
     const wrapper = shallow(<Levels editCharacter={edit} />);

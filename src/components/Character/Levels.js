@@ -7,23 +7,13 @@ class Levels extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      show: false
-    };
-
     this.clearClick = this.clearClick.bind(this);
-    this.handleIconClick = this.handleIconClick.bind(this);
 
     this.handleInputChange = this.handleInputChange.bind(this);
   }
 
   clearClick(e) {
     e.stopPropagation();
-  }
-
-  handleIconClick(e) {
-    e.preventDefault();
-    this.setState({show: !this.state.show});
   }
 
   handleInputChange(e) {
@@ -115,36 +105,29 @@ class Levels extends React.Component {
 
     return (
       <div {...rest}>
-        <div className='icon' onClick={this.handleIconClick}>
-          {this.props.icon}
-          <div onClick={this.clearClick}
-            className={'dropdown' + (this.state.show ? ' show' : '')}
-          >
-            {list.map(item => {
-              return (
-                <div className='level' key={item.level}>
-                  <label>{'Level ' + item.level}</label>
-                  <select
-                    name={item.level}
-                    value={item.id}
-                    onChange={this.handleInputChange}
-                  >
-                    <option default value=''></option>
-                    {options.filter(option => option.tier <= item.tier)
-                      .map((option, i) => (option._id
-                        ? <option key={i} name={item.level} value={option._id}>{option.name}</option>
-                        : <option key={i} disabled>{`─ ${option.group} Tier ${option.tier}`}</option>
-                      ))
-                    }
-                  </select>
-                </div>
-              );
-            })}
-            {warnings[0]}
-            {warnings[1]}
-            {warnings[2]}
-          </div>
-        </div>
+        {list.map(item => {
+          return (
+            <div className='level' key={item.level}>
+              <label>{'Level ' + item.level}</label>
+              <select
+                name={item.level}
+                value={item.id}
+                onChange={this.handleInputChange}
+              >
+                <option default value=''></option>
+                {options.filter(option => option.tier <= item.tier)
+                  .map((option, i) => (option._id
+                    ? <option key={i} name={item.level} value={option._id}>{option.name}</option>
+                    : <option key={i} disabled>{`─ ${option.group} Tier ${option.tier}`}</option>
+                  ))
+                }
+              </select>
+            </div>
+          );
+        })}
+        {warnings[0]}
+        {warnings[1]}
+        {warnings[2]}
       </div>
     );
   }
@@ -153,7 +136,6 @@ class Levels extends React.Component {
 Levels.defaultProps = {
   level: 0,
   interval: 5,
-  icon: <IconMoreVertical color='inherit' />,
   domains: [],
   known: [],
   T1: false,

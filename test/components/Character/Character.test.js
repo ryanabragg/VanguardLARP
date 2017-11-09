@@ -85,11 +85,6 @@ describe('<Character />', () => {
       //@todo: check props
     });
 
-    it('contains a styled crafting info component', () => {
-      const wrapper = shallow(<Character api={api} />);
-      expect(wrapper.find(Box).find(Crafting)).to.have.length(1);
-    });
-
     it('contains a styled crafting skills component', () => {
       const wrapper = shallow(<Character api={api} />);
       expect(wrapper.find(Box).find({label: 'Craft Skills'}).find(AbilityGroup)).to.have.length(1);
