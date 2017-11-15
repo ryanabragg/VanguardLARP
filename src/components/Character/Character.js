@@ -83,15 +83,16 @@ class Character extends React.Component {
   viewRule(id) {}
 
   getRules() {
+    const increaseMax = this.props.rules.filter(r => r.increaseMax != '');
     return this.props.rules.map(m => {
-      let rule = Object.assign({}, m);/*
+      let rule = Object.assign({}, m);
       if(rule.max)
-        rule.max += this.props.rules.filter(r => (
+        rule.max += increaseMax.filter(r => (
           r.increaseMax.split(', ').includes(m._id)
         )).map(r => (
           this.state.character.skills.filter(s => s.id == r._id)
             .reduce((t, s) => t + s.count, 0)
-        )).reduce((t, r) => t + r, 0);
+        )).reduce((t, r) => t + r, 0);/*
       if(ruleextrause)
         rule.max += this.props.rules.filter(r => (
           r.increaseMax.split(', ').includes(m._id)
