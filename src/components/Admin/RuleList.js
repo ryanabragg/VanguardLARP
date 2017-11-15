@@ -53,7 +53,6 @@ class RuleList extends React.Component {
                   grantsUseOf={this.props.selected.grantsUseOf}
                   increaseMax={this.props.selected.increaseMax}
                   disable={this.props.selected.disable}
-                  prodigy={this.props.selected.prodigy}
                   hidden={this.props.selected.hidden}
                   onChange={this.props.onChange}
                   onSubmit={this.props.onSubmit}

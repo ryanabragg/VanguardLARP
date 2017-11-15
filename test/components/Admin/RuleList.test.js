@@ -266,7 +266,6 @@ describe('<RuleList />', () => {
         grantsUseOf: '',
         increaseMax: 'litter',
         disable: 1,
-        prodigy: false,
         hidden: true
       },
       scrollToForm: true
@@ -296,7 +295,6 @@ describe('<RuleList />', () => {
     expect(wrapper.find(RuleForm).prop('grantsUseOf')).to.equal('');
     expect(wrapper.find(RuleForm).prop('increaseMax')).to.equal('litter');
     expect(wrapper.find(RuleForm).prop('disable')).to.equal(1);
-    expect(wrapper.find(RuleForm).prop('prodigy')).to.equal(false);
     expect(wrapper.find(RuleForm).prop('hidden')).to.equal(true);
     expect(wrapper.find(RuleForm).prop('onChange')).to.equal(onChange);
     expect(wrapper.find(RuleForm).prop('onSubmit')).to.equal(onSubmit);

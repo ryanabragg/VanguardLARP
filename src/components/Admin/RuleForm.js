@@ -182,14 +182,6 @@ class RuleForm extends React.Component {
               onChange={this.props.onChange}
             />
           </div>
-          <div>
-            <label>Prodigy</label>
-            <Field type='checkbox'
-              name='prodigy'
-              value={this.props.prodigy}
-              onChange={this.props.onChange}
-            />
-          </div>
         </fieldset>
         <fieldset>
           <div>
@@ -364,10 +356,6 @@ RuleForm.propTypes = {
   grantsUseOf: PropTypes.string,
   increaseMax: PropTypes.string,
   disable: PropTypes.oneOfType([
-    PropTypes.bool,
-    PropTypes.number
-  ]),
-  prodigy: PropTypes.oneOfType([
     PropTypes.bool,
     PropTypes.number
   ]),

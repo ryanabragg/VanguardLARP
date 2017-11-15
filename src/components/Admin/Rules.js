@@ -38,7 +38,6 @@ class Rules extends React.Component {
       grantsUseOf: '',
       increaseMax: '',
       disable: false,
-      prodigy: true,
       hidden: false
     };
 

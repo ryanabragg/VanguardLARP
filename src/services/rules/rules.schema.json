@@ -151,9 +151,6 @@
       "description": "do not allow direct selection (only granted by other rules)",
       "type": "boolean"
     },
-    "prodigy": {
-      "type": "boolean"
-    },
     "hidden": {
       "type": "boolean"
     }
