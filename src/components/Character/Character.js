@@ -44,10 +44,7 @@ class Character extends React.Component {
       race: {
         name: '',
         culture: '',
-        prodigy: {
-          race: '',
-          culture: ''
-        }
+        prodigy: false
       },
       sourceMarks: [],
       skills: []
@@ -123,13 +120,6 @@ class Character extends React.Component {
 
     const rules = this.getRules();
 
-    const granted = rules.filter(rule => rule.grants);
-    /*return {
-      body: 10 + 5 * level,
-      buffs: 3 + Math.floor(level / 5),
-      inscriptions: 1 + Math.floor(level / 5),
-    };*/
-
     return {
       interval: interval,
       level: level,
@@ -139,22 +129,16 @@ class Character extends React.Component {
         T3: level >= 3 * interval && this.state.character.build.nonDomain >= 125,
         AA: level >= 4 * interval
       },
-      races: rules.filter(r => r.category == 'Race'),
-      cultures: rules.filter(r => r.category == 'Culture'),
-      racials: rules.filter(r => (
-        r.race != '' && r.category != 'Race' && r.category != 'Culture'
-      )),
+      races: rules.filter(r => r.category == 'Race' && r.group == ''),
+      cultures: rules.filter(r => r.category == 'Race' && r.group != ''),
+      racials: rules.filter(r => r.race != ''),
       languages: rules.filter(r => r.category == 'Language'),
-      constants: rules.filter(r => r.category == 'Constant'),
+      constants: rules.filter(r =>  r.category == 'Constant' && r.race == ''),
       crafts: rules.filter(r => r.category == 'Craft')
         .sort((a, b) => {
           if(a.name == 'Jack of All Trades')
             return -1;
           if(b.name == 'Jack of All Trades')
-            return 1;
-          if(a.name == 'Frugal Craftsman')
-            return -1;
-          if(b.name == 'Frugal Craftsman')
             return 1;
           return a.name < b.name ? -1 : 1;
         }),
@@ -327,8 +311,9 @@ class Character extends React.Component {
         nextState = this.stateLivesChange(prevState, action); break;
       case 'RACE':
       case 'CULTURE':
-      case 'PRODIGY':
         nextState = this.stateRaceChange(prevState, action); break;
+      case 'PRODIGY':
+        nextState.character.race.prodigy = action.data; break;
       case 'SOURCE MARK':
         nextState.character.sourceMarks = action.data; break;
       case 'SKILL INCREMENT':
@@ -405,141 +390,72 @@ class Character extends React.Component {
   stateRaceChange(prevState, action) {
     let nextState = Object.assign({}, prevState);
 
-    let change = {
-      old: {
-        prodigy: prevState.character.race.culture == 'Prodigy',
-        race: prevState.character.race.culture == 'Prodigy'
-          ? prevState.character.race.prodigy.race
-          : prevState.character.race.name,
-        culture: prevState.character.race.culture == 'Prodigy'
-          ? prevState.character.race.prodigy.culture
-          : prevState.character.race.culture
-      }
-    };
+    let rule = this.props.rules.filter(r => (
+      r.category == 'Race' && r.name == action.data
+    ));
+    if(rule.length)
+      rule = rule[0];
+    else if(action.data != '')
+      return prevState;
+
+    if(prevState.character.race.name != '')
+      nextState = this.stateSkillChange(nextState, {
+        type: 'SKILL',
+        data: {
+          id: this.props.rules.filter(r => (
+            r.category == 'Race' && r.name == prevState.character.race.name
+          ))[0]._id,
+          count: 0,
+          source: 'race'
+        }
+      });
+    if(prevState.character.race.culture != '')
+      nextState = this.stateSkillChange(nextState, {
+        type: 'SKILL',
+        data: {
+          id: this.props.rules.filter(r => (
+            r.category == 'Race' && r.name == prevState.character.race.culture
+          ))[0]._id,
+          count: 0,
+          source: 'culture'
+        }
+      });
 
     switch(action.type) {
     case 'RACE':
       nextState.character.race.name = action.data;
       nextState.character.race.culture = '';
-      nextState.character.race.prodigy = {
-        race: '',
-        culture: ''
-      };
       break;
     case 'CULTURE':
-      if(action.data)
-        nextState.character.race.name = this.props.rules.filter(rule => {
-          return rule.category == 'Culture' && rule.name == action.data;
-        })[0].race;
+      if(action.data != '')
+        nextState.character.race.name = rule.group;
       nextState.character.race.culture = action.data;
-      nextState.character.race.prodigy = {
-        race: '',
-        culture: ''
-      };
-      break;
-    case 'PRODIGY':
-      nextState.character.race.prodigy = action.data;
       break;
     default:
     }
 
-    change.new = {
-      prodigy: nextState.character.race.culture == 'Prodigy',
-      race: nextState.character.race.culture == 'Prodigy'
-        ? nextState.character.race.prodigy.race
-        : nextState.character.race.name,
-      culture: nextState.character.race.culture == 'Prodigy'
-        ? nextState.character.race.prodigy.culture
-        : nextState.character.race.culture
-    };
-
-    if(!change.old.prodigy && change.new.prodigy){
-      this.props.rules.filter(rule => {
-        return rule.culture == 'Prodigy' && rule.category == 'Cultural' && !rule.group;
-      }).forEach(rule => {
-        nextState = this.stateSkillChange(nextState, {
-          type: 'SKILL',
-          data: {
-            id: rule._id,
-            count: 1,
-            source: 'culture'
-          }
-        });
+    if(nextState.character.race.name != '')
+      nextState = this.stateSkillChange(nextState, {
+        type: 'SKILL',
+        data: {
+          id: this.props.rules.filter(r => (
+            r.category == 'Race' && r.name == nextState.character.race.name
+          ))[0]._id,
+          count: 1,
+          source: 'race'
+        }
       });
-    }
-
-    if(change.old.prodigy && !change.new.prodigy){
-      this.props.rules.filter(rule => {
-        return rule.culture == 'Prodigy';
-      }).forEach(rule => {
-        nextState = this.stateSkillChange(nextState, {
-          type: 'SKILL',
-          data: {
-            id: rule._id,
-            count: 0,
-            source: 'culture'
-          }
-        });
+    if(nextState.character.race.culture != '')
+      nextState = this.stateSkillChange(nextState, {
+        type: 'SKILL',
+        data: {
+          id: this.props.rules.filter(r => (
+            r.category == 'Race' && r.name == nextState.character.race.culture
+          ))[0]._id,
+          count: 1,
+          source: 'culture'
+        }
       });
-    }
-
-    if(change.old.race != change.new.race) {
-      if(change.old.race)
-        this.props.rules.filter(rule => {
-          return rule.race == change.old.race && !rule.culture;
-        }).forEach(rule => {
-          nextState = this.stateSkillChange(nextState, {
-            type: 'SKILL',
-            data: {
-              id: rule._id,
-              count: 0,
-              source: 'race'
-            }
-          });
-        });
-      if(change.new.race)
-        this.props.rules.filter(rule => {
-          return rule.race == change.new.race && rule.category == 'Racial' && !rule.group;
-        }).forEach(rule => {
-          nextState = this.stateSkillChange(nextState, {
-            type: 'SKILL',
-            data: {
-              id: rule._id,
-              count: 1,
-              source: 'race'
-            }
-          });
-        });
-    }
-
-    if(change.old.culture != change.new.culture) {
-      if(change.old.culture)
-        this.props.rules.filter(rule => {
-          return rule.culture == change.old.culture;
-        }).forEach(rule => {
-          nextState = this.stateSkillChange(nextState, {
-            type: 'SKILL',
-            data: {
-              id: rule._id,
-              count: 0,
-              source: 'culture'
-            }
-          });
-        });
-      if(change.new.culture)
-        this.props.rules.filter(rule => {
-          return rule.culture == change.new.culture && rule.category == 'Cultural' && !rule.group;
-        }).forEach(rule => {
-          nextState = this.stateSkillChange(nextState, {
-            type: 'SKILL',
-            data: {
-              id: rule._id,
-              count: 1,
-              source: 'culture'
-            }
-          });
-        });
-    }
 
     return nextState;
   }
@@ -814,7 +730,7 @@ class Character extends React.Component {
               name='culture'
               value={race.culture}
               type='select'
-              options={cultures.filter(c => !race.name || c.race == race.name)
+              options={cultures.filter(c => !race.name || c.group == race.name)
                 .map(c => {
                   return { value: c.name, label: c.name };
                 })}
