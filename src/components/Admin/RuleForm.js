@@ -19,6 +19,7 @@ class RuleForm extends React.Component {
       'Pool Ability',
       'Domain',
       'Advanced Art',
+      'Race',
       'Option',
       'Choice'
     ].map(v => {return {value: v, label: v};});
