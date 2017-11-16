@@ -84,23 +84,25 @@ class Character extends React.Component {
 
   getRules() {
     const increaseMax = this.props.rules.filter(r => r.increaseMax != '');
+    const grantsUseOf = this.props.rules.filter(r => r.grantsUseOf != '');
     return this.props.rules.map(m => {
       let rule = Object.assign({}, m);
+
       if(rule.max)
         rule.max += increaseMax.filter(r => (
           r.increaseMax.split(', ').includes(m._id)
         )).map(r => (
           this.state.character.skills.filter(s => s.id == r._id)
             .reduce((t, s) => t + s.count, 0)
-        )).reduce((t, r) => t + r, 0);/*
-      if(ruleextrause)
-        rule.max += this.props.rules.filter(r => (
-          r.increaseMax.split(', ').includes(m._id)
-        )).map(r => (
-          this.state.character.skills.filter(s => s.id == r._id)
-            .reduce((t, s) => t + s.count, 0)
-        )).reduce((t, r) => t + r, 0);*/
-
+        )).reduce((t, r) => t + r, 0);
+/*
+      let extraUses = grantsUseOf.filter(r => (
+        r.grantsUseOf.split(', ').includes(m._id)
+      )).map(r => (
+        this.state.character.skills.filter(s => s.id == r._id)
+          .reduce((t, s) => t + s.count, 0)
+      )).reduce((t, r) => t + r, 0);
+*/
       let count = this.state.character.skills.filter(s => s.id == rule._id)
         .reduce((t, s) => t + s.count, 0);
       count = !Number(rule.max) ? count : Math.min(rule.max, count);
@@ -132,7 +134,7 @@ class Character extends React.Component {
       },
       races: rules.filter(r => r.category == 'Race' && r.group == ''),
       cultures: rules.filter(r => r.category == 'Race' && r.group != ''),
-      racials: rules.filter(r => r.race != ''),
+      racials: rules.filter(r => r.race != '' && r.category != 'Language'),
       languages: rules.filter(r => r.category == 'Language'),
       constants: rules.filter(r =>  r.category == 'Constant' && r.race == ''),
       crafts: rules.filter(r => r.category == 'Craft')
@@ -399,28 +401,10 @@ class Character extends React.Component {
     else if(action.data != '')
       return prevState;
 
-    if(prevState.character.race.name != '')
-      nextState = this.stateSkillChange(nextState, {
-        type: 'SKILL',
-        data: {
-          id: this.props.rules.filter(r => (
-            r.category == 'Race' && r.name == prevState.character.race.name
-          ))[0]._id,
-          count: 0,
-          source: 'race'
-        }
-      });
-    if(prevState.character.race.culture != '')
-      nextState = this.stateSkillChange(nextState, {
-        type: 'SKILL',
-        data: {
-          id: this.props.rules.filter(r => (
-            r.category == 'Race' && r.name == prevState.character.race.culture
-          ))[0]._id,
-          count: 0,
-          source: 'culture'
-        }
-      });
+    let previous = {
+      race: prevState.character.race.name,
+      culture: prevState.character.race.culture
+    };
 
     switch(action.type) {
     case 'RACE':
@@ -433,25 +417,54 @@ class Character extends React.Component {
       nextState.character.race.culture = action.data;
       break;
     default:
+      return prevState;
     }
 
-    if(nextState.character.race.name != '')
+    let next = {
+      race: nextState.character.race.name,
+      culture: nextState.character.race.culture
+    };
+
+    if(previous.race != '' && previous.race != next.race)
       nextState = this.stateSkillChange(nextState, {
         type: 'SKILL',
         data: {
           id: this.props.rules.filter(r => (
-            r.category == 'Race' && r.name == nextState.character.race.name
+            r.category == 'Race' && r.name == previous.race
+          ))[0]._id,
+          count: 0,
+          source: 'race'
+        }
+      });
+    if(previous.culture != '' && previous.culture != next.culture)
+      nextState = this.stateSkillChange(nextState, {
+        type: 'SKILL',
+        data: {
+          id: this.props.rules.filter(r => (
+            r.category == 'Race' && r.name == previous.culture
+          ))[0]._id,
+          count: 0,
+          source: 'culture'
+        }
+      });
+
+    if(next.race != '' && previous.race != next.race)
+      nextState = this.stateSkillChange(nextState, {
+        type: 'SKILL',
+        data: {
+          id: this.props.rules.filter(r => (
+            r.category == 'Race' && r.name == next.race
           ))[0]._id,
           count: 1,
           source: 'race'
         }
       });
-    if(nextState.character.race.culture != '')
+    if(next.culture != '' && previous.culture != next.culture)
       nextState = this.stateSkillChange(nextState, {
         type: 'SKILL',
         data: {
           id: this.props.rules.filter(r => (
-            r.category == 'Race' && r.name == nextState.character.race.culture
+            r.category == 'Race' && r.name == next.culture
           ))[0]._id,
           count: 1,
           source: 'culture'
@@ -481,6 +494,28 @@ class Character extends React.Component {
       return prevState;*/
 
     let skills = prevState.character.skills.slice();
+
+    if(!count && rule.category == 'Option') {
+      this.props.rules
+        .filter(r => r.category == 'Choice' && r.group == rule.name)
+        .map(r => {
+          return {
+            id: r._id,
+            count: this.state.character.skills.filter(s => s.id == r._id)
+              .reduce((t, s) => t + s.count, 0)
+          };
+        }).filter(s => s.count > 0)
+        .forEach(s => {
+          nextState = this.stateSkillChange(nextState, {
+            type: 'SKILL',
+            data: {
+              id: s.id,
+              count: 0,
+              source: rule.culture ? 'culture' : 'race'
+            }
+          });
+        });
+    }
 
     let choice = {
       limit: Number(rule.max),
