@@ -773,17 +773,33 @@ class Character extends React.Component {
               onChange={this.editCharacter}
             />
           </Box>
-          <Box color={!!race.name}
-            label='Racial'>
+          <Box color={!!race.name} label='Racial'>
             <Racials
               race={race.name}
               culture={race.culture}
               prodigy={race.prodigy}
-              races={races}
-              cultures={cultures}
               racials={racials}
-              languages={languages}
               viewDescription={this.viewRule}
+              editCharacter={this.editCharacter}
+            />
+          </Box>
+        </Section>
+        <Section>
+          <Box color={!!race.name} label='Languages'>
+            <AbilityGroup
+              languages={languages.filter(l => l.group == race.name)}
+              viewDescription={this.viewRule}
+              editCharacter={this.editCharacter}
+            />
+          </Box>
+          <Box color={canLearn.T1} label='Free Domains'>
+            <Levels
+              level={level}
+              domains={domains}
+              known={freeSkills}
+              T1={canLearn.T1}
+              T2={canLearn.T2}
+              T3={canLearn.T3}
               editCharacter={this.editCharacter}
             />
           </Box>
@@ -807,17 +823,6 @@ class Character extends React.Component {
             extraTags={poolTags}
             abilities={pools}
             viewDescription={this.viewRule}
-            editCharacter={this.editCharacter}
-          />
-        </Box>
-        <Box color={canLearn.T1} label='Free Domains'>
-          <Levels
-            level={level}
-            domains={domains}
-            known={freeSkills}
-            T1={canLearn.T1}
-            T2={canLearn.T2}
-            T3={canLearn.T3}
             editCharacter={this.editCharacter}
           />
         </Box>

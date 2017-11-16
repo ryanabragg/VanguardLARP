@@ -10,31 +10,18 @@ class Racials extends React.Component {
   constructor(props) {
     super(props);
 
-    this.handleProdigyRacial = this.handleProdigyRacial.bind(this);
-
     this.renderAbilities = this.renderAbilities.bind(this);
-  }
-
-  handleProdigyRacial(action) {
-    let prodigy = {
-      race: action.type == 'RACE' ? action.data : this.props.prodigy.race,
-      culture: action.type == 'CULTURE' ? action.data : this.props.prodigy.culture
-    };
-    this.props.editCharacter({
-      type: 'PRODIGY',
-      data: prodigy
-    });
   }
 
   renderAbilities(abilities, source='race') {
     const options = abilities.filter(rule => rule.category == 'Option');
     const choices = abilities.filter(rule => rule.category == 'Choice');
     const normal = abilities.filter(rule => {
-      return rule.category != 'Option' && rule.category != 'Choice'
-      && (!rule.group || choices.find(ability => ability.name == rule.group && ability.count > 0));
+      return rule.count > 0 && rule.category != 'Option' && rule.category != 'Choice'
+      && (!rule.group || choices.find(c => c.name == rule.group && c.count > 0));
     });
     const availableOptions = options.filter(rule => {
-      return !rule.group || choices.find(ability => ability.name == rule.group && ability.count > 0);
+      return !rule.group || choices.find(c => c.name == rule.group && c.count > 0);
     });
     return (
       <div data-source={source}>
@@ -75,49 +62,23 @@ class Racials extends React.Component {
     delete rest.race;
     delete rest.culture;
     delete rest.prodigy;
-    delete rest.races;
-    delete rest.cultures;
     delete rest.racials;
-    delete rest.culturals;
     delete rest.viewDescription;
     delete rest.editCharacter;
-    const race = this.props.culture == 'Prodigy' ? this.props.prodigy.race : this.props.race;
-    const culture = this.props.culture == 'Prodigy' ? this.props.prodigy.culture : this.props.culture;
     return (
       <div {...rest}>
-        {this.props.culture != 'Prodigy' ? null :
-          <div>
-            <Field
-              name='race'
-              placeholder='Race'
-              value={this.props.prodigy.race}
-              type='select'
-              options={this.props.races.filter(r => r.prodigy).map(r => {
-                return { value: r.name, label: r.name };
-              })}
-              onChange={this.handleProdigyRacial}
-            />
-            <Field
-              name='culture'
-              placeholder='Culture'
-              value={this.props.prodigy.culture}
-              type='select'
-              options={this.props.cultures.filter(c => {
-                return c.prodigy && (!this.props.prodigy.race || c.race == this.props.prodigy.race);
-              }).map(c => {
-                return { value: c.name, label: c.name };
-              })}
-              onChange={this.handleProdigyRacial}
-            />
+        {!this.props.prodigy ? null :
+          <div className='prodigy'>
+            Prodigy
             <div className='divider' />
           </div>
         }
         {this.renderAbilities(this.props.racials.filter(r => {
-          return r.race == race && !r.culture && (this.props.culture != 'Prodigy' || r.prodigy);
+          return r.race == this.props.race && !r.culture;
         }), 'race')}
-        {!race ? null : <div className='divider' />}
+        {!this.props.race ? null : <div className='divider' />}
         {this.renderAbilities(this.props.racials.filter(r => {
-          return r.culture && (r.culture == culture || (this.props.culture == 'Prodigy' && (r.culture == 'Prodigy' || r.prodigy)));
+          return r.culture && r.culture == this.props.culture;
         }), 'culture')}
       </div>
     );
@@ -127,21 +88,14 @@ class Racials extends React.Component {
 Racials.defaultProps = {
   race: '',
   culture: '',
-  prodigy: {
-    race: '',
-    culture: ''
-  },
-  races: [],
-  cultures: [],
+  prodigy: false,
   racials: []
 };
 
 Racials.propTypes = {
   race: PropTypes.string,
   culture: PropTypes.string,
-  prodigy: PropTypes.object,
-  races: PropTypes.array,
-  cultures: PropTypes.array,
+  prodigy: PropTypes.bool,
   racials: PropTypes.array,
   viewDescription: PropTypes.func.isRequired,
   editCharacter: PropTypes.func.isRequired
