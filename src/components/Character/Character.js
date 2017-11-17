@@ -220,6 +220,9 @@ class Character extends React.Component {
         extra: this.state.character.skills
           .filter(s => s.id == 'ZbJdBt91GzSQTCnL') // extra
           .reduce((t, s) => t + s.count, 0)
+        + this.state.character.skills
+          .filter(s => s.id == 'aV3rS9qZpp48Jn7h') // extra per 5 levels
+          .reduce((t, s) => t + s.count, 0) * Math.floor(level / 5),
       },
       armor: {
         AP: {
