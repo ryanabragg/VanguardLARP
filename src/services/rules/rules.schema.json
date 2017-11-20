@@ -83,6 +83,11 @@
       "type": "integer",
       "minimum": 0
     },
+    "roleplay": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 12
+    },
     "race": {
       "type": "string"
     },

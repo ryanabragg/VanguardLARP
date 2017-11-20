@@ -21,6 +21,7 @@ class Rules extends React.Component {
       group: '',
       tier: '',
       level: 0,
+      roleplay: 0,
       effect: '',
       race: '',
       culture: '',

@@ -239,10 +239,10 @@ class RuleForm extends React.Component {
             />
           </div>
           <div>
-            <label>Extra Purchase Of</label>
-            <Field type='text'
-              name='increaseMax'
-              value={this.props.increaseMax}
+            <label>Role-Play Months</label>
+            <Field type='number'
+              name='roleplay'
+              value={this.props.roleplay}
               onChange={this.props.onChange}
             />
           </div>
@@ -309,6 +309,14 @@ class RuleForm extends React.Component {
               onChange={this.props.onChange}
             />
           </div>
+          <div>
+            <label>Extra Purchase Of</label>
+            <Field type='text'
+              name='increaseMax'
+              value={this.props.increaseMax}
+              onChange={this.props.onChange}
+            />
+          </div>
         </fieldset>
         <button type='button' value='submit' onClick={this.props.onSubmit}>{this.props.id != 'new' ? 'Update' : 'Create'}</button>
         <button type='button' value='cancel' onClick={this.props.onCancel}>Cancel</button>
@@ -322,6 +330,7 @@ RuleForm.defaultProps = {
   build: 0,
   max: 1,
   level: 0,
+  roleplay: 0,
   delivery: 'Packet',
   uses: 0,
   disable: false,
@@ -339,6 +348,7 @@ RuleForm.propTypes = {
   group: PropTypes.string,
   tier: PropTypes.string,
   level: PropTypes.number,
+  roleplay: PropTypes.number,
   effect: PropTypes.string,
   race: PropTypes.string,
   culture: PropTypes.string,

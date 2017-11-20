@@ -36,6 +36,7 @@ class RuleList extends React.Component {
                   group={this.props.selected.group}
                   tier={this.props.selected.tier}
                   level={this.props.selected.level}
+                  roleplay={this.props.selected.roleplay}
                   effect={this.props.selected.effect}
                   race={this.props.selected.race}
                   culture={this.props.selected.culture}
