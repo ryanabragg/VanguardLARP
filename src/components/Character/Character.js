@@ -599,10 +599,10 @@ class Character extends React.Component {
     }
 
     if(rule._id == 'MQxu5lE0qQvJdZCQ') { // red stones are white
-      let blues = prevState.character.lives.filtter(l => l.color == 'blue')[0];
-      let blacks = prevState.character.lives.filtter(l => l.color == 'black')[0];
-      let reds = prevState.character.lives.filtter(l => l.color == 'red')[0];
-      let whites = prevState.character.lives.filtter(l => l.color == 'white')[0];
+      let blues = prevState.character.lives.filter(l => l.color == 'blue')[0];
+      let blacks = prevState.character.lives.filter(l => l.color == 'black')[0];
+      let reds = prevState.character.lives.filter(l => l.color == 'red')[0];
+      let whites = prevState.character.lives.filter(l => l.color == 'white')[0];
       nextState.character.lives = [{
         color: 'blue',
         count: blues.count,
@@ -613,11 +613,11 @@ class Character extends React.Component {
         disabled: blacks.disabled
       }, {
         color: 'red',
-        count: reds.count + !count ? 2 : -2,
+        count: reds.count + (!count ? 2 : -2),
         disabled: 0
       }, {
         color: 'white',
-        count: whites.count + !count ? -2 : 2,
+        count: whites.count + (!count ? -2 : 2),
         disabled: whites.disabled
       }];
     }

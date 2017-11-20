@@ -14,14 +14,20 @@ class Stones extends React.Component {
     delete rest.type;
     delete rest.stoneClick;
     let stones = [];
-    if(typeof this.props.stones == 'number')
+    if(this.props.stones <= 0)
+      return null;
+    else if(typeof this.props.stones == 'number')
       stones = new Array(this.props.stones).fill({color: undefined, disabled: false});
+    else if(this.props.stones.length == 0)
+      return null;
     else
       stones = [].concat.apply([], this.props.stones.map(stone => {
+        if(stone.count <= 0)
+          return null;
         return new Array(stone.count).fill(null).map((i, index) => {
           return {color: stone.color, disabled: index >= stone.count - stone.disabled};
         });
-      }));
+      })).filter(stone => stone != null);
     return (
       <div {...rest}>
         {stones.map((stone, index) => (
@@ -38,7 +44,9 @@ class Stones extends React.Component {
   }
 }
 
-//Stones.defaultProps = {};
+Stones.defaultProps = {
+  stones: 0
+};
 
 Stones.propTypes = {
   stones: PropTypes.oneOfType([
