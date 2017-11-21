@@ -317,7 +317,7 @@ describe('<SourceMarks />', () => {
       if(index == 0){
         expect(node.prop('value')).to.equal('');
         expect(node.text()).to.equal('');
-      } else {console.log(index, elements.filter(e => e.basic)[index-1])
+      } else {
         expect(node.prop('value')).to.equal(elements.filter(e => e.basic).concat(known.map(k => ({mark: k})))[index-1].mark);
         expect(node.text()).to.equal(elements.filter(e => e.basic).concat(known.map(k => ({mark: k})))[index-1].mark);
       }
