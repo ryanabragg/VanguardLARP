@@ -43,7 +43,8 @@ class RuleList extends React.Component {
                   delivery={this.props.selected.delivery}
                   verbal={this.props.selected.verbal}
                   uses={this.props.selected.uses}
-                  usesPerAptitude={this.props.selected.usesPerAptitude}
+                  usesExtra={this.props.selected.usesExtra}
+                  usesPerXAptitudes={this.props.selected.usesPerXAptitudes}
                   usesType={this.props.selected.usesType}
                   description={this.props.selected.description}
                   requires={this.props.selected.requires}

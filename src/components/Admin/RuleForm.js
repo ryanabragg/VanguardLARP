@@ -203,7 +203,7 @@ class RuleForm extends React.Component {
           </div>
         </fieldset>
         <fieldset>
-          <div>
+          <div className='quarter'>
             <label>Uses</label>
             <Field type='number'
               name='uses'
@@ -211,15 +211,23 @@ class RuleForm extends React.Component {
               onChange={this.props.onChange}
             />
           </div>
-          <div>
-            <label>Uses Per X Aptitudes</label>
+          <div className='quarter'>
+            <label>Extra Uses Per</label>
             <Field type='number'
-              name='usesPerAptitude'
-              value={this.props.usesPerAptitude}
+              name='usesExtra'
+              value={this.props.usesExtra}
               onChange={this.props.onChange}
             />
           </div>
-          <div>
+          <div className='quarter'>
+            <label>X Aptitudes</label>
+            <Field type='number'
+              name='usesPerXAptitudes'
+              value={this.props.usesPerXAptitudes}
+              onChange={this.props.onChange}
+            />
+          </div>
+          <div className='quarter'>
             <label>Uses By</label>
             <Field type='select'
               name='usesType'
@@ -333,6 +341,8 @@ RuleForm.defaultProps = {
   roleplay: 0,
   delivery: 'Packet',
   uses: 0,
+  usesExtra: 0,
+  usesPerXAptitudes: 0,
   disable: false,
   prodigy: true,
   hidden: false,
@@ -355,7 +365,8 @@ RuleForm.propTypes = {
   delivery: PropTypes.string,
   verbal: PropTypes.string,
   uses: PropTypes.number,
-  usesPerAptitude: PropTypes.number,
+  usesExtra: PropTypes.number,
+  usesPerXAptitudes: PropTypes.number,
   usesType: PropTypes.string,
   description: PropTypes.string,
   requires: PropTypes.string,

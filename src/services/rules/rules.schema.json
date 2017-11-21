@@ -114,7 +114,11 @@
       "type": "integer",
       "minimum": 0
     },
-    "usesPerAptitude": {
+    "usesExtra": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "usesPerXAptitudes": {
       "type": "number",
       "minimum": 0
     },

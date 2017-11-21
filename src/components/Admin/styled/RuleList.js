@@ -66,6 +66,10 @@ const StyledRuleList = styled(RuleList)`
     width: 200px;
     margin: 0 15px 1em 0;
   }
+  fieldset > div.quarter {
+    width: 150px;
+    margin: 0 10px 1em 0;
+  }
   label {
     display: block;
   }

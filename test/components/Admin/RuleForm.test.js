@@ -37,8 +37,8 @@ describe('<RuleForm />', () => {
     expect(wrapper.find('form').prop('name')).to.equal('rule');
     expect(wrapper.find('fieldset')).to.have.length(10);
     expect(wrapper.find('button')).to.have.length(3);
-    expect(wrapper.find('label')).to.have.length(25);
-    expect(wrapper.find(Field)).to.have.length(25);
+    expect(wrapper.find('label')).to.have.length(27);
+    expect(wrapper.find(Field)).to.have.length(27);
   });
 
   it('has a div containing the id prop and a Link icon if id is not "new"', () => {
@@ -130,6 +130,7 @@ describe('<RuleForm />', () => {
       group: 'cat',
       tier: '3',
       level: 7,
+      roleplay: 9,
       effect: 'entertainment',
       race: 'feline',
       culture: 'hunter',
@@ -235,71 +236,83 @@ describe('<RuleForm />', () => {
     expect(wrapper.find(Field).at(13).prop('value')).to.equal(9);
     expect(wrapper.find(Field).at(13).prop('onChange')).to.equal(onChange);
 
-    expect(wrapper.find('label').at(14).text()).to.equal('Uses Per X Aptitudes');
+    expect(wrapper.find('label').at(14).text()).to.equal('Extra Uses Per');
     expect(wrapper.find(Field).at(14).prop('type')).to.equal('number');
-    expect(wrapper.find(Field).at(14).prop('name')).to.equal('usesPerAptitude');
+    expect(wrapper.find(Field).at(14).prop('name')).to.equal('usesExtra');
     expect(wrapper.find(Field).at(14).prop('value')).to.equal(0);
     expect(wrapper.find(Field).at(14).prop('onChange')).to.equal(onChange);
 
-    expect(wrapper.find('label').at(15).text()).to.equal('Uses By');
-    expect(wrapper.find(Field).at(15).prop('type')).to.equal('select');
-    expect(wrapper.find(Field).at(15).prop('name')).to.equal('usesType');
-    expect(wrapper.find(Field).at(15).prop('value')).to.equal('per Event');
+    expect(wrapper.find('label').at(15).text()).to.equal('X Aptitudes');
+    expect(wrapper.find(Field).at(15).prop('type')).to.equal('number');
+    expect(wrapper.find(Field).at(15).prop('name')).to.equal('usesPerXAptitudes');
+    expect(wrapper.find(Field).at(15).prop('value')).to.equal(0);
     expect(wrapper.find(Field).at(15).prop('onChange')).to.equal(onChange);
 
-    expect(wrapper.find('label').at(16).text()).to.equal('Minimum Level');
-    expect(wrapper.find(Field).at(16).prop('type')).to.equal('number');
-    expect(wrapper.find(Field).at(16).prop('name')).to.equal('level');
-    expect(wrapper.find(Field).at(16).prop('value')).to.equal(7);
+    expect(wrapper.find('label').at(16).text()).to.equal('Uses By');
+    expect(wrapper.find(Field).at(16).prop('type')).to.equal('select');
+    expect(wrapper.find(Field).at(16).prop('name')).to.equal('usesType');
+    expect(wrapper.find(Field).at(16).prop('value')).to.equal('per Event');
     expect(wrapper.find(Field).at(16).prop('onChange')).to.equal(onChange);
 
-    expect(wrapper.find('label').at(17).text()).to.equal('Extra Purchase Of');
-    expect(wrapper.find(Field).at(17).prop('type')).to.equal('text');
-    expect(wrapper.find(Field).at(17).prop('name')).to.equal('increaseMax');
-    expect(wrapper.find(Field).at(17).prop('value')).to.equal('litter');
+    expect(wrapper.find('label').at(17).text()).to.equal('Minimum Level');
+    expect(wrapper.find(Field).at(17).prop('type')).to.equal('number');
+    expect(wrapper.find(Field).at(17).prop('name')).to.equal('level');
+    expect(wrapper.find(Field).at(17).prop('value')).to.equal(7);
     expect(wrapper.find(Field).at(17).prop('onChange')).to.equal(onChange);
 
-    expect(wrapper.find('label').at(18).text()).to.equal('Grants Use Of');
-    expect(wrapper.find(Field).at(18).prop('type')).to.equal('text');
-    expect(wrapper.find(Field).at(18).prop('name')).to.equal('grantsUseOf');
-    expect(wrapper.find(Field).at(18).prop('value')).to.equal('');
+    expect(wrapper.find('label').at(18).text()).to.equal('Role-Play Months');
+    expect(wrapper.find(Field).at(18).prop('type')).to.equal('number');
+    expect(wrapper.find(Field).at(18).prop('name')).to.equal('roleplay');
+    expect(wrapper.find(Field).at(18).prop('value')).to.equal(9);
     expect(wrapper.find(Field).at(18).prop('onChange')).to.equal(onChange);
 
-    expect(wrapper.find('label').at(19).text()).to.equal('Description');
-    expect(wrapper.find(Field).at(19).prop('type')).to.equal('textarea');
-    expect(wrapper.find(Field).at(19).prop('name')).to.equal('description');
-    expect(wrapper.find(Field).at(19).prop('value')).to.equal('lazy');
+    expect(wrapper.find('label').at(19).text()).to.equal('Grants Use Of');
+    expect(wrapper.find(Field).at(19).prop('type')).to.equal('text');
+    expect(wrapper.find(Field).at(19).prop('name')).to.equal('grantsUseOf');
+    expect(wrapper.find(Field).at(19).prop('value')).to.equal('');
     expect(wrapper.find(Field).at(19).prop('onChange')).to.equal(onChange);
 
-    expect(wrapper.find('label').at(20).text()).to.equal('Requires');
-    expect(wrapper.find(Field).at(20).prop('type')).to.equal('text');
-    expect(wrapper.find(Field).at(20).prop('name')).to.equal('requires');
-    expect(wrapper.find(Field).at(20).prop('value')).to.equal('food');
+    expect(wrapper.find('label').at(20).text()).to.equal('Description');
+    expect(wrapper.find(Field).at(20).prop('type')).to.equal('textarea');
+    expect(wrapper.find(Field).at(20).prop('name')).to.equal('description');
+    expect(wrapper.find(Field).at(20).prop('value')).to.equal('lazy');
     expect(wrapper.find(Field).at(20).prop('onChange')).to.equal(onChange);
 
-    expect(wrapper.find('label').at(21).text()).to.equal('Requires Any Of');
+    expect(wrapper.find('label').at(21).text()).to.equal('Requires');
     expect(wrapper.find(Field).at(21).prop('type')).to.equal('text');
-    expect(wrapper.find(Field).at(21).prop('name')).to.equal('requeresAny');
-    expect(wrapper.find(Field).at(21).prop('value')).to.equal('attention');
+    expect(wrapper.find(Field).at(21).prop('name')).to.equal('requires');
+    expect(wrapper.find(Field).at(21).prop('value')).to.equal('food');
     expect(wrapper.find(Field).at(21).prop('onChange')).to.equal(onChange);
 
-    expect(wrapper.find('label').at(22).text()).to.equal('Conflicts With');
+    expect(wrapper.find('label').at(22).text()).to.equal('Requires Any Of');
     expect(wrapper.find(Field).at(22).prop('type')).to.equal('text');
-    expect(wrapper.find(Field).at(22).prop('name')).to.equal('conflicts');
-    expect(wrapper.find(Field).at(22).prop('value')).to.equal('laser pointer');
+    expect(wrapper.find(Field).at(22).prop('name')).to.equal('requeresAny');
+    expect(wrapper.find(Field).at(22).prop('value')).to.equal('attention');
     expect(wrapper.find(Field).at(22).prop('onChange')).to.equal(onChange);
 
-    expect(wrapper.find('label').at(23).text()).to.equal('Removes and Refunds');
+    expect(wrapper.find('label').at(23).text()).to.equal('Conflicts With');
     expect(wrapper.find(Field).at(23).prop('type')).to.equal('text');
-    expect(wrapper.find(Field).at(23).prop('name')).to.equal('removes');
-    expect(wrapper.find(Field).at(23).prop('value')).to.equal('master');
+    expect(wrapper.find(Field).at(23).prop('name')).to.equal('conflicts');
+    expect(wrapper.find(Field).at(23).prop('value')).to.equal('laser pointer');
     expect(wrapper.find(Field).at(23).prop('onChange')).to.equal(onChange);
 
-    expect(wrapper.find('label').at(24).text()).to.equal('Grants');
+    expect(wrapper.find('label').at(24).text()).to.equal('Removes and Refunds');
     expect(wrapper.find(Field).at(24).prop('type')).to.equal('text');
-    expect(wrapper.find(Field).at(24).prop('name')).to.equal('grants');
-    expect(wrapper.find(Field).at(24).prop('value')).to.equal('purring');
+    expect(wrapper.find(Field).at(24).prop('name')).to.equal('removes');
+    expect(wrapper.find(Field).at(24).prop('value')).to.equal('master');
     expect(wrapper.find(Field).at(24).prop('onChange')).to.equal(onChange);
+
+    expect(wrapper.find('label').at(25).text()).to.equal('Grants');
+    expect(wrapper.find(Field).at(25).prop('type')).to.equal('text');
+    expect(wrapper.find(Field).at(25).prop('name')).to.equal('grants');
+    expect(wrapper.find(Field).at(25).prop('value')).to.equal('purring');
+    expect(wrapper.find(Field).at(25).prop('onChange')).to.equal(onChange);
+
+    expect(wrapper.find('label').at(26).text()).to.equal('Extra Purchase Of');
+    expect(wrapper.find(Field).at(26).prop('type')).to.equal('text');
+    expect(wrapper.find(Field).at(26).prop('name')).to.equal('increaseMax');
+    expect(wrapper.find(Field).at(26).prop('value')).to.equal('litter');
+    expect(wrapper.find(Field).at(26).prop('onChange')).to.equal(onChange);
   });
 
   it('grabs the ref to the DOM form after mounting');

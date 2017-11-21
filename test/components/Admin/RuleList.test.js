@@ -255,7 +255,8 @@ describe('<RuleList />', () => {
         delivery: 'pounce',
         verbal: 'meow',
         uses: 9,
-        usesPerAptitude: 0,
+        usesExtra: 0,
+        usesPerXAptitudes: 4,
         usesType: 'per Event',
         description: 'lazy',
         requires: 'food',
@@ -284,7 +285,8 @@ describe('<RuleList />', () => {
     expect(wrapper.find(RuleForm).prop('delivery')).to.equal('pounce');
     expect(wrapper.find(RuleForm).prop('verbal')).to.equal('meow');
     expect(wrapper.find(RuleForm).prop('uses')).to.equal(9);
-    expect(wrapper.find(RuleForm).prop('usesPerAptitude')).to.equal(0);
+    expect(wrapper.find(RuleForm).prop('usesExtra')).to.equal(0);
+    expect(wrapper.find(RuleForm).prop('usesPerXAptitudes')).to.equal(4);
     expect(wrapper.find(RuleForm).prop('usesType')).to.equal('per Event');
     expect(wrapper.find(RuleForm).prop('description')).to.equal('lazy');
     expect(wrapper.find(RuleForm).prop('requires')).to.equal('food');
