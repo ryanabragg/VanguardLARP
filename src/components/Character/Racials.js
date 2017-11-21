@@ -78,7 +78,7 @@ class Racials extends React.Component {
         }), 'race')}
         {!this.props.race ? null : <div className='divider' />}
         {this.renderAbilities(this.props.racials.filter(r => {
-          return r.culture && r.culture == this.props.culture;
+          return (r.culture && r.culture == this.props.culture) || r.category == 'Choice';
         }), 'culture')}
       </div>
     );

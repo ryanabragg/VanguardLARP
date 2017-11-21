@@ -790,7 +790,13 @@ class Character extends React.Component {
         <Section>
           <Box color={!!race.name} label='Languages'>
             <AbilityGroup
-              abilities={languages.filter(l => l.group == race.name)}
+              abilities={languages.filter(l => {
+                return l.group == race.name || l.group == '';
+              }).sort((a, b) => {
+                if(a.build == b.build)
+                  return a.name > b.name ? 1 : a.name < b.name ? -1 : 0;
+                return a.build - b.build;
+              })}
               viewDescription={this.viewRule}
               editCharacter={this.editCharacter}
             />
