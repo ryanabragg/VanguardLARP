@@ -21,7 +21,7 @@ class Racials extends React.Component {
       && (!rule.group || choices.find(c => c.name == rule.group && c.count > 0));
     });
     const availableOptions = options.filter(rule => {
-      return !rule.group || choices.find(c => c.name == rule.group && c.count > 0);
+      return !rule.group && rule.count > 0 || choices.find(c => c.name == rule.group && c.count > 0);
     });
     return (
       <div data-source={source}>
