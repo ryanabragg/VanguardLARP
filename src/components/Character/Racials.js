@@ -14,14 +14,14 @@ class Racials extends React.Component {
   }
 
   renderAbilities(abilities, source='race') {
-    const options = abilities.filter(rule => rule.category == 'Option');
-    const choices = abilities.filter(rule => rule.category == 'Choice');
-    const normal = abilities.filter(rule => {
-      return rule.count > 0 && rule.category != 'Option' && rule.category != 'Choice'
-      && (!rule.group || choices.find(c => c.name == rule.group && c.count > 0));
+    const options = abilities.filter(r => r.category == 'Option');
+    const choices = abilities.filter(r => r.category == 'Choice');
+    const normal = abilities.filter(r => {
+      return r.count > 0 && r.category != 'Option' && r.category != 'Choice'
+      && (!r.group || choices.find(c => c.name == r.group && c.count > 0));
     });
-    const availableOptions = options.filter(rule => {
-      return !rule.group && rule.count > 0 || choices.find(c => c.name == rule.group && c.count > 0);
+    const availableOptions = options.filter(o => {
+      return !o.group && o.count > 0 || choices.find(c => c.name == o.group && c.count > 0);
     });
     return (
       <div data-source={source}>
@@ -46,7 +46,7 @@ class Racials extends React.Component {
               <label className='option'>{ability.name + (ability.max ? ' (' + ability.max + ')' : '')}</label>
               <AbilityGroup
                 source={source}
-                abilities={choices.filter(rule => rule.group == ability.name)}
+                abilities={choices.filter(r => r.group == ability.name)}
                 viewDescription={this.props.viewDescription}
                 editCharacter={this.props.editCharacter}
               />
