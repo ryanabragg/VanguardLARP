@@ -540,7 +540,8 @@ class Character extends React.Component {
         .reduce((total, skill) => total + skill.count, 0));
     }
 
-    if((rule.max != 0 && count > rule.max) || (choice.limit && count + choice.known > choice.limit))
+    let known = skills.filter(s => s.id == id).reduce((t, s) => t + s.count, 0);
+    if((rule.max != 0 && count + known > rule.max) || (choice.limit && count + choice.known > choice.limit))
       return prevState;
 
     let target = skills.findIndex(skill => skill.id == id && skill.source == source);
