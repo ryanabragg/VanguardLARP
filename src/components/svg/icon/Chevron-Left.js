@@ -1,28 +1,28 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const RadioButtonUnchecked = (props) => {
+const ChevronLeft = (props) => {
   const color = props.color == 'inherit' ? undefined : props.color;
-  const aria = props.title ? 'svg-radio-button-unchecked-title' : '' +
+  const aria = props.title ? 'svg-chevron-left-title' : '' +
     props.title && props.description ? ' ' : '' +
-    props.description ? 'svg-radio-button-unchecked-desc' : '';
+    props.description ? 'svg-chevron-left-desc' : '';
   return (
     <svg width={props.width} height={props.height} viewBox='0 0 24 24'
       xmlns='http://www.w3.org/2000/svg' role='img'
       aria-labelledby={aria}
     >
       {!props.title ? null :
-        <title id='svg-radio-button-unchecked-title'>{props.title}</title>
+        <title id='svg-chevron-left-title'>{props.title}</title>
       }
       {!props.description ? null :
-        <desc id='svg-radio-button-unchecked-desc'>{props.description}</desc>
+        <desc id='svg-chevron-left-desc'>{props.description}</desc>
       }
-      <path fill={color} d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm0-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z" />
+      <path fill={color} d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
     </svg>
   );
 };
 
-RadioButtonUnchecked.defaultProps = {
+ChevronLeft.defaultProps = {
   color: 'inherit',
   width: undefined,
   height: undefined,
@@ -30,7 +30,7 @@ RadioButtonUnchecked.defaultProps = {
   description: ''
 };
 
-RadioButtonUnchecked.propTypes = {
+ChevronLeft.propTypes = {
   color: PropTypes.string,
   width: PropTypes.string,
   height: PropTypes.string,
@@ -38,4 +38,4 @@ RadioButtonUnchecked.propTypes = {
   description: PropTypes.string
 };
 
-export default RadioButtonUnchecked;
+export default ChevronLeft;
