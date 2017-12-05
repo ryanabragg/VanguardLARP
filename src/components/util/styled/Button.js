@@ -7,7 +7,8 @@ import Button from '../Button';
 const StyledButton = styled(Button)`
   height: ${props => props.height || props.size || '32px'};
   width: ${props => props.width || props.size || '32px'};
-  padding: 4px;
+  margin: ${props => props.margin || '0'};
+  padding: ${props => props.padding || '0'};
   background: ${props => {
     return props.color || props.theme.colors[props.type || 'primary'];
   }};
@@ -25,6 +26,17 @@ const StyledButton = styled(Button)`
 
   :hover {
     cursor: pointer;
+    background: ${props => {
+      return props.color || props.theme.colors[props.type || 'accent'];
+    }};
+    color: ${props => {
+      let color = props.color || props.theme.colors[props.type || 'accent'];
+      return colorOnBackground(color, props.theme.alphaLightText.primary, props.theme.alphaDarkText.primary)
+    }};
+    fill: ${props => {
+      let color = props.color || props.theme.colors[props.type || 'accent'];
+      return colorOnBackground(color, props.theme.alphaLightText.primary, props.theme.alphaDarkText.primary)
+    }};
   }
   :focus {
     color: ${props => {
