@@ -14,6 +14,8 @@ class Button extends React.Component {
 
   handleClick(e) {
     e.stopPropagation();
+    if(this.props.disabled)
+      return;
     if(typeof this.props.callback == 'function')
       this.props.callback();
   }
@@ -27,6 +29,7 @@ class Button extends React.Component {
       <div {...rest} role='button' tabIndex='0'
         onClick={this.handleClick}
         aria-label={this.props.label}
+        data-disabled={this.props.disabled}
       >
         {!this.props.children ? this.props.label : this.props.children}
       </div>
@@ -35,11 +38,13 @@ class Button extends React.Component {
 }
 
 Button.defaultProps = {
-  label: ''
+  label: '',
+  disabled: false
 };
 
 Button.propTypes = {
   label: PropTypes.string,
+  disabled: PropTypes.bool,
   callback: PropTypes.func.isRequired,
 };
 
