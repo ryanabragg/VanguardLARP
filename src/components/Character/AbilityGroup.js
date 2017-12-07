@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Ability from './Ability';
+import Ability from './styled/Ability';
 
 class AbilityGroup extends React.Component {
   constructor(props) {
@@ -30,8 +30,13 @@ class AbilityGroup extends React.Component {
                       key={ability._id}
                       id={ability._id}
                       name={ability.name}
-                      display={ability.display}
+                      category={ability.category}
+                      max={ability.max}
+                      min={ability.granted}
                       count={ability.count}
+                      uses={ability.usesTotal}
+                      usesPer={ability.usesType}
+                      source={this.props.source}
                       viewDescription={this.props.viewDescription}
                       editCharacter={this.props.editCharacter}
                     />
@@ -48,11 +53,15 @@ class AbilityGroup extends React.Component {
           return (
             <Ability
               key={ability._id}
-              source={this.props.source}
               id={ability._id}
               name={ability.name}
-              display={ability.display}
+              category={ability.category}
+              max={ability.max}
+              min={ability.granted}
               count={ability.count}
+              uses={ability.usesTotal}
+              usesPer={ability.usesType}
+              source={this.props.source}
               viewDescription={this.props.viewDescription}
               editCharacter={this.props.editCharacter}
             />

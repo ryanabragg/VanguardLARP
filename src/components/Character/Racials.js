@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 
 import Field from '../util/styled/Field';
 
-import Ability from './Ability';
-import AbilityGroup from './AbilityGroup';
+import Ability from './styled/Ability';
+import AbilityGroup from './styled/AbilityGroup';
 
 class Racials extends React.Component {
   constructor(props) {
@@ -32,8 +32,12 @@ class Racials extends React.Component {
               source={source}
               id={ability._id}
               name={ability.name}
-              display={ability.display}
+              category={ability.category}
+              max={ability.max}
+              min={ability.granted}
               count={ability.count}
+              uses={ability.usesTotal}
+              usesPer={ability.usesType}
               viewDescription={this.props.viewDescription}
               editCharacter={this.props.editCharacter}
             />

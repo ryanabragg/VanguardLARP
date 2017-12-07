@@ -5,8 +5,8 @@ import { shallow } from 'enzyme';
 import { JSDOM } from 'jsdom';
 
 import Racials from '../../../src/components/Character/Racials';
-import Ability from '../../../src/components/Character/Ability';
-import AbilityGroup from '../../../src/components/Character/AbilityGroup';
+import Ability from '../../../src/components/Character/styled/Ability';
+import AbilityGroup from '../../../src/components/Character/styled/AbilityGroup';
 import Field from '../../../src/components/util/styled/Field';
 
 const window = (new JSDOM('<!doctype html><html><body></body></html>')).window;

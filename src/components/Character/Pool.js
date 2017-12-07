@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Ability from './Ability';
+import Ability from './styled/Ability';
 
 class Pool extends React.Component {
   constructor(props) {
@@ -12,19 +12,27 @@ class Pool extends React.Component {
     const rest = Object.assign({}, this.props);
     delete rest.id;
     delete rest.name;
+    delete rest.category;
+    delete rest.max;
+    delete rest.min;
     delete rest.count;
+    delete rest.uses;
+    delete rest.usesPer;
     delete rest.source;
-    delete rest.tags;
     delete rest.abilities;
     delete rest.viewDescription;
     delete rest.editCharacter;
-    const tags = this.props.tags ? ' (' + this.props.tags * this.props.count + ' tags)' : '';
     return (
       <div {...rest} className='pool'>
         <Ability
           id={this.props.id}
-          name={this.props.name + tags}
+          name={this.props.name}
+          category={this.props.category}
+          max={this.props.max}
+          min={this.props.min}
           count={this.props.count}
+          uses={this.props.uses}
+          usesPer={this.props.usesPer}
           source={this.props.source}
           viewDescription={this.props.viewDescription}
           editCharacter={this.props.editCharacter}
@@ -36,8 +44,13 @@ class Pool extends React.Component {
                 key={ability._id}
                 id={ability._id}
                 name={ability.name}
-                display='none'
+                display={false}
+                category={ability.category}
+                max={ability.max}
+                min={ability.granted}
                 count={ability.count}
+                uses={ability.usesTotal}
+                usesPer={ability.usesType}
                 source={this.props.source}
                 viewDescription={this.props.viewDescription}
                 editCharacter={this.props.editCharacter}
@@ -51,9 +64,14 @@ class Pool extends React.Component {
 }
 
 Pool.defaultProps = {
+  name: 'Default Pool',
+  category: 'Pool',
+  max: 0,
+  min: 0,
   count: 0,
+  uses: 4,
+  usesPer: 'per Short Recovery',
   source: 'build',
-  tags: 0,
   abilities: []
 };
 
@@ -62,10 +80,14 @@ Pool.propTypes = {
     PropTypes.string,
     PropTypes.number
   ]).isRequired,
-  name: PropTypes.string.isRequired,
+  name: PropTypes.string,
+  category: PropTypes.string,
+  max: PropTypes.number,
+  min: PropTypes.number,
   count: PropTypes.number,
+  uses: PropTypes.number,
+  usesPer: PropTypes.string,
   source: PropTypes.string,
-  tags: PropTypes.number,
   abilities: PropTypes.array.isRequired,
   viewDescription: PropTypes.func.isRequired,
   editCharacter: PropTypes.func.isRequired
