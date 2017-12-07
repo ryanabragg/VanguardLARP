@@ -40,6 +40,7 @@ class Field extends React.Component {
     delete rest.placeholder;
     delete rest.value;
     delete rest.options;
+    delete rest.indeterminate;
     delete rest.onChange;
 
     if(this.props.type == 'textarea')
@@ -83,6 +84,10 @@ class Field extends React.Component {
           value={this.props.value}
           checked={!this.props.value ? false : true}
           readOnly={typeof this.props.onChange != 'function'}
+          ref={ref => {
+            if(ref)
+              ref.indeterminate = this.props.indeterminate;
+          }}
         />
       );
 
@@ -103,6 +108,7 @@ Field.defaultProps = {
   type: 'text',
   value: '',
   options: [],
+  indeterminate: false,
   rows: 5,
   cols: 5
 };
@@ -124,6 +130,7 @@ Field.propTypes = {
       ])
     })
   ),
+  indeterminate: PropTypes.bool,
   rows: PropTypes.number,
   cols: PropTypes.number,
   onChange: PropTypes.func
