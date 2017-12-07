@@ -139,6 +139,9 @@ const theme = {
 
 const values = {
   colors: {
+    white: '#ffffff',
+    grey: '#a0a0a0',
+    black: '#000000',
     font: '#000000',
     background: '#FFFFFF',
     primary: '#003da5',

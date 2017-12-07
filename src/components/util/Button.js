@@ -23,6 +23,7 @@ class Button extends React.Component {
   render() {
     const rest = Object.assign({}, this.props);
     delete rest.label;
+    delete rest.disabled;
     delete rest.callback;
 
     return (
