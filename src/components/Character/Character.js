@@ -124,6 +124,8 @@ class Character extends React.Component {
           this.state.character.skills.filter(s => s.id == r._id)
             .reduce((t, s) => t + s.count, 0)
         )).reduce((t, r) => t + r, 0);
+        if(rule.category == 'Pool')
+          usesGranted = count * usesGranted;
         let aptitudesTotal = aptitudes.combat;
         if(rule.group == 'Burn' || rule.group == 'True Faith')
           aptitudesTotal += aptitudes.armor;
