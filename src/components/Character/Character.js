@@ -85,6 +85,13 @@ class Character extends React.Component {
   getRules() {
     const increaseMax = this.props.rules.filter(r => r.increaseMax != '');
     const grantsUseOf = this.props.rules.filter(r => r.grantsUseOf != '');
+    const aptitudesCombat = this.state.character.skills.filter(s => s.id == 'EU07O6zCUA4nUM6i');
+    const aptitudesArmor = this.state.character.skills.filter(s => s.id == 'UDgik1fvfhVo6icT');
+    const aptitudes = {
+      combat: aptitudesCombat.length > 0 ? aptitudesCombat[0].count : 0,
+      armor: aptitudesArmor.length > 0 ? aptitudesArmor[0].count : 0,
+    };
+
     return this.props.rules.map(m => {
       let rule = Object.assign({}, m);
 
@@ -95,17 +102,13 @@ class Character extends React.Component {
           this.state.character.skills.filter(s => s.id == r._id)
             .reduce((t, s) => t + s.count, 0)
         )).reduce((t, r) => t + r, 0);
-/*
-      let extraUses = grantsUseOf.filter(r => (
-        r.grantsUseOf.split(', ').includes(m._id)
-      )).map(r => (
-        this.state.character.skills.filter(s => s.id == r._id)
-          .reduce((t, s) => t + s.count, 0)
-      )).reduce((t, r) => t + r, 0);
-*/
-      let count = this.state.character.skills.filter(s => s.id == rule._id)
+
+      let skill = this.state.character.skills.filter(s => s.id == rule._id);
+      let count = skill.reduce((t, s) => t + s.count, 0);
+      let granted = skill.filter(s => s.source != 'build')
         .reduce((t, s) => t + s.count, 0);
       count = !Number(rule.max) ? count : Math.min(rule.max, count);
+      granted = !Number(rule.max) ? granted : Math.min(rule.max, granted);
 
       let display = '';
       if(rule.category == 'Craft' && rule.max == 5)
@@ -113,7 +116,23 @@ class Character extends React.Component {
       else if (rule.max == 1)
         display = 'checkbox';
 
-      return Object.assign({}, rule, {count: count}, {display: display});
+      let usesTotal = 0;
+      if(count > 0 && rule.uses > 0) {
+        let usesGranted = grantsUseOf.filter(r => (
+          r.grantsUseOf.split(', ').includes(m._id)
+        )).map(r => (
+          this.state.character.skills.filter(s => s.id == r._id)
+            .reduce((t, s) => t + s.count, 0)
+        )).reduce((t, r) => t + r, 0);
+        let aptitudesTotal = aptitudes.combat;
+        if(rule.group == 'Burn' || rule.group == 'True Faith')
+          aptitudesTotal += aptitudes.armor;
+        usesTotal = count * rule.uses + usesGranted;
+        if(rule.usesPerXAptitudes)
+          usesTotal += Math.floor(rule.usesExtra * aptitudesTotal / rule.usesPerXAptitudes);
+      }
+
+      return Object.assign({}, rule, {count: count, granted: granted}, {display: display}, {usesTotal: usesTotal});
     }).sort((a, b) => a.name > b.name ? 1 : -1);
   }
 
@@ -485,7 +504,7 @@ class Character extends React.Component {
     if(!id || count < 0)
       return prevState;
 
-    let rule = this.props.rules.filter(rule => rule._id == id);
+    let rule = this.getRules().filter(rule => rule._id == id);
     if(!rule.length)
       return prevState;
     rule = rule[0];
@@ -540,8 +559,8 @@ class Character extends React.Component {
         .reduce((total, skill) => total + skill.count, 0));
     }
 
-    let known = skills.filter(s => s.id == id).reduce((t, s) => t + s.count, 0);
-    if((rule.max != 0 && count + known > rule.max) || (choice.limit && count + choice.known > choice.limit))
+    let otherSources = skills.filter(s => s.id == id && s.source != source).reduce((t, s) => t + s.count, 0);
+    if((rule.max != 0 && count + otherSources > rule.max) || (choice.limit && count + choice.known > choice.limit))
       return prevState;
 
     let target = skills.findIndex(skill => skill.id == id && skill.source == source);
@@ -741,17 +760,17 @@ class Character extends React.Component {
               stones={recoveries.base + recoveries.extra}
             />
           </Box>
-        <Box color={sourceMark.limit > 0}
-          label='Source Mark Elements'
-        >
-          <SourceMarks
-            limit={sourceMark.limit}
-            mastery={sourceMark.mastery}
-            granted={sourceMark.granted}
-            known={sourceMarks}
-            editCharacter={this.editCharacter}
-          />
-        </Box>
+          <Box color={sourceMark.limit > 0}
+            label='Source Mark Elements'
+          >
+            <SourceMarks
+              limit={sourceMark.limit}
+              mastery={sourceMark.mastery}
+              granted={sourceMark.granted}
+              known={sourceMarks}
+              editCharacter={this.editCharacter}
+            />
+          </Box>
         </Section>
         <Section>
           <Box color label='Race' factor={0.5}>
