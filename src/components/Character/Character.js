@@ -283,17 +283,6 @@ class Character extends React.Component {
       healing: this.state.character.skills
         .filter(s => s.id == 'qB6SPd8ygEKXoZY6')
         .reduce((t, s) => t + s.count, 0),
-      poolTags: {
-        chemix: this.state.character.skills
-          .filter(s => s.id == 'wWqLrPr3MOqGKltI') // extra tag per pool
-          .reduce((t, s) => t + s.count, 0),
-        melee: this.state.character.skills
-          .filter(s => s.id == 'qB6SPd8ygEKXoZY6') // extra tag per pool
-          .reduce((t, s) => t + s.count, 0),
-        spell: this.state.character.skills
-          .filter(s => s.id == '7wWLZATFKgGO5h9N') // extra tag per pool
-          .reduce((t, s) => t + s.count, 0)
-      },
       freeSkills: this.state.character.skills
         .filter(s => typeof s.source == 'number')
         .map(s => {
@@ -506,7 +495,7 @@ class Character extends React.Component {
     if(!id || count < 0)
       return prevState;
 
-    let rule = this.getRules().filter(rule => rule._id == id);
+    let rule = this.props.rules.filter(rule => rule._id == id);
     if(!rule.length)
       return prevState;
     rule = rule[0];
@@ -568,6 +557,68 @@ class Character extends React.Component {
     let target = skills.findIndex(skill => skill.id == id && skill.source == source);
 
     let free = -1 == ['build','race','culture'].indexOf(source) ? 0 : 1;
+
+    // cost reductions
+    if(rule.build && typeof source != 'number') {
+      if(rule.group == 'Alchemy') {
+        rule.build -= skills.filter(s => s.id == 'rQZtxDdJPKYn5fDF').reduce((t, s) => t + s.count, 0);
+        rule.build -= rule.tier * skills.filter(s => s.id == 'Ugf8nn8ysQDKMTKW').reduce((t, s) => t + s.count, 0);
+      }
+      if(rule.group == 'Combat') {
+        rule.build -= skills.filter(s => s.id == '0Q4JLDA9n2Nyodln').reduce((t, s) => t + s.count, 0);
+        rule.build -= rule.tier * skills.filter(s => s.id == 'vADtxxrt89WnboWo').reduce((t, s) => t + s.count, 0);
+      }
+      if(rule.group == 'Faith') {
+        rule.build -= skills.filter(s => s.id == 'lLqBfuHQtCoJGxUJ').reduce((t, s) => t + s.count, 0);
+        rule.build -= rule.tier * skills.filter(s => s.id == 'Ql54KJac67UmrkV5').reduce((t, s) => t + s.count, 0);
+      }
+      if(rule.group == 'Insight') {
+        rule.build -= skills.filter(s => s.id == 'xcEqoKjW3bzEe70P').reduce((t, s) => t + s.count, 0);
+        rule.build -= rule.tier * skills.filter(s => s.id == 'UKBhCRlZMVx5BWpm').reduce((t, s) => t + s.count, 0);
+      }
+      if(rule.group == 'Stealth') {
+        rule.build -= skills.filter(s => s.id == 'LoRpBQpAw4I5Hwla').reduce((t, s) => t + s.count, 0);
+        rule.build -= rule.tier * skills.filter(s => s.id == 'KlwvkK0b8WJ4Yh1c').reduce((t, s) => t + s.count, 0);
+      }
+      if(rule.group == 'Burn') {
+        rule.build -= skills.filter(s => s.id == 'IHfGY0P6gU4APd5q').reduce((t, s) => t + s.count, 0);
+        rule.build -= rule.tier * skills.filter(s => s.id == '9ccyQgpaHbW0Zh7N').reduce((t, s) => t + s.count, 0);
+      }
+      if(rule.category == 'Pool') {
+        if(rule._id == 'znYnAukGjreX2vOp') // Chemix Pool
+          rule.build -= skills.filter(s => s.id == 'KO7ERx1NuaUDMeB7').reduce((t, s) => t + s.count, 0);
+        if(rule._id == '89L88N3OtHNvjnVr') // Melee Pool
+          rule.build -= skills.filter(s => s.id == 'FvYhZnEXaacz3MIw').reduce((t, s) => t + s.count, 0);
+        if(rule._id == 'QAma29B8RcXwNDLS') // Spell Pool
+          rule.build -= skills.filter(s => s.id == 'MK4mjAxfXMWfthUE').reduce((t, s) => t + s.count, 0);
+      }
+      if(rule.category == 'Craft') {
+        rule.build -= skills.filter(s => s.id == 'Dzj6aIPhxb9bIPox').reduce((t, s) => t + s.count, 0);
+        if(rule._id == '7YAY5bnJC2l15Qvi') // Apothecary
+          rule.build -= skills.filter(s => s.id == 'VZggn8mKlMa5J1rh').reduce((t, s) => t + s.count, 0);
+        if(rule._id == 'x9yxEliF4P2AlIcQ') // Armorsmithing
+          rule.build -= skills.filter(s => s.id == '9AqB00GqyXUzfatt').reduce((t, s) => t + s.count, 0);
+        if(rule._id == 'EB7ZLCrTMncostR5') // Boomersmithing
+          rule.build -= skills.filter(s => s.id == 'ymOJrVmbcDVeXFHf').reduce((t, s) => t + s.count, 0);
+        if(rule._id == 'Gm6PnucyBJg9Vy1x') // Clockwork
+          rule.build -= skills.filter(s => s.id == 'EVAyjJ709619JAjp').reduce((t, s) => t + s.count, 0);
+        if(rule._id == 'fld4x99cwvtcf1xY') // Enchanting
+          rule.build -= skills.filter(s => s.id == 'vwXrNSFvRAmDSPgO').reduce((t, s) => t + s.count, 0);
+        if(rule._id == 'JNiEZ58d1DNfxgZZ') // Field Surgeon
+          rule.build -= skills.filter(s => s.id == 'OykKTl3kyTCIonOu').reduce((t, s) => t + s.count, 0);
+        if(rule._id == 'G1xorWOoLS2jc3oy') // Scribing
+          rule.build -= skills.filter(s => s.id == 'QSeKc7sZQ4eptxSb').reduce((t, s) => t + s.count, 0);
+        if(rule._id == '1dOq8uHq876WUuQz') // Source Engineering
+          rule.build -= skills.filter(s => s.id == 'fsKIx9LRpqzImL1f').reduce((t, s) => t + s.count, 0);
+        if(rule._id == 'MDGpvPLv6wPxm4x2') // Trinket Crafting
+          rule.build -= skills.filter(s => s.id == 'KMfJNHbadCS5miYm').reduce((t, s) => t + s.count, 0);
+        if(rule._id == 'fMmzyBULpa8SUxh6') // Underwater Basket Weaving
+          rule.build -= skills.filter(s => s.id == 'rmZfZh5QyfuIot8O').reduce((t, s) => t + s.count, 0);
+        if(rule._id == 'svgUCKVdVPqfiPrJ') // Weaponsmithing
+          rule.build -= skills.filter(s => s.id == 'HW5gddHQ8pGGfqfa').reduce((t, s) => t + s.count, 0);
+      }
+      rule.build = Math.max(0, rule.build);
+    }
 
     if(typeof source == 'number') {
       target = skills.findIndex(skill => skill.source == source);
@@ -679,7 +730,6 @@ class Character extends React.Component {
       armor,
       damage,
       healing,
-      poolTags,
       freeSkills
     } = this.parseRules();
     const domainNames = domains.map(rule => rule.group)
@@ -851,7 +901,6 @@ class Character extends React.Component {
         </Box>
         <Box color label='Combat Pools'>
           <Pools
-            extraTags={poolTags}
             abilities={pools}
             viewDescription={this.viewRule}
             editCharacter={this.editCharacter}
