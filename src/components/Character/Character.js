@@ -535,19 +535,16 @@ class Character extends React.Component {
       known: 0
     };
     if(count && rule.category == 'Choice') {
-      let option = this.props.rules.filter(r => r.name == rule.group && r.category == 'Option');
-      let optionIndex = 0;
-      if(option.length > 1) {
-        let parentSelection = option.map(o => this.props.rules.filter(r => r.name == o.group)[0])
-          .filter(o => skills.findIndex(skill => skill.id == o._id && skill.source == source && skill.count > 0) > -1);
-        if(parentSelection.length)
-          optionIndex = option.findIndex(o => o.group == parentSelection[0].name);
-      }
-      let choices = this.props.rules.filter(r => r.category == 'Choice' && r.group == option[optionIndex].name);
-      choice.limit = Number(option[optionIndex].max);
-      choice.known = Number(choices.map(r => skills[skills.findIndex(s => s.id == r._id)])
+      let option = this.props.rules.filter(r => r.name == rule.group && r.category == 'Option')
+        .filter(r => skills.findIndex(s => s.id == r._id) > -1);
+      if(!option.length)
+        return prevState;
+      option = option[0];
+      choice.limit = Number(option.max);
+      choice.known = this.props.rules.filter(r => r.category == 'Choice' && r.group == option.name)
+        .map(r => skills[skills.findIndex(s => s.id == r._id)])
         .filter(skill => skill != undefined && skill.id != id)
-        .reduce((total, skill) => total + skill.count, 0));
+        .reduce((total, skill) => total + skill.count, 0);
     }
 
     let otherSources = skills.filter(s => s.id == id && s.source != source).reduce((t, s) => t + s.count, 0);
