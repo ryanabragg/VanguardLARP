@@ -8,7 +8,7 @@ const StyledButton = styled(Button)`
   height: ${props => props.height || props.size || '32px'};
   width: ${props => props.width || props.size || '32px'};
   margin: ${props => props.margin || '0'};
-  padding: ${props => props.padding || '0'};
+  padding: ${props => props.padding || '5px'};
   background: ${props => {
     if(props.disabled)
       return props.theme.colors.grey;

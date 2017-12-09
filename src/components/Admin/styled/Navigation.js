@@ -15,7 +15,7 @@ const StyledNavigation = styled(Navigation)`
   nav {
     position: fixed;
     top: 0;
-    z-index: 5;
+    z-index: 1;
     display: inline-flex;
     flex-direction: columns;
     align-items: flex-start;

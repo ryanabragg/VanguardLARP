@@ -4,7 +4,7 @@ const Section = styled.section`
   position: relative;
   display: inline-block;
   padding: 0;
-  margin: 0 auto;
+  margin: 0;
   vertical-align: top;
   width: ${props => {
     let width = props.width || 'xs';
@@ -23,7 +23,7 @@ const Section = styled.section`
     default:
       width = typeof width == 'number' ? width : props.theme.breakpoints.xs;
     }
-    return (width * factor) - 0; // left and right margin pixels
+    return width * factor;
   }}px;
 `;
 

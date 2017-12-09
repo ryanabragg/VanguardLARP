@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import Section from './styled/Section';
 import Box from './styled/Box';
 
-import Field from '../util/styled/Field';
+import CharacterMenu from './styled/CharacterMenu';
+import CharacterSheet from './styled/CharacterSheet';
 
 import Levels from './styled/Levels';
 import Stones from './styled/Stones';
@@ -13,6 +14,11 @@ import Crafting from './styled/Crafting';
 import AbilityGroup from './styled/AbilityGroup';
 import Racials from './styled/Racials';
 import Pools from './styled/Pools';
+
+import Button from '../util/styled/Button';
+import Field from '../util/styled/Field';
+
+import Save from '../svg/icon/Save';
 
 // import the notifications component to access static methods (don't import styled version)
 import NotificationList from '../util/NotificationList';
@@ -73,7 +79,8 @@ class Character extends React.Component {
 
   componentDidMount () {
     this.props.loadService('rules');
-    // load character
+    if(this.props.match.params.hasOwnProperty('code'))
+      this.loadCharacter(this.props.match.params.code);
   }
 
   reloadRules() {
@@ -295,13 +302,31 @@ class Character extends React.Component {
     };
   }
 
-  encode() {}
+  encode() {
+    let encoded = JSON.stringify(this.state.character);
+    console.log(encoded, btoa(encoded));
+    this.props.history.replace('/character/' + btoa(encoded));
+  }
 
-  decode(code) {}
+  decode(code) {
+    let data = undefined;
+    console.log(code);
+    try{
+      data = JSON.parse(atob(code));
+    } catch(e) {
+      data = this.newCharacter;
+    }
+    console.log(data);
+    this.setState({character: data});
+  }
 
-  saveCharacter() {}
+  saveCharacter() {
+    this.encode();
+  }
 
-  loadCharacter() {}
+  loadCharacter(code) {
+    this.decode(code);
+  }
 
   editCharacter(payload) {
     let action = payload;
@@ -698,230 +723,18 @@ class Character extends React.Component {
   }
 
   render() {
-    const {
-      player,
-      name,
-      build,
-      lives,
-      race,
-      sourceMarks
-    } = this.state.character;
-    const {
-      interval,
-      level,
-      canLearn,
-      races,
-      cultures,
-      racials,
-      languages,
-      constants,
-      crafts,
-      domains,
-      advancedArts,
-      pools,
-      sourceMark,
-      recoveries,
-      body,
-      buffs,
-      inscriptions,
-      armor,
-      damage,
-      healing,
-      freeSkills
-    } = this.parseRules();
-    const domainNames = domains.map(rule => rule.group)
-      .filter((rule, index, self) => self.indexOf(rule) == index)
-      .sort((a, b) => {
-        if(a == 'Burn')
-          return 1;
-        if(b == 'Burn')
-          return -1;
-        return a > b ? 1 : -1;
-      });
     return (
-      <Section width='l'>
-        <Section>
-          <Box label='Player'>
-            <Field
-              name='player name'
-              value={player.name}
-            />
-          </Box>
-          <Box color label='Character'>
-            <Field
-              name='name'
-              value={name}
-              onChange={this.editCharacter}
-            />
-          </Box>
-          <Box color label='Player Build' factor={1/3}>
-            <Field
-              name='player build'
-              value={player.build}
-              onChange={this.editCharacter}
-            />
-          </Box>
-          <Box label='Build Total' factor={1/3}>
-            <Field
-              name='total build'
-              value={build.total}
-            />
-          </Box>
-          <Box label='Build Spent' factor={1/3}>
-            <Field
-              name='spent build'
-              value={build.spent}
-            />
-          </Box>
-          <Box label='Level' factor={0.25}>
-            <Field
-              name='level'
-              value={level}
-            />
-          </Box>
-          <Box label='Body' factor={0.25}>
-            <Field
-              name='body'
-              value={(body.base + body.extra + body.perLevel * level) * (body.double ? 2 : 1)}
-            />
-          </Box>
-          <Box label='Buffs' factor={0.25}>
-            <Field
-              name='buffs'
-              value={buffs.base + buffs.extra}
-            />
-          </Box>
-          <Box label='Tattoos' factor={0.25}>
-            <Field
-              name='inscriptions'
-              value={inscriptions.base + inscriptions.extra}
-            />
-          </Box>
-          <Box color label='Ressurection Bag'>
-            <Stones
-              stones={lives}
-              type='life'
-              stoneClick={this.editCharacter}
-            />
-          </Box>
-          <Box label='Recoveries'>
-            <Stones
-              stones={recoveries.base + recoveries.extra}
-            />
-          </Box>
-          <Box color={sourceMark.limit > 0}
-            label='Source Mark Elements'
-          >
-            <SourceMarks
-              limit={sourceMark.limit}
-              mastery={sourceMark.mastery}
-              granted={sourceMark.granted}
-              known={sourceMarks}
-              editCharacter={this.editCharacter}
-            />
-          </Box>
-        </Section>
-        <Section>
-          <Box color label='Race' factor={0.5}>
-            <Field
-              name='race'
-              value={race.name}
-              type='select'
-              options={races.map(r => {
-                return { value: r.name, label: r.name };
-              })}
-              onChange={this.editCharacter}
-            />
-          </Box>
-          <Box color label='Culture' factor={0.5}>
-            <Field
-              name='culture'
-              value={race.culture}
-              type='select'
-              options={cultures.filter(c => !race.name || c.group == race.name)
-                .map(c => {
-                  return { value: c.name, label: c.name };
-                })}
-              onChange={this.editCharacter}
-            />
-          </Box>
-          <Box color={!!race.name} label='Racial'>
-            <Racials
-              race={race.name}
-              culture={race.culture}
-              prodigy={race.prodigy}
-              racials={racials}
-              viewDescription={this.viewRule}
-              editCharacter={this.editCharacter}
-            />
-          </Box>
-        </Section>
-        <Section>
-          <Box color={!!race.name} label='Languages'>
-            <AbilityGroup
-              abilities={languages.filter(l => {
-                return l.group == race.name || l.group == '';
-              }).sort((a, b) => {
-                if(a.build == b.build)
-                  return a.name > b.name ? 1 : a.name < b.name ? -1 : 0;
-                return a.build - b.build;
-              })}
-              viewDescription={this.viewRule}
-              editCharacter={this.editCharacter}
-            />
-          </Box>
-          <Box color={canLearn.T1} label='Free Domains'>
-            <Levels
-              level={level}
-              domains={domains}
-              known={freeSkills}
-              T1={canLearn.T1}
-              T2={canLearn.T2}
-              T3={canLearn.T3}
-              editCharacter={this.editCharacter}
-            />
-          </Box>
-        </Section>
-        <Box color label='Craft Skills'>
-          <AbilityGroup
-            abilities={crafts}
-            viewDescription={this.viewRule}
-            editCharacter={this.editCharacter}
-          />
-        </Box>
-        <Box color label='Constant Skills'>
-          <AbilityGroup
-            abilities={constants}
-            viewDescription={this.viewRule}
-            editCharacter={this.editCharacter}
-          />
-        </Box>
-        <Box color label='Combat Pools'>
-          <Pools
-            abilities={pools}
-            viewDescription={this.viewRule}
-            editCharacter={this.editCharacter}
-          />
-        </Box>
-        {domainNames.map(domain => {
-          return (
-            <Box color={canLearn.T1} label={domain} key={domain}>
-              <AbilityGroup
-                abilities={domains.filter(rule => rule.group == domain)}
-                viewDescription={this.viewRule}
-                editCharacter={this.editCharacter}
-              />
-            </Box>
-          );
-        })}
-        <Box color={canLearn.AA} label='Advanced Arts'>
-          <AbilityGroup
-            abilities={advancedArts}
-            viewDescription={this.viewRule}
-            editCharacter={this.editCharacter}
-          />
-        </Box>
-      </Section>
+      <div>
+        <CharacterMenu
+          submit={this.saveCharacter}
+        />
+        <CharacterSheet
+          character={this.state.character}
+          rules={this.parseRules()}
+          viewRule={this.viewRule}
+          editCharacter={this.editCharacter}
+        />
+      </div>
     );
   }
 }

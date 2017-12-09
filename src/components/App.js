@@ -226,7 +226,7 @@ export default class App extends React.Component {
                 patch={this.recordPatch}
                 remove={this.recordDelete} />;
             }} />
-            <Route path='/character/:id' render={props => {
+            <Route path='/character/:code' render={props => {
               return <Character {...props}
                 user={this.state.user}
                 rules={this.state.rules}
