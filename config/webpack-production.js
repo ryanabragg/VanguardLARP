@@ -11,6 +11,7 @@ module.exports = {
   },
   output: {
     path: path.join(process.cwd(),'dist'),
+    publicPath: "/",
     filename: 'scripts.js'
   },
   devtool: 'source-map',
@@ -22,6 +23,7 @@ module.exports = {
     })*/
   ],
   module: {
+    noParse: /node_modules\/localforage\/dist\/localforage.js/,
     rules: [
       { test: /\.js$/,
         exclude: /node_modules/,

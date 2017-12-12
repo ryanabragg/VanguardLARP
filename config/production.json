@@ -1,4 +1,4 @@
 {
-  "host": "www.vanguardlarp.net",
-  "port": "3030"
+  "host": "HOST_PRODUCTION",
+  "port": "PORT_PRODUCTION"
 }
