@@ -127,7 +127,7 @@ class Events extends React.Component {
   createEvent(event) {
     this.props.create('events', event, (error, record) => {
       if(error)
-        NotificationList.alert(error.name, 'Failed to create event.');
+        NotificationList.alert(error.name, 'Failed to create event.');console.log(error)
     });
   }
 
@@ -160,12 +160,10 @@ class Events extends React.Component {
     this.selectEvent(e.target.id);
   }
 
-  handleFormInputChange(e) {
-    e.preventDefault();
-    let target = e.target; // e not available during callback
+  handleFormInputChange(payload) {
     this.setState((prevState, props) => {
       let nextState = Object.assign({}, prevState);
-      nextState.selected[target.name] = target.type === 'checkbox' ? target.checked : target.value;
+      nextState.selected[payload.type] = payload.data;
       return nextState;
     });
   }
