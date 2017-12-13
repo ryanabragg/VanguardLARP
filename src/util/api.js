@@ -8,9 +8,9 @@ import auth from 'feathers-authentication-client';
 
 import localforage from 'localforage';
 
-let socket = io('localhost:3030');
-if(!socket.connected)
-  socket = io('192.168.1.167:3030');
+import serverURL from './server-url';
+
+let socket = io(serverURL);
 
 localforage.config({
   name: 'VanguardLARP'
