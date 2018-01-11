@@ -86,15 +86,15 @@ export default class App extends React.Component {
     ));
   }
 
-  loadService(service, force = false) {
-    if(!force && this.state[service].length)
-      return;
-    api.serviceData(service).then(data => {
+  loadService(service, reload = false) {
+    api.getServiceData(service, reload).then(data => {
       this.setState((prevState, props) => {
         let nextState = Object.assign({}, prevState);
         nextState[service] = data;
         return nextState;
       });
+    }).catch(error => {
+      NotificationList.alert(error.message, error.name);
     });
 
     if(-1 == this.listeners.indexOf(service)) {

@@ -53,19 +53,46 @@ api.getUser = async () => {
     let result = await api.authenticate({strategy: 'jwt', accessToken: jwt});
     let payload = await api.passport.verifyJWT(result.accessToken);
     return await api.service('users').get(payload.userId);
-  } catch (err) {
+  } catch (error) {
     return {};
   }
 }
 
-api.serviceData = async (service) => {
-  let page = await api.service(service).find({query:{$skip: 0, $limit: 1000}});
-  let records = [].concat(page.data);
-  while(page.skip <= page.total) {
-    page = await api.service(service).find({query:{$skip: page.skip + page.limit, $limit: page.limit}});
-    records = records.concat(page.data);
+api.getServiceData = async (service, reload = false) => {
+  try {
+    let value = {
+      data: [],
+      expires: 0
+    };
+    let keys = await localforage.keys();
+    if(!reload && keys.indexOf(service) > -1)
+      value = await localforage.getItem(service);
+
+    if(value.data.length && value.expires > Date.now())
+      return value.data;
+
+    let page = await api.service(service).find({
+      query:{
+        $skip: 0, $limit: 1000
+      }
+    });
+    let data = [].concat(page.data);
+    while(page.skip <= page.total) {
+      page = await api.service(service).find({
+        query: {
+        $skip: page.skip + page.limit, $limit: page.limit
+        }
+      });
+      data = data.concat(page.data);
+    }
+    await localforage.setItem(service, {
+      data: data,
+      expires: Date.now() + 30 * 24 * 60 * 60 * 1000
+    });
+    return data;
+  } catch (error) {
+    return error;
   }
-  return records;
 }
 
 export default api;
