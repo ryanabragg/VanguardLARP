@@ -1,3 +1,5 @@
+require('babel-register');
+
 /* eslint-disable no-console */
 const logger = require('winston');
 const app = require('./server');
