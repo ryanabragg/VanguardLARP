@@ -3,16 +3,25 @@ import styled from 'styled-components';
 import Modal from '../Modal';
 
 const StyledModal = styled(Modal)`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   position: fixed;
   overflow: auto;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  padding: 10%;
+  padding: 0;
   margin: 0;
   z-index: 42;
   ${props => props.noBackdrop ? '' : 'background-color: rgb(0, 0, 0); background-color: rgba(0, 0, 0, 0.3);'}
+`;
+
+export default StyledModal;
+
+/*
   [data-modal="close-button"] {
     position: absolute;
     top: 0;
@@ -35,6 +44,4 @@ const StyledModal = styled(Modal)`
     left: 50%;
     transform: translate(-50%, -50%);
   }
-`;
-
-export default StyledModal;
+  */

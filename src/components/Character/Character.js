@@ -6,6 +6,7 @@ import Box from './styled/Box';
 
 import CharacterMenu from './styled/CharacterMenu';
 import CharacterSheet from './styled/CharacterSheet';
+import ModalViewRule from './styled/ModalViewRule';
 
 import Levels from './styled/Levels';
 import Stones from './styled/Stones';
@@ -57,12 +58,14 @@ class Character extends React.Component {
     };
 
     this.state = {
-      character: this.newCharacter
+      character: this.newCharacter,
+      rule: null
     };
 
     this.reloadRules = this.reloadRules.bind(this);
 
     this.viewRule = this.viewRule.bind(this);
+    this.hideRule = this.hideRule.bind(this);
 
     this.getRules = this.getRules.bind(this);
     this.parseRules = this.parseRules.bind(this);
@@ -87,7 +90,17 @@ class Character extends React.Component {
     this.props.loadService('rules', true);
   }
 
-  viewRule(id) {}
+  viewRule(id) {
+    if(!id)
+      return;
+    let rule = this.props.rules.filter(rule => rule._id == id);
+    if(rule.length)
+      this.setState({rule: rule[0]});
+  }
+
+  hideRule() {
+    this.setState({rule: null});
+  }
 
   getRules() {
     const increaseMax = this.props.rules.filter(r => r.increaseMax != '');
@@ -733,6 +746,10 @@ class Character extends React.Component {
           rules={this.parseRules()}
           viewRule={this.viewRule}
           editCharacter={this.editCharacter}
+        />
+        <ModalViewRule
+          close={this.hideRule}
+          rule={this.state.rule}
         />
       </div>
     );

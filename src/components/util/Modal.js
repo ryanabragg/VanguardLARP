@@ -5,82 +5,40 @@ class Modal extends React.Component {
   constructor(props) {
     super(props);
 
-    this.handleClickOutside = this.handleClickOutside.bind(this);
-    this.handleClickInside = this.handleClickInside.bind(this);
+    this.handleClickAway = this.handleClickAway.bind(this);
   }
 
-  componentDidMount() {
-    if(this.props.timeout)
-      this.timeout = setTimeout(
-        this.modalTimeout,
-        this.props.timeout
-      );
-  }
-
-  componentWillUnmount() {
-    if(this.timeout) {
-      clearTimeout(this.timeout);
-      this.timeout = undefined;
-    }
-  }
-
-  modalTimeout() {
-    this.timeout = undefined;
-    this.props.onTimeout();
-    this.props.close();
-  }
-
-  handleClickOutside(e) {
-    e.preventDefault();
-    if(this.props.closeOnClickOutside)
-      this.props.close();
-  }
-
-  handleClickInside(e) {
-    e.preventDefault();
+  handleClickAway(e) {
     e.stopPropagation();
+    if (this.props.closeOnClickAway && e.target === e.currentTarget)
+      this.props.close();
   }
 
   render() {
     const rest = Object.assign({}, this.props);
-    delete rest.close;
     delete rest.visible;
-    delete rest.closeOnClickOutside;
-    delete rest.closeButton;
-    delete rest.timeout;
-    delete rest.onTimeout;
+    delete rest.close;
+    delete rest.closeOnClickAway;
     if (this.props.visible == false)
       return null;
     return (
-      <div {...rest} data-modal='container' onClick={this.handleClickOutside}>
-        <div data-modal='content' onClick={this.handleClickInside}>
-          {this.props.children}
-          {this.props.closeButton && (
-            <span data-modal='close-button' title="Close Modal" onClick={this.props.close}>
-              &times;
-            </span>
-          )}
-        </div>
+      <div {...rest} onClick={this.handleClickAway}>
+        {this.props.children}
       </div>
     );
   }
 }
 
 Modal.defaultProps = {
-  visible: false,
-  closeOnClickOutside: true,
-  closeButton: true,
-  timeout: undefined
+  visible: true,
+  closeOnClickAway: true
 };
 
 Modal.propTypes = {
   children: PropTypes.any,
-  close: PropTypes.func.isRequired,
   visible: PropTypes.bool,
-  closeOnClickOutside: PropTypes.bool,
-  closeButton: PropTypes.bool,
-  timeout: PropTypes.number,
-  onTimeout: PropTypes.func
+  close: PropTypes.func.isRequired,
+  closeOnClickAway: PropTypes.bool
 };
 
 export default Modal;

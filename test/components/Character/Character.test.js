@@ -11,11 +11,9 @@ import theme from '../../../src/components/theme';
 
 import Character from '../../../src/components/Character/Character';
 
-import Box from '../../../src/components/Character/styled/Box';
-import Stones from '../../../src/components/Character/styled/Stones';
-import AbilityGroup from '../../../src/components/Character/styled/AbilityGroup';
-import SourceMarks from '../../../src/components/Character/styled/SourceMarks';
-import Crafting from '../../../src/components/Character/styled/Crafting';
+import CharacterMenu from '../../../src/components/Character/styled/CharacterMenu';
+import CharacterSheet from '../../../src/components/Character/styled/CharacterSheet';
+import ModalViewRule from '../../../src/components/Character/styled/ModalViewRule';
 
 const window = (new JSDOM('<!doctype html><html><body></body></html>')).window;
 global.window = window;
@@ -35,65 +33,22 @@ copyProps(window, global);
 describe('<Character />', () => {
 
   describe('Children', () => {
-    it('contains a bio components'/*, () => {
+
+    it('contains styled character sub-components', () => {/*
+  user: PropTypes.object,
+  rules: PropTypes.array,
+  subscribeService: PropTypes.func.isRequired,
+  loadService: PropTypes.func.isRequired,
+  create: PropTypes.func.isRequired,
+  update: PropTypes.func.isRequired,
+  patch: PropTypes.func.isRequired,
+  remove: PropTypes.func.isRequired,
+  match: PropTypes.object.isRequired*/
       const wrapper = shallow(<Character />);
-      expect(wrapper.find(Bio)).to.have.length(1);
-      expect(wrapper.find(Bio).prop('player')).to.equal('Anonymous');
-      expect(wrapper.find(Bio).prop('playerBuild')).to.equal(0);
-      expect(wrapper.find(Bio).prop('name')).to.equal('New Character');
-      expect(wrapper.find(Bio).prop('race')).to.equal('');
-      expect(wrapper.find(Bio).prop('culture')).to.equal('');
-      expect(wrapper.find(Bio).prop('build')).to.equal(35);
-      expect(wrapper.find(Bio).prop('spent')).to.equal(0);
-      expect(wrapper.find(Bio).prop('level')).to.equal(-3);
-      expect(wrapper.find(Bio).prop('body')).to.equal(-5);
-      expect(wrapper.find(Bio).prop('buffs')).to.equal(2);
-      expect(wrapper.find(Bio).prop('inscriptions')).to.equal(0);
-      expect(wrapper.find(Bio).prop('editCharacter')).to.be.a('function');
-    }*/);
-
-    it('contains a styled Stones ressurection bag component', () => {
-      const wrapper = shallow(<Character api={api} />);
-      expect(wrapper.find(Box).find({label: 'Ressurection Bag'}).find(Stones)).to.have.length(1);
-      expect(wrapper.find(Box).find({label: 'Ressurection Bag'}).find(Stones).prop('stones')).to.deep.equal([
-        { color: 'blue', count: 1, disabled: 0 },
-        { color: 'black', count: 1, disabled: 0 },
-        { color: 'red', count: 2, disabled: 0 },
-        { color: 'white', count: 9, disabled: 0 }
-      ]);
-      expect(wrapper.find(Box).find({label: 'Ressurection Bag'}).find(Stones).prop('stoneClick')).to.be.a('function');
+      expect(wrapper.find(CharacterMenu)).to.have.length(1);
+      expect(wrapper.find(CharacterSheet)).to.have.length(1);
+      expect(wrapper.find(ModalViewRule)).to.have.length(1);
     });
-
-    it('contains a styled Stones recoveries component', () => {
-      const wrapper = shallow(<Character api={api} />);
-      expect(wrapper.find(Box).find({label: 'Recoveries'}).find(Stones)).to.have.length(1);
-      expect(wrapper.find(Box).find({label: 'Recoveries'}).find(Stones).prop('stones')).to.equal(6);
-      expect(wrapper.find(Box).find({label: 'Recoveries'}).find(Stones).prop('stoneClick')).to.equal(undefined);
-    });
-
-    it('contains a styled racial skills component');
-
-    it('contains a styled constant skills component', () => {
-      const wrapper = shallow(<Character api={api} />);
-      expect(wrapper.find(Box).find({label: 'Constant Skills'}).find(AbilityGroup)).to.have.length(1);
-      //@todo: check props
-    });
-
-    it('contains a styled source mark list component', () => {
-      const wrapper = shallow(<Character api={api} />);
-      expect(wrapper.find(Box).find({label: 'Source Mark Elements'}).find(SourceMarks)).to.have.length(1);
-      //@todo: check props
-    });
-
-    it('contains a styled crafting skills component', () => {
-      const wrapper = shallow(<Character api={api} />);
-      expect(wrapper.find(Box).find({label: 'Craft Skills'}).find(AbilityGroup)).to.have.length(1);
-      //@todo: check props
-    });
-
-    it('contains a styled combat pools component');
-    it('contains a styled domains component');
-    it('contains a styled advanced arts component');
   });
 
   describe('State', () => {
