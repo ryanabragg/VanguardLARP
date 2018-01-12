@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 
 import Logo from '../svg/Logo';
 
+import NotificationList from '../util/styled/NotificationList';
+
 class Login extends React.Component {
   constructor(props) {
     super(props);
@@ -40,13 +42,20 @@ class Login extends React.Component {
   async loginLocal(credentials, register = false) {
     if(register)
       await this.props.register(credentials);
-    const user = await this.props.login(credentials);
-    this.props.setUser(user);
-    this.setState({password: ''});
-    if(register && user != {})
-      this.props.history.push(`/account/${user._id}`);
-    else if(user != {})
-      this.props.history.goBack();
+    try {
+      const user = await this.props.login(credentials).catch(error => {
+        console.log(error);
+      });
+      const fail = Object.keys(user).length === 0 && user.constructor === Object;
+      this.props.setUser(user);
+      this.setState({password: ''});
+      if(register && !fail)
+        this.props.history.push(`/account/${user._id}`);
+      else if(!fail)
+        this.props.history.goBack();
+    } catch (error) {
+      NotificationList.alert(error.message, error.name);
+    }
   }
 
   handleFormInputChange(e) {
@@ -236,6 +245,8 @@ class Login extends React.Component {
     const rest = Object.assign({}, this.props);
     delete rest.match;
     delete rest.history;
+    delete rest.location;
+    delete rest.staticContext;
     delete rest.register;
     delete rest.login;
     delete rest.user;
