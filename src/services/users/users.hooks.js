@@ -17,12 +17,17 @@ const restrict = [
   })
 ];
 
+const initRoles = () => context => {
+  context.data.permissions = [];
+  return context;
+};
+
 module.exports = {
   before: {
     all: [],
     find: [ authenticate('jwt') ],
     get: [ ...restrict ],
-    create: [ hashPassword(), validateSchema(schema, Ajv, { coerceTypes: true }) ],
+    create: [ hashPassword(), initRoles(), validateSchema(schema, Ajv, { coerceTypes: true }) ],
     update: [ ...restrict, hashPassword(), validateSchema(schema, Ajv, { coerceTypes: true }) ],
     patch: [ ...restrict, hashPassword(), validateSchema(schema, Ajv, { coerceTypes: true }) ],
     remove: [ ...restrict ]
