@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { hydrate } from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { AppContainer } from 'react-hot-loader';
 import PropTypes from 'prop-types';
@@ -21,7 +21,7 @@ HotLoader.propTypes = {
 };
 
 window.onload = () => {
-  ReactDOM.render(
+  hydrate(
     <HotLoader>
       <App/>
     </HotLoader>,
@@ -32,7 +32,7 @@ window.onload = () => {
 if(module.hot) {
   module.hot.accept('./components/App', () => {
     const NewApp = require('./components/App').default;
-    ReactDOM.render(
+    hydrate(
       <HotLoader>
         <NewApp/>
       </HotLoader>,
