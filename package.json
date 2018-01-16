@@ -26,7 +26,6 @@
     "npm": ">= 3.0.0"
   },
   "scripts": {
-    "preinstall": "npm i -g pm2",
     "test": "npm run eslint && npm run mocha",
     "eslint": "eslint src/. test/. --config .eslintrc.json",
     "mocha": "mocha --require test/test-setup.js test/ --recursive --compilers js:babel-core/register",
