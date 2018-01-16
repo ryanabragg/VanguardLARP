@@ -9,7 +9,7 @@ import routes from '../routes';
 module.exports = function () {
   const app = this;
 
-  app.get('*', (req, res, next) => {
+  app.get('*', async (req, res, next) => {
     const whitelist = [
       /.js$/i,
       /.json$/i
@@ -19,30 +19,44 @@ module.exports = function () {
       return;
     }
     const match = routes.reduce((acc, route) => matchPath(req.url, route, { exact: true }) || acc, null); // react routes
-    if (!match.isExact) {
+    if(!match.isExact) {
       next();
       return;
     }
+    let events = req.url != '/' ? [] : await app.service('events').find({
+      paginate: false,
+      query:{
+        $skip: 0,
+        $limit: 12,
+        $sort: {
+          date: 1
+        },
+        date: {
+          $gte: (new Date()).toJSON().slice(0, 10)
+        }
+      }
+    });
     const context = {};
     const sheet = new ServerStyleSheet();
     const html = renderToString(sheet.collectStyles(
       <StaticRouter location={req.url} context={context}>
-        <App />
+        <App events={events} />
       </StaticRouter>)
     );
     const css = sheet.getStyleTags();
 
     // context updates if redirected
-    if (context.url) {
+    if(context.url) {
       res.redirect(301, context.url);
-    } else {
+    }
+    else {
       res.send(`
         <!DOCTYPE html>
         <html>
           <head>
             <meta charset="utf-8" />
-            <meta name="viewport" content="width=device-width,initial-scale=1">
-            <title>Vanguard LARP</title>
+            <meta name="viewport" content="width=device-width,initial-scale=1" />
+            <title>Vanguard LARP - Lenoir NC</title>
             ${css}
           </head>
           <body>

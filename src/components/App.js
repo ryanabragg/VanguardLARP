@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Switch, Route } from 'react-router-dom';
 import { injectGlobal, ThemeProvider } from 'styled-components';
 
@@ -15,7 +16,7 @@ import AdminRules from './Admin/Rules';
 
 import Character from './Character/Character';
 
-import NotificationList from './util/styled/NotificationList';
+import NotificationList from './util/NotificationList';
 
 import PageNotFound from './PageNotFound';
 
@@ -35,7 +36,7 @@ html, body {
 `;
 
 // update ../routes.js to include possible routes
-export default class App extends React.Component {
+class App extends React.Component {
   constructor (props) {
     super(props);
 
@@ -44,8 +45,8 @@ export default class App extends React.Component {
 
     this.state = {
       user: {},
-      events: [],
-      rules: []
+      events: props.events,
+      rules: props.rules
     };
 
     this.setUser = this.setUser.bind(this);
@@ -258,3 +259,15 @@ export default class App extends React.Component {
     );
   }
 }
+
+App.defaultProps = {
+  events: [],
+  rules: []
+};
+
+App.propTypes = {
+  events: PropTypes.array,
+  rules: PropTypes.array
+};
+
+export default App;
