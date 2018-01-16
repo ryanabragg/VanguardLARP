@@ -16,7 +16,7 @@ import AdminRules from './Admin/Rules';
 
 import Character from './Character/Character';
 
-import NotificationList from './util/NotificationList';
+import NotificationList from './util/styled/NotificationList';
 
 import PageNotFound from './PageNotFound';
 
