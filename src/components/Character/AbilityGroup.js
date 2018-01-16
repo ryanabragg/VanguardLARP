@@ -20,9 +20,9 @@ class AbilityGroup extends React.Component {
     if(tiers.length)
       return (
         <div {...rest}>
-          {tiers.map(tier => {
+          {tiers.map((tier, index) => {
             return (
-              <div className='tier' key={tier}>
+              <div className='tier' key={index}>
                 <label className='tier'>{tier}</label>
                 {this.props.abilities.filter(ability => tier === ability.tier).map(ability => {
                   return (

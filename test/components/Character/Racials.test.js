@@ -2,30 +2,13 @@ import React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { shallow } from 'enzyme';
-import { JSDOM } from 'jsdom';
 
 import Racials from '../../../src/components/Character/Racials';
 import Ability from '../../../src/components/Character/styled/Ability';
 import AbilityGroup from '../../../src/components/Character/styled/AbilityGroup';
 import Field from '../../../src/components/util/styled/Field';
 
-const window = (new JSDOM('<!doctype html><html><body></body></html>')).window;
-global.window = window;
-global.document = window.document;
-global.navigator = {
-  userAgent: 'node.js',
-};
-
-function copyProps(src, target) {
-  const props = Object.getOwnPropertyNames(src)
-    .filter(prop => typeof target[prop] === 'undefined')
-    .map(prop => Object.getOwnPropertyDescriptor(src, prop));
-  Object.defineProperties(target, props);
-}
-copyProps(window, global);
-
 describe('<Racials />', () => {
-
   it('renders an Ability or AbilityGroup per item in racials', () => {
     const view = spy(), update = spy();
     let list = [{

@@ -2,26 +2,10 @@ import React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { shallow } from 'enzyme';
-import { JSDOM } from 'jsdom';
 
 import Levels from '../../../src/components/Character/Levels';
 
 import IconMoreVertical from '../../../src/components/svg/IconMoreVertical';
-
-const window = (new JSDOM('<!doctype html><html><body></body></html>')).window;
-global.window = window;
-global.document = window.document;
-global.navigator = {
-  userAgent: 'node.js',
-};
-
-function copyProps(src, target) {
-  const props = Object.getOwnPropertyNames(src)
-    .filter(prop => typeof target[prop] === 'undefined')
-    .map(prop => Object.getOwnPropertyDescriptor(src, prop));
-  Object.defineProperties(target, props);
-}
-copyProps(window, global);
 
 describe('<Levels />', () => {
   it('shows a label with a warning for non-qualification based on props', () => {
@@ -273,7 +257,7 @@ describe('<Levels />', () => {
     };
     wrapper.setProps(props);
     wrapper.find('.level').at(2).find('select').simulate('change', {target: {name: '9', value: '20'}, preventDefault: () => {}});
-    expect(edit.firstCall.args[0]).to.deep.equal({type: 'SKILL', data: { id: '20', count: 1, source: 9 }});
+    expect(edit.getCall(0).args[0]).to.deep.equal({type: 'SKILL', data: { id: '20', count: 1, source: 9 }});
     known = [{
       id: '42',
       level: 6,
@@ -284,9 +268,8 @@ describe('<Levels />', () => {
       name: 'angels'
     }];
     wrapper.setProps({known: known});
-    edit.reset();
     wrapper.find('.level').at(2).find('select').simulate('change', {target: {name: '9', value: '10'}, preventDefault: () => {}});
-    expect(edit.firstCall.args[0]).to.deep.equal({type: 'SKILL', data: { id: '20', count: 0, source: 9 }});
-    expect(edit.secondCall.args[0]).to.deep.equal({type: 'SKILL', data: { id: '10', count: 1, source: 9 }});
+    expect(edit.getCall(1).args[0]).to.deep.equal({type: 'SKILL', data: { id: '20', count: 0, source: 9 }});
+    expect(edit.getCall(2).args[0]).to.deep.equal({type: 'SKILL', data: { id: '10', count: 1, source: 9 }});
   });
 });

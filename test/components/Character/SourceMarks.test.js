@@ -2,24 +2,8 @@ import React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { shallow, mount } from 'enzyme';
-import { JSDOM } from 'jsdom';
 
 import SourceMarks from '../../../src/components/Character/SourceMarks';
-
-const window = (new JSDOM('<!doctype html><html><body></body></html>')).window;
-global.window = window;
-global.document = window.document;
-global.navigator = {
-  userAgent: 'node.js',
-};
-
-function copyProps(src, target) {
-  const props = Object.getOwnPropertyNames(src)
-    .filter(prop => typeof target[prop] === 'undefined')
-    .map(prop => Object.getOwnPropertyDescriptor(src, prop));
-  Object.defineProperties(target, props);
-}
-copyProps(window, global);
 
 describe('<SourceMarks />', () => {
   it('renders an div with an unordered list', () => {

@@ -2,25 +2,9 @@ import React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { shallow } from 'enzyme';
-import { JSDOM } from 'jsdom';
 
 import AbilityGroup from '../../../src/components/Character/AbilityGroup';
 import Ability from '../../../src/components/Character/styled/Ability';
-
-const window = (new JSDOM('<!doctype html><html><body></body></html>')).window;
-global.window = window;
-global.document = window.document;
-global.navigator = {
-  userAgent: 'node.js',
-};
-
-function copyProps(src, target) {
-  const props = Object.getOwnPropertyNames(src)
-    .filter(prop => typeof target[prop] === 'undefined')
-    .map(prop => Object.getOwnPropertyDescriptor(src, prop));
-  Object.defineProperties(target, props);
-}
-copyProps(window, global);
 
 describe('<AbilityGroup />', () => {
   it('renders an Ability component for each object in the abilities prop', () => {

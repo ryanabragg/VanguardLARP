@@ -2,27 +2,10 @@ import React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { mount, shallow } from 'enzyme';
-import { JSDOM } from 'jsdom';
 
 import Notification from '../../../src/components/util/Notification';
 
-const window = (new JSDOM('<!doctype html><html><body></body></html>')).window;
-global.window = window;
-global.document = window.document;
-global.navigator = {
-  userAgent: 'node.js',
-};
-
-function copyProps(src, target) {
-  const props = Object.getOwnPropertyNames(src)
-    .filter(prop => typeof target[prop] === 'undefined')
-    .map(prop => Object.getOwnPropertyDescriptor(src, prop));
-  Object.defineProperties(target, props);
-}
-copyProps(window, global);
-
 describe('<Notification />', () => {
-
   it('renders a div containing the message prop', () => {
     const dismiss = spy();
     const wrapper = shallow(<Notification id='42' message='meaning' dismiss={dismiss} />);

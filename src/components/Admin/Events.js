@@ -127,7 +127,7 @@ class Events extends React.Component {
   createEvent(event) {
     this.props.create('events', event, (error, record) => {
       if(error)
-        NotificationList.alert(error.name, 'Failed to create event.');console.log(error)
+        NotificationList.alert(error.name, 'Failed to create event.');
     });
   }
 

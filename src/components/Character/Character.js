@@ -317,19 +317,16 @@ class Character extends React.Component {
 
   encode() {
     let encoded = JSON.stringify(this.state.character);
-    console.log(encoded, btoa(encoded));
     this.props.history.replace('/character/' + btoa(encoded));
   }
 
   decode(code) {
     let data = undefined;
-    console.log(code);
     try{
       data = JSON.parse(atob(code));
     } catch(e) {
       data = this.newCharacter;
     }
-    console.log(data);
     this.setState({character: data});
   }
 

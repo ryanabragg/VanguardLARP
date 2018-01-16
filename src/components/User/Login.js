@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import Logo from '../svg/Logo';
 
-import NotificationList from '../util/styled/NotificationList';
+import NotificationList from '../util/NotificationList';
 
 class Login extends React.Component {
   constructor(props) {
@@ -43,9 +43,7 @@ class Login extends React.Component {
     if(register)
       await this.props.register(credentials);
     try {
-      const user = await this.props.login(credentials).catch(error => {
-        console.log(error);
-      });
+      const user = await this.props.login(credentials);
       const fail = Object.keys(user).length === 0 && user.constructor === Object;
       this.props.setUser(user);
       this.setState({password: ''});

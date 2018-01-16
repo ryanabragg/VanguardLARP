@@ -2,37 +2,28 @@ import React from 'react';
 import { expect } from 'chai';
 import { spy, stub } from 'sinon';
 import { shallow } from 'enzyme';
-import { JSDOM } from 'jsdom';
 
 import api from '../../../src/util/api';
 
 import Login from '../../../src/components/User/Login';
 import Logo from '../../../src/components/svg/Logo';
 
-const window = (new JSDOM('<!doctype html><html><body></body></html>')).window;
-global.window = window;
-global.document = window.document;
-global.navigator = {
-  userAgent: 'node.js',
-};
-
-function copyProps(src, target) {
-  const props = Object.getOwnPropertyNames(src)
-    .filter(prop => typeof target[prop] === 'undefined')
-    .map(prop => Object.getOwnPropertyDescriptor(src, prop));
-  Object.defineProperties(target, props);
-}
-copyProps(window, global);
-
 /*
  * provide match object with path string to mimic prop from react-router
  */
 
 describe('<Login />', () => {
-
   it('renders a form for login', () => {
-    const setUser = spy();
-    const wrapper = shallow(<Login api={api} setUser={setUser} match={{path:'/login'}} />);
+    const login = spy(),
+      register = spy(),
+      setUser = spy(),
+      push = spy(),
+      goBack = spy();
+    const history = {
+      push: push,
+      goBack: goBack
+    };
+    const wrapper = shallow(<Login login={login} register={register} setUser={setUser} history={history} match={{path:'/login'}} />);
     expect(wrapper.find('div').find('form')).to.have.length(1);
     expect(wrapper.find('div').find('form').prop('name')).to.equal('login');
     expect(wrapper.find(Logo)).to.have.length(1);
@@ -57,8 +48,16 @@ describe('<Login />', () => {
   });
 
   it('renders a form for registration', () => {
-    const setUser = spy();
-    const wrapper = shallow(<Login api={api} setUser={setUser} match={{path:'/register'}} />);
+    const login = spy(),
+      register = spy(),
+      setUser = spy(),
+      push = spy(),
+      goBack = spy();
+    const history = {
+      push: push,
+      goBack: goBack
+    };
+    const wrapper = shallow(<Login login={login} register={register} setUser={setUser} history={history} match={{path:'/register'}} />);
     expect(wrapper.find('div').find('form')).to.have.length(1);
     expect(wrapper.find('div').find('form').prop('name')).to.equal('register');
     expect(wrapper.find(Logo)).to.have.length(1);
@@ -81,8 +80,16 @@ describe('<Login />', () => {
   });
 
   it('switches between login and registration based on user input', () => {
-    const setUser = spy();
-    const wrapper = shallow(<Login api={api} setUser={setUser} match={{path:'/login'}} />);
+    const login = spy(),
+      register = spy(),
+      setUser = spy(),
+      push = spy(),
+      goBack = spy();
+    const history = {
+      push: push,
+      goBack: goBack
+    };
+    const wrapper = shallow(<Login login={login} register={register} setUser={setUser} history={history} match={{path:'/login'}} />);
     expect(wrapper.find('div').find('form').prop('name')).to.equal('login');
     wrapper.find('.option-right').simulate('click');
     expect(wrapper.find('div').find('form').prop('name')).to.equal('register');
@@ -91,8 +98,16 @@ describe('<Login />', () => {
   });
 
   it('shows a password reset form when "Forgot your password?" is clicked', () => {
-    const setUser = spy();
-    const wrapper = shallow(<Login api={api} setUser={setUser} match={{path:'/login'}} />);
+    const login = spy(),
+      register = spy(),
+      setUser = spy(),
+      push = spy(),
+      goBack = spy();
+    const history = {
+      push: push,
+      goBack: goBack
+    };
+    const wrapper = shallow(<Login login={login} register={register} setUser={setUser} history={history} match={{path:'/login'}} />);
     expect(wrapper.find('div').find('form').prop('name')).to.equal('login');
     wrapper.find('.option-left').simulate('click');
     expect(wrapper.find('div').find('form').prop('name')).to.equal('password-recovery');
@@ -113,8 +128,16 @@ describe('<Login />', () => {
   });
 
   it('updates the state email and password from the inputs', () => {
-    const setUser = spy();
-    const wrapper = shallow(<Login api={api} setUser={setUser} match={{path:'/login'}} />);
+    const login = spy(),
+      register = spy(),
+      setUser = spy(),
+      push = spy(),
+      goBack = spy();
+    const history = {
+      push: push,
+      goBack: goBack
+    };
+    const wrapper = shallow(<Login login={login} register={register} setUser={setUser} history={history} match={{path:'/login'}} />);
     expect(wrapper.state().email).to.equal('');
     wrapper.find({name:'email'}).simulate('change', {target: {name: 'email', value: 'test'}, preventDefault: () => {}});
     expect(wrapper.state().email).to.equal('test');
@@ -127,7 +150,7 @@ describe('<Login />', () => {
     const setUser = spy();
     const history = {push: (location) => {}, goBack: () => {}};
     spy(history, 'push');
-    const wrapper = shallow(<Login api={api} setUser={setUser} match={{path:'/login'}} history={history} />);
+    const wrapper = shallow(<Login login={login} register={register} setUser={setUser} history={history} match={{path:'/login'}} history={history} />);
     expect(wrapper.state().password).to.equal('');
     wrapper.find({name: 'password'}).simulate('change', {target: {name: 'password', value: 'testing'}, preventDefault: () => {}});
     expect(wrapper.state().password).to.equal('testing');
@@ -145,7 +168,7 @@ describe('<Login />', () => {
     const setUser = spy();
     const history = {push: (location) => {}, goBack: () => {}};
     spy(history, 'push');
-    const wrapper = shallow(<Login api={api} setUser={setUser} match={{path:'/login'}} history={history} />);
+    const wrapper = shallow(<Login login={login} register={register} setUser={setUser} history={history} match={{path:'/login'}} history={history} />);
     wrapper.find({name: 'email'}).simulate('change', {target: {name: 'email', value: 'test'}, preventDefault: () => {}});
     wrapper.find({name: 'password'}).simulate('change', {target: {name: 'password', value: 'test'}, preventDefault: () => {}});
     wrapper.find({value: 'submit'}).simulate('click', {preventDefault: () => {}});
@@ -163,7 +186,7 @@ describe('<Login />', () => {
     const setUser = spy();
     const history = {push: (location) => {}, goBack: () => {}};
     spy(history, 'push');
-    const wrapper = shallow(<Login api={api} setUser={setUser} match={{path:'/login'}} history={history} />);
+    const wrapper = shallow(<Login login={login} register={register} setUser={setUser} history={history} match={{path:'/login'}} history={history} />);
     wrapper.find({name: 'email'}).simulate('change', {target: {name: 'email', value: 'test'}, preventDefault: () => {}});
     wrapper.find({name: 'password'}).simulate('change', {target: {name: 'password', value: 'test'}, preventDefault: () => {}});
     wrapper.find({value: 'submit'}).simulate('click', {preventDefault: () => {}});

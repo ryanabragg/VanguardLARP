@@ -3,7 +3,6 @@ import { ThemeProvider } from 'styled-components';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { shallow, mount } from 'enzyme';
-import { JSDOM } from 'jsdom';
 
 import Ability from '../../../src/components/Character/Ability';
 import Button from '../../../src/components/util/styled/Button';
@@ -17,21 +16,6 @@ import CheckboxUnchecked from '../../../src/components/svg/icon/Checkbox-Uncheck
  * However, this means setProps can't be used on the Ability component.
 */
 import theme from '../../../src/components/theme';
-
-const window = (new JSDOM('<!doctype html><html><body></body></html>')).window;
-global.window = window;
-global.document = window.document;
-global.navigator = {
-  userAgent: 'node.js',
-};
-
-function copyProps(src, target) {
-  const props = Object.getOwnPropertyNames(src)
-    .filter(prop => typeof target[prop] === 'undefined')
-    .map(prop => Object.getOwnPropertyDescriptor(src, prop));
-  Object.defineProperties(target, props);
-}
-copyProps(window, global);
 
 describe('<Ability />', () => {
   it('renders labels for the count, uses, and name', () => {

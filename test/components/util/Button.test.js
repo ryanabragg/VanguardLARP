@@ -2,27 +2,10 @@ import React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { shallow } from 'enzyme';
-import { JSDOM } from 'jsdom';
 
 import Button from '../../../src/components/util/Button';
 
-const window = (new JSDOM('<!doctype html><html><body></body></html>')).window;
-global.window = window;
-global.document = window.document;
-global.navigator = {
-  userAgent: 'node.js',
-};
-
-function copyProps(src, target) {
-  const props = Object.getOwnPropertyNames(src)
-    .filter(prop => typeof target[prop] === 'undefined')
-    .map(prop => Object.getOwnPropertyDescriptor(src, prop));
-  Object.defineProperties(target, props);
-}
-copyProps(window, global);
-
 describe('<Button />', () => {
-
   it('renders a div button', () => {
     const fn = spy();
     const wrapper = shallow(<Button callback={fn} />);

@@ -2,7 +2,6 @@ import React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { mount, shallow } from 'enzyme';
-import { JSDOM } from 'jsdom';
 import { ThemeProvider } from 'styled-components';
 
 import api from '../../../src/util/api';
@@ -14,21 +13,6 @@ import Character from '../../../src/components/Character/Character';
 import CharacterMenu from '../../../src/components/Character/styled/CharacterMenu';
 import CharacterSheet from '../../../src/components/Character/styled/CharacterSheet';
 import ModalViewRule from '../../../src/components/Character/styled/ModalViewRule';
-
-const window = (new JSDOM('<!doctype html><html><body></body></html>')).window;
-global.window = window;
-global.document = window.document;
-global.navigator = {
-  userAgent: 'node.js',
-};
-
-function copyProps(src, target) {
-  const props = Object.getOwnPropertyNames(src)
-    .filter(prop => typeof target[prop] === 'undefined')
-    .map(prop => Object.getOwnPropertyDescriptor(src, prop));
-  Object.defineProperties(target, props);
-}
-copyProps(window, global);
 
 describe('<Character />', () => {
 
@@ -44,7 +28,21 @@ describe('<Character />', () => {
   patch: PropTypes.func.isRequired,
   remove: PropTypes.func.isRequired,
   match: PropTypes.object.isRequired*/
-      const wrapper = shallow(<Character />);
+      const subscribeService = spy(),
+        loadService = spy(),
+        create = spy(),
+        update = spy(),
+        patch = spy(),
+        remove = spy();
+      const wrapper = shallow(<Character
+        subscribeService={subscribeService}
+        loadService={loadService}
+        create={create}
+        update={update}
+        patch={patch}
+        remove={remove}
+        match={{params:{code:'test'}}}
+      />);
       expect(wrapper.find(CharacterMenu)).to.have.length(1);
       expect(wrapper.find(CharacterSheet)).to.have.length(1);
       expect(wrapper.find(ModalViewRule)).to.have.length(1);

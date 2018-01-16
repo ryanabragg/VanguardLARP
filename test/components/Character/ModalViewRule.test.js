@@ -2,28 +2,12 @@ import React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { shallow } from 'enzyme';
-import { JSDOM } from 'jsdom';
 
 import ModalViewRule from '../../../src/components/Character/ModalViewRule';
 
 import Modal from '../../../src/components/util/styled/Modal';
 import Button from '../../../src/components/util/styled/Button';
 import X from '../../../src/components/svg/icon/X';
-
-const window = (new JSDOM('<!doctype html><html><body></body></html>')).window;
-global.window = window;
-global.document = window.document;
-global.navigator = {
-  userAgent: 'node.js',
-};
-
-function copyProps(src, target) {
-  const props = Object.getOwnPropertyNames(src)
-    .filter(prop => typeof target[prop] === 'undefined')
-    .map(prop => Object.getOwnPropertyDescriptor(src, prop));
-  Object.defineProperties(target, props);
-}
-copyProps(window, global);
 
 describe('<ModalViewRule />', () => {
   it('renders Modal containing the rule information', () => {
