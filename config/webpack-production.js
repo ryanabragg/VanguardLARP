@@ -1,6 +1,5 @@
 const path = require('path');
 const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -16,11 +15,10 @@ module.exports = {
   },
   devtool: 'source-map',
   plugins: [
-/*    new HtmlWebpackPlugin({
-      filename: 'index.html',
-      title: 'Vanguard LARP',
-      template: './src/html.ejs'
-    })*/
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('production')
+    }),
+    new webpack.optimize.UglifyJsPlugin()
   ],
   module: {
     noParse: /node_modules\/localforage\/dist\/localforage.js/,
