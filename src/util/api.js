@@ -95,4 +95,17 @@ api.getServiceData = async (service, reload = false) => {
   }
 }
 
+api.setServiceData = async (service, data) => {
+  if(!service || !data)
+    return;
+  try {
+    await localforage.setItem(service, {
+      data: data,
+      expires: 0
+    });
+  } catch (error) {
+    return error;
+  }
+}
+
 export default api;

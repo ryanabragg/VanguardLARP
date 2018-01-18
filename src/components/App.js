@@ -106,6 +106,7 @@ class App extends React.Component {
           nextState[service] = prevState[service].concat(record);
           return nextState;
         }, () => {
+          api.setServiceData(service, this.state[service]);
           this.observers.filter(observer => observer.service == service)
             .forEach(observer => observer.func({type: 'created', data: record}));
         });
@@ -118,6 +119,7 @@ class App extends React.Component {
           nextState[service][index] = Object.assign({}, record);
           return nextState;
         }, () => {
+          api.setServiceData(service, this.state[service]);
           this.observers.filter(observer => observer.service == service)
             .forEach(observer => observer.func({type: 'updated', data: record, previous: previous}));
         });
@@ -128,6 +130,7 @@ class App extends React.Component {
           nextState[service] = prevState[service].filter(item => item._id != record._id);
           return nextState;
         }, () => {
+          api.setServiceData(service, this.state[service]);
           this.observers.filter(observer => observer.service == service)
             .forEach(observer => observer.func({type: 'removed', data: record}));
         });
