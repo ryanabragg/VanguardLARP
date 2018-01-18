@@ -62,17 +62,22 @@ class Character extends React.Component {
       rule: null
     };
 
+    this.redoBuild = false;
+
     this.reloadRules = this.reloadRules.bind(this);
 
     this.viewRule = this.viewRule.bind(this);
     this.hideRule = this.hideRule.bind(this);
 
+    this.getRuleBuild = this.getRuleBuild.bind(this);
     this.getRules = this.getRules.bind(this);
     this.parseRules = this.parseRules.bind(this);
 
     this.encode = this.encode.bind(this);
     this.decode = this.decode.bind(this);
     this.saveCharacter = this.saveCharacter.bind(this);
+
+    this.updateCharacterBuild = this.updateCharacterBuild.bind(this);
 
     this.editCharacter = this.editCharacter.bind(this);
     this.stateLivesChange = this.stateLivesChange.bind(this);
@@ -100,6 +105,73 @@ class Character extends React.Component {
 
   hideRule() {
     this.setState({rule: null});
+  }
+
+  getRuleBuild(id) {
+    let skills = this.state.character.skills;
+    let rule = this.props.rules.filter(rule => rule._id == id);
+    if(!rule.length)
+      return 0;
+    rule = rule[0];
+    let build = rule.build;
+    if(rule.group == 'Alchemy') {
+      build -= skills.filter(s => s.id == 'rQZtxDdJPKYn5fDF').reduce((t, s) => t + s.count, 0);
+      build -= rule.tier * skills.filter(s => s.id == 'Ugf8nn8ysQDKMTKW').reduce((t, s) => t + s.count, 0);
+    }
+    if(rule.group == 'Combat') {
+      build -= skills.filter(s => s.id == '0Q4JLDA9n2Nyodln').reduce((t, s) => t + s.count, 0);
+      build -= rule.tier * skills.filter(s => s.id == 'vADtxxrt89WnboWo').reduce((t, s) => t + s.count, 0);
+    }
+    if(rule.group == 'Faith') {
+      build -= skills.filter(s => s.id == 'lLqBfuHQtCoJGxUJ').reduce((t, s) => t + s.count, 0);
+      build -= rule.tier * skills.filter(s => s.id == 'Ql54KJac67UmrkV5').reduce((t, s) => t + s.count, 0);
+    }
+    if(rule.group == 'Insight') {
+      build -= skills.filter(s => s.id == 'xcEqoKjW3bzEe70P').reduce((t, s) => t + s.count, 0);
+      build -= rule.tier * skills.filter(s => s.id == 'UKBhCRlZMVx5BWpm').reduce((t, s) => t + s.count, 0);
+    }
+    if(rule.group == 'Stealth') {
+      build -= skills.filter(s => s.id == 'LoRpBQpAw4I5Hwla').reduce((t, s) => t + s.count, 0);
+      build -= rule.tier * skills.filter(s => s.id == 'KlwvkK0b8WJ4Yh1c').reduce((t, s) => t + s.count, 0);
+    }
+    if(rule.group == 'Burn') {
+      build -= skills.filter(s => s.id == 'IHfGY0P6gU4APd5q').reduce((t, s) => t + s.count, 0);
+      build -= rule.tier * skills.filter(s => s.id == '9ccyQgpaHbW0Zh7N').reduce((t, s) => t + s.count, 0);
+    }
+    if(rule.category == 'Pool') {
+      if(rule._id == 'znYnAukGjreX2vOp') // Chemix Pool
+        build -= skills.filter(s => s.id == 'KO7ERx1NuaUDMeB7').reduce((t, s) => t + s.count, 0);
+      if(rule._id == '89L88N3OtHNvjnVr') // Melee Pool
+        build -= skills.filter(s => s.id == 'FvYhZnEXaacz3MIw').reduce((t, s) => t + s.count, 0);
+      if(rule._id == 'QAma29B8RcXwNDLS') // Spell Pool
+        build -= skills.filter(s => s.id == 'MK4mjAxfXMWfthUE').reduce((t, s) => t + s.count, 0);
+    }
+    if(rule.category == 'Craft') {
+      build -= skills.filter(s => s.id == 'Dzj6aIPhxb9bIPox').reduce((t, s) => t + s.count, 0);
+      if(rule._id == '7YAY5bnJC2l15Qvi') // Apothecary
+        build -= skills.filter(s => s.id == 'VZggn8mKlMa5J1rh').reduce((t, s) => t + s.count, 0);
+      if(rule._id == 'x9yxEliF4P2AlIcQ') // Armorsmithing
+        build -= skills.filter(s => s.id == '9AqB00GqyXUzfatt').reduce((t, s) => t + s.count, 0);
+      if(rule._id == 'EB7ZLCrTMncostR5') // Boomersmithing
+        build -= skills.filter(s => s.id == 'ymOJrVmbcDVeXFHf').reduce((t, s) => t + s.count, 0);
+      if(rule._id == 'Gm6PnucyBJg9Vy1x') // Clockwork
+        build -= skills.filter(s => s.id == 'EVAyjJ709619JAjp').reduce((t, s) => t + s.count, 0);
+      if(rule._id == 'fld4x99cwvtcf1xY') // Enchanting
+        build -= skills.filter(s => s.id == 'vwXrNSFvRAmDSPgO').reduce((t, s) => t + s.count, 0);
+      if(rule._id == 'JNiEZ58d1DNfxgZZ') // Field Surgeon
+        build -= skills.filter(s => s.id == 'OykKTl3kyTCIonOu').reduce((t, s) => t + s.count, 0);
+      if(rule._id == 'G1xorWOoLS2jc3oy') // Scribing
+        build -= skills.filter(s => s.id == 'QSeKc7sZQ4eptxSb').reduce((t, s) => t + s.count, 0);
+      if(rule._id == '1dOq8uHq876WUuQz') // Source Engineering
+        build -= skills.filter(s => s.id == 'fsKIx9LRpqzImL1f').reduce((t, s) => t + s.count, 0);
+      if(rule._id == 'MDGpvPLv6wPxm4x2') // Trinket Crafting
+        build -= skills.filter(s => s.id == 'KMfJNHbadCS5miYm').reduce((t, s) => t + s.count, 0);
+      if(rule._id == 'fMmzyBULpa8SUxh6') // Underwater Basket Weaving
+        build -= skills.filter(s => s.id == 'rmZfZh5QyfuIot8O').reduce((t, s) => t + s.count, 0);
+      if(rule._id == 'svgUCKVdVPqfiPrJ') // Weaponsmithing
+        build -= skills.filter(s => s.id == 'HW5gddHQ8pGGfqfa').reduce((t, s) => t + s.count, 0);
+    }
+    return Math.max(0, build);
   }
 
   getRules() {
@@ -154,7 +226,13 @@ class Character extends React.Component {
           usesTotal += Math.floor(rule.usesExtra * aptitudesTotal / rule.usesPerXAptitudes);
       }
 
-      return Object.assign({}, rule, {count: count, granted: granted}, {display: display}, {usesTotal: usesTotal});
+      return Object.assign({}, rule, {
+        build: this.getRuleBuild(rule._id),
+        display: display,
+        count: count,
+        granted: granted,
+        usesTotal: usesTotal
+      });
     }).sort((a, b) => a.name > b.name ? 1 : -1);
   }
 
@@ -338,6 +416,27 @@ class Character extends React.Component {
     this.decode(code);
   }
 
+  updateCharacterBuild(prevState) {
+    let nextState = Object.assign({}, prevState);
+    let build = {
+      total: nextState.character.build.total,
+      spent: 0,
+      nonDomain: 0
+    };
+    nextState.character.skills.filter(s => s.source == 'build').forEach(s => {
+      let rule = this.props.rules.filter(r => r._id == s.id);
+      if(!rule.length)
+        return;
+      rule = rule[0];
+      let cost = this.getRuleBuild(rule._id);
+      build.spent += cost;
+      if(rule.category != 'Domain')
+        build.nonDomain += cost;
+    });
+    nextState.character.build = build;
+    return nextState;
+  }
+
   editCharacter(payload) {
     let action = payload;
     action.type = payload.type.toUpperCase();
@@ -399,6 +498,10 @@ class Character extends React.Component {
         return prevState;
       }
       return nextState;
+    }, () => {
+      if(this.redoBuild) {
+        this.setState(this.updateCharacterBuild, () => {this.redoBuild = false;});
+      }
     });
   }
 
@@ -588,68 +691,9 @@ class Character extends React.Component {
 
     let target = skills.findIndex(skill => skill.id == id && skill.source == source);
 
-    let free = -1 == ['build','race','culture'].indexOf(source) ? 0 : 1;
-
-    // cost reductions
-    if(rule.build && typeof source != 'number') {
-      if(rule.group == 'Alchemy') {
-        rule.build -= skills.filter(s => s.id == 'rQZtxDdJPKYn5fDF').reduce((t, s) => t + s.count, 0);
-        rule.build -= rule.tier * skills.filter(s => s.id == 'Ugf8nn8ysQDKMTKW').reduce((t, s) => t + s.count, 0);
-      }
-      if(rule.group == 'Combat') {
-        rule.build -= skills.filter(s => s.id == '0Q4JLDA9n2Nyodln').reduce((t, s) => t + s.count, 0);
-        rule.build -= rule.tier * skills.filter(s => s.id == 'vADtxxrt89WnboWo').reduce((t, s) => t + s.count, 0);
-      }
-      if(rule.group == 'Faith') {
-        rule.build -= skills.filter(s => s.id == 'lLqBfuHQtCoJGxUJ').reduce((t, s) => t + s.count, 0);
-        rule.build -= rule.tier * skills.filter(s => s.id == 'Ql54KJac67UmrkV5').reduce((t, s) => t + s.count, 0);
-      }
-      if(rule.group == 'Insight') {
-        rule.build -= skills.filter(s => s.id == 'xcEqoKjW3bzEe70P').reduce((t, s) => t + s.count, 0);
-        rule.build -= rule.tier * skills.filter(s => s.id == 'UKBhCRlZMVx5BWpm').reduce((t, s) => t + s.count, 0);
-      }
-      if(rule.group == 'Stealth') {
-        rule.build -= skills.filter(s => s.id == 'LoRpBQpAw4I5Hwla').reduce((t, s) => t + s.count, 0);
-        rule.build -= rule.tier * skills.filter(s => s.id == 'KlwvkK0b8WJ4Yh1c').reduce((t, s) => t + s.count, 0);
-      }
-      if(rule.group == 'Burn') {
-        rule.build -= skills.filter(s => s.id == 'IHfGY0P6gU4APd5q').reduce((t, s) => t + s.count, 0);
-        rule.build -= rule.tier * skills.filter(s => s.id == '9ccyQgpaHbW0Zh7N').reduce((t, s) => t + s.count, 0);
-      }
-      if(rule.category == 'Pool') {
-        if(rule._id == 'znYnAukGjreX2vOp') // Chemix Pool
-          rule.build -= skills.filter(s => s.id == 'KO7ERx1NuaUDMeB7').reduce((t, s) => t + s.count, 0);
-        if(rule._id == '89L88N3OtHNvjnVr') // Melee Pool
-          rule.build -= skills.filter(s => s.id == 'FvYhZnEXaacz3MIw').reduce((t, s) => t + s.count, 0);
-        if(rule._id == 'QAma29B8RcXwNDLS') // Spell Pool
-          rule.build -= skills.filter(s => s.id == 'MK4mjAxfXMWfthUE').reduce((t, s) => t + s.count, 0);
-      }
-      if(rule.category == 'Craft') {
-        rule.build -= skills.filter(s => s.id == 'Dzj6aIPhxb9bIPox').reduce((t, s) => t + s.count, 0);
-        if(rule._id == '7YAY5bnJC2l15Qvi') // Apothecary
-          rule.build -= skills.filter(s => s.id == 'VZggn8mKlMa5J1rh').reduce((t, s) => t + s.count, 0);
-        if(rule._id == 'x9yxEliF4P2AlIcQ') // Armorsmithing
-          rule.build -= skills.filter(s => s.id == '9AqB00GqyXUzfatt').reduce((t, s) => t + s.count, 0);
-        if(rule._id == 'EB7ZLCrTMncostR5') // Boomersmithing
-          rule.build -= skills.filter(s => s.id == 'ymOJrVmbcDVeXFHf').reduce((t, s) => t + s.count, 0);
-        if(rule._id == 'Gm6PnucyBJg9Vy1x') // Clockwork
-          rule.build -= skills.filter(s => s.id == 'EVAyjJ709619JAjp').reduce((t, s) => t + s.count, 0);
-        if(rule._id == 'fld4x99cwvtcf1xY') // Enchanting
-          rule.build -= skills.filter(s => s.id == 'vwXrNSFvRAmDSPgO').reduce((t, s) => t + s.count, 0);
-        if(rule._id == 'JNiEZ58d1DNfxgZZ') // Field Surgeon
-          rule.build -= skills.filter(s => s.id == 'OykKTl3kyTCIonOu').reduce((t, s) => t + s.count, 0);
-        if(rule._id == 'G1xorWOoLS2jc3oy') // Scribing
-          rule.build -= skills.filter(s => s.id == 'QSeKc7sZQ4eptxSb').reduce((t, s) => t + s.count, 0);
-        if(rule._id == '1dOq8uHq876WUuQz') // Source Engineering
-          rule.build -= skills.filter(s => s.id == 'fsKIx9LRpqzImL1f').reduce((t, s) => t + s.count, 0);
-        if(rule._id == 'MDGpvPLv6wPxm4x2') // Trinket Crafting
-          rule.build -= skills.filter(s => s.id == 'KMfJNHbadCS5miYm').reduce((t, s) => t + s.count, 0);
-        if(rule._id == 'fMmzyBULpa8SUxh6') // Underwater Basket Weaving
-          rule.build -= skills.filter(s => s.id == 'rmZfZh5QyfuIot8O').reduce((t, s) => t + s.count, 0);
-        if(rule._id == 'svgUCKVdVPqfiPrJ') // Weaponsmithing
-          rule.build -= skills.filter(s => s.id == 'HW5gddHQ8pGGfqfa').reduce((t, s) => t + s.count, 0);
-      }
-      rule.build = Math.max(0, rule.build);
+    let cost = -1 == ['build','race','culture'].indexOf(source) ? 0 : rule.build;
+    if(cost && typeof source != 'number') {
+      cost = this.getRuleBuild(rule._id);
     }
 
     if(typeof source == 'number') {
@@ -670,8 +714,8 @@ class Character extends React.Component {
         };
     }
     else if(target == -1) {
-      nextState.character.build.spent += count * free * rule.build;
-      nextState.character.build.nonDomain += (rule.category != 'Domain' ? count * free * rule.build : 0);
+      nextState.character.build.spent += count * cost;
+      nextState.character.build.nonDomain += (rule.category != 'Domain' ? count * cost : 0);
       nextState.character.skills = skills.concat({
         id: id,
         name: rule.name,
@@ -680,13 +724,13 @@ class Character extends React.Component {
       });
     }
     else {
-      nextState.character.build.spent += (count - skills[target].count) * free * rule.build;
-      nextState.character.build.nonDomain += (rule.category != 'Domain' ? (count - skills[target].count) * free * rule.build : 0);
+      nextState.character.build.spent += (count - skills[target].count) * cost;
+      nextState.character.build.nonDomain += (rule.category != 'Domain' ? (count - skills[target].count) * cost : 0);
       nextState.character.skills[target].count = count;
     }
 
-    if(rule.grants) {
-      let grants = rule.grants.split(', ')
+    if(rule.grants)
+      rule.grants.split(', ')
         .filter((text, index, self) => self.indexOf(text) == index)
         .map(text => {
           return {
@@ -694,14 +738,12 @@ class Character extends React.Component {
             count: count * rule.grants.split(', ').filter(g => g == text).length,
             source: `${source}: ${id}`
           };
+        }).forEach(grant => {
+          nextState = this.stateSkillChange(nextState, {
+            type: 'SKILL',
+            data: grant
+          });
         });
-      grants.forEach(grant => {
-        nextState = this.stateSkillChange(nextState, {
-          type: 'SKILL',
-          data: grant
-        });
-      });
-    }
 
     if(rule._id == 'MQxu5lE0qQvJdZCQ') { // red stones are white
       let blues = prevState.character.lives.filter(l => l.color == 'blue')[0];
@@ -726,6 +768,9 @@ class Character extends React.Component {
         disabled: whites.disabled
       }];
     }
+
+    if(rule.group == 'Build')
+      this.redoBuild = true;
 
     nextState.character.skills = nextState.character.skills.filter(skill => skill.count > 0);
 
