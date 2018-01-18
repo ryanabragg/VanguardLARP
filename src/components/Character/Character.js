@@ -147,7 +147,8 @@ class Character extends React.Component {
         build -= skills.filter(s => s.id == 'MK4mjAxfXMWfthUE').reduce((t, s) => t + s.count, 0);
     }
     if(rule.category == 'Craft') {
-      build -= skills.filter(s => s.id == 'Dzj6aIPhxb9bIPox').reduce((t, s) => t + s.count, 0);
+      if(rule._id != 'cwB8oaUJQWHsw5oj') // generic craft reducer, doesn't affect Jack of All Trades
+        build -= skills.filter(s => s.id == 'Dzj6aIPhxb9bIPox').reduce((t, s) => t + s.count, 0);
       if(rule._id == '7YAY5bnJC2l15Qvi') // Apothecary
         build -= skills.filter(s => s.id == 'VZggn8mKlMa5J1rh').reduce((t, s) => t + s.count, 0);
       if(rule._id == 'x9yxEliF4P2AlIcQ') // Armorsmithing
@@ -228,6 +229,7 @@ class Character extends React.Component {
 
       return Object.assign({}, rule, {
         build: this.getRuleBuild(rule._id),
+        buildBase: rule.build,
         display: display,
         count: count,
         granted: granted,
@@ -429,9 +431,13 @@ class Character extends React.Component {
         return;
       rule = rule[0];
       let cost = this.getRuleBuild(rule._id);
-      build.spent += cost;
+      let total = cost * s.count;
+      if(rule.category == 'Craft' && s.count == 5) {
+        total = cost * 4 + rule.build;
+      }
+      build.spent += total;
       if(rule.category != 'Domain')
-        build.nonDomain += cost;
+        build.nonDomain += total;
     });
     nextState.character.build = build;
     return nextState;
