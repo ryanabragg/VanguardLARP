@@ -34,12 +34,13 @@ class ModalViewRule extends React.Component {
       return Object.assign({}, rule, {count: count, granted: granted});
   */
     const rule = this.props.rule;
-
+    // grandmastery (5th purchase) isn't discounted
+    const build = rule.category == 'Craft' && rule.count >= 4 ? rule.buildBase : rule.build;
     return (
       <Modal close={this.props.close}>
         <div {...rest}>
           <header>
-            <h1>{rule.name}</h1>
+            <h1>{rule.name + (!build ? '' : ` (${build} Build)`)}</h1>
             <Button title='Close Description' label='Close Description' callback={this.props.close} type='background'>
               <X />
             </Button>
@@ -68,6 +69,8 @@ class ModalViewRule extends React.Component {
 ModalViewRule.defaultProps = {
   rule: {
     name: 'default',
+    build: 0,
+    count: 0,
     category: 'default',
     description: 'default'
   }

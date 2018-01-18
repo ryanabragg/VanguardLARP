@@ -99,8 +99,15 @@ class Character extends React.Component {
     if(!id)
       return;
     let rule = this.props.rules.filter(rule => rule._id == id);
-    if(rule.length)
-      this.setState({rule: rule[0]});
+    if(!rule.length)
+      return;
+    rule = Object.assign({}, rule[0], {
+      build: this.getRuleBuild(id),
+      buildBase: rule[0].build,
+      count: this.state.character.skills.filter(s => s.id == id)
+        .reduce((t, s) => t + s.count, 0)
+    });
+    this.setState({rule: rule});
   }
 
   hideRule() {

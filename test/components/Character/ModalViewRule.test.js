@@ -54,13 +54,34 @@ describe('<ModalViewRule />', () => {
     wrapper.setProps({
       rule: rule
     });
-    expect(wrapper.find('h1').text()).to.equal('1');
     expect(wrapper.find('.category').text()).to.equal('2: Burn (Tier 4)');
-    expect(wrapper.find('.race').text()).to.equal('Race: 5 (6)');
-    expect(wrapper.find('.effect').text()).to.equal('7');
-    expect(wrapper.find('.delivery').text()).to.equal('Delivery: 8');
-    expect(wrapper.find('.verbal').text()).to.equal('Verbal: "9"');
     expect(wrapper.find('.uses').text()).to.equal('Uses: 10 + 11 per 12 Aptitudes 13');
-    expect(wrapper.find('main').html()).to.equal('<main class="description"><p>14</p><p>15</p></main>');
+
+    rule.build = 5;
+    rule.buildBase = 10;
+    wrapper.setProps({
+      rule: rule
+    });
+    expect(wrapper.find('h1').text()).to.equal('1 (5 Build)');
+    rule.count = 5;
+    wrapper.setProps({
+      rule: rule
+    });
+    expect(wrapper.find('h1').text()).to.equal('1 (5 Build)');
+    rule.category = 'Craft'
+    wrapper.setProps({
+      rule: rule
+    });
+    expect(wrapper.find('h1').text()).to.equal('1 (10 Build)');
+    rule.count = 4;
+    wrapper.setProps({
+      rule: rule
+    });
+    expect(wrapper.find('h1').text()).to.equal('1 (10 Build)');
+    rule.count = 3;
+    wrapper.setProps({
+      rule: rule
+    });
+    expect(wrapper.find('h1').text()).to.equal('1 (5 Build)');
   });
 });
