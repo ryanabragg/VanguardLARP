@@ -155,16 +155,14 @@ class Ability extends React.Component {
       <div {...rest}>
         {input}
         <div className={'controls' + (this.state.isShowingControls ? ' show' : '')}>
-          <Button callback={this.increment} radius='50%'
+          <Button callback={this.increment}
             disabled={this.props.max > 0 && this.props.count >= this.props.max}
-          >
-            <ChevronUp />
-          </Button>
-          <Button callback={this.decrement} radius='50%'
+            icon={<ChevronUp />} radius='100%' type='primary'
+          />
+          <Button callback={this.decrement}
             disabled={this.props.count <= this.props.min}
-          >
-            <ChevronDown />
-          </Button>
+            icon={<ChevronDown />} radius='100%' type='primary'
+          />
         </div>
         <div className={'uses' + uses}>
           {!this.props.uses ? null : <label>{this.props.uses}</label>}

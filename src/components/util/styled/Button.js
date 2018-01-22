@@ -23,8 +23,8 @@ const StyledButton = styled(Button)`
       color = hover;
     return `
       color: ${props.theme.newtheme.colors.typography(color)};
-      background: ${color};
       fill: ${props.theme.newtheme.colors.typography(color, 'icon')};
+      background: ${color};
       border: ${props.borderSize || '1px'} solid ${color};
       border-radius: ${props.radius || '0px'};
 

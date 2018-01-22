@@ -61,6 +61,10 @@ const StyledAbility = styled(Ability)`
     &:focus {
       display: flex;
     }
+
+    button {
+      padding: 0;
+    }
   }
 
   .show {
