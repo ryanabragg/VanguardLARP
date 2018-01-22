@@ -30,6 +30,7 @@ const space = {
   m: 16,
   l: 32,
   xl: 64,
+  xxl: 128,
   squish: (size) => size/2,
   stretch: (size) => size*1.5,
   inset: (size, mod=(v)=>v) => mod(size) + 'px ' + size + 'px',
@@ -47,6 +48,7 @@ const layers = {
 
 const typography = {
   size: {
+    xxs: 6,
     xs: 8,
     s: 12,
     m: 16,
@@ -95,37 +97,44 @@ const typography = {
 
 const colors = {
   white: '#ffffff',
-  grey: '#0f0f0f',
+  grey: '#E0E1E2',
   black: '#000000',
-  red: '#000000',
-  green: '#000000',
+  red: '#DB2828',
+  green: '#21BA45',
   blue: '#003da5',
-  yellow: '#660729',
+  yellow: '#660729', //asside
+  gold: '#ffcc00',
   pale: {
-    grey: '#0a0a0a',
-    red: '#ff5c42',
-    green: '#2daf77',
+    grey: '#0a0a0a', //link
+    red: '#ff5c42', //error
+    green: '#2daf77', //success
     blue: '#8bb8e8',
-    yellow: '#fbd872',
-  },
-  accent: '#ffcc00',
-  asside: '#660729',
-  link: '#0a0a0a',
-  success: '#2daf77',
-  error: '#ff5c42',
-  alert: '#fbd872',
-  delta: {
-    lighten: 5,
-    darken: 10,
-    blacken: 20
+    yellow: '#fbd872', //alert|warning
   },
   external: {
     facebook: '#3B5998'
   },
+  isLight: (c) => Color(c).light(),
+  isDark: (c) => Color(c).dark(),
+  lighten: (c) => Color(c).lighten(0.05).hex(),
+  darken: (c) => Color(c).darken(0.1).hex(),
+  blacken: (c) => Color(c).darken(0.2).hex(),
+  greyscale: (c) => Color(c).grayscale().hex(),
+  opacity: (c, o) => o > 0 ? Color(c).opacquer(o).hex() : Color(c).fade(0 - o).hex(),
   typography: (background, type='primary') => {
     let bg = Color(background);
     let alpha = (bg.light() ? typography.alpha.dark[type] : typography.alpha.light[type]) || 1;
     return Color(bg.light() ? 'black' : 'white').mix(bg, alpha).hex();
+  },
+  mix: (c1, c2, a) => Color(c1).mix(Color(c2), a).hex()
+};
+
+colors.byType = (type) => {
+  switch(type) {
+  case 'primary': return colors.blue;
+  case 'secondary': return colors.pale.blue;
+  case 'danger': return colors.red;
+  default: return colors.grey;
   }
 };
 
@@ -188,5 +197,7 @@ const values = {
     iconInactive: 0.3,
   }
 };
+
+values.newtheme = theme;
 
 export default values;

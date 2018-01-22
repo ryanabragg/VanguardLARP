@@ -1,73 +1,67 @@
 import styled from 'styled-components';
 
-import { colorOnBackground } from '../../../util/css-helpers';
-
 import Button from '../Button';
 
 const StyledButton = styled(Button)`
-  height: ${props => props.height || props.size || '32px'};
-  width: ${props => props.width || props.size || '32px'};
+  display: flex;
+  flex-flow: ${props => !props.iconRight ? 'row' : 'row-reverse'};
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: center;
+
   margin: ${props => props.margin || '0'};
   padding: ${props => props.padding || '5px'};
-  background: ${props => {
+
+  ${props => {
+    let color = props.theme.newtheme.colors.grey;
     if(props.disabled)
-      return props.theme.colors.grey;
-    return props.color || props.theme.colors[props.type || 'primary'];
-  }};
-  color: ${props => {
-    if(props.disabled)
-      return props.theme.colors.white;
-    let color = props.color || props.theme.colors[props.type || 'primary'];
-    return colorOnBackground(color, props.theme.alphaLightText.primary, props.theme.alphaDarkText.primary)
-  }};
-  fill: ${props => {
-    if(props.disabled)
-      return props.theme.colors.white;
-    let color = props.color || props.theme.colors[props.type || 'primary'];
-    return colorOnBackground(color, props.theme.alphaLightText.primary, props.theme.alphaDarkText.primary)
-  }};
-  border-radius: ${props => props.radius || '0px'};
-  border: none;
+      color = props.theme.newtheme.colors.pale.grey;
+    else if(props.type)
+      color = props.theme.newtheme.colors.byType(props.type);
+    let hover = props.theme.newtheme.colors.darken(color);
+    if(props.pressed)
+      color = hover;
+    return `
+      color: ${props.theme.newtheme.colors.typography(color)};
+      background: ${color};
+      fill: ${props.theme.newtheme.colors.typography(color, 'icon')};
+      border: ${props.borderSize || '1px'} solid ${color};
+      border-radius: ${props.radius || '0px'};
+
+      :hover,
+      :focus {
+        color: ${props.theme.newtheme.colors.typography(hover)};
+        fill: ${props.theme.newtheme.colors.typography(hover, 'icon')};;
+        background: ${hover};
+        border: ${props.borderSize || '1px'} solid ${hover};
+        border-radius: ${props.radius || '0px'};
+      }
+    `;
+  }}
+
   ${props => props.shadow ? 'box-shadow: 4px 8px 16px rgba(0,0,0,0.4);' : ''}
 
-  :hover {
-    ${props => props.disabled ? '' : 'cursor: pointer;'}
-    background: ${props => {
-      if(props.disabled)
-        return props.theme.colors.grey;
-      return props.color || props.theme.colors[props.type || 'accent'];
-    }};
-    color: ${props => {
-      if(props.disabled)
-        return props.theme.colors.white;
-      let color = props.color || props.theme.colors[props.type || 'accent'];
-      return colorOnBackground(color, props.theme.alphaLightText.primary, props.theme.alphaDarkText.primary)
-    }};
-    fill: ${props => {
-      if(props.disabled)
-        return props.theme.colors.white;
-      let color = props.color || props.theme.colors[props.type || 'accent'];
-      return colorOnBackground(color, props.theme.alphaLightText.primary, props.theme.alphaDarkText.primary)
-    }};
+  a {
+    color: inherit;
+    text-decoration: none;
   }
-  :focus {
-    background: ${props => {
-      if(props.disabled)
-        return props.theme.colors.grey;
-      return props.color || props.theme.colors[props.type || 'accent'];
-    }};
-    color: ${props => {
-      if(props.disabled)
-        return props.theme.colors.white;
-      let color = props.color || props.theme.colors[props.type || 'accent'];
-      return colorOnBackground(color, props.theme.alphaLightText.primary, props.theme.alphaDarkText.primary)
-    }};
-    fill: ${props => {
-      if(props.disabled)
-        return props.theme.colors.white;
-      let color = props.color || props.theme.colors[props.type || 'accent'];
-      return colorOnBackground(color, props.theme.alphaLightText.primary, props.theme.alphaDarkText.primary)
-    }};
+
+  ${props => props.disabled ? '' : ':hover { cursor: pointer; }'}
+
+  svg {
+    height: ${props => props.iconSize || '32px'};
+    width: ${props => props.iconSize || '32px'};
+    fill: inherit;
+  }
+
+  > span {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  > span[data-button="content"] {
+    margin: 0 10px;
   }
 
   ${props => props.custom || ''}
