@@ -50,6 +50,7 @@ class App extends React.Component {
     };
 
     this.setUser = this.setUser.bind(this);
+    this.logout = this.logout.bind(this);
 
     this.subscribeService = this.subscribeService.bind(this);
     this.loadService = this.loadService.bind(this);
@@ -78,6 +79,11 @@ class App extends React.Component {
 
   setUser(user) {
     this.setState({user: user});
+  }
+
+  logout() {
+    api.logout();
+    this.setState({user: {}});
   }
 
   subscribeService(service, observer) {
@@ -165,15 +171,16 @@ class App extends React.Component {
           }} />
           <Route path='/admin' render={props => {
             return <AdminNavigation {...props}
-              api={api}
               user={this.state.user}
-              setUser={this.setUser} />;
+              setUser={this.setUser}
+              logout={this.logout} />;
           }} />
           <Switch>
             <Route exact path='/admin' component={AdminDashboard} />
             <Route exact path='/admin/events' render={props => {
               return <AdminEvents {...props}
                 user={this.state.user}
+                logout={this.logout}
                 events={this.state.events}
                 subscribeService={this.subscribeService}
                 loadService={this.loadService}
@@ -185,6 +192,7 @@ class App extends React.Component {
             <Route path='/admin/events/:id' render={props => {
               return <AdminEvents {...props}
                 user={this.state.user}
+                logout={this.logout}
                 events={this.state.events}
                 subscribeService={this.subscribeService}
                 loadService={this.loadService}
@@ -196,6 +204,7 @@ class App extends React.Component {
             <Route exact path='/admin/rules' render={props => {
               return <AdminRules {...props}
                 user={this.state.user}
+                logout={this.logout}
                 rules={this.state.rules}
                 subscribeService={this.subscribeService}
                 loadService={this.loadService}
@@ -207,6 +216,7 @@ class App extends React.Component {
             <Route path='/admin/rules/:id' render={props => {
               return <AdminRules {...props}
                 user={this.state.user}
+                logout={this.logout}
                 rules={this.state.rules}
                 subscribeService={this.subscribeService}
                 loadService={this.loadService}
@@ -222,6 +232,7 @@ class App extends React.Component {
             <Route exact path='/character' render={props => {
               return <Character {...props}
                 user={this.state.user}
+                logout={this.logout}
                 rules={this.state.rules}
                 subscribeService={this.subscribeService}
                 loadService={this.loadService}
@@ -230,9 +241,22 @@ class App extends React.Component {
                 patch={this.recordPatch}
                 remove={this.recordDelete} />;
             }} />
-            <Route path='/character/:code' render={props => {
+            <Route path='/character/:id' render={props => {
               return <Character {...props}
                 user={this.state.user}
+                logout={this.logout}
+                rules={this.state.rules}
+                subscribeService={this.subscribeService}
+                loadService={this.loadService}
+                create={this.recordCreate}
+                update={this.recordUpdate}
+                patch={this.recordPatch}
+                remove={this.recordDelete} />;
+            }} />
+            <Route path='/character/link/:link' render={props => {
+              return <Character {...props}
+                user={this.state.user}
+                logout={this.logout}
                 rules={this.state.rules}
                 subscribeService={this.subscribeService}
                 loadService={this.loadService}

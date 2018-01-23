@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 
 import Button from '../util/styled/Button';
 
-import Refresh from '../svg/icon/Refresh';
-import Add from '../svg/icon/Add';
-import Trash from '../svg/icon/Trash';
-import X from '../svg/icon/X';
-import Magnifier from '../svg/icon/Magnifier';
-import Save from '../svg/icon/Save';
-import Link from '../svg/icon/Link';
+import IconRefresh from '../svg/icon/Refresh';
+import IconX from '../svg/icon/X';
+import IconSave from '../svg/icon/Save';
+import IconBookmark from '../svg/icon/Bookmark';
+import IconPersonAdd from '../svg/icon/Person-Add';
+import IconPersonBoxed from '../svg/icon/Person-Boxed';
+import IconLogin from '../svg/icon/Arrive';
+import IconLogout from '../svg/icon/Leave';
 
 class CharacterMenu extends React.Component {
   constructor (props) {
@@ -53,80 +54,80 @@ class CharacterMenu extends React.Component {
 
   render() {
     const rest = Object.assign({}, this.props);
-    delete rest.reload;
-    delete rest.search;
+    delete rest.user;
+    delete rest.logout;
+    delete rest.reloadRules;
+    delete rest.link;
+    delete rest.save;
+    delete rest.reset;
     delete rest.new;
-    delete rest.submit;
-    delete rest.cancel;
-    delete rest.delete;
+
+    const anon = Object.keys(this.props.user).length === 0 && this.props.user.constructor === Object;
 
     return (
       <div {...rest}>
-        {typeof this.props.reload != 'function' ? null :
-          <Button label='Reload'
-            callback={this.props.reload}
-            radius='100%'
+        <Button label={anon ? 'Sign In' : 'Sign Out'}
+          link={anon ? '/login' : null}
+          callback={anon ? null : this.props.logout}
+          icon={anon ? <IconLogin /> : <IconLogout />}
+        >
+          {anon ? 'Sign In' : 'Sign Out'}
+        </Button>
+        {anon ? null :
+          <Button label='Account'
+            link='/account'
+            icon={<IconPersonBoxed />}
           >
-            <Refresh />
+            Account
           </Button>
         }
-        {typeof this.props.search != 'function' ? null :
-          <div className='has-dropdown'>
-            <div className='dropdown'>
-              <input />
-              <div className='menu-item' onClick={this.search}>
-              </div>
-              <div className='menu-item' onClick={this.searchClear}>
-              </div>
-            </div>
-          </div>
-        }
-        {typeof this.props.new != 'function' ? null :
-          <Button label='New Character'
-            callback={this.props.new}
-            radius='100%'
-          >
-            <Add />
-          </Button>
-        }
-        {typeof this.props.submit != 'function' ? null :
-          <Button label='Save'
-            callback={this.props.submit}
-            radius='100%'
-          >
-            <Link />
-          </Button>
-        }
-        {typeof this.props.cancel != 'function' ? null :
-          <Button label='Cancel; Clear Record Selection'
-            callback={this.props.cancel}
-            radius='100%'
-          >
-            <X />
-          </Button>
-        }
-        {typeof this.props.delete != 'function' ? null :
-          <Button label='Delete'
-            callback={this.props.delete}
-            radius='100%'
-          >
-            <Trash />
-          </Button>
-        }
+        <Button label='Reload Rules'
+          callback={this.props.reloadRules}
+          icon={<IconRefresh />}
+        >
+          Reload Rules
+        </Button>
+        <Button label='Set Address Link'
+          callback={this.props.link}
+          icon={<IconBookmark />}
+        >
+          Set Address Link
+        </Button>
+        <Button label='Save Character'
+          callback={this.props.save}
+          icon={<IconSave />}
+        >
+          Save Character
+        </Button>
+        <Button label='Reset Character'
+          callback={this.props.reset}
+          icon={<IconX />}
+        >
+          Reset Character
+        </Button>
+        <Button label='New Character'
+          callback={this.props.new}
+          icon={<IconPersonAdd />}
+        >
+          New Character
+        </Button>
       </div>
     );
   }
 }
 
-CharacterMenu.defaultProps = {};
+CharacterMenu.defaultProps = {
+  user: {}
+};
 
 CharacterMenu.propTypes = {
-  reload: PropTypes.func,
-  search: PropTypes.func,
-  new: PropTypes.func,
-  submit: PropTypes.func,
-  cancel: PropTypes.func,
-  delete: PropTypes.func,
+  user: PropTypes.object,
+  logout: PropTypes.func.isRequired,
+  reloadRules: PropTypes.func,
+  link: PropTypes.func,
+  save: PropTypes.func,
+  reset: PropTypes.func,
+  new: PropTypes.func
 };
 
 export default CharacterMenu;

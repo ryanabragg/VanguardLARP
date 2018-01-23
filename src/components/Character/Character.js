@@ -1,25 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Section from './styled/Section';
-import Box from './styled/Box';
-
 import CharacterMenu from './styled/CharacterMenu';
 import CharacterSheet from './styled/CharacterSheet';
 import ModalViewRule from './styled/ModalViewRule';
-
-import Levels from './styled/Levels';
-import Stones from './styled/Stones';
-import SourceMarks from './styled/SourceMarks';
-import Crafting from './styled/Crafting';
-import AbilityGroup from './styled/AbilityGroup';
-import Racials from './styled/Racials';
-import Pools from './styled/Pools';
-
-import Button from '../util/styled/Button';
-import Field from '../util/styled/Field';
-
-import Save from '../svg/icon/Save';
 
 // import the notifications component to access static methods (don't import styled version)
 import NotificationList from '../util/NotificationList';
@@ -28,9 +12,9 @@ class Character extends React.Component {
   constructor (props) {
     super(props);
 
-    this.newCharacter = {
+    this.blankCharacter = {
       _id: '',
-      shared: false,
+      type: 'freestyle',
       player: {
         id: '',
         name: 'Anonymous',
@@ -58,7 +42,7 @@ class Character extends React.Component {
     };
 
     this.state = {
-      character: this.newCharacter,
+      character: this.blankCharacter,
       rule: null
     };
 
@@ -66,16 +50,20 @@ class Character extends React.Component {
 
     this.reloadRules = this.reloadRules.bind(this);
 
+    this.setCharacterLink = this.setCharacterLink.bind(this);
+    this.getCharacterFromLink = this.getCharacterFromLink.bind(this);
+
+    this.newCharacter = this.newCharacter.bind(this);
+    this.resetCharacter = this.resetCharacter.bind(this);
+    this.saveCharacter = this.saveCharacter.bind(this);
+    this.loadCharacter = this.loadCharacter.bind(this);
+
     this.viewRule = this.viewRule.bind(this);
     this.hideRule = this.hideRule.bind(this);
 
     this.getRuleBuild = this.getRuleBuild.bind(this);
     this.getRules = this.getRules.bind(this);
     this.parseRules = this.parseRules.bind(this);
-
-    this.encode = this.encode.bind(this);
-    this.decode = this.decode.bind(this);
-    this.saveCharacter = this.saveCharacter.bind(this);
 
     this.updateCharacterBuild = this.updateCharacterBuild.bind(this);
 
@@ -87,13 +75,65 @@ class Character extends React.Component {
 
   componentDidMount () {
     this.props.loadService('rules');
-    if(this.props.match.params.hasOwnProperty('code'))
-      this.loadCharacter(this.props.match.params.code);
+    if(this.props.match.params.hasOwnProperty('link'))
+      this.getCharacterFromLink(this.props.match.params.link);
+    if(this.props.match.params.hasOwnProperty('id'))
+      this.loadCharacter(this.props.match.params.id);
   }
 
   reloadRules() {
     this.props.loadService('rules', true);
   }
+
+  setCharacterLink() {
+    let character = Object.assign({}, this.state.character);
+    character.player.id = '';
+    character.player.build = 0;
+    let encoded = JSON.stringify(character);
+    this.props.history.replace('/character/link/' + btoa(encoded));
+  }
+
+  getCharacterFromLink(code) {
+    let data = undefined;
+    try{
+      data = JSON.parse(atob(code));
+    } catch(e) {
+      data = this.blankCharacter;
+    }
+    this.setState({character: data});
+  }
+
+  newCharacter() {
+    this.setState({character: this.blankCharacter});
+  }
+
+  resetCharacter() {}
+
+  saveCharacter() {
+    if(Object.keys(this.props.user).length === 0 && this.props.user.constructor === Object) {
+      NotificationList.alert('Not signed in');
+      return;
+    }
+    if(!this.state.character._id){
+      let character = Object.assign({}, this.state.character);
+      delete character._id;
+      this.props.create('characters', character).then(c => {
+        this.setState({character: c});
+        NotificationList.success('Character created');
+        this.props.history.replace('/character/' + this.state.character._id);
+      }).catch(error => {
+        NotificationList.alert(error.errors[0], 'Failed to create character.');
+      });
+    }
+    else
+      this.props.update('characters', this.state.character).then(c => {
+        NotificationList.success('Character updated');
+      }).catch(error => {
+        NotificationList.alert(error.errors[0], 'Failed to update character.');
+      });
+  }
+
+  loadCharacter(id) {}
 
   viewRule(id) {
     if(!id)
@@ -400,29 +440,6 @@ class Character extends React.Component {
           };
         })
     };
-  }
-
-  encode() {
-    let encoded = JSON.stringify(this.state.character);
-    this.props.history.replace('/character/' + btoa(encoded));
-  }
-
-  decode(code) {
-    let data = undefined;
-    try{
-      data = JSON.parse(atob(code));
-    } catch(e) {
-      data = this.newCharacter;
-    }
-    this.setState({character: data});
-  }
-
-  saveCharacter() {
-    this.encode();
-  }
-
-  loadCharacter(code) {
-    this.decode(code);
   }
 
   updateCharacterBuild(prevState) {
@@ -794,7 +811,13 @@ class Character extends React.Component {
     return (
       <div>
         <CharacterMenu
-          submit={this.saveCharacter}
+          user={this.props.user}
+          logout={this.props.logout}
+          reloadRules={this.reloadRules}
+          link={this.setCharacterLink}
+          save={this.saveCharacter}
+          reset={this.saveCharacter}
+          new={this.newCharacter}
         />
         <CharacterSheet
           character={this.state.character}
@@ -818,6 +841,7 @@ Character.defaultProps = {
 
 Character.propTypes = {
   user: PropTypes.object,
+  logout: PropTypes.func.isRequired,
   rules: PropTypes.array,
   subscribeService: PropTypes.func.isRequired,
   loadService: PropTypes.func.isRequired,

@@ -28,8 +28,14 @@
       "type": "string",
       "format": "date-time"
     },
-    "shared": {
-      "type": "boolean"
+    "type": {
+      "type": "string",
+      "enum": [
+        "freestyle",
+        "player",
+        "non-player",
+        "monster"
+      ]
     },
     "player": {
       "description": "user data",

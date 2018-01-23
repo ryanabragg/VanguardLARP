@@ -105,7 +105,7 @@ const colors = {
   yellow: '#660729', //asside
   gold: '#ffcc00',
   pale: {
-    grey: '#0a0a0a', //link
+    grey: '#f0f0f0', //link
     red: '#ff5c42', //error
     green: '#2daf77', //success
     blue: '#8bb8e8',
@@ -134,6 +134,7 @@ colors.byType = (type) => {
   case 'primary': return colors.blue;
   case 'secondary': return colors.pale.blue;
   case 'danger': return colors.red;
+  case 'disabled': return colors.pale.grey;
   default: return colors.grey;
   }
 };

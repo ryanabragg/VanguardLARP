@@ -269,7 +269,9 @@ class Rules extends React.Component {
     return (
       <div>
         <main>
-          <RecordMenu direction='vertical'
+          <RecordMenu
+            user={this.props.user}
+            logout={this.props.logout}
             reload={this.reloadService}
             new={this.handleFormNew}
             submit={this.state.selected._id ? this.handleFormSubmit : undefined}
@@ -293,6 +295,7 @@ Rules.defaultProps = {
  */
 Rules.propTypes = {
   user: PropTypes.object,
+  logout: PropTypes.func.isRequired,
   rules: PropTypes.array,
   subscribeService: PropTypes.func.isRequired,
   loadService: PropTypes.func.isRequired,

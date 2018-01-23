@@ -233,6 +233,8 @@ class Events extends React.Component {
       <div>
         <main>
           <RecordMenu direction='vertical'
+            user={this.props.user}
+            logout={this.props.logout}
             reload={this.reloadService}
             new={this.handleFormNew}
             submit={this.state.selected._id ? this.handleFormSubmit : undefined}
@@ -254,6 +256,7 @@ Events.defaultProps = {
 
 Events.propTypes = {
   user: PropTypes.object,
+  logout: PropTypes.func.isRequired,
   events: PropTypes.array,
   subscribeService: PropTypes.func.isRequired,
   loadService: PropTypes.func.isRequired,

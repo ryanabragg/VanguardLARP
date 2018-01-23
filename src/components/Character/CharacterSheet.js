@@ -12,7 +12,6 @@ import AbilityGroup from './styled/AbilityGroup';
 import Racials from './styled/Racials';
 import Pools from './styled/Pools';
 
-import Button from '../util/styled/Button';
 import Field from '../util/styled/Field';
 
 const CharacterSheet = (props) => {

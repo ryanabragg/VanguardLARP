@@ -27,10 +27,6 @@ const StyledNavigation = styled(Navigation)`
     transition: top 0.2s ease-in-out;
   }
 
-  nav > :last-child {
-    margin-left: auto;
-  }
-
   nav.hide {
     top: -60px;
   }
@@ -56,33 +52,7 @@ const StyledNavigation = styled(Navigation)`
     height: 40px;
     width: 40px;
     margin: 5px;
-  }
-  svg {
     fill: ${props => colorOnBackground(Color(props.theme.colors.primary).grayscale().hex(), props.theme.alphaLightText.primary, props.theme.alphaDarkText.primary)};
-  }
-
-  .divider {
-    width: 3px;
-    height: 90%;
-    margin-top: 5%;
-    background: ${props => colorOnBackground(Color(props.theme.colors.primary).grayscale().hex(), props.theme.alphaLightText.primary, props.theme.alphaDarkText.primary)};
-  }
-
-  .has-dropdown {
-    display: inline;
-  }
-  .has-dropdown:hover .dropdown,
-  .has-dropdown:focus .dropdown {
-    display: block;
-  }
-  .dropdown {
-    display: none;
-    position: absolute;
-    background: ${props => Color(props.theme.colors.primary).grayscale().hex()};
-  }
-
-  @media (max-width: ${props => props.theme.breakpoints.s}px) {
-    
   }
 `;
 

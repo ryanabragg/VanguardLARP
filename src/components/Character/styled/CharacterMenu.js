@@ -21,8 +21,13 @@ const StyledCharacterMenu = styled(CharacterMenu)`
   }
   transition: top 0.2s ease-in-out;
 
-  div {
-    margin: 0 0 8px 0;
+  span[data-button="content"] {
+    display: none;
+  }
+  button:hover {
+    > span[data-button="content"] {
+      display: flex;
+    }
   }
 `;
 

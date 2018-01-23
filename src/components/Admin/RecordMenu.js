@@ -9,6 +9,9 @@ import Trash from '../svg/icon/Trash';
 import X from '../svg/icon/X';
 import Magnifier from '../svg/icon/Magnifier';
 import Save from '../svg/icon/Save';
+import IconPersonBoxed from '../svg/icon/Person-Boxed';
+import IconLogin from '../svg/icon/Arrive';
+import IconLogout from '../svg/icon/Leave';
 
 class Menu extends React.Component {
   constructor (props) {
@@ -52,6 +55,8 @@ class Menu extends React.Component {
 
   render() {
     const rest = Object.assign({}, this.props);
+    delete rest.user;
+    delete rest.logout;
     delete rest.reload;
     delete rest.search;
     delete rest.new;
@@ -59,14 +64,31 @@ class Menu extends React.Component {
     delete rest.cancel;
     delete rest.delete;
 
+    const anon = Object.keys(this.props.user).length === 0 && this.props.user.constructor === Object;
+
     return (
       <div {...rest}>
+        <Button label={anon ? 'Sign In' : 'Sign Out'}
+          link={anon ? '/login' : null}
+          callback={anon ? null : this.props.logout}
+          icon={anon ? <IconLogin /> : <IconLogout />}
+        >
+          {anon ? 'Sign In' : 'Sign Out'}
+        </Button>
+        {anon ? null :
+          <Button label='Account'
+            link='/account'
+            icon={<IconPersonBoxed />}
+          >
+            Account
+          </Button>
+        }
         {typeof this.props.reload != 'function' ? null :
           <Button label='Reload Data'
             callback={this.props.reload}
-            radius='100%'
+            icon={<Refresh />}
           >
-            <Refresh />
+            Reload Data
           </Button>
         }
         {typeof this.props.search != 'function' ? null :
@@ -83,33 +105,33 @@ class Menu extends React.Component {
         {typeof this.props.new != 'function' ? null :
           <Button label='New Record'
             callback={this.props.new}
-            radius='100%'
+            icon={<Add />}
           >
-            <Add />
+            New
           </Button>
         }
         {typeof this.props.submit != 'function' ? null :
-          <Button label='Submit Record'
+          <Button label='Save Record'
             callback={this.props.submit}
-            radius='100%'
+            icon={<Save />}
           >
-            <Save />
+            Save
           </Button>
         }
         {typeof this.props.cancel != 'function' ? null :
           <Button label='Cancel; Clear Record Selection'
             callback={this.props.cancel}
-            radius='100%'
+            icon={<X />}
           >
-            <X />
+            Cancel
           </Button>
         }
         {typeof this.props.delete != 'function' ? null :
           <Button label='Delete Record'
             callback={this.props.delete}
-            radius='100%'
+            icon={<Trash />}
           >
-            <Trash />
+            Delete
           </Button>
         }
       </div>
@@ -117,9 +139,13 @@ class Menu extends React.Component {
   }
 }
 
-Menu.defaultProps = {};
+Menu.defaultProps = {
+  user: {}
+};
 
 Menu.propTypes = {
+  user: PropTypes.object,
+  logout: PropTypes.func.isRequired,
   reload: PropTypes.func,
   search: PropTypes.func,
   new: PropTypes.func,

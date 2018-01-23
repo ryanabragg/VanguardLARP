@@ -8,11 +8,6 @@ import IconEvent from '../svg/icon/Event';
 import IconRule from '../svg/icon/Extension';
 import IconCharacter from '../svg/icon/Persons';
 
-import IconAccount from '../svg/icon/Gear';
-import IconProfile from '../svg/icon/PersonBox';
-import IconLogin from '../svg/icon/Arrive';
-import IconLogout from '../svg/icon/Leave';
-
 class Navigation extends React.Component {
   constructor (props) {
     super(props);
@@ -29,7 +24,6 @@ class Navigation extends React.Component {
     this.scrollNext = 0;
 
     this.account = this.account.bind(this);
-    this.logout = this.logout.bind(this);
 
     this.handlePosition = this.handlePosition.bind(this);
     this.updateNav = this.updateNav.bind(this);
@@ -71,11 +65,6 @@ class Navigation extends React.Component {
       this.props.history.push('/login');
   }
 
-  logout() {
-    this.props.api.logout();
-    this.props.setUser({});
-  }
-
   handlePosition(e) {
     this.scrollNext = this.nav.getBoundingClientRect().top;
     if(Math.abs(this.scrollNext - this.scrollPrev) > this.state.delta) {
@@ -103,32 +92,7 @@ class Navigation extends React.Component {
     delete rest.match;
     delete rest.location;
     delete rest.history;
-    delete rest.api;
-    delete rest.user;
-    delete rest.setUser;
     delete rest.hideOnScroll;
-
-    let account = null;
-    if(this.props.user._id)
-      account = (
-        <div className='has-dropdown'>
-          <IconAccount title='View Account Settings' />
-          <div className='dropdown'>
-            <NavLink to={'/account'}>
-              <IconProfile title='View Account Settings' />
-            </NavLink>
-            <a role='button' onClick={this.logout}>
-              <IconLogout title='Sign Out' />
-            </a>
-          </div>
-        </div>
-      );
-    else
-      account = (
-        <NavLink to={'/login'}>
-          <IconLogin title='Sign In' />
-        </NavLink>
-      );
 
     return (
       <div {...rest} ref={ref => this.nav = ref}>
@@ -145,7 +109,6 @@ class Navigation extends React.Component {
           <NavLink to={'/admin/characters'} activeClassName='nav-active'>
             <IconCharacter title='Manage Characters' />
           </NavLink>
-          {account}
         </nav>
       </div>
     );
@@ -162,9 +125,6 @@ Navigation.defaultProps = {
 Navigation.propTypes = {
   location: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
-  api: PropTypes.object.isRequired,
-  user: PropTypes.object,
-  setUser: PropTypes.func.isRequired,
   hideOnScroll: PropTypes.bool
 };
 
