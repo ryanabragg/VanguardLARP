@@ -181,7 +181,15 @@ class Character extends React.Component {
       });
   }
 
-  loadCharacter(id) {}
+  loadCharacter(id) {
+    let character = this.props.characters.filter(c => c._id == id);console.log(this.props.characters)
+    if(!character.length){
+      NotificationList.alert('Character not found');
+      return;
+    }
+    character = character[0];
+    this.setState({character: Object.assign({}, this.blankCharacter, character)});
+  }
 
   viewRule(id) {
     if(!id)
@@ -884,13 +892,15 @@ class Character extends React.Component {
 
 Character.defaultProps = {
   user: {},
-  rules: []
+  rules: [],
+  characters: []
 };
 
 Character.propTypes = {
   user: PropTypes.object,
   logout: PropTypes.func.isRequired,
   rules: PropTypes.array,
+  characters: PropTypes.array,
   subscribeService: PropTypes.func.isRequired,
   loadService: PropTypes.func.isRequired,
   create: PropTypes.func.isRequired,

@@ -10,8 +10,8 @@ const routes = [
   '/admin/characters',
   '/admin/characters/:id',
   '/character',
-  '/character/link/:link',
-  '/character/:id'
+  '/character/:id',
+  '/character/link/:link'
 ];
 
 module.exports = routes;

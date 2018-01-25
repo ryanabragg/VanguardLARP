@@ -46,7 +46,8 @@ class App extends React.Component {
     this.state = {
       user: {},
       events: props.events,
-      rules: props.rules
+      rules: props.rules,
+      characters: []
     };
 
     this.setUser = this.setUser.bind(this);
@@ -144,19 +145,19 @@ class App extends React.Component {
   }
 
   recordCreate(service, record, callback) {
-    api.service(service).create(record, callback);
+    return api.service(service).create(record, callback);
   }
 
   recordUpdate(service, record, callback) {
-    api.service(service).update(record._id, record, callback);
+    return api.service(service).update(record._id, record, callback);
   }
 
   recordPatch(service, id = null, data, query = {}, callback) {
-    api.service(service).patch(id, data, {query: query}, callback);
+    return api.service(service).patch(id, data, {query: query}, callback);
   }
 
   recordDelete(service, id = null, query = {}, callback) {
-    api.service(service).remove(id, {query: query}, callback);
+    return api.service(service).remove(id, {query: query}, callback);
   }
 
   render() {
@@ -168,12 +169,7 @@ class App extends React.Component {
               events={this.state.events}
               loadService={this.loadService} />;
           }} />
-          <Route path='/admin' render={props => {
-            return <AdminNavigation {...props}
-              user={this.state.user}
-              setUser={this.setUser}
-              logout={this.logout} />;
-          }} />
+          <Route path='/admin' component={AdminNavigation} />
           <Switch>
             <Route exact path='/admin' component={AdminDashboard} />
             <Route exact path='/admin/events' render={props => {
@@ -188,7 +184,7 @@ class App extends React.Component {
                 patch={this.recordPatch}
                 remove={this.recordDelete} />;
             }} />
-            <Route path='/admin/events/:id' render={props => {
+            <Route exact path='/admin/events/:id' render={props => {
               return <AdminEvents {...props}
                 user={this.state.user}
                 logout={this.logout}
@@ -212,7 +208,7 @@ class App extends React.Component {
                 patch={this.recordPatch}
                 remove={this.recordDelete} />;
             }} />
-            <Route path='/admin/rules/:id' render={props => {
+            <Route exact path='/admin/rules/:id' render={props => {
               return <AdminRules {...props}
                 user={this.state.user}
                 logout={this.logout}
@@ -225,7 +221,7 @@ class App extends React.Component {
                 remove={this.recordDelete} />;
             }} />
             <Route exact path='/admin/characters' component={PageNotFound} />
-            <Route path='/admin/characters/:id' component={PageNotFound} />
+            <Route exact path='/admin/characters/:id' component={PageNotFound} />
           </Switch>
           <Switch>
             <Route exact path='/character' render={props => {
@@ -233,6 +229,7 @@ class App extends React.Component {
                 user={this.state.user}
                 logout={this.logout}
                 rules={this.state.rules}
+                characters={this.state.characters}
                 subscribeService={this.subscribeService}
                 loadService={this.loadService}
                 create={this.recordCreate}
@@ -240,11 +237,12 @@ class App extends React.Component {
                 patch={this.recordPatch}
                 remove={this.recordDelete} />;
             }} />
-            <Route path='/character/link/:link' render={props => {
+            <Route exact path='/character/:id' render={props => {
               return <Character {...props}
                 user={this.state.user}
                 logout={this.logout}
                 rules={this.state.rules}
+                characters={this.state.characters}
                 subscribeService={this.subscribeService}
                 loadService={this.loadService}
                 create={this.recordCreate}
@@ -252,11 +250,12 @@ class App extends React.Component {
                 patch={this.recordPatch}
                 remove={this.recordDelete} />;
             }} />
-            <Route path='/character/:id' render={props => {
+            <Route exact path='/character/link/:link' render={props => {
               return <Character {...props}
                 user={this.state.user}
                 logout={this.logout}
                 rules={this.state.rules}
+                characters={this.state.characters}
                 subscribeService={this.subscribeService}
                 loadService={this.loadService}
                 create={this.recordCreate}

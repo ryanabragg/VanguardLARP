@@ -43,7 +43,7 @@
       "properties": {
         "id": {
           "type": "string",
-          "pattern": "^[a-zA-Z0-9]+$"
+          "pattern": "^[a-zA-Z0-9]*$"
         },
         "name": {
           "type": "string",
@@ -116,15 +116,7 @@
           "type": "string"
         },
         "prodigy": {
-          "type": "object",
-          "properties": {
-            "race": {
-              "type": "string"
-            },
-            "culture": {
-              "type": "object"
-            }
-          }
+          "type": "boolean"
         }
       }
     },
@@ -148,9 +140,9 @@
             "minimum": 1
           },
           "source": {
-            "oneOf": [
-              { "type": "string" },
-              { "type": "integer" }
+            "anyOf": [
+              { "type": "integer" },
+              { "type": "string" }
             ]
           }
         }
@@ -162,7 +154,6 @@
     "name",
     "build",
     "lives",
-    "recoveries",
     "race",
     "sourceMarks",
     "skills"
