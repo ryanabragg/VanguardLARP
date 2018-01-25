@@ -88,7 +88,8 @@ describe('<Pool />', () => {
     }, {
       _id: 7,
       name: 'lucky',
-      count: 11
+      count: 11,
+      uses: 7
     }];
     const wrapper = shallow(<Pool id='ID' name='tests' abilities={list} viewDescription={view} editCharacter={update}/>);
 
@@ -106,7 +107,7 @@ describe('<Pool />', () => {
     expect(wrapper.find(Ability).at(1).prop('editCharacter')).to.equal(update);
 
     expect(wrapper.find(Ability).at(2).prop('id')).to.equal(7);
-    expect(wrapper.find(Ability).at(2).prop('name')).to.equal('lucky');
+    expect(wrapper.find(Ability).at(2).prop('name')).to.equal('lucky (7)');
     expect(wrapper.find(Ability).at(2).prop('display')).to.equal(false);
     expect(wrapper.find(Ability).at(2).prop('category')).to.equal(undefined);
     expect(wrapper.find(Ability).at(2).prop('max')).to.equal(undefined);

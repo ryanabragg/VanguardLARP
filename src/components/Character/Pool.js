@@ -39,11 +39,12 @@ class Pool extends React.Component {
         />
         <div className='pool-abilities'>
           {this.props.abilities.map(ability => {
+            const tags = ability.uses > 1 ? ' (' + ability.uses + ')' : '';
             return (
               <Ability
                 key={ability._id}
                 id={ability._id}
-                name={ability.name}
+                name={ability.name + tags}
                 display={false}
                 category={ability.category}
                 max={ability.max}
