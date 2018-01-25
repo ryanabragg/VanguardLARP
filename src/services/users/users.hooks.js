@@ -9,7 +9,7 @@ const schema = require('./users.schema.json');
 const restrict = [
   authenticate('jwt'),
   restrictToRoles({
-    roles: ['admin'],
+    roles: ['logistics', 'admin'],
     fieldName: 'permissions',
     idField: '_id',
     ownerField: '_id',

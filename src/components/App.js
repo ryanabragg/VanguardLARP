@@ -94,16 +94,6 @@ class App extends React.Component {
   }
 
   loadService(service, reload = false) {
-    api.getServiceData(service, reload).then(data => {
-      this.setState((prevState, props) => {
-        let nextState = Object.assign({}, prevState);
-        nextState[service] = data;
-        return nextState;
-      });
-    }).catch(error => {
-      NotificationList.alert(error.message, error.name);
-    });
-
     if(-1 == this.listeners.indexOf(service)) {
       this.listeners.push(service);
       api.service(service).on('created', record => {
@@ -142,6 +132,15 @@ class App extends React.Component {
         });
       });
     }
+    return api.getServiceData(service, reload).then(data => {
+      this.setState((prevState, props) => {
+        let nextState = Object.assign({}, prevState);
+        nextState[service] = data;
+        return nextState;
+      });
+    }).catch(error => {
+      NotificationList.alert(error.message, error.name);
+    });
   }
 
   recordCreate(service, record, callback) {
@@ -241,7 +240,7 @@ class App extends React.Component {
                 patch={this.recordPatch}
                 remove={this.recordDelete} />;
             }} />
-            <Route path='/character/:id' render={props => {
+            <Route path='/character/link/:link' render={props => {
               return <Character {...props}
                 user={this.state.user}
                 logout={this.logout}
@@ -253,7 +252,7 @@ class App extends React.Component {
                 patch={this.recordPatch}
                 remove={this.recordDelete} />;
             }} />
-            <Route path='/character/link/:link' render={props => {
+            <Route path='/character/:id' render={props => {
               return <Character {...props}
                 user={this.state.user}
                 logout={this.logout}

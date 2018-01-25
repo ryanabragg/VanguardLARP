@@ -10,6 +10,7 @@ const routes = [
   '/admin/characters',
   '/admin/characters/:id',
   '/character',
+  '/character/link/:link',
   '/character/:id'
 ];
 

@@ -8,9 +8,11 @@ const schema = require('./characters.schema.json');
 const restrict = [
   authenticate('jwt'),
   restrictToRoles({
-    roles: ['characters', 'admin'],
+    roles: ['character-edit', 'logistics', 'admin'],
     fieldName: 'permissions',
-    idField: '_id'
+    idField: '_id',
+    ownerField: '_createdBy',
+    owner: true
   })
 ];
 

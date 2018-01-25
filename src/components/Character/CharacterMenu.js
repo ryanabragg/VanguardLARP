@@ -56,7 +56,7 @@ class CharacterMenu extends React.Component {
     const rest = Object.assign({}, this.props);
     delete rest.user;
     delete rest.logout;
-    delete rest.reloadRules;
+    delete rest.reloadServices;
     delete rest.link;
     delete rest.save;
     delete rest.reset;
@@ -82,10 +82,10 @@ class CharacterMenu extends React.Component {
           </Button>
         }
         <Button label='Reload Rules'
-          callback={this.props.reloadRules}
+          callback={this.props.reloadServices}
           icon={<IconRefresh />}
         >
-          Reload Rules
+          Reload Data
         </Button>
         <Button label='Set Address Link'
           callback={this.props.link}
@@ -123,7 +123,7 @@ CharacterMenu.defaultProps = {
 CharacterMenu.propTypes = {
   user: PropTypes.object,
   logout: PropTypes.func.isRequired,
-  reloadRules: PropTypes.func,
+  reloadServices: PropTypes.func,
   link: PropTypes.func,
   save: PropTypes.func,
   reset: PropTypes.func,

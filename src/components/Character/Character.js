@@ -48,7 +48,8 @@ class Character extends React.Component {
 
     this.redoBuild = false;
 
-    this.reloadRules = this.reloadRules.bind(this);
+    this.characterObserver = this.characterObserver.bind(this);
+    this.reloadServices = this.reloadServices.bind(this);
 
     this.setCharacterLink = this.setCharacterLink.bind(this);
     this.getCharacterFromLink = this.getCharacterFromLink.bind(this);
@@ -73,15 +74,62 @@ class Character extends React.Component {
     this.stateSkillChange = this.stateSkillChange.bind(this);
   }
 
-  componentDidMount () {
-    this.props.loadService('rules');
+  async componentDidMount () {
+    this.unsubscribe = this.props.subscribeService('characters', this.characterObserver);
+    await this.props.loadService('characters');
+    await this.props.loadService('rules');
     if(this.props.match.params.hasOwnProperty('link'))
       this.getCharacterFromLink(this.props.match.params.link);
     if(this.props.match.params.hasOwnProperty('id'))
       this.loadCharacter(this.props.match.params.id);
   }
 
-  reloadRules() {
+  componentWillUnmount () {
+    this.unsubscribe();
+  }
+
+  characterObserver(payload) {
+    let notification = undefined;
+    switch(payload.type) {
+    case 'created':
+      break;
+    case 'updated':
+      if(payload.data._id == this.state.selected._id && payload.data._modifiedBy != this.props.user._id)
+        notification = {
+          timeoutDuration: 0,
+          type: 'warning',
+          title: 'Updated',
+          message: 'The character you are viewing has been modified. Applying the changes will remove any of your own.',
+          action: 'APPLY',
+          actionFunction: (param) => this.selectRule(param),
+          actionParam: payload.data._id
+        };
+      else if(payload.data._id == this.state.selected._id)
+        notification = {
+          type: 'success',
+          title: 'Updated',
+          message: 'Character updated.'
+        };
+      break;
+    case 'removed':
+      if(payload.data._id == this.state.selected._id && payload.data._modifiedBy != this.props.user._id)
+        notification = {
+          timeoutDuration: 0,
+          type: 'alert',
+          title: 'Deleted',
+          message: 'The character you were viewing has been deleted.',
+          action: 'UNDO',
+          actionFunction: (param) => this.createRule(param),
+          actionParam: payload.data
+        };
+      break;
+    }
+    if(notification)
+      NotificationList.notify(notification);
+  }
+
+  reloadServices() {
+    this.props.loadService('characters', true);
     this.props.loadService('rules', true);
   }
 
@@ -813,7 +861,7 @@ class Character extends React.Component {
         <CharacterMenu
           user={this.props.user}
           logout={this.props.logout}
-          reloadRules={this.reloadRules}
+          reloadServices={this.reloadServices}
           link={this.setCharacterLink}
           save={this.saveCharacter}
           reset={this.saveCharacter}
