@@ -14,12 +14,8 @@ class Character extends React.Component {
 
     this.blankCharacter = {
       _id: '',
+      _player: '',
       type: 'freestyle',
-      player: {
-        id: '',
-        name: 'Anonymous',
-        build: 0
-      },
       name: 'New Character',
       build: {
         total: 35,
@@ -94,33 +90,24 @@ class Character extends React.Component {
     case 'created':
       break;
     case 'updated':
-      if(payload.data._id == this.state.selected._id && payload.data._modifiedBy != this.props.user._id)
+      if(payload.data._id == this.state.character._id && payload.data._modifiedBy != this.props.user._id)
         notification = {
           timeoutDuration: 0,
           type: 'warning',
           title: 'Updated',
           message: 'The character you are viewing has been modified. Applying the changes will remove any of your own.',
           action: 'APPLY',
-          actionFunction: (param) => this.selectRule(param),
-          actionParam: payload.data._id
-        };
-      else if(payload.data._id == this.state.selected._id)
-        notification = {
-          type: 'success',
-          title: 'Updated',
-          message: 'Character updated.'
+          actionFunction: (param) => this.setState({character: Object.assign({}, param)}),
+          actionParam: payload.data
         };
       break;
     case 'removed':
-      if(payload.data._id == this.state.selected._id && payload.data._modifiedBy != this.props.user._id)
+      if(payload.data._id == this.state.character._id && payload.data._modifiedBy != this.props.user._id)
         notification = {
           timeoutDuration: 0,
           type: 'alert',
           title: 'Deleted',
-          message: 'The character you were viewing has been deleted.',
-          action: 'UNDO',
-          actionFunction: (param) => this.createRule(param),
-          actionParam: payload.data
+          message: 'The character you are viewing has been deleted.'
         };
       break;
     }
@@ -182,7 +169,7 @@ class Character extends React.Component {
   }
 
   loadCharacter(id) {
-    let character = this.props.characters.filter(c => c._id == id);console.log(this.props.characters)
+    let character = this.props.characters.filter(c => c._id == id);
     if(!character.length){
       NotificationList.alert('Character not found');
       return;

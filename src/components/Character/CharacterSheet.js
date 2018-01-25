@@ -22,7 +22,6 @@ const CharacterSheet = (props) => {
   delete rest.editCharacter;
 
   const {
-    player,
     name,
     build,
     lives,
@@ -64,23 +63,10 @@ const CharacterSheet = (props) => {
   return (
     <div {...rest}>
       <Section>
-        <Box label='Player'>
-          <Field
-            name='player name'
-            value={player.name}
-          />
-        </Box>
-        <Box color label='Character'>
+        <Box color label='Character Name'>
           <Field
             name='name'
             value={name}
-            onChange={props.editCharacter}
-          />
-        </Box>
-        <Box color label='Player Build' factor={1/3}>
-          <Field
-            name='player build'
-            value={player.build}
             onChange={props.editCharacter}
           />
         </Box>
@@ -96,25 +82,25 @@ const CharacterSheet = (props) => {
             value={build.spent}
           />
         </Box>
-        <Box label='Level' factor={0.25}>
+        <Box label='Level' factor={1/3}>
           <Field
             name='level'
             value={level}
           />
         </Box>
-        <Box label='Body' factor={0.25}>
+        <Box label='Body' factor={1/3}>
           <Field
             name='body'
             value={(body.base + body.extra + body.perLevel * level) * (body.double ? 2 : 1)}
           />
         </Box>
-        <Box label='Buffs' factor={0.25}>
+        <Box label='Buffs' factor={1/3}>
           <Field
             name='buffs'
             value={buffs.base + buffs.extra}
           />
         </Box>
-        <Box label='Tattoos' factor={0.25}>
+        <Box label='Tattoos' factor={1/3}>
           <Field
             name='inscriptions'
             value={inscriptions.base + inscriptions.extra}

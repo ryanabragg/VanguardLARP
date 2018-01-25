@@ -11,12 +11,13 @@ const restrict = [
     roles: ['character-edit', 'logistics', 'admin'],
     fieldName: 'permissions',
     idField: '_id',
-    ownerField: '_createdBy',
+    ownerField: '_player',
     owner: true
   })
 ];
 
 const createInfo = [
+  associateCurrentUser({idField: '_id', as: '_player'}),
   associateCurrentUser({idField: '_id', as: '_createdBy'}),
   associateCurrentUser({idField: '_id', as: '_modifiedBy'}),
   setNow('_createdAt', '_modifiedAt')

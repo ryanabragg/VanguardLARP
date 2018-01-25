@@ -37,23 +37,10 @@
         "monster"
       ]
     },
-    "player": {
-      "description": "user data",
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "pattern": "^[a-zA-Z0-9]*$"
-        },
-        "name": {
-          "type": "string",
-          "minLength": 1
-        },
-        "build": {
-          "type": "integer",
-          "minimum": 0
-        }
-      }
+    "_player": {
+      "description": "owner id",
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9]*$"
     },
     "name": {
       "type": "string",
