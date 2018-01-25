@@ -47,7 +47,7 @@ class App extends React.Component {
       user: {},
       events: props.events,
       rules: props.rules,
-      characters: []
+      characters: props.characters
     };
 
     this.setUser = this.setUser.bind(this);
@@ -60,6 +60,12 @@ class App extends React.Component {
     this.recordUpdate = this.recordUpdate.bind(this);
     this.recordPatch = this.recordPatch.bind(this);
     this.recordDelete = this.recordDelete.bind(this);
+
+    this.renderHome = this.renderHome.bind(this);
+    this.renderLogin = this.renderLogin.bind(this);
+    this.renderCharacter = this.renderCharacter.bind(this);
+    this.renderAdminEvents = this.renderAdminEvents.bind(this);
+    this.renderAdminRules = this.renderAdminRules.bind(this);
   }
 
   componentDidMount() {
@@ -160,124 +166,82 @@ class App extends React.Component {
     return api.service(service).remove(id, {query: query}, callback);
   }
 
+  renderHome(props) {
+    return <Home {...props}
+      events={this.state.events}
+      loadService={this.loadService} />;
+  }
+
+  renderLogin(props) {
+    return <Login {...props}
+      register={api.register}
+      login={api.login}
+      user={this.state.user}
+      setUser={this.setUser} />;
+  }
+
+  renderCharacter(props) {
+    return <Character {...props}
+      user={this.state.user}
+      logout={this.logout}
+      rules={this.state.rules}
+      characters={this.state.characters}
+      subscribeService={this.subscribeService}
+      loadService={this.loadService}
+      create={this.recordCreate}
+      update={this.recordUpdate}
+      patch={this.recordPatch}
+      remove={this.recordDelete} />;
+  }
+
+  renderAdminEvents(props) {
+    return <AdminEvents {...props}
+      user={this.state.user}
+      logout={this.logout}
+      events={this.state.events}
+      subscribeService={this.subscribeService}
+      loadService={this.loadService}
+      create={this.recordCreate}
+      update={this.recordUpdate}
+      patch={this.recordPatch}
+      remove={this.recordDelete} />;
+  }
+
+  renderAdminRules(props) {
+    return <AdminRules {...props}
+      user={this.state.user}
+      logout={this.logout}
+      rules={this.state.rules}
+      subscribeService={this.subscribeService}
+      loadService={this.loadService}
+      create={this.recordCreate}
+      update={this.recordUpdate}
+      patch={this.recordPatch}
+      remove={this.recordDelete} />;
+  }
+
   render() {
     return (
       <ThemeProvider theme={theme}>
         <div>
-          <Route exact path='/' render={props => {
-            return <Home {...props}
-              events={this.state.events}
-              loadService={this.loadService} />;
-          }} />
+          <Route exact path='/' render={this.renderHome} />
+          <Route path='/register' render={this.renderLogin} />
+          <Route path='/login' render={this.renderLogin} />
+          <Switch>
+            <Route exact path='/character' render={this.renderCharacter} />
+            <Route exact path='/character/:id' render={this.renderCharacter} />
+            <Route exact path='/character/link/:link' render={this.renderCharacter} />
+          </Switch>
           <Route path='/admin' component={AdminNavigation} />
           <Switch>
             <Route exact path='/admin' component={AdminDashboard} />
-            <Route exact path='/admin/events' render={props => {
-              return <AdminEvents {...props}
-                user={this.state.user}
-                logout={this.logout}
-                events={this.state.events}
-                subscribeService={this.subscribeService}
-                loadService={this.loadService}
-                create={this.recordCreate}
-                update={this.recordUpdate}
-                patch={this.recordPatch}
-                remove={this.recordDelete} />;
-            }} />
-            <Route exact path='/admin/events/:id' render={props => {
-              return <AdminEvents {...props}
-                user={this.state.user}
-                logout={this.logout}
-                events={this.state.events}
-                subscribeService={this.subscribeService}
-                loadService={this.loadService}
-                create={this.recordCreate}
-                update={this.recordUpdate}
-                patch={this.recordPatch}
-                remove={this.recordDelete} />;
-            }} />
-            <Route exact path='/admin/rules' render={props => {
-              return <AdminRules {...props}
-                user={this.state.user}
-                logout={this.logout}
-                rules={this.state.rules}
-                subscribeService={this.subscribeService}
-                loadService={this.loadService}
-                create={this.recordCreate}
-                update={this.recordUpdate}
-                patch={this.recordPatch}
-                remove={this.recordDelete} />;
-            }} />
-            <Route exact path='/admin/rules/:id' render={props => {
-              return <AdminRules {...props}
-                user={this.state.user}
-                logout={this.logout}
-                rules={this.state.rules}
-                subscribeService={this.subscribeService}
-                loadService={this.loadService}
-                create={this.recordCreate}
-                update={this.recordUpdate}
-                patch={this.recordPatch}
-                remove={this.recordDelete} />;
-            }} />
+            <Route exact path='/admin/events' render={this.renderAdminEvents} />
+            <Route exact path='/admin/events/:id' render={this.renderAdminEvents} />
+            <Route exact path='/admin/rules' render={this.renderAdminRules} />
+            <Route exact path='/admin/rules/:id' render={this.renderAdminRules} />
             <Route exact path='/admin/characters' component={PageNotFound} />
             <Route exact path='/admin/characters/:id' component={PageNotFound} />
           </Switch>
-          <Switch>
-            <Route exact path='/character' render={props => {
-              return <Character {...props}
-                user={this.state.user}
-                logout={this.logout}
-                rules={this.state.rules}
-                characters={this.state.characters}
-                subscribeService={this.subscribeService}
-                loadService={this.loadService}
-                create={this.recordCreate}
-                update={this.recordUpdate}
-                patch={this.recordPatch}
-                remove={this.recordDelete} />;
-            }} />
-            <Route exact path='/character/:id' render={props => {
-              return <Character {...props}
-                user={this.state.user}
-                logout={this.logout}
-                rules={this.state.rules}
-                characters={this.state.characters}
-                subscribeService={this.subscribeService}
-                loadService={this.loadService}
-                create={this.recordCreate}
-                update={this.recordUpdate}
-                patch={this.recordPatch}
-                remove={this.recordDelete} />;
-            }} />
-            <Route exact path='/character/link/:link' render={props => {
-              return <Character {...props}
-                user={this.state.user}
-                logout={this.logout}
-                rules={this.state.rules}
-                characters={this.state.characters}
-                subscribeService={this.subscribeService}
-                loadService={this.loadService}
-                create={this.recordCreate}
-                update={this.recordUpdate}
-                patch={this.recordPatch}
-                remove={this.recordDelete} />;
-            }} />
-          </Switch>
-          <Route path='/login' render={props => {
-            return <Login {...props}
-              register={api.register}
-              login={api.login}
-              user={this.state.user}
-              setUser={this.setUser} />;
-          }} />
-          <Route path='/register' render={props => {
-            return <Login {...props}
-              register={api.register}
-              login={api.login}
-              user={this.state.user}
-              setUser={this.setUser} />;
-          }} />
           <NotificationList />
         </div>
       </ThemeProvider>
@@ -287,12 +251,14 @@ class App extends React.Component {
 
 App.defaultProps = {
   events: [],
-  rules: []
+  rules: [],
+  characters: []
 };
 
 App.propTypes = {
   events: PropTypes.array,
-  rules: PropTypes.array
+  rules: PropTypes.array,
+  characters: PropTypes.array
 };
 
 export default App;
