@@ -135,6 +135,7 @@ colors.byType = (type) => {
   case 'secondary': return colors.pale.blue;
   case 'danger': return colors.red;
   case 'disabled': return colors.pale.grey;
+  case 'ghost': return colors.darken(colors.grey);
   default: return colors.grey;
   }
 };

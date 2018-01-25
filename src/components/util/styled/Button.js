@@ -13,27 +13,25 @@ const StyledButton = styled(Button)`
   padding: ${props => props.padding || '5px'};
 
   ${props => {
-    let color = props.theme.newtheme.colors.grey;
+    let color = props.theme.newtheme.colors.byType(props.ghost ? 'ghost' : props.type);
     if(props.disabled)
       color = props.theme.newtheme.colors.pale.grey;
-    else if(props.type)
-      color = props.theme.newtheme.colors.byType(props.type);
     let hover = props.theme.newtheme.colors.darken(color);
     if(props.pressed)
       color = hover;
     return `
-      color: ${props.theme.newtheme.colors.typography(color)};
-      fill: ${props.theme.newtheme.colors.typography(color, 'icon')};
-      background: ${color};
-      border: ${props.borderSize || '1px'} solid ${color};
+      color: ${props.ghost ? color : props.theme.newtheme.colors.typography(color)};
+      fill: ${props.ghost ? color : props.theme.newtheme.colors.typography(color, 'icon')};
+      background: ${props.ghost ? 'none' : color};
+      border: ${props.ghost ? 'none' : props.borderSize || `1px solid ${color}`};
       border-radius: ${props.radius || '0px'};
 
       :hover,
       :focus {
-        color: ${props.theme.newtheme.colors.typography(hover)};
-        fill: ${props.theme.newtheme.colors.typography(hover, 'icon')};;
-        background: ${hover};
-        border: ${props.borderSize || '1px'} solid ${hover};
+        color: ${props.ghost ? hover : props.theme.newtheme.colors.typography(hover)};
+        fill: ${props.ghost ? hover : props.theme.newtheme.colors.typography(hover, 'icon')};;
+        background: ${props.ghost ? 'none' : hover};
+        border: ${props.ghost ? 'none' : props.borderSize || `1px solid ${hover}`};
         border-radius: ${props.radius || '0px'};
       }
     `;

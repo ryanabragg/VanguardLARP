@@ -20,7 +20,7 @@ describe('<ModalViewRule />', () => {
     expect(wrapper.find('main').text()).to.equal('default');
     expect(wrapper.find(Button)).to.have.length(1);
     expect(wrapper.find(Button).prop('callback')).to.equal(fn);
-    expect(wrapper.find(Button).find(X)).to.have.length(1);
+    expect(wrapper.find(Button).prop('icon')).to.deep.equal(<X />);
 
     let rule = {
       name: '1',
@@ -83,5 +83,11 @@ describe('<ModalViewRule />', () => {
       rule: rule
     });
     expect(wrapper.find('h1').text()).to.equal('1 (5 Build)');
+
+    rule.category = 'Pool Ability';
+    wrapper.setProps({
+      rule: rule
+    });
+    expect(wrapper.find('.uses').text()).to.equal('Tags: 10');
   });
 });

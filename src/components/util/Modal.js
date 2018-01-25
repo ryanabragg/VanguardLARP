@@ -19,7 +19,7 @@ class Modal extends React.Component {
     delete rest.visible;
     delete rest.close;
     delete rest.closeOnClickAway;
-    if (this.props.visible == false)
+    if(!this.props.visible)
       return null;
     return (
       <div {...rest} onClick={this.handleClickAway}>

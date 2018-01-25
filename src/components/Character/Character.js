@@ -39,7 +39,7 @@ class Character extends React.Component {
 
     this.state = {
       character: this.blankCharacter,
-      rule: null
+      rule: undefined
     };
 
     this.redoBuild = false;
@@ -122,10 +122,8 @@ class Character extends React.Component {
 
   setCharacterLink() {
     let character = Object.assign({}, this.state.character);
-    character.player.id = '';
-    character.player.build = 0;
     let encoded = JSON.stringify(character);
-    this.props.history.replace('/character/link/' + btoa(encoded));
+    this.props.history.push('/character/link/' + btoa(encoded));
   }
 
   getCharacterFromLink(code) {
@@ -155,7 +153,7 @@ class Character extends React.Component {
       this.props.create('characters', character).then(c => {
         this.setState({character: c});
         NotificationList.success('Character created');
-        this.props.history.replace('/character/' + this.state.character._id);
+        this.props.history.push('/character/' + this.state.character._id);
       }).catch(error => {
         NotificationList.alert(error.errors[0], 'Failed to create character.');
       });
@@ -194,7 +192,7 @@ class Character extends React.Component {
   }
 
   hideRule() {
-    this.setState({rule: null});
+    this.setState({rule: undefined});
   }
 
   getRuleBuild(id) {
