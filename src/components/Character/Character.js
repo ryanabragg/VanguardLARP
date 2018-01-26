@@ -724,6 +724,8 @@ class Character extends React.Component {
       return prevState;*/
 
     let skills = prevState.character.skills.slice();
+    let thisSource = skills.filter(s => s.id == id && s.source == source).reduce((t, s) => t + s.count, 0);
+    let otherSources = skills.filter(s => s.id == id && s.source != source).reduce((t, s) => t + s.count, 0);
 
     if(!count && rule.category == 'Option') {
       this.props.rules
@@ -764,16 +766,16 @@ class Character extends React.Component {
         .reduce((total, skill) => total + skill.count, 0);
     }
 
-    let otherSources = skills.filter(s => s.id == id && s.source != source).reduce((t, s) => t + s.count, 0);
     if((rule.max != 0 && count + otherSources > rule.max) || (choice.limit && count + choice.known > choice.limit))
       return prevState;
 
     let target = skills.findIndex(skill => skill.id == id && skill.source == source);
 
     let cost = -1 == ['build','race','culture'].indexOf(source) ? 0 : rule.build;
-    if(cost && typeof source != 'number') {
+    if(rule.category == 'Craft' && (thisSource + otherSources == 5 || count + otherSources == 5))
+      this.redoBuild = true;
+    if(cost && typeof source != 'number')
       cost = this.getRuleBuild(rule._id);
-    }
 
     if(typeof source == 'number') {
       target = skills.findIndex(skill => skill.source == source);
