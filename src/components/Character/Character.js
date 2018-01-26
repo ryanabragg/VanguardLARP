@@ -65,6 +65,7 @@ class Character extends React.Component {
     this.updateCharacterBuild = this.updateCharacterBuild.bind(this);
 
     this.editCharacter = this.editCharacter.bind(this);
+    this.toggleProdigy = this.toggleProdigy.bind(this);
     this.stateLivesChange = this.stateLivesChange.bind(this);
     this.stateRaceChange = this.stateRaceChange.bind(this);
     this.stateSkillChange = this.stateSkillChange.bind(this);
@@ -576,6 +577,13 @@ class Character extends React.Component {
     });
   }
 
+  toggleProdigy() {
+    this.editCharacter({
+      type: 'PRODIGY',
+      data: !this.state.character.race.prodigy
+    });
+  }
+
   stateLivesChange(prevState, action) {
     let nextState = Object.assign({}, prevState);
     switch(action.type) {
@@ -857,7 +865,8 @@ class Character extends React.Component {
           reloadServices={this.reloadServices}
           link={this.setCharacterLink}
           save={this.saveCharacter}
-          reset={this.saveCharacter}
+          reset={this.resetCharacter}
+          prodigy={this.toggleProdigy}
           new={this.newCharacter}
         />
         <CharacterSheet

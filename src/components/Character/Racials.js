@@ -73,7 +73,7 @@ class Racials extends React.Component {
       <div {...rest}>
         {!this.props.prodigy ? null :
           <div className='prodigy'>
-            Prodigy
+            Prodigy: Waive Makeup Requirements
             <div className='divider' />
           </div>
         }

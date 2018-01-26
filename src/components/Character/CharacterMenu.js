@@ -11,6 +11,7 @@ import IconPersonAdd from '../svg/icon/Person-Add';
 import IconPersonBoxed from '../svg/icon/Person-Boxed';
 import IconLogin from '../svg/icon/Arrive';
 import IconLogout from '../svg/icon/Leave';
+import IconButterfly from '../svg/icon/Butterfly';
 
 class CharacterMenu extends React.Component {
   constructor (props) {
@@ -105,6 +106,12 @@ class CharacterMenu extends React.Component {
         >
           Reset Character
         </Button>
+        <Button label='Toggle Prodigy'
+          callback={this.props.prodigy}
+          icon={<IconButterfly />}
+        >
+          Toggle Prodigy
+        </Button>
         <Button label='New Character'
           callback={this.props.new}
           icon={<IconPersonAdd />}
@@ -127,6 +134,7 @@ CharacterMenu.propTypes = {
   link: PropTypes.func,
   save: PropTypes.func,
   reset: PropTypes.func,
+  prodigy: PropTypes.func,
   new: PropTypes.func
 };
 
