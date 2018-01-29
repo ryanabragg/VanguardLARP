@@ -36,6 +36,17 @@ module.exports = function () {
         }
       }
     });
+    let title = 'Vanguard LARP';
+    if(req.url == '/')
+      title += ' - Lenoir NC';
+    else if(req.url == '/login')
+      title += ' - Login';
+    else if(req.url == '/register')
+      title += ' - Register';
+    else if(/^\/character/.test(req.url))
+      title += ' - Character';
+    else if(/^\/admin/.test(req.url))
+      title += ' - Admin';
     const context = {};
     const sheet = new ServerStyleSheet();
     const html = renderToString(sheet.collectStyles(
@@ -51,20 +62,20 @@ module.exports = function () {
     }
     else {
       res.send(`
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <meta charset="utf-8" />
-            <meta name="viewport" content="width=device-width,initial-scale=1" />
-            <title>Vanguard LARP - Lenoir NC</title>
-            ${css}
-          </head>
-          <body>
-            <div id="react-app">${html}</div>
-            <script type="application/javascript" src="/scripts.js"></script>
-          </body>
-        </html>
-      `);
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>${title}</title>
+    ${css}
+  </head>
+  <body>
+    <div id="react-app">${html}</div>
+    <script type="application/javascript" src="/scripts.js"></script>
+  </body>
+</html>
+`);
     }
   });
 };
