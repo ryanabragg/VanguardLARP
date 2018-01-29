@@ -46,6 +46,7 @@ const StyledButton = styled(Button)`
 
   ${props => props.disabled ? '' : ':hover { cursor: pointer; }'}
 
+  img,
   svg {
     height: ${props => props.iconSize || '32px'};
     width: ${props => props.iconSize || '32px'};
