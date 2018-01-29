@@ -139,6 +139,7 @@ class Character extends React.Component {
 
   newCharacter() {
     this.setState({character: this.blankCharacter});
+    this.props.history.push('/character');
   }
 
   resetCharacter() {}
