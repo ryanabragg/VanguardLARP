@@ -61,6 +61,7 @@ class CharacterMenu extends React.Component {
     delete rest.link;
     delete rest.save;
     delete rest.reset;
+    delete rest.prodigy;
     delete rest.new;
 
     const anon = Object.keys(this.props.user).length === 0 && this.props.user.constructor === Object;
