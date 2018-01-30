@@ -6,6 +6,8 @@ import { ServerStyleSheet } from 'styled-components';
 import App from '../components/App';
 import routes from '../routes';
 
+import html from '../templates/app';
+
 module.exports = function () {
   const app = this;
 
@@ -49,7 +51,7 @@ module.exports = function () {
       title += ' - Admin';
     const context = {};
     const sheet = new ServerStyleSheet();
-    const html = renderToString(sheet.collectStyles(
+    const content = renderToString(sheet.collectStyles(
       <StaticRouter location={req.url} context={context}>
         <App events={events} />
       </StaticRouter>)
@@ -61,21 +63,11 @@ module.exports = function () {
       res.redirect(301, context.url);
     }
     else {
-      res.send(`
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>${title}</title>
-    ${css}
-  </head>
-  <body>
-    <div id="react-app">${html}</div>
-    <script type="application/javascript" src="/scripts.js"></script>
-  </body>
-</html>
-`);
+      res.send(html({
+        title: title,
+        css: css,
+        content: content
+      }));
     }
   });
 };
