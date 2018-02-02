@@ -4,8 +4,9 @@ import PropTypes from 'prop-types';
 import Button from '../util/styled/Button';
 
 import IconRefresh from '../svg/icon/Refresh';
-import IconX from '../svg/icon/X';
+import IconReset from '../svg/icon/Undo';
 import IconSave from '../svg/icon/Save';
+import IconTrash from '../svg/icon/Trash';
 import IconBookmark from '../svg/icon/Bookmark';
 import IconPersonAdd from '../svg/icon/Person-Add';
 import IconPersonBoxed from '../svg/icon/Person-Boxed';
@@ -63,6 +64,8 @@ class CharacterMenu extends React.Component {
     delete rest.reset;
     delete rest.prodigy;
     delete rest.new;
+    delete rest.delete;
+    delete rest.showDelete;
 
     const anon = Object.keys(this.props.user).length === 0 && this.props.user.constructor === Object;
 
@@ -103,7 +106,7 @@ class CharacterMenu extends React.Component {
         </Button>
         <Button label='Reset Character'
           callback={this.props.reset}
-          icon={<IconX />}
+          icon={<IconReset />}
         >
           Reset Character
         </Button>
@@ -119,6 +122,14 @@ class CharacterMenu extends React.Component {
         >
           New Character
         </Button>
+        {!this.props.showDelete ? null : (
+          <Button label='Delete Character'
+            callback={this.props.delete}
+            icon={<IconTrash />}
+          >
+            Delete Character
+          </Button>
+        )}
       </div>
     );
   }
@@ -136,7 +147,9 @@ CharacterMenu.propTypes = {
   save: PropTypes.func,
   reset: PropTypes.func,
   prodigy: PropTypes.func,
-  new: PropTypes.func
+  new: PropTypes.func,
+  delete: PropTypes.func,
+  showDelete: PropTypes.bool
 };
 
 export default CharacterMenu;

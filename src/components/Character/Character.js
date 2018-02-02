@@ -54,6 +54,7 @@ class Character extends React.Component {
     this.resetCharacter = this.resetCharacter.bind(this);
     this.saveCharacter = this.saveCharacter.bind(this);
     this.loadCharacter = this.loadCharacter.bind(this);
+    this.deleteCharacter = this.deleteCharacter.bind(this);
 
     this.viewRule = this.viewRule.bind(this);
     this.hideRule = this.hideRule.bind(this);
@@ -122,9 +123,14 @@ class Character extends React.Component {
   }
 
   setCharacterLink() {
-    let character = Object.assign({}, this.state.character);
-    let encoded = JSON.stringify(character);
-    this.props.history.push('/character/link/' + btoa(encoded));
+    this.setState((prevState, props) => {
+      let nextState = Object.assign({}, prevState);
+      nextState.character._id = '';
+      return nextState;
+    }, () => {
+      let encoded = JSON.stringify(this.state.character);
+      this.props.history.push('/character/link/' + btoa(encoded));
+    });
   }
 
   getCharacterFromLink(code) {
@@ -142,7 +148,16 @@ class Character extends React.Component {
     this.props.history.push('/character');
   }
 
-  resetCharacter() {}
+  resetCharacter() {
+    if(Object.keys(this.props.user).length === 0 && this.props.user.constructor === Object) {
+      NotificationList.alert('Not signed in');
+      return;
+    }
+    if(this.props.match.params.hasOwnProperty('link'))
+      this.getCharacterFromLink(this.props.match.params.link);
+    if(this.props.match.params.hasOwnProperty('id'))
+      this.loadCharacter(this.props.match.params.id);
+  }
 
   saveCharacter() {
     if(Object.keys(this.props.user).length === 0 && this.props.user.constructor === Object) {
@@ -176,6 +191,27 @@ class Character extends React.Component {
     }
     character = character[0];
     this.setState({character: Object.assign({}, this.blankCharacter, character)});
+  }
+
+  deleteCharacter() {
+    if(Object.keys(this.props.user).length === 0 && this.props.user.constructor === Object) {
+      NotificationList.alert('Not signed in');
+      return;
+    }
+    if(this.state.character._id) {
+      NotificationList.notify({
+        type: 'warning',
+        title: 'Confirm',
+        message: 'Delete this character?',
+        action: 'DELETE',
+        actionFunction: () => {
+          this.props.remove('characters', this.state.character._id)
+          .then(done => NotificationList.success('Character Deleted'))
+          .catch(error => NotificationList.alert(error.message));
+        }
+      });
+      this.props.history.push('/account');
+    }
   }
 
   viewRule(id) {
@@ -871,6 +907,8 @@ class Character extends React.Component {
           reset={this.resetCharacter}
           prodigy={this.toggleProdigy}
           new={this.newCharacter}
+          delete={this.deleteCharacter}
+          showDelete={this.props.match.params.hasOwnProperty('id')}
         />
         <CharacterSheet
           character={this.state.character}
