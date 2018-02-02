@@ -36,6 +36,8 @@ class Field extends React.Component {
   render() {
     const rest = Object.assign({}, this.props);
     delete rest.type;
+    delete rest.decorated;
+    delete rest.alert;
     delete rest.name;
     delete rest.placeholder;
     delete rest.value;

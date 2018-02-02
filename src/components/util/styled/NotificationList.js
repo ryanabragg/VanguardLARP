@@ -10,7 +10,7 @@ const StyledNotificationList = styled(NotificationList)`
   left: 50%;
   transform: translate(-50%, 0);
   min-width: ${props => props.width || 250}px;
-  z-index: 16;
+  z-index: 42;
   text-align: center;
   border-radius: 2px;
   //child divs are individual notifications

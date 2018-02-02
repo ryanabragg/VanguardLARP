@@ -5,6 +5,7 @@ import { injectGlobal, ThemeProvider } from 'styled-components';
 
 import api from '../util/api';
 
+import User from './User/styled/User';
 import Login from './User/styled/Login';
 
 import Home from './Home/Home';
@@ -63,6 +64,7 @@ class App extends React.Component {
 
     this.renderHome = this.renderHome.bind(this);
     this.renderLogin = this.renderLogin.bind(this);
+    this.renderUser = this.renderUser.bind(this);
     this.renderCharacter = this.renderCharacter.bind(this);
     this.renderAdminEvents = this.renderAdminEvents.bind(this);
     this.renderAdminRules = this.renderAdminRules.bind(this);
@@ -85,15 +87,15 @@ class App extends React.Component {
   }
 
   setUser(user) {
-    this.setState({user: user});
+    return new Promise(resolve => this.setState({user: user}, resolve));
   }
 
   logout() {
     api.logout();
-    this.setState({user: {}});
+    return new Promise(resolve => this.setState({user: {}}, resolve));
   }
 
-  subscribeService(service, observer) {
+  subscribeService(service, observer = () => null) {
     this.observers.push({service: service, func: observer});
     return () => this.observers = this.observers.filter(item => (
       !(item.service == service && item.func == observer)
@@ -174,10 +176,20 @@ class App extends React.Component {
 
   renderLogin(props) {
     return <Login {...props}
-      register={api.register}
-      login={api.login}
+      api={api}
       user={this.state.user}
       setUser={this.setUser} />;
+  }
+
+  renderUser(props) {
+    return <User {...props}
+      api={api}
+      user={this.state.user}
+      setUser={this.setUser}
+      logout={this.logout}
+      characters={this.state.characters.filter(c => c._player == this.state.user._id)}
+      subscribeService={this.subscribeService}
+      loadService={this.loadService} />;
   }
 
   renderCharacter(props) {
@@ -224,23 +236,24 @@ class App extends React.Component {
     return (
       <ThemeProvider theme={theme}>
         <div>
-          <Route exact path='/' render={this.renderHome} />
-          <Route path='/register' render={this.renderLogin} />
-          <Route path='/login' render={this.renderLogin} />
-          <Switch>
-            <Route exact path='/character' render={this.renderCharacter} />
-            <Route exact path='/character/:id' render={this.renderCharacter} />
-            <Route exact path='/character/link/:link' render={this.renderCharacter} />
-          </Switch>
           <Route path='/admin' component={AdminNavigation} />
           <Switch>
+            <Route exact path='/' render={this.renderHome} />
+            <Route path='/register' render={this.renderLogin} />
+            <Route exact path='/login' render={this.renderLogin} />
+            <Route path='/login/reset/:token' render={this.renderLogin} />
+            <Route exact path='/account' render={this.renderUser} />
+            <Route path='/account/verify/:token' render={this.renderUser} />
+            <Route exact path='/character' render={this.renderCharacter} />
+            <Route exact path='/character/:id' render={this.renderCharacter} />
+            <Route path='/character/link/:link' render={this.renderCharacter} />
             <Route exact path='/admin' component={AdminDashboard} />
             <Route exact path='/admin/events' render={this.renderAdminEvents} />
-            <Route exact path='/admin/events/:id' render={this.renderAdminEvents} />
+            <Route path='/admin/events/:id' render={this.renderAdminEvents} />
             <Route exact path='/admin/rules' render={this.renderAdminRules} />
-            <Route exact path='/admin/rules/:id' render={this.renderAdminRules} />
+            <Route path='/admin/rules/:id' render={this.renderAdminRules} />
             <Route exact path='/admin/characters' component={PageNotFound} />
-            <Route exact path='/admin/characters/:id' component={PageNotFound} />
+            <Route path='/admin/characters/:id' component={PageNotFound} />
           </Switch>
           <NotificationList />
         </div>

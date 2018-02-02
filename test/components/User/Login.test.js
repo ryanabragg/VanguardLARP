@@ -1,7 +1,8 @@
 import React from 'react';
+import { StaticRouter } from 'react-router-dom';
 import { expect } from 'chai';
 import { spy, stub } from 'sinon';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 
 import api from '../../../src/util/api';
 
@@ -14,28 +15,17 @@ import Logo from '../../../src/components/svg/Logo';
 
 describe('<Login />', () => {
   it('renders a form for login', () => {
-    const login = spy(),
-      register = spy(),
-      setUser = spy(),
-      push = spy(),
-      goBack = spy();
-    const history = {
-      push: push,
-      goBack: goBack
-    };
-    const wrapper = shallow(<Login login={login} register={register} setUser={setUser} history={history} match={{path:'/login'}} />);
-    expect(wrapper.find('div').find('form')).to.have.length(1);
-    expect(wrapper.find('div').find('form').prop('name')).to.equal('login');
+    const wrapper = mount(<Login />);
+    expect(wrapper.find('form')).to.have.length(1);
+    expect(wrapper.find('form').prop('name')).to.equal('login');
     expect(wrapper.find(Logo)).to.have.length(1);
-    expect(wrapper.find('span')).to.have.length(4);
+    expect(wrapper.find('span')).to.have.length(3);
     expect(wrapper.find('.logo').type()).to.equal('span');
-    expect(wrapper.find('.divider').type()).to.equal('span');
     expect(wrapper.find('.option-left').type()).to.equal('span');
     expect(wrapper.find('.option-left').text()).to.equal('Forgot your password?');
     expect(wrapper.find('.option-right').type()).to.equal('span');
     expect(wrapper.find('.option-right').text()).to.equal('Sign Up');
-    expect(wrapper.find('button')).to.have.length(2);
-    expect(wrapper.find({value: 'facebook'}).type()).to.equal('button');
+    expect(wrapper.find('button')).to.have.length(1);
     expect(wrapper.find({value: 'submit'}).type()).to.equal('button');
     expect(wrapper.find('label')).to.have.length(2);
     expect(wrapper.find('label').at(0).text()).to.equal('Email');
@@ -48,69 +38,49 @@ describe('<Login />', () => {
   });
 
   it('renders a form for registration', () => {
-    const login = spy(),
-      register = spy(),
-      setUser = spy(),
-      push = spy(),
-      goBack = spy();
-    const history = {
-      push: push,
-      goBack: goBack
+    const match = {
+      params: {},
+      path: '/register'
     };
-    const wrapper = shallow(<Login login={login} register={register} setUser={setUser} history={history} match={{path:'/register'}} />);
-    expect(wrapper.find('div').find('form')).to.have.length(1);
-    expect(wrapper.find('div').find('form').prop('name')).to.equal('register');
+    const wrapper = mount(<Login match={match} />);
+    expect(wrapper.find('form')).to.have.length(1);
+    expect(wrapper.find('form').prop('name')).to.equal('register');
     expect(wrapper.find(Logo)).to.have.length(1);
-    expect(wrapper.find('span')).to.have.length(3);
+    expect(wrapper.find('span')).to.have.length(2);
     expect(wrapper.find('.logo').type()).to.equal('span');
-    expect(wrapper.find('.divider').type()).to.equal('span');
     expect(wrapper.find('.option-right').type()).to.equal('span');
     expect(wrapper.find('.option-right').text()).to.equal('Sign In');
-    expect(wrapper.find('button')).to.have.length(2);
-    expect(wrapper.find({value: 'facebook'}).type()).to.equal('button');
+    expect(wrapper.find('button')).to.have.length(1);
     expect(wrapper.find({value: 'submit'}).type()).to.equal('button');
-    expect(wrapper.find('label')).to.have.length(2);
-    expect(wrapper.find('label').at(0).text()).to.equal('Email');
-    expect(wrapper.find('label').at(1).text()).to.equal('Password');
-    expect(wrapper.find('input')).to.have.length(2);
+    expect(wrapper.find('label')).to.have.length(3);
+    expect(wrapper.find('label').at(0).text()).to.equal('Name');
+    expect(wrapper.find('label').at(1).text()).to.equal('Email');
+    expect(wrapper.find('label').at(2).text()).to.equal('Password');
+    expect(wrapper.find('input')).to.have.length(4);
     expect(wrapper.find('input').at(0).prop('type')).to.equal('text');
-    expect(wrapper.find('input').at(0).prop('name')).to.equal('email');
-    expect(wrapper.find('input').at(1).prop('type')).to.equal('password');
-    expect(wrapper.find('input').at(1).prop('name')).to.equal('password');
+    expect(wrapper.find('input').at(0).prop('name')).to.equal('name');
+    expect(wrapper.find('input').at(1).prop('type')).to.equal('text');
+    expect(wrapper.find('input').at(1).prop('name')).to.equal('email');
+    expect(wrapper.find('input').at(2).prop('type')).to.equal('password');
+    expect(wrapper.find('input').at(2).prop('name')).to.equal('password');
+    expect(wrapper.find('input').at(3).prop('type')).to.equal('password');
+    expect(wrapper.find('input').at(3).prop('name')).to.equal('passwordAgain');
   });
 
   it('switches between login and registration based on user input', () => {
-    const login = spy(),
-      register = spy(),
-      setUser = spy(),
-      push = spy(),
-      goBack = spy();
-    const history = {
-      push: push,
-      goBack: goBack
-    };
-    const wrapper = shallow(<Login login={login} register={register} setUser={setUser} history={history} match={{path:'/login'}} />);
-    expect(wrapper.find('div').find('form').prop('name')).to.equal('login');
+    const wrapper = mount(<Login />);
+    expect(wrapper.find('form').prop('name')).to.equal('login');
     wrapper.find('.option-right').simulate('click');
-    expect(wrapper.find('div').find('form').prop('name')).to.equal('register');
+    expect(wrapper.find('form').prop('name')).to.equal('register');
     wrapper.find('.option-right').simulate('click');
-    expect(wrapper.find('div').find('form').prop('name')).to.equal('login');
+    expect(wrapper.find('form').prop('name')).to.equal('login');
   });
 
   it('shows a password reset form when "Forgot your password?" is clicked', () => {
-    const login = spy(),
-      register = spy(),
-      setUser = spy(),
-      push = spy(),
-      goBack = spy();
-    const history = {
-      push: push,
-      goBack: goBack
-    };
-    const wrapper = shallow(<Login login={login} register={register} setUser={setUser} history={history} match={{path:'/login'}} />);
-    expect(wrapper.find('div').find('form').prop('name')).to.equal('login');
+    const wrapper = mount(<Login />);
+    expect(wrapper.find('form').prop('name')).to.equal('login');
     wrapper.find('.option-left').simulate('click');
-    expect(wrapper.find('div').find('form').prop('name')).to.equal('password-recovery');
+    expect(wrapper.find('form').prop('name')).to.equal('password-recovery');
     expect(wrapper.find(Logo)).to.have.length(1);
     expect(wrapper.find('span')).to.have.length(2);
     expect(wrapper.find('.logo').type()).to.equal('span');
@@ -124,25 +94,16 @@ describe('<Login />', () => {
     expect(wrapper.find('input').at(0).prop('type')).to.equal('text');
     expect(wrapper.find('input').at(0).prop('name')).to.equal('email');
     wrapper.find('.option-left').simulate('click');
-    expect(wrapper.find('div').find('form').prop('name')).to.equal('login');
+    expect(wrapper.find('form').prop('name')).to.equal('login');
   });
 
   it('updates the state email and password from the inputs', () => {
-    const login = spy(),
-      register = spy(),
-      setUser = spy(),
-      push = spy(),
-      goBack = spy();
-    const history = {
-      push: push,
-      goBack: goBack
-    };
-    const wrapper = shallow(<Login login={login} register={register} setUser={setUser} history={history} match={{path:'/login'}} />);
+    const wrapper = mount(<Login />);
     expect(wrapper.state().email).to.equal('');
-    wrapper.find({name:'email'}).simulate('change', {target: {name: 'email', value: 'test'}, preventDefault: () => {}});
+    wrapper.find({name:'email'}).simulate('change', {target: {name: 'email', value: 'test'}, stopPropagation: () => {}});
     expect(wrapper.state().email).to.equal('test');
     expect(wrapper.state().password).to.equal('');
-    wrapper.find({name:'password'}).simulate('change', {target: {name: 'password', value: 'testing'}, preventDefault: () => {}});
+    wrapper.find({name:'password'}).simulate('change', {target: {name: 'password', value: 'testing'}, stopPropagation: () => {}});
     expect(wrapper.state().password).to.equal('testing');
   });
 
@@ -152,9 +113,9 @@ describe('<Login />', () => {
     spy(history, 'push');
     const wrapper = shallow(<Login login={login} register={register} setUser={setUser} history={history} match={{path:'/login'}} history={history} />);
     expect(wrapper.state().password).to.equal('');
-    wrapper.find({name: 'password'}).simulate('change', {target: {name: 'password', value: 'testing'}, preventDefault: () => {}});
+    wrapper.find({name: 'password'}).simulate('change', {target: {name: 'password', value: 'testing'}, stopPropagation: () => {}});
     expect(wrapper.state().password).to.equal('testing');
-    wrapper.find({value: 'submit'}).simulate('click', {preventDefault: () => {}});
+    wrapper.find({value: 'submit'}).simulate('click', {stopPropagation: () => {}});
     expect(wrapper.state().password).to.equal('');
   }*/);
 
@@ -169,9 +130,9 @@ describe('<Login />', () => {
     const history = {push: (location) => {}, goBack: () => {}};
     spy(history, 'push');
     const wrapper = shallow(<Login login={login} register={register} setUser={setUser} history={history} match={{path:'/login'}} history={history} />);
-    wrapper.find({name: 'email'}).simulate('change', {target: {name: 'email', value: 'test'}, preventDefault: () => {}});
-    wrapper.find({name: 'password'}).simulate('change', {target: {name: 'password', value: 'test'}, preventDefault: () => {}});
-    wrapper.find({value: 'submit'}).simulate('click', {preventDefault: () => {}});
+    wrapper.find({name: 'email'}).simulate('change', {target: {name: 'email', value: 'test'}, stopPropagation: () => {}});
+    wrapper.find({name: 'password'}).simulate('change', {target: {name: 'password', value: 'test'}, stopPropagation: () => {}});
+    wrapper.find({value: 'submit'}).simulate('click', {stopPropagation: () => {}});
     expect(api.register.callCount).to.equal(1);
     expect(api.login.callCount).to.equal(1);
     expect(history.push.callCount).to.equal(1);
@@ -187,9 +148,9 @@ describe('<Login />', () => {
     const history = {push: (location) => {}, goBack: () => {}};
     spy(history, 'push');
     const wrapper = shallow(<Login login={login} register={register} setUser={setUser} history={history} match={{path:'/login'}} history={history} />);
-    wrapper.find({name: 'email'}).simulate('change', {target: {name: 'email', value: 'test'}, preventDefault: () => {}});
-    wrapper.find({name: 'password'}).simulate('change', {target: {name: 'password', value: 'test'}, preventDefault: () => {}});
-    wrapper.find({value: 'submit'}).simulate('click', {preventDefault: () => {}});
+    wrapper.find({name: 'email'}).simulate('change', {target: {name: 'email', value: 'test'}, stopPropagation: () => {}});
+    wrapper.find({name: 'password'}).simulate('change', {target: {name: 'password', value: 'test'}, stopPropagation: () => {}});
+    wrapper.find({value: 'submit'}).simulate('click', {stopPropagation: () => {}});
     api.login.restore();
     history.push.restore();
   }*/);
@@ -203,4 +164,23 @@ describe('<Login />', () => {
   it('has a disabled Reset Password button if no email is entered');
 
   it('sends a password reset email');
+
+  it('renders a new password entry form if a reset token is used', () => {
+    const match = {
+      params: {
+        token: 'test'
+      },
+      path: '/login/verify/:token'
+    };
+    const wrapper = mount(<Login match={match} />);
+    expect(wrapper.find('form')).to.have.length(1);
+    expect(wrapper.find('form').prop('name')).to.equal('password-reset');
+    expect(wrapper.find('label').text()).to.equal('Password');
+    expect(wrapper.find('input')).to.have.length(2);
+    expect(wrapper.find('input').at(0).prop('type')).to.equal('password');
+    expect(wrapper.find('input').at(0).prop('name')).to.equal('password');
+    expect(wrapper.find('input').at(1).prop('type')).to.equal('password');
+    expect(wrapper.find('input').at(1).prop('name')).to.equal('passwordAgain');
+    // todo: confirm api call on button click
+  });
 });

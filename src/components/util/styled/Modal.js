@@ -15,7 +15,7 @@ const StyledModal = styled(Modal)`
   height: 100%;
   padding: 0;
   margin: 0;
-  z-index: 42;
+  z-index: 32;
   ${props => props.noBackdrop ? '' : 'background-color: rgb(0, 0, 0); background-color: rgba(0, 0, 0, 0.3);'}
 `;
 

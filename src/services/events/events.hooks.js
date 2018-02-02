@@ -4,6 +4,7 @@ const { associateCurrentUser, restrictToRoles } = require('feathers-authenticati
 const Ajv = require('ajv');
 
 const schema = require('./events.schema.json');
+const patchSchema = Object.assign({}, schema, {required: []});
 
 const restrict = [
   authenticate('jwt'),
@@ -32,7 +33,7 @@ module.exports = {
     get: [],
     create: [ ...restrict, ...createInfo, validateSchema(schema, Ajv, { coerceTypes: true }) ],
     update: [ ...restrict, ...updateInfo, validateSchema(schema, Ajv, { coerceTypes: true }) ],
-    patch: [ ...restrict, ...updateInfo, validateSchema(schema, Ajv, { coerceTypes: true }) ],
+    patch: [ ...restrict, ...updateInfo, validateSchema(patchSchema, Ajv, { coerceTypes: true }) ],
     remove: [ ...restrict ]
   },
 

@@ -1,10 +1,22 @@
-const { when, discard, validateSchema } = require('feathers-hooks-common');
+const {
+  disallow,
+  discard,
+  iff,
+  isProvider,
+  preventChanges,
+  validateSchema,
+  when
+} = require('feathers-hooks-common');
 const { authenticate } = require('feathers-authentication').hooks;
 const { restrictToRoles } = require('feathers-authentication-hooks');
+const { addVerification, removeVerification } = require('feathers-authentication-management').hooks;
 const { hashPassword } = require('feathers-authentication-local').hooks;
 const Ajv = require('ajv');
 
+const sendVerificationEmail = require('../../hooks/send-verification-email');
+
 const schema = require('./users.schema.json');
+const patchSchema = Object.assign({}, schema, {required: []});
 
 const restrict = [
   authenticate('jwt'),
@@ -17,36 +29,89 @@ const restrict = [
   })
 ];
 
-const initRoles = () => context => {
-  context.data.permissions = [];
-  return context;
-};
+const initialData = () => hook =>
+  new Promise((resolve, reject) => {
+    hook.app.service('/users').find({paginate: false, query: {$limit: 1}}).then(data => {
+      if(data.length === 0)
+        hook.data.permissions = [ 'admin' ];
+      else
+        hook.data.permissions = [];
+      hook.data.preferredComm = 'email';
+      hook.data.isVerified = false;
+      hook.data.verifyToken = null;
+      hook.data.verifyShortToken = null;
+      hook.data.verifyExpires = 0;
+      hook.data.verifyChanges = {};
+      hook.data.resetToken = null;
+      hook.data.resetShortToken = null;
+      hook.data.resetExpires = 0;
+      resolve(hook);
+    }).catch(error => reject(error));
+  });
+
+const removeSensitiveData = [
+  discard(
+    'password',
+    'verifyToken',
+    'verifyShortToken',
+    'verifyExpires',
+    'verifyChanges',
+    'resetToken',
+    'resetShortToken',
+    'resetExpires'
+  )
+];
 
 module.exports = {
   before: {
     all: [],
     find: [ authenticate('jwt') ],
     get: [ ...restrict ],
-    create: [ hashPassword(), initRoles(), validateSchema(schema, Ajv, { coerceTypes: true }) ],
-    update: [ ...restrict, hashPassword(), validateSchema(schema, Ajv, { coerceTypes: true }) ],
-    patch: [ ...restrict, hashPassword(), validateSchema(schema, Ajv, { coerceTypes: true }) ],
+    create: [
+      hashPassword(),
+      initialData(),
+      addVerification('verification'),
+      validateSchema(schema, Ajv, { coerceTypes: true })
+    ],
+    update: [ disallow('external') ],
+    patch: [
+      ...restrict,
+      validateSchema(patchSchema, Ajv, { coerceTypes: true }),
+      iff(
+        isProvider('external'),
+        preventChanges(
+          'email',
+          'isVerified',
+          'verifyToken',
+          'verifyShortToken',
+          'verifyExpires',
+          'verifyChanges',
+          'resetToken',
+          'resetShortToken',
+          'resetExpires'
+        )
+      )
+    ],
     remove: [ ...restrict ]
   },
 
   after: {
     all: [
-      when(
+      iff(
         hook => hook.params.provider,
-        discard('password'),
-        discard('permissions')
+        ...removeSensitiveData
       )
     ],
     find: [],
     get: [],
-    create: [],
-    update: [],
-    patch: [],
-    remove: []
+    create: [
+      sendVerificationEmail(),
+      removeVerification(),
+      ...removeSensitiveData
+    ],
+    update: [ ...removeSensitiveData ],
+    patch: [ ...removeSensitiveData ],
+    remove: [ ...removeSensitiveData ]
   },
 
   error: {

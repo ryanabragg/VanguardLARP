@@ -99,6 +99,9 @@ const StyledLogin = styled(Login)`
     padding: 5px;
     font-size: 20px;
   }
+  .warn {
+    background-color: ${props => props.theme.colors.alert};
+  }
 
   span.option-left,
   span.option-right {

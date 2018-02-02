@@ -1,3 +1,2 @@
-const serverURL = process.env.NODE_ENV === 'production' ? 'https://www.vanguardlarp.net' : 'localhost';
-
-export default serverURL;
+module.exports = process.env.NODE_ENV === 'production' ? 'http://35.196.171.102' : 'localhost';
+//https://www.vanguardlarp.net

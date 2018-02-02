@@ -3,6 +3,7 @@
   "port": "PORT",
   "dist": "../dist/",
   "static": "../static/",
+  "nedb": "../data",
   "paginate": {
     "default": 10,
     "max": 50
@@ -59,5 +60,21 @@
       "secure": false
     }
   },
-  "nedb": "../data"
+  "verification": {
+    "path": "verification",
+    "service": "/users",
+    "identifyUserProps": [
+      "email"
+    ]
+  },
+  "mailgun": {
+    "auth": {
+      "api_key": "MG_APIKEY",
+      "domain": "MG_DOMAIN"
+    }
+  },
+  "email": {
+    "sender": "EMAIL_CONTACT",
+    "contact": "EMAIL_CONTACT"
+  }
 }

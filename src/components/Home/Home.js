@@ -84,7 +84,7 @@ class Home extends React.Component {
                   <IconCharacter />
                 </div>
                 <div className='icon-label'>
-                  Character Sheet
+                  Character Builder
                 </div>
               </a>
             </div>

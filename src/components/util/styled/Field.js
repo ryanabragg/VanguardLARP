@@ -8,7 +8,12 @@ const StyledField = styled(Field)`
 
   height: 30px;
 
-  border: none;
+  ${props => {
+    if(props.decorated)
+      return `padding 0 0.5em;
+  border: 1px solid ${props.alert ? props.theme.newtheme.colors.pale.red : props.theme.colors.secondary};`;
+    return `border: none;`;
+  }}
   outline: none;
   
   background: none;
@@ -19,7 +24,12 @@ const StyledField = styled(Field)`
   transition: border 0.3s;
 
   :focus {
-    border-bottom: solid 1px ${props => props.theme.colors.secondary};
+    border-bottom: solid 1px ${props => props.alert ? props.theme.newtheme.colors.pale.red : props.theme.colors.secondary};
+    ${props => {
+      if(props.decorated)
+        return `box-shadow: 0 2px 7px ${props.alert ? props.theme.newtheme.colors.pale.red : props.theme.colors.secondary};`;
+      return ``;
+    }}
   }
 
   //textarea

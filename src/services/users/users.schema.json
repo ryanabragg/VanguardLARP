@@ -10,11 +10,15 @@
     },
     "email": {
       "type": "string",
-      "pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+      "format": "email"
     },
     "password": {
       "description": "hashed string",
       "type": "string"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 2
     },
     "permissions": {
       "type": "array",
@@ -27,10 +31,55 @@
           "logistics"
         ]
       }
+    },
+    "isVerified": {
+      "type": "boolean"
+    },
+    "verifyToken": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "verifyShortToken": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "verifyExpires": {
+      "description": "time (milliseconds)",
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "verifyChanges": {
+      "type": "object"
+    },
+    "resetToken": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "resetShortToken": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "resetExpires": {
+      "description": "time (milliseconds)",
+      "type": [
+        "integer",
+        "null"
+      ]
     }
   },
   "required": [
     "email",
-    "password"
+    "password",
+    "name"
   ]
 }
