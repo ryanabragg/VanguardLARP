@@ -17,7 +17,8 @@ import AdminRules from './Admin/Rules';
 
 import Character from './Character/Character';
 
-import NotificationList from './util/styled/NotificationList';
+import NotificationListDisplay from './util/styled/NotificationList';
+import NotificationList from './util/NotificationList';
 
 import PageNotFound from './PageNotFound';
 
@@ -255,7 +256,7 @@ class App extends React.Component {
             <Route exact path='/admin/characters' component={PageNotFound} />
             <Route path='/admin/characters/:id' component={PageNotFound} />
           </Switch>
-          <NotificationList />
+          <NotificationListDisplay />
         </div>
       </ThemeProvider>
     );
