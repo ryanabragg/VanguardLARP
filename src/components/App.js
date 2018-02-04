@@ -63,6 +63,8 @@ class App extends React.Component {
     this.recordPatch = this.recordPatch.bind(this);
     this.recordDelete = this.recordDelete.bind(this);
 
+    this.getCharacter = this.getCharacter.bind(this);
+
     this.renderHome = this.renderHome.bind(this);
     this.renderLogin = this.renderLogin.bind(this);
     this.renderUser = this.renderUser.bind(this);
@@ -72,9 +74,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    api.getUser().then((user) => {
-      this.setState({user: user});
-    });
+    api.getUser().then((user) => this.setState({user: user}));
   }
 
   componentWillUnmount() {
@@ -148,8 +148,6 @@ class App extends React.Component {
         nextState[service] = data;
         return nextState;
       });
-    }).catch(error => {
-      NotificationList.alert(error.message, error.name);
     });
   }
 
@@ -167,6 +165,27 @@ class App extends React.Component {
 
   recordDelete(service, id = null, query = {}, callback) {
     return api.service(service).remove(id, {query: query}, callback);
+  }
+
+  getCharacter(id) {
+    if(!id)
+      Promise.reject(new Error('No ID provided'));
+    return Promise.resolve()
+      .then(() => {
+        if(!this.state.user.hasOwnProperty('_id'))
+          return api.getUser().then((user) => this.setUser(user));
+      })
+      .then(() => {
+        if(!this.state.user.hasOwnProperty('_id'))
+          throw new Error('Not signed in');
+        let character = this.state.characters.filter(c => c._id == id);
+        if(character.length == 0)
+          throw new Error('Character not found');
+        character = character[0];
+        if(character._player != this.state.user._id && !this.state.user.canManageCharacters)
+          throw new Error('Not your character');
+        return character;
+      });
   }
 
   renderHome(props) {
@@ -198,7 +217,7 @@ class App extends React.Component {
       user={this.state.user}
       logout={this.logout}
       rules={this.state.rules}
-      characters={this.state.characters}
+      getCharacter={this.getCharacter}
       subscribeService={this.subscribeService}
       loadService={this.loadService}
       create={this.recordCreate}

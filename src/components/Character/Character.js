@@ -44,6 +44,8 @@ class Character extends React.Component {
 
     this.redoBuild = false;
 
+    this.logout = this.logout.bind(this);
+
     this.characterObserver = this.characterObserver.bind(this);
     this.reloadServices = this.reloadServices.bind(this);
 
@@ -53,7 +55,6 @@ class Character extends React.Component {
     this.newCharacter = this.newCharacter.bind(this);
     this.resetCharacter = this.resetCharacter.bind(this);
     this.saveCharacter = this.saveCharacter.bind(this);
-    this.loadCharacter = this.loadCharacter.bind(this);
     this.deleteCharacter = this.deleteCharacter.bind(this);
 
     this.viewRule = this.viewRule.bind(this);
@@ -72,18 +73,49 @@ class Character extends React.Component {
     this.stateSkillChange = this.stateSkillChange.bind(this);
   }
 
-  async componentDidMount () {
+  componentDidMount () {
+    this.props.loadService('rules')
+    .then(() => {
+      if(this.props.match.params.hasOwnProperty('link'))
+        this.getCharacterFromLink(this.props.match.params.link);
+    });
     this.unsubscribe = this.props.subscribeService('characters', this.characterObserver);
-    await this.props.loadService('characters');
-    await this.props.loadService('rules');
-    if(this.props.match.params.hasOwnProperty('link'))
-      this.getCharacterFromLink(this.props.match.params.link);
-    if(this.props.match.params.hasOwnProperty('id'))
-      this.loadCharacter(this.props.match.params.id);
+    this.props.loadService('characters')
+    .then(() => {
+      if(this.props.match.params.hasOwnProperty('id'))
+        this.props.getCharacter(this.props.match.params.id)
+        .then(result => {console.log(result); return result;})
+        .then(character => this.setState({character: character}))
+        .catch(error => {
+          NotificationList.alert(error.message);
+          this.props.history.replace('/character');
+        });
+    });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if(this.props.match.params.hasOwnProperty('id') && !nextProps.match.params.hasOwnProperty('id'))
+      this.setState({character: this.blankCharacter})
+    if(!this.props.match.params.hasOwnProperty('id') && nextProps.match.params.hasOwnProperty('id'))
+      this.props.getCharacter(nextProps.match.params.id)
+      .then(character => this.setState({character: character}))
+      .catch(error => {
+        NotificationList.alert(error.message);
+        this.props.history.replace('/character');
+      });
+    if(this.props.match.params.hasOwnProperty('link') && !nextProps.match.params.hasOwnProperty('link'))
+      this.setState({character: this.blankCharacter})
+    if(!this.props.match.params.hasOwnProperty('link') && nextProps.match.params.hasOwnProperty('link'))
+      this.getCharacterFromLink(nextProps.match.params.link);
   }
 
   componentWillUnmount () {
     this.unsubscribe();
+  }
+
+  logout() {
+    this.props.logout();
+    this.props.history.push('/character');
   }
 
   characterObserver(payload) {
@@ -126,6 +158,7 @@ class Character extends React.Component {
     this.setState((prevState, props) => {
       let nextState = Object.assign({}, prevState);
       nextState.character._id = '';
+      nextState.character._player = '';
       return nextState;
     }, () => {
       let encoded = JSON.stringify(this.state.character);
@@ -135,9 +168,9 @@ class Character extends React.Component {
 
   getCharacterFromLink(code) {
     let data = undefined;
-    try{
+    try {
       data = JSON.parse(atob(code));
-    } catch(e) {
+    } catch(error) {
       data = this.blankCharacter;
     }
     this.setState({character: data});
@@ -167,6 +200,7 @@ class Character extends React.Component {
     if(!this.state.character._id){
       let character = Object.assign({}, this.state.character);
       delete character._id;
+      character._player = this.props.user._id;
       this.props.create('characters', character).then(c => {
         this.setState({character: c});
         NotificationList.success('Character created');
@@ -181,16 +215,6 @@ class Character extends React.Component {
       }).catch(error => {
         NotificationList.alert(error.errors[0], 'Failed to update character.');
       });
-  }
-
-  loadCharacter(id) {
-    let character = this.props.characters.filter(c => c._id == id);
-    if(!character.length){
-      NotificationList.alert('Character not found');
-      return;
-    }
-    character = character[0];
-    this.setState({character: Object.assign({}, this.blankCharacter, character)});
   }
 
   deleteCharacter() {
@@ -900,7 +924,7 @@ class Character extends React.Component {
       <div>
         <CharacterMenu
           user={this.props.user}
-          logout={this.props.logout}
+          logout={this.logout}
           reloadServices={this.reloadServices}
           link={this.setCharacterLink}
           save={this.saveCharacter}
@@ -908,7 +932,8 @@ class Character extends React.Component {
           prodigy={this.toggleProdigy}
           new={this.newCharacter}
           delete={this.deleteCharacter}
-          showDelete={this.props.match.params.hasOwnProperty('id')}
+          saved={this.state.character._id != ''}
+          linked={this.props.match.params.hasOwnProperty('link')}
         />
         <CharacterSheet
           character={this.state.character}
@@ -928,14 +953,14 @@ class Character extends React.Component {
 Character.defaultProps = {
   user: {},
   rules: [],
-  characters: []
+  getCharacter: () => Promise.reject('default')
 };
 
 Character.propTypes = {
   user: PropTypes.object,
   logout: PropTypes.func.isRequired,
   rules: PropTypes.array,
-  characters: PropTypes.array,
+  getCharacter: PropTypes.func,
   subscribeService: PropTypes.func.isRequired,
   loadService: PropTypes.func.isRequired,
   create: PropTypes.func.isRequired,

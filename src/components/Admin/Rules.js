@@ -68,11 +68,12 @@ class Rules extends React.Component {
     this.handleFormNew = this.handleFormNew.bind(this);
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     this.unsubscribe = this.props.subscribeService('rules', this.ruleObserver);
-    await this.props.loadService('rules');
-    if(this.props.match.params.hasOwnProperty('id'))
-      this.selectRule(this.props.match.params.id);
+    this.props.loadService('rules').then(data => {
+      if(this.props.match.params.hasOwnProperty('id'))
+        this.selectRule(this.props.match.params.id);
+    });
   }
 
   componentWillUnmount () {

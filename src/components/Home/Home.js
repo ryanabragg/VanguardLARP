@@ -69,7 +69,7 @@ class Home extends React.Component {
           <article className='content'>
             <h1 className='title'>Game Rules</h1>
             <div className='title-icon'>
-              <a target='_new' href='https://docs.google.com/document/d/1qhpAflKwudtAlP0mCH43gbcQifZwSJe7aII-nm1PzeI/edit'>
+              <a href='https://docs.google.com/document/d/1qhpAflKwudtAlP0mCH43gbcQifZwSJe7aII-nm1PzeI/edit'>
                 <div className='icon'>
                   <IconGoogleDoc />
                 </div>
@@ -79,7 +79,7 @@ class Home extends React.Component {
               </a>
             </div>
             <div className='title-icon'>
-              <a target='_new' href='/character'>
+              <a href='/character'>
                 <div className='icon'>
                   <IconCharacter />
                 </div>
@@ -99,7 +99,7 @@ class Home extends React.Component {
           <article className='content'>
             <h1 className='title'>Contact Us</h1>
             <div className='title-icon'>
-              <a target='_new' href='https://www.facebook.com/groups/544631092325451/'>
+              <a href='https://www.facebook.com/groups/544631092325451/'>
                 <div className='icon'>
                   <IconFacebook />
                 </div>

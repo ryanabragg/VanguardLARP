@@ -93,16 +93,6 @@ const StyledLogin = styled(Login)`
     display: block;
   }
 
-  input {
-    width: 100%;
-    margin-bottom: 5px;
-    padding: 5px;
-    font-size: 20px;
-  }
-  .warn {
-    background-color: ${props => props.theme.colors.alert};
-  }
-
   span.option-left,
   span.option-right {
     font-size: 0.6em;

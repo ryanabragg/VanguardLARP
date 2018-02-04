@@ -14,129 +14,95 @@ import IconLogin from '../svg/icon/Arrive';
 import IconLogout from '../svg/icon/Leave';
 import IconButterfly from '../svg/icon/Butterfly';
 
-class CharacterMenu extends React.Component {
-  constructor (props) {
-    super(props);
+const CharacterMenu = (props) => {
+  const rest = Object.assign({}, props);
+  delete rest.user;
+  delete rest.logout;
+  delete rest.reloadServices;
+  delete rest.link;
+  delete rest.save;
+  delete rest.reset;
+  delete rest.prodigy;
+  delete rest.new;
+  delete rest.delete;
+  delete rest.saved;
+  delete rest.linked;
 
-    this.state = {
-      searching: false,
-      search: ''
-    };
+  const anon = Object.keys(props.user).length === 0 && props.user.constructor === Object;
 
-    this.handleSearch = this.handleSearch.bind(this);
-    this.search = this.search.bind(this);
-  }
-
-  componentWillUnmount() {
-    if(this.timeout)
-      clearTimeout(this.timeout)
-    this.timeout = undefined;
-  }
-
-  handleSearch(e) {
-    e.stopPropagation();
-    this.setState({search: e.target.value});
-    if(this.timeout)
-      clearTimeout(this.timeout)
-    this.timeout = setTimeout(this.search, 2000);
-  }
-
-  search() {
-    if(this.timeout)
-      clearTimeout(this.timeout)
-    this.props.search(this.state.search);
-  }
-
-  searchClear() {
-    if(this.timeout)
-      clearTimeout(this.timeout)
-    this.setState({searching: false, search: ''});
-    this.props.search();
-  }
-
-  render() {
-    const rest = Object.assign({}, this.props);
-    delete rest.user;
-    delete rest.logout;
-    delete rest.reloadServices;
-    delete rest.link;
-    delete rest.save;
-    delete rest.reset;
-    delete rest.prodigy;
-    delete rest.new;
-    delete rest.delete;
-    delete rest.showDelete;
-
-    const anon = Object.keys(this.props.user).length === 0 && this.props.user.constructor === Object;
-
-    return (
-      <div {...rest}>
-        <Button label={anon ? 'Sign In' : 'Sign Out'}
-          link={anon ? '/login' : null}
-          callback={anon ? null : this.props.logout}
-          icon={anon ? <IconLogin /> : <IconLogout />}
+  return (
+    <div {...rest}>
+      <Button label={anon ? 'Sign In' : 'Sign Out'}
+        link={anon ? '/login' : null}
+        callback={anon ? null : props.logout}
+        icon={anon ? <IconLogin /> : <IconLogout />}
+      >
+        {anon ? 'Sign In' : 'Sign Out'}
+      </Button>
+      {anon ? null :
+        <Button label='Account'
+          link='/account'
+          icon={<IconPersonBoxed />}
         >
-          {anon ? 'Sign In' : 'Sign Out'}
+          Account
         </Button>
-        {anon ? null :
-          <Button label='Account'
-            link='/account'
-            icon={<IconPersonBoxed />}
-          >
-            Account
-          </Button>
-        }
-        <Button label='Reload Rules'
-          callback={this.props.reloadServices}
-          icon={<IconRefresh />}
-        >
-          Reload Data
-        </Button>
-        <Button label='Set Address Link'
-          callback={this.props.link}
-          icon={<IconBookmark />}
-        >
-          Set Address Link
-        </Button>
-        <Button label='Save Character'
-          callback={this.props.save}
-          icon={<IconSave />}
-        >
-          Save Character
-        </Button>
+      }
+      <Button label='Reload Rules'
+        callback={props.reloadServices}
+        icon={<IconRefresh />}
+      >
+        Reload Data
+      </Button>
+      <Button label='Toggle Prodigy'
+        callback={props.prodigy}
+        icon={<IconButterfly />}
+      >
+        Toggle Prodigy
+      </Button>
+      <Button label='Set Address Link'
+        callback={props.link}
+        icon={<IconBookmark />}
+      >
+        Set Address Link
+      </Button>
+      <Button label='New Character'
+        callback={props.new}
+        icon={<IconPersonAdd />}
+      >
+        New Character
+      </Button>
+      {!props.saved && !props.linked ? null : (
         <Button label='Reset Character'
-          callback={this.props.reset}
+          callback={props.reset}
           icon={<IconReset />}
         >
           Reset Character
         </Button>
-        <Button label='Toggle Prodigy'
-          callback={this.props.prodigy}
-          icon={<IconButterfly />}
+      )}
+      {!props.user._id ? null : (
+        <Button label='Save Character'
+          callback={props.save}
+          icon={<IconSave />}
         >
-          Toggle Prodigy
+          Save Character
         </Button>
-        <Button label='New Character'
-          callback={this.props.new}
-          icon={<IconPersonAdd />}
+      )}
+      {!props.saved ? null : (
+        <Button label='Delete Character'
+          callback={props.delete}
+          icon={<IconTrash />}
         >
-          New Character
+          Delete Character
         </Button>
-        {!this.props.showDelete ? null : (
-          <Button label='Delete Character'
-            callback={this.props.delete}
-            icon={<IconTrash />}
-          >
-            Delete Character
-          </Button>
-        )}
-      </div>
-    );
-  }
+      )}
+    </div>
+  );
 }
 
 CharacterMenu.defaultProps = {
-  user: {}
+  user: {},
+  saved: false,
+  linked: false
 };
 
 CharacterMenu.propTypes = {
@@ -149,7 +115,8 @@ CharacterMenu.propTypes = {
   prodigy: PropTypes.func,
   new: PropTypes.func,
   delete: PropTypes.func,
-  showDelete: PropTypes.bool
+  saved: PropTypes.bool,
+  linked: PropTypes.bool
 };
 
 export default CharacterMenu;

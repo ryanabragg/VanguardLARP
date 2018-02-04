@@ -83,7 +83,7 @@ class NotificationList extends React.Component {
 
   render() {
     return (
-      <asside {...this.props}>
+      <div {...this.props}>
         {this.state.list.map(notice => (
           <Notification
             key={notice.id}
@@ -100,7 +100,7 @@ class NotificationList extends React.Component {
             showDismiss={notice.showDismiss}
           />
         ))}
-      </asside>
+      </div>
     );
   }
 }

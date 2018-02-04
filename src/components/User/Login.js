@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
-import wait from '../../util/wait';
+import Field from '../util/styled/Field';
 
 import Logo from '../svg/Logo';
 
@@ -24,17 +24,15 @@ class Login extends React.Component {
       lockout: 1000 * 60 * 5 // 5 minutes
     }
 
-    this.loginFacebook = this.loginFacebook.bind(this);
+    this.register = this.register.bind(this);
     this.login = this.login.bind(this);
 
-    this.handleFormInputChange = this.handleFormInputChange.bind(this);
+    this.onChange = this.onChange.bind(this);
     this.handleFormKeyPress = this.handleFormKeyPress.bind(this);
 
-    this.handleFormLoginFacebook = this.handleFormLoginFacebook.bind(this);
-    this.handleFormLoginLocal = this.handleFormLoginLocal.bind(this);
+    this.handleFormLogin = this.handleFormLogin.bind(this);
     this.handleFormPasswordRecovery = this.handleFormPasswordRecovery.bind(this);
-    this.handleFormRegisterFacebook = this.handleFormRegisterFacebook.bind(this);
-    this.handleFormRegisterLocal = this.handleFormRegisterLocal.bind(this);
+    this.handleFormRegister = this.handleFormRegister.bind(this);
     this.handleFormPasswordReset = this.handleFormPasswordReset.bind(this);
 
     this.handleViewLogin = this.handleViewLogin.bind(this);
@@ -54,69 +52,28 @@ class Login extends React.Component {
       this.props.history.push('/account');
   }
 
-  async loginFacebook(credentials, register = false) {
-    if(register)
-      return;
+  register(credentials) {
+    this.props.api.register(credentials)
+    .then(() => {
+      NotificationList.info('Please check your email for verification.');
+      this.props.history.push('/account');
+    })
+    .then(() => this.props.api.login(credentials))
+    .then(user => this.props.setUser(user))
+    .catch(error => NotificationList.alert(error.message, error.name));
   }
 
-  async login(credentials, register = false) {
-    await wait(500);
-    if(this.props.next > Date.now()) {
-      let time = (this.props.next - Date.now()) / 1000;
-      let units = 'seconds';
-      if(time > 60){
-        time = time / 60;
-        units = 'minutes';
-      }
-      NotificationList.alert(`Please wait ${time} ${units} before trying again.`);
-      return Promise.reject();
-    }
-    if(register) {
-      try {
-        await this.props.api.register(credentials);
-      } catch (error) {
-        NotificationList.alert(error.message, error.name);
-        return Promise.reject(error);
-      }
-    }
-    let user = {};
-    let fail = false;
-    try {
-      user = await this.props.api.login(credentials);
-      fail = Object.keys(user).length === 0 && user.constructor === Object;
-      this.props.setUser(user);
-    } catch (error) {
-      NotificationList.alert(error.message, error.name);
-    }
-    this.setState((prevState, props) => {
-      let attempts = prevState.attempts + 1;
-      return {
-        password: '',
-        passwordAgain: '',
-        attempts: attempts,
-        next: Date.now() + (attempts > this.state.max ? this.state.lockout : 0)
-      };
-    });
-    if(register && !fail)
-      return Promise.resolve().then(result => {
-        NotificationList.info('Please check your email for verification.');
-        this.props.history.push('/account');
-      });
-    else if(!fail)
-      return Promise.resolve().then(result => {
-        this.props.history.goBack();
-        if(this.props.match.path.substring(1, 6) == 'login')
-          this.props.history.push('/account');
-      });
-    return Promise.reject();
+  login(credentials) {
+    this.props.api.login(credentials)
+    .then(user => this.props.setUser(user))
+    .then(() => this.props.history.push('/account'))
+    .catch(error => NotificationList.alert(error.message, error.name));
   }
 
-  handleFormInputChange(e) {
-    e.stopPropagation();
-    let target = e.target; // e not available during callback
+  onChange(payload) {
     this.setState((prevState, props) => {
       let nextState = Object.assign({}, prevState);
-      nextState[target.name] = target.type === 'checkbox' ? target.checked : target.value;
+      nextState[payload.type] = payload.data;
       return nextState;
     });
   }
@@ -125,19 +82,14 @@ class Login extends React.Component {
     if(e.key != 'Enter')
       return;
     if(this.state.view == 'login')
-      this.handleFormLoginLocal(e);
+      this.handleFormLogin(e);
     else if(this.state.view == 'register')
-      this.handleFormRegisterLocal(e);
+      this.handleFormRegister(e);
     else if(this.state.view == 'password-recovery')
       this.handleFormPasswordRecovery(e);
   }
 
-  handleFormLoginFacebook(e) {
-    e.stopPropagation();
-    loginFacebook();
-  }
-
-  handleFormLoginLocal(e) {
+  handleFormLogin(e) {
     e.stopPropagation();
     const credentials = !this.state.email || !this.state.password ? null :
       { email: this.state.email,
@@ -157,13 +109,12 @@ class Login extends React.Component {
     });
   }
 
-  handleFormRegisterFacebook(e) {
+  handleFormRegister(e) {
     e.stopPropagation();
-  }
-
-  handleFormRegisterLocal(e) {
-    e.stopPropagation();
-    // @todo email and pwd check
+    if(!this.state.password) {
+      NotificationList.alert('Please enter a password');
+      return;
+    }
     if(this.state.password != this.state.passwordAgain) {
       NotificationList.alert('Password entries do not match');
       return;
@@ -173,7 +124,7 @@ class Login extends React.Component {
       password: this.state.password,
       name: this.state.name
     };
-    this.login(credentials, true);
+    this.register(credentials);
   }
 
   handleFormPasswordReset() {
@@ -216,14 +167,6 @@ class Login extends React.Component {
     this.setState({view: 'password-recovery'});
   }
 
-/*
-        <button type='button' value='facebook'
-          onClick={this.handleFormLoginFacebook}
-        >
-          Sign in with Facebook
-        </button>
-        <span className='divider'>or</span>*/
-
   renderLogin() {
     return (
       <form name='login'>
@@ -231,20 +174,20 @@ class Login extends React.Component {
           <Logo alt='logo' />
         </span>
         <label>Email</label>
-        <input type='text'
+        <Field type='text' decorated
           name='email'
           value={this.state.email}
-          onChange={this.handleFormInputChange}
+          onChange={this.onChange}
         />
         <label>Password</label>
-        <input type='password'
+        <Field type='password' decorated
           name='password'
           value={this.state.password}
-          onChange={this.handleFormInputChange}
+          onChange={this.onChange}
           onKeyPress={this.handleFormKeyPress}
         />
         <button type='button' value="submit"
-          onClick={this.handleFormLoginLocal}
+          onClick={this.handleFormLogin}
         >
           Sign In
         </button>
@@ -269,33 +212,32 @@ class Login extends React.Component {
           <Logo alt='logo' />
         </span>
         <label>Name</label>
-        <input type='text'
+        <Field type='text' decorated
           name='name'
           value={this.state.name}
-          onChange={this.handleFormInputChange}
+          onChange={this.onChange}
         />
         <label>Email</label>
-        <input type='text'
+        <Field type='text' decorated
           name='email'
           value={this.state.email}
-          onChange={this.handleFormInputChange}
+          onChange={this.onChange}
         />
         <label>Password</label>
-        <input type='password'
+        <Field type='password' decorated
           name='password'
           value={this.state.password}
-          onChange={this.handleFormInputChange}
-          onKeyPress={this.handleFormKeyPress}
+          onChange={this.onChange}
         />
-        <input type='password'
+        <label>Enter again:</label>
+        <Field type='password' decorated
           name='passwordAgain'
           value={this.state.passwordAgain}
-          onChange={this.handleFormInputChange}
-          onKeyPress={this.handleFormKeyPress}
-          className={this.state.password && this.state.password != this.state.passwordAgain ? 'warn' : ''}
+          onChange={this.onChange}
+          alert={this.state.passwordAgain && this.state.passwordAgain != this.state.password}
         />
         <button type='button' value="submit"
-          onClick={this.handleFormRegisterLocal}
+          onClick={this.handleFormRegister}
         >
           Sign Up
         </button>
@@ -315,10 +257,10 @@ class Login extends React.Component {
           <Logo alt='logo' />
         </span>
         <label>Email</label>
-        <input type='text'
+        <Field type='text' decorated
           name='email'
           value={this.state.email}
-          onChange={this.handleFormInputChange}
+          onChange={this.onChange}
           onKeyPress={this.handleFormKeyPress}
         />
         <button type='button' value='submit'
@@ -342,18 +284,18 @@ class Login extends React.Component {
           <Logo alt='logo' />
         </span>
         <label>Password</label>
-        <input type='password'
+        <Field type='password' decorated
           name='password'
           value={this.state.password}
-          onChange={this.handleFormInputChange}
-          onKeyPress={this.handleFormKeyPress}
+          onChange={this.onChange}
         />
-        <input type='password'
+        <label>Enter again:</label>
+        <Field type='password' decorated
           name='passwordAgain'
           value={this.state.passwordAgain}
-          onChange={this.handleFormInputChange}
+          onChange={this.onChange}
           onKeyPress={this.handleFormKeyPress}
-          className={this.state.password && this.state.password != this.state.passwordAgain ? 'warn' : ''}
+          alert={this.state.passwordAgain && this.state.passwordAgain != this.state.password}
         />
         <button type='button' value="submit"
           onClick={this.handleFormPasswordReset}

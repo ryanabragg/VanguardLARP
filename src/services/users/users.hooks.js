@@ -29,25 +29,26 @@ const restrict = [
   })
 ];
 
-const initialData = () => hook =>
-  new Promise((resolve, reject) => {
-    hook.app.service('/users').find({paginate: false, query: {$limit: 1}}).then(data => {
-      if(data.length === 0)
-        hook.data.permissions = [ 'admin' ];
-      else
-        hook.data.permissions = [];
-      hook.data.preferredComm = 'email';
-      hook.data.isVerified = false;
-      hook.data.verifyToken = null;
-      hook.data.verifyShortToken = null;
-      hook.data.verifyExpires = 0;
-      hook.data.verifyChanges = {};
-      hook.data.resetToken = null;
-      hook.data.resetShortToken = null;
-      hook.data.resetExpires = 0;
-      resolve(hook);
-    }).catch(error => reject(error));
-  });
+const setInitialData = () => hook =>
+  hook.app.service('/users')
+  .find({paginate: false, query: {$limit: 1}})
+  .then(data => {
+    if(data.length === 0)
+      hook.data.permissions = [ 'admin' ];
+    else
+      hook.data.permissions = [];
+    hook.data.preferredComm = 'email';
+    hook.data.isVerified = false;
+    hook.data.verifyToken = null;
+    hook.data.verifyShortToken = null;
+    hook.data.verifyExpires = 0;
+    hook.data.verifyChanges = {};
+    hook.data.resetToken = null;
+    hook.data.resetShortToken = null;
+    hook.data.resetExpires = 0;
+    return hook;
+  })
+  .catch(error => hook);
 
 const removeSensitiveData = [
   discard(
@@ -69,7 +70,7 @@ module.exports = {
     get: [ ...restrict ],
     create: [
       hashPassword(),
-      initialData(),
+      setInitialData(),
       addVerification('verification'),
       validateSchema(schema, Ajv, { coerceTypes: true })
     ],

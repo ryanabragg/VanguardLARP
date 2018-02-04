@@ -24,74 +24,81 @@ const api = feathers()
   .configure(socketio(socket))
   .configure(auth({storage: authStore}));
 
-api.register = async (credentials) => {
-  return await api.service('users').create({
+api.register = (credentials) => {
+  return api.service('users').create({
     name: credentials.name,
     email: credentials.email,
     password: credentials.password
   });
 };
 
-api.accountVerifySignup = async (email) => {
-  let user = await api.getUser();
-  if(user.verifySignup)
-    return Promise.reject('User already verified');
-  return api.service('verification').create({
+api.accountVerifySignup = (email) => {
+  api.getUser()
+  .then(user => {
+    if(user.verifySignup)
+      throw new Error('User already verified');
+  })
+  .then(() => api.service('verification').create({
     action: 'resendVerifySignup',
     value: {
       email: email
     }
-  });
+  }));
 }
 
-// for initial signup  or idenntity changes
-api.accountAcceptIdentity = async (token) => {console.log(token)
+api.accountAcceptIdentity = (token) => {
   return api.service('verification').create({
     action: 'verifySignupLong',
     value: token
   });
 }
 
-api.accountChangeIdentity = async (email, password, changes) => {
-  let user = await api.getUser();
-  if(!user._id || user.email != email)
-    return Promise.reject('Not logged in');
-  return api.service('verification').create({
-    action: 'identityChange',
-    value: {
-      user: {
-        email: email
-      },
-      password: password,
-      changes: changes // e.g. {email: new@email.com, name: update}
-    }
+api.accountChangeIdentity = (email, password, changes) => {
+  api.getUser()
+  .then(user => {
+    if(!user._id || user.email != email)
+      throw new Error('Not logged in');
+    return api.service('verification').create({
+      action: 'identityChange',
+      value: {
+        user: {
+          email: email
+        },
+        password: password,
+        changes: changes // e.g. {email: new@email.com, name: update}
+      }
+    });
   });
 }
 
-api.accountChangeField = async (email, changes) => {
-  let user = await api.getUser();
-  if(!user._id || user.email != email)
-    return Promise.reject('Not logged in');
-  return api.service('users').patch(user._id, changes);
-}
-
-api.accountChangePassword = async (email, oldPassword, password) => {
-  let user = await api.getUser();
-  if(!user._id || user.email != email)
-    return Promise.reject('Not logged in');
-  return api.service('verification').create({
-    action: 'passwordChange',
-    value: {
-      user: {
-        email: email
-      },
-      oldPassword: oldPassword,
-      password: password
-    }
+api.accountChangeField = (email, changes) => {
+  api.getUser()
+  .then(user => {
+    if(!user._id || user.email != email)
+      throw new Error('Not logged in');
+    return api.service('users').patch(user._id, changes);
   });
 }
 
-api.accountRequestPassword = async (email) => {
+api.accountChangePassword = (email, oldPassword, password) => {
+  api.getUser()
+  .then(user => {
+    if(!user._id || user.email != email)
+      throw new Error('Not logged in');
+    return api.service('verification').create({
+      action: 'passwordChange',
+      value: {
+        user: {
+          email: email
+        },
+        oldPassword: oldPassword,
+        password: password
+      }
+    });
+  });
+}
+
+api.accountRequestPassword = (email) => {
   return api.service('verification').create({
     action: 'sendResetPwd',
     value: {
@@ -100,7 +107,7 @@ api.accountRequestPassword = async (email) => {
   });
 }
 
-api.accountResetPassword = async (token, password) => {
+api.accountResetPassword = (token, password) => {
   return api.service('verification').create({
     action: 'resetPwdLong',
     value: {
@@ -110,56 +117,72 @@ api.accountResetPassword = async (token, password) => {
   });
 }
 
-api.login = async (credentials) => {
-  let auth = credentials ?
-    Object.assign(credentials, {strategy: 'local'}) : {};
-  try {
-    let result = await api.authenticate(auth);
-    let payload = await api.passport.verifyJWT(result.accessToken);
-    return await api.service('users').get(payload.userId);
-  } catch (error) {
-    return Promise.reject(error);
-  }
+api.login = (credentials) => {
+  let auth = credentials ? Object.assign(credentials, {strategy: 'local'}) : {};
+  return api.authenticate(auth)
+  .then(result => api.passport.verifyJWT(result.accessToken))
+  .then(payload => api.service('users').get(payload.userId));
 };
 
-api.getUser = async () => {
-  try {
-    let jwt = await api.passport.getJWT();
-    let result = await api.authenticate({strategy: 'jwt', accessToken: jwt});
-    let payload = await api.passport.verifyJWT(result.accessToken);
-    return await api.service('users').get(payload.userId);
-  } catch (error) {
-    return Promise.reject(error);
-  }
+api.getUser = () => {
+  return api.passport.getJWT()
+  .then(jwt => api.authenticate({strategy: 'jwt', accessToken: jwt}))
+  .then(result => api.passport.verifyJWT(result.accessToken))
+  .then(payload => api.service('users').get(payload.userId))
+  .catch(error => {return {};});
 };
 
-api.getLocal = async (key) => {
+api.getLocal = (key) => {
   return localforage.getItem(key);
 };
 
-api.setLocal = async (key, data) => {
+api.setLocal = (key, data) => {
   return localforage.setItem(key, data);
 };
 
-api.getServiceData = async (service, reload = false) => {
-  try {
-    let value = {
+api.getServiceData = (service, reload = false) => {
+  return localforage.keys()
+  .then(keys => {
+    if(!reload && keys.indexOf(service) > -1)
+      return localforage.getItem(service);
+    return {
       data: [],
       expires: 0
     };
-    let keys = await localforage.keys();
-    if(!reload && keys.indexOf(service) > -1)
-      value = await localforage.getItem(service);
-
-    if(value.data.length && value.expires > Date.now())
-      return Promise.resolve(value.data);
-
-    let page = await api.service(service).find({
-      query:{
-        $skip: 0, $limit: 1000
-      }
+  }).then(value => {
+    if(!value.data.length || Date.now() > value.expires)
+      throw new Error('No stored data');
+    return value.data;
+  }).catch(() => {
+    return api.service(service).find({ query: { $limit: 1000 } })
+    .then(firstPage => {
+      if(Array.isArray(firstPage))
+        return firstPage;
+      let pages = Math.ceil(firstPage.total / firstPage.limit) - 1;
+      if(pages <= 0)
+        return firstPage.data;
+      pages = new Array().map((value, index) => api.service(service).find({
+        query: {
+          $skip: (index + 1) * firstPage.limit,
+          $limit: firstPage.limit
+        }
+      }));
+      return Promise.all(pages)
+        .then(values => values.reduce(
+          (data, value) => data.concat(value),
+          firstPage.data
+        ));
     });
-    let data = [].concat(page.data);
+  })
+  .then(data => {
+    localforage.setItem(service, {
+      data: data,
+      expires: Date.now() + 30 * 24 * 60 * 60 * 1000
+    });
+    return data;
+  })
+  .catch(error => []);
+/*
     while(page.skip <= page.total) {
       page = await api.service(service).find({
         query: {
@@ -167,29 +190,16 @@ api.getServiceData = async (service, reload = false) => {
         }
       });
       data = data.concat(page.data);
-    }
-    await localforage.setItem(service, {
-      data: data,
-      expires: Date.now() + 30 * 24 * 60 * 60 * 1000
-    });
-    return Promise.resolve(data);
-  } catch (error) {
-    return Promise.reject(error);
-  }
+    }*/
 };
 
-api.setServiceData = async (service, data) => {
+api.setServiceData = (service, data) => {
   if(!service || !data)
     return Promise.reject();
-  try {
-    await localforage.setItem(service, {
-      data: data,
-      expires: 0
-    });
-    return Promise.resolve();
-  } catch (error) {
-    return Promise.reject(error);
-  }
+  localforage.setItem(service, {
+    data: data,
+    expires: Date.now() + 30 * 24 * 60 * 60 * 1000
+  });
 };
 
 export default api;

@@ -137,7 +137,7 @@
     }
   },
   "required": [
-    "player",
+    "_player",
     "name",
     "build",
     "lives",
