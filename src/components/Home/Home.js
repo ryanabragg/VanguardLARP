@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import PropTypes from 'prop-types';
 
 import Logo from '../svg/Logo';
@@ -20,6 +21,9 @@ class Home extends React.Component {
   render() {
     return (
       <Homepage>
+        <Helmet>
+            <title>Vanguard LARP - Lenoir NC</title>
+        </Helmet>
         <header>
           <div className='header-image'>
             <Logo />

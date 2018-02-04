@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import PropTypes from 'prop-types';
 
 import Spinner from '../styled/Spinner';
@@ -269,6 +270,9 @@ class Rules extends React.Component {
 
     return (
       <div>
+        <Helmet>
+            <title>Rules Admin | Vanguard LARP</title>
+        </Helmet>
         <main>
           <RecordMenu
             user={this.props.user}

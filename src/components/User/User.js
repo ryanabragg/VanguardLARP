@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Helmet } from 'react-helmet';
 import PropTypes from 'prop-types';
 
 import UserMenu from './styled/UserMenu';
@@ -328,6 +329,9 @@ class User extends React.Component {
 
     return (
       <div {...rest}>
+        <Helmet>
+            <title>Account | Vanguard LARP</title>
+        </Helmet>
         <UserMenu logout={this.logout}
           reloadCharacters={this.reloadCharacters}
         />

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import PropTypes from 'prop-types';
 
 import Spinner from '../styled/Spinner';
@@ -231,6 +232,9 @@ class Events extends React.Component {
 
     return (
       <div>
+        <Helmet>
+            <title>Events Admin | Vanguard LARP</title>
+        </Helmet>
         <main>
           <RecordMenu direction='vertical'
             user={this.props.user}

@@ -2,6 +2,7 @@ import React from 'react';
 import { renderToString } from 'react-dom/server';
 import { StaticRouter, matchPath } from 'react-router';
 import { ServerStyleSheet } from 'styled-components';
+import { Helmet } from 'react-helmet';
 
 import App from '../components/App';
 import routes from '../routes';
@@ -38,17 +39,6 @@ module.exports = function () {
         }
       }
     });
-    let title = 'Vanguard LARP';
-    if(req.url == '/')
-      title += ' - Lenoir NC';
-    else if(req.url == '/login')
-      title += ' - Login';
-    else if(req.url == '/register')
-      title += ' - Register';
-    else if(/^\/character/.test(req.url))
-      title += ' - Character';
-    else if(/^\/admin/.test(req.url))
-      title += ' - Admin';
     const context = {};
     const sheet = new ServerStyleSheet();
     const content = renderToString(sheet.collectStyles(
@@ -57,6 +47,7 @@ module.exports = function () {
       </StaticRouter>)
     );
     const css = sheet.getStyleTags();
+    const helmet = Helmet.renderStatic();
 
     // context updates if redirected
     if(context.url) {
@@ -64,7 +55,7 @@ module.exports = function () {
     }
     else {
       res.send(html({
-        title: title,
+        title: helmet.title.toString(),
         css: css,
         content: content
       }));

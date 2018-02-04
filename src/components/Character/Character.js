@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import PropTypes from 'prop-types';
 
 import CharacterMenu from './styled/CharacterMenu';
@@ -922,6 +923,9 @@ class Character extends React.Component {
   render() {
     return (
       <div>
+        <Helmet>
+            <title>{this.state.character.name} @ Vanguard LARP</title>
+        </Helmet>
         <CharacterMenu
           user={this.props.user}
           logout={this.logout}

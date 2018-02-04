@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Helmet } from 'react-helmet';
 import PropTypes from 'prop-types';
 
 import Field from '../util/styled/Field';
@@ -333,6 +334,9 @@ class Login extends React.Component {
     }
     return (
       <div {...rest}>
+        <Helmet>
+            <title>Login | Vanguard LARP</title>
+        </Helmet>
         {form}
       </div>
     );
