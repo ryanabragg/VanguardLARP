@@ -921,10 +921,14 @@ class Character extends React.Component {
   }
 
   render() {
+    let title = this.state.character.name;
+    if(this.props.match.params.hasOwnProperty('link'))
+      title = `<${title}>`;
+    title += ' @ Vanguard LARP';
     return (
       <div>
         <Helmet>
-            <title>{this.state.character.name} @ Vanguard LARP</title>
+            <title>{title}</title>
         </Helmet>
         <CharacterMenu
           user={this.props.user}
