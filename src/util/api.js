@@ -161,17 +161,16 @@ api.getServiceData = (service, reload = false) => {
       let pages = Math.ceil(firstPage.total / firstPage.limit) - 1;
       if(pages <= 0)
         return firstPage.data;
-      pages = new Array().map((value, index) => api.service(service).find({
-        query: {
-          $skip: (index + 1) * firstPage.limit,
-          $limit: firstPage.limit
-        }
-      }));
+      pages = Array.from(Array(pages))
+        .map((value, index) => api.service(service).find({
+          query: {
+            $skip: (index + 1) * firstPage.limit,
+            $limit: firstPage.limit
+          }
+        }));
       return Promise.all(pages)
-        .then(values => values.reduce(
-          (data, value) => data.concat(value),
-          firstPage.data
-        ));
+        .then(values => [firstPage.data].concat(values.map(v => v.data)))
+        .then(values => [].concat.apply([], values));
     });
   })
   .then(data => {
@@ -182,15 +181,6 @@ api.getServiceData = (service, reload = false) => {
     return data;
   })
   .catch(error => []);
-/*
-    while(page.skip <= page.total) {
-      page = await api.service(service).find({
-        query: {
-        $skip: page.skip + page.limit, $limit: page.limit
-        }
-      });
-      data = data.concat(page.data);
-    }*/
 };
 
 api.setServiceData = (service, data) => {

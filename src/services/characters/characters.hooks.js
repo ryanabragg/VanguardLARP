@@ -1,35 +1,21 @@
 const errors = require('feathers-errors');
-const { checkContext, getByDot, unless, setNow, validateSchema } = require('feathers-hooks-common');
+const { checkContext, getByDot, setNow, unless, validateSchema } = require('feathers-hooks-common');
 const { authenticate } = require('feathers-authentication').hooks;
-const { associateCurrentUser, restrictToOwner } = require('feathers-authentication-hooks');
+const { associateCurrentUser, queryWithCurrentUser, restrictToRoles } = require('feathers-authentication-hooks');
 const Ajv = require('ajv');
+const hasPermission = require('../../hooks/has-permission');
 
 const schema = require('./characters.schema.json');
 const patchSchema = Object.assign({}, schema, {required: []});
 
-const hasPermission = () => {
-  const permissions = Array.from(arguments) || [];
-  return hook => {
-    checkContext(hook, 'before');
-    if(!hook.params.provider)
-      return true;
-    if(!getByDot(hook, 'params.user.permissions'))
-      return false;
-    if(!permissions.some(p => hook.params.user.permissions.includes(p)))
-      return false;
-    return true;
-  }
-}
-
 const restrict = [
-  authenticate('jwt'),
-  unless(
-    hasPermission('logistics', 'admin'),
-    restrictToOwner({
-      idField: '_id',
-      ownerField: '_player'
-    })
-  )
+  restrictToRoles({
+    roles: ['logistics', 'admin'],
+    fieldName: 'permissions',
+    idField: '_id',
+    ownerField: '_player',
+    owner: true
+  })
 ];
 
 const createInfo = [
@@ -45,15 +31,31 @@ const updateInfo = [
   setNow('_modifiedAt')
 ];
 
+const isPlayer = () => hook => {
+  checkContext(hook, 'before');
+  if(!hook.params.provider)
+    return true;
+  if(!getByDot(hook, 'params.user._id'))
+    throw new errors.Forbidden('Not signed in');
+  hook.params.query._player = hook.params.user._id;
+  return hook;
+}
+
+
 module.exports = {
   before: {
-    all: [ ...restrict ],
-    find: [],
-    get: [],
+    all: [ authenticate('jwt') ],
+    find: [
+      unless(
+        hasPermission('logistics', 'admin'),
+        isPlayer()
+      )
+    ],
+    get: [ ...restrict ],
     create: [ ...createInfo, validateSchema(schema, Ajv, { coerceTypes: true }) ],
     update: [ ...updateInfo, validateSchema(schema, Ajv, { coerceTypes: true }) ],
-    patch: [ ...updateInfo, validateSchema(patchSchema, Ajv, { coerceTypes: true }) ],
-    remove: []
+    patch: [ ...restrict, ...updateInfo, validateSchema(patchSchema, Ajv, { coerceTypes: true }) ],
+    remove: [ ...restrict ]
   },
 
   after: {

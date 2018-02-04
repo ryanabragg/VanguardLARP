@@ -4,15 +4,16 @@ const {
   iff,
   isProvider,
   preventChanges,
-  validateSchema,
-  when
+  unless, 
+  validateSchema
 } = require('feathers-hooks-common');
 const { authenticate } = require('feathers-authentication').hooks;
-const { restrictToRoles } = require('feathers-authentication-hooks');
+const { queryWithCurrentUser, restrictToRoles } = require('feathers-authentication-hooks');
 const { addVerification, removeVerification } = require('feathers-authentication-management').hooks;
 const { hashPassword } = require('feathers-authentication-local').hooks;
 const Ajv = require('ajv');
 
+const hasPermission = require('../../hooks/has-permission');
 const sendVerificationEmail = require('../../hooks/send-verification-email');
 
 const schema = require('./users.schema.json');
@@ -66,7 +67,13 @@ const removeSensitiveData = [
 module.exports = {
   before: {
     all: [],
-    find: [ authenticate('jwt') ],
+    find: [
+      authenticate('jwt'),
+      unless(
+        hasPermission('logistics', 'admin'),
+        queryWithCurrentUser({ idField: '_id' })
+      )
+    ],
     get: [ ...restrict ],
     create: [
       hashPassword(),
