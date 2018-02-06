@@ -336,6 +336,7 @@ class Login extends React.Component {
       <div {...rest}>
         <Helmet>
             <title>Login | Vanguard LARP</title>
+            <meta name="description" content="Vanguard LARP site login" />
         </Helmet>
         {form}
       </div>

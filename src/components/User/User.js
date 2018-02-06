@@ -331,6 +331,7 @@ class User extends React.Component {
       <div {...rest}>
         <Helmet>
             <title>Account | Vanguard LARP</title>
+            <meta name="description" content="Vanguard LARP account information and characters" />
         </Helmet>
         <UserMenu logout={this.logout}
           reloadCharacters={this.reloadCharacters}

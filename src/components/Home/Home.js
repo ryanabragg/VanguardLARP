@@ -23,6 +23,8 @@ class Home extends React.Component {
       <Homepage>
         <Helmet>
             <title>Vanguard LARP - Lenoir NC</title>
+            <meta name="description" content="A boffer steampunk fantasy fusion game geared towards
+              making the player feel epic from the start." />
         </Helmet>
         <header>
           <div className='header-image'>
@@ -143,7 +145,7 @@ class Home extends React.Component {
             <div className='location-detail'>
               <p>
                 Note that Scout Road turns into a gravel road at the camp entrance,
-                while the paved road curves left. See <a target="_new" href='https://www.google.com/maps/@35.9480276,-81.3864486,265m/data=!3m1!1e3?hl=en-US'>here</a> for a visual.
+                while the paved road curves left. <a href='https://www.google.com/maps/@35.9480276,-81.3864486,265m/data=!3m1!1e3?hl=en-US'>See here for a visual.</a>
               </p>
               <p>
                 After the entrance, keep going until you see a fork in the road and turn left.

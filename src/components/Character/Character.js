@@ -929,6 +929,7 @@ class Character extends React.Component {
       <div>
         <Helmet>
             <title>{title}</title>
+            <meta name="description" content="Game Character" />
         </Helmet>
         <CharacterMenu
           user={this.props.user}

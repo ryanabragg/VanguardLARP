@@ -7,6 +7,7 @@ export default class AdminDashboard extends React.Component {
       <div>
         <Helmet>
             <title>Admin | Vanguard LARP</title>
+            <meta name="description" content="Administration" />
         </Helmet>
         todo
       </div>
