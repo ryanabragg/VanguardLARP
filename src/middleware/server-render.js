@@ -13,11 +13,11 @@ module.exports = function () {
   const app = this;
 
   app.get('*', async (req, res, next) => {
-    const whitelist = [
+    const webpackFiles = [
       /.js$/i,
       /.json$/i
-    ]; // mostly for webpack HMR
-    if(whitelist.reduce((acc, filetype) => filetype.test(req.url) || acc, null)) {
+    ];
+    if(webpackFiles.reduce((acc, filetype) => filetype.test(req.url) || acc, null)) {
       next();
       return;
     }
