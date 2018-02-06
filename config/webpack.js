@@ -1,6 +1,5 @@
 const path = require('path');
 const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -13,17 +12,16 @@ module.exports = {
   },
   output: {
     path: path.join(process.cwd(),'dist'),
-    publicPath: "/",
+    publicPath: '/',
     filename: 'scripts.js'
   },
   devtool: 'eval-source-map',
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('development')
+    }),
     new webpack.HotModuleReplacementPlugin(),
-/*    new HtmlWebpackPlugin({
-      filename: 'index.html',
-      title: 'Vanguard LARP',
-      template: './src/html.ejs'
-    }),*/
+    new webpack.optimize.UglifyJsPlugin()
   ],
   module: {
     noParse: /node_modules\/localforage\/dist\/localforage.js/,
