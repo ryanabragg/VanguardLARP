@@ -1,6 +1,7 @@
 {
     "name": "Vanguard LARP",
     "short_name": "Vanguard",
+    "start_url": "/index.html",
     "icons": [
         {
             "src": "/android-chrome-192x192.png?v=E6jlE9ANzK",

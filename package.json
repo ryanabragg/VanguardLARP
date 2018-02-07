@@ -35,13 +35,15 @@
     "images": "npm run favicon && npm run svg",
     "presw": "rm -f dist/service-worker.js dist/workbox-sw*",
     "sw": "workbox generate:sw workbox-config.js",
-    "predev": "npm run presw",
+    "predev": "npm run presw && rm -f dist/scripts.js",
     "dev": "pm2 start ecosystem.config.js",
     "prebuild": "npm run images",
     "build": "NODE_ENV=production node_modules/.bin/webpack --config config/webpack-production.js --progress --colors --hide-modules",
     "prestart": "npm run build && npm run sw",
     "start": "pm2 start ecosystem.config.js --env production",
-    "restart": "pm2 restart website"
+    "restart": "pm2 restart website",
+    "stop": "pm2 stop website",
+    "kill": "pm2 delete website"
   },
   "dependencies": {
     "ajv": "^6.0.1",

@@ -6,6 +6,11 @@ import PropTypes from 'prop-types';
 
 import App from './components/App';
 
+if(process.env.NODE_ENV == 'production')
+  require('./service-worker-registration');
+else
+  require('./service-worker-unregister');
+
 function HotLoader(props) {
   return (
     <BrowserRouter onUpdate={() => window.scrollTo(0, 0)}>
